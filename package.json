@@ -1,0 +1,17 @@
+{
+  "name": "wolfdeck",
+  "version": "3.0.0",
+  "description": "WebGL presentation framework — a 3D low-poly papercraft diorama with a wolf presenter",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3000",
+    "build": "vite build",
+    "preview": "vite preview --port 3000"
+  },
+  "dependencies": {
+    "three": "^0.178.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

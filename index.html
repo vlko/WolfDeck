@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WolfDeck</title>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #f2eee4; }
+    canvas { display: block; }
+    #fatal {
+      display: none; position: fixed; inset: 0; padding: 2rem;
+      background: #2b2620; color: #efe9dc; font: 15px/1.6 ui-monospace, monospace;
+      white-space: pre-wrap; z-index: 10;
+    }
+    #fatal.show { display: block; }
+  </style>
+</head>
+<body>
+  <div id="fatal"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,1296 @@
+{
+  "meta": {
+    "title": "Papercraft Meadow — WolfDeck demo",
+    "sceneSpacing": 34,
+    "walkSpeed": 8,
+    "seed": 1,
+    "rivers": [
+      {
+        "x": 17,
+        "width": 3
+      }
+    ],
+    "roads": [
+      {
+        "z": 2,
+        "width": 2.4,
+        "from": 21,
+        "to": 47
+      }
+    ]
+  },
+  "scenes": [
+    {
+      "id": "meadow",
+      "title": "The Meadow",
+      "props": [
+        {
+          "type": "pineTree",
+          "position": [
+            -11,
+            0
+          ],
+          "layer": "back",
+          "scale": 1.25,
+          "options": {
+            "seed": 3,
+            "tiers": 6
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -9,
+            0,
+            0.7
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 7
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -12.5,
+            0,
+            1.2
+          ],
+          "layer": "back",
+          "scale": 0.85,
+          "options": {
+            "seed": 12
+          }
+        },
+        {
+          "type": "cottage",
+          "position": [
+            -4,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "variant": "timber",
+            "seed": 2
+          }
+        },
+        {
+          "type": "barn",
+          "position": [
+            8,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 1
+          }
+        },
+        {
+          "type": "hut",
+          "position": [
+            15,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 4
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            18,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 9,
+            "tiers": 5
+          }
+        },
+        {
+          "type": "cottage",
+          "position": [
+            2.5,
+            0
+          ],
+          "layer": "mid",
+          "scale": 0.85,
+          "options": {
+            "variant": "roundWindow",
+            "seed": 8
+          }
+        },
+        {
+          "type": "well",
+          "position": [
+            -7.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 5,
+            "animation": "crankTurn"
+          }
+        },
+        {
+          "type": "haystack",
+          "position": [
+            11.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 6
+          }
+        },
+        {
+          "type": "fence",
+          "position": [
+            -1.5,
+            0,
+            0.9
+          ],
+          "layer": "mid",
+          "options": {
+            "length": 6,
+            "seed": 2
+          }
+        },
+        {
+          "type": "sheep",
+          "position": [
+            4.5,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 3,
+            "animation": "graze"
+          }
+        },
+        {
+          "type": "lamb",
+          "position": [
+            6.2,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 4
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -13.5,
+            0
+          ],
+          "layer": "front",
+          "scale": 0.6,
+          "options": {
+            "seed": 11
+          }
+        },
+        {
+          "type": "fence",
+          "position": [
+            12,
+            0
+          ],
+          "layer": "front",
+          "scale": 0.9,
+          "options": {
+            "length": 4,
+            "seed": 9
+          }
+        }
+      ],
+      "steps": [
+        {
+          "part": {
+            "type": "text",
+            "title": "Hello!",
+            "body": "A presentation that lives\ninside a papercraft diorama.",
+            "tilt": -2
+          }
+        },
+        {
+          "part": {
+            "type": "bullets",
+            "title": "How it works",
+            "items": [
+              "Everything is one JSON file",
+              "Space reveals the next idea",
+              "Backspace rewinds it exactly"
+            ],
+            "tilt": 1.5
+          }
+        },
+        {
+          "part": {
+            "type": "image",
+            "src": "images/demo.png",
+            "caption": "Images float in the scene too",
+            "width": 4.4
+          }
+        },
+        {
+          "part": {
+            "type": "chart",
+            "chart": "bar",
+            "title": "Sheep counted",
+            "data": [
+              {
+                "label": "Mon",
+                "value": 12
+              },
+              {
+                "label": "Tue",
+                "value": 19
+              },
+              {
+                "label": "Wed",
+                "value": 31
+              }
+            ],
+            "tilt": 2
+          }
+        },
+        {
+          "part": {
+            "type": "chart",
+            "chart": "pie",
+            "title": "Flock mood",
+            "data": [
+              {
+                "label": "Cozy",
+                "value": 70
+              },
+              {
+                "label": "Curious",
+                "value": 20
+              },
+              {
+                "label": "Baa",
+                "value": 10
+              }
+            ],
+            "tilt": -3
+          }
+        },
+        {
+          "part": {
+            "type": "chart",
+            "chart": "line",
+            "title": "Grass, over time",
+            "data": [
+              {
+                "label": "Q1",
+                "value": 5
+              },
+              {
+                "label": "Q2",
+                "value": 9
+              },
+              {
+                "label": "Q3",
+                "value": 7
+              },
+              {
+                "label": "Q4",
+                "value": 12
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "city",
+      "title": "The City",
+      "props": [
+        {
+          "type": "officeTower",
+          "position": [
+            -11,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 3,
+            "floors": 6,
+            "color": "#6f7a74"
+          }
+        },
+        {
+          "type": "officeTower",
+          "position": [
+            -7.5,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 7,
+            "floors": 5,
+            "color": "#a98289"
+          }
+        },
+        {
+          "type": "townhouse",
+          "position": [
+            -3.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 2,
+            "variant": "steep"
+          }
+        },
+        {
+          "type": "townhouse",
+          "position": [
+            0.5,
+            0,
+            0.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 5,
+            "variant": "awning"
+          }
+        },
+        {
+          "type": "officeTower",
+          "position": [
+            4.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 1,
+            "floors": 7
+          }
+        },
+        {
+          "type": "townhouse",
+          "position": [
+            8.5,
+            0,
+            0.5
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 9,
+            "variant": "timber"
+          }
+        },
+        {
+          "type": "officeTower",
+          "position": [
+            12.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 11,
+            "floors": 5,
+            "color": "#e3dac8"
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            -13,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 4,
+            "shape": "round"
+          }
+        },
+        {
+          "type": "streetlamp",
+          "position": [
+            -5.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 1
+          }
+        },
+        {
+          "type": "bench",
+          "position": [
+            -2,
+            0,
+            0.5
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 3
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            2.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 6,
+            "shape": "ball"
+          }
+        },
+        {
+          "type": "trafficLight",
+          "position": [
+            6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 2
+          }
+        },
+        {
+          "type": "busStop",
+          "position": [
+            10,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 8
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            13.5,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 12,
+            "shape": "poplar"
+          }
+        },
+        {
+          "type": "citizen",
+          "position": [
+            -4,
+            0
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 5
+          }
+        },
+        {
+          "type": "car",
+          "position": [
+            0,
+            0
+          ],
+          "layer": 2,
+          "options": {
+            "seed": 3,
+            "path": [
+              -11,
+              11
+            ],
+            "speed": 3.4,
+            "startAt": 0.15
+          }
+        },
+        {
+          "type": "bus",
+          "position": [
+            0,
+            0,
+            0.35
+          ],
+          "layer": 2,
+          "options": {
+            "seed": 6,
+            "path": [
+              -12,
+              12
+            ],
+            "speed": 2.5,
+            "startAt": 0.65,
+            "direction": -1
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            -12.5,
+            0
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 10,
+            "shape": "cone"
+          }
+        },
+        {
+          "type": "hydrant",
+          "position": [
+            11,
+            0
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 2
+          }
+        }
+      ],
+      "steps": [
+        {
+          "part": {
+            "type": "text",
+            "title": "Welcome downtown",
+            "body": "Same paper, taller stories.\nThe wolf moved to the city.",
+            "tilt": -2
+          }
+        },
+        {
+          "part": {
+            "type": "bullets",
+            "title": "Alive by default",
+            "items": [
+              "Tower windows flicker on and off",
+              "Cars and the bus patrol the road",
+              "The traffic light runs its cycle",
+              "Streetlamps breathe warm light"
+            ],
+            "tilt": 1.5
+          }
+        },
+        {
+          "part": {
+            "type": "chart",
+            "chart": "bar",
+            "title": "Morning traffic",
+            "data": [
+              {
+                "label": "Paws",
+                "value": 28
+              },
+              {
+                "label": "Cars",
+                "value": 14
+              },
+              {
+                "label": "Buses",
+                "value": 6
+              }
+            ],
+            "tilt": 2
+          }
+        },
+        {
+          "part": {
+            "type": "chart",
+            "chart": "pie",
+            "title": "Who rides the bus",
+            "data": [
+              {
+                "label": "Foxes",
+                "value": 55
+              },
+              {
+                "label": "Sheep",
+                "value": 30
+              },
+              {
+                "label": "Wolves",
+                "value": 15
+              }
+            ],
+            "tilt": -2.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "office",
+      "title": "The Office",
+      "props": [
+        {
+          "type": "bookshelf",
+          "position": [
+            -9,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 2
+          },
+          "scale": 1.7
+        },
+        {
+          "type": "whiteboard",
+          "position": [
+            -4.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 5
+          },
+          "scale": 1.6
+        },
+        {
+          "type": "filingCabinet",
+          "position": [
+            -1,
+            0,
+            0.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 3
+          },
+          "scale": 1.5
+        },
+        {
+          "type": "bookshelf",
+          "position": [
+            5.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 9
+          },
+          "scale": 1.7
+        },
+        {
+          "type": "whiteboard",
+          "position": [
+            10.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 11
+          },
+          "scale": 1.6
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            13.5,
+            0
+          ],
+          "layer": "back",
+          "scale": 1.9,
+          "options": {
+            "seed": 6
+          }
+        },
+        {
+          "type": "desk",
+          "position": [
+            -7,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 1
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "mug",
+          "position": [
+            -6.5,
+            1.42,
+            0.3
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 4
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "officeChair",
+          "position": [
+            -6.9,
+            0,
+            1.15
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 2,
+            "animation": "swivel"
+          },
+          "scale": 1.35,
+          "rotation": 180
+        },
+        {
+          "type": "meetingTable",
+          "position": [
+            3.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 7
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "deskLamp",
+          "position": [
+            4.8,
+            1.45,
+            0.15
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 1
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "wasteBasket",
+          "position": [
+            9.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 8
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            -11.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 12
+          },
+          "scale": 1.5
+        },
+        {
+          "type": "officeWorker",
+          "position": [
+            -2.5,
+            0
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 3,
+            "animal": "bear"
+          },
+          "scale": 1.25
+        },
+        {
+          "type": "officeWorker",
+          "position": [
+            7.5,
+            0,
+            0.4
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 6,
+            "animal": "cat"
+          },
+          "scale": 1.25
+        },
+        {
+          "type": "officeWorker",
+          "position": [
+            11.5,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 9,
+            "animal": "badger"
+          },
+          "scale": 1.25
+        },
+        {
+          "type": "paperStack",
+          "position": [
+            -12.5,
+            0
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 5
+          },
+          "scale": 1.4
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            12.5,
+            0,
+            0.5
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 15
+          },
+          "scale": 1.3
+        }
+      ],
+      "steps": [
+        {
+          "part": {
+            "type": "text",
+            "title": "The Office",
+            "body": "Where the flock plans its quarter.\nCoffee is mandatory.",
+            "tilt": -2
+          }
+        },
+        {
+          "part": {
+            "type": "bullets",
+            "title": "Office pack, alive",
+            "items": [
+              "The monitor flickers while someone works",
+              "The chair swivels, the mug steams",
+              "Colleagues blink and look around",
+              "Lamp glows warm over the table"
+            ],
+            "tilt": 1.5
+          }
+        },
+        {
+          "part": {
+            "type": "chart",
+            "chart": "pie",
+            "title": "Where the day goes",
+            "data": [
+              {
+                "label": "Meetings",
+                "value": 45
+              },
+              {
+                "label": "Coffee",
+                "value": 20
+              },
+              {
+                "label": "Actual work",
+                "value": 35
+              }
+            ],
+            "tilt": -2.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "shop",
+      "title": "The Market",
+      "props": [
+        {
+          "type": "shopBuilding",
+          "position": [
+            -7,
+            0
+          ],
+          "layer": "back",
+          "scale": 1.4,
+          "options": {
+            "seed": 1
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            -12.5,
+            0
+          ],
+          "layer": "back",
+          "scale": 1.5,
+          "options": {
+            "seed": 4,
+            "shape": "diamond"
+          }
+        },
+        {
+          "type": "breadShelf",
+          "position": [
+            -1.5,
+            0,
+            0.5
+          ],
+          "layer": "back",
+          "scale": 1.5,
+          "options": {
+            "seed": 3
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            12,
+            0
+          ],
+          "layer": "back",
+          "scale": 1.6,
+          "options": {
+            "seed": 7,
+            "shape": "poplar",
+            "pot": false
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            14.5,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "scale": 1.3,
+          "options": {
+            "seed": 9,
+            "shape": "poplar",
+            "pot": false
+          }
+        },
+        {
+          "type": "flourSack",
+          "position": [
+            1.2,
+            0,
+            0.9
+          ],
+          "layer": "back",
+          "scale": 1.3,
+          "options": {
+            "seed": 5,
+            "color": "cream"
+          }
+        },
+        {
+          "type": "marketStall",
+          "position": [
+            5.5,
+            0
+          ],
+          "layer": "mid",
+          "scale": 1.3,
+          "options": {
+            "seed": 2
+          }
+        },
+        {
+          "type": "shopSign",
+          "position": [
+            -11,
+            0
+          ],
+          "layer": "mid",
+          "scale": 1.3,
+          "options": {
+            "seed": 6
+          }
+        },
+        {
+          "type": "crate",
+          "position": [
+            -3.5,
+            0
+          ],
+          "layer": "mid",
+          "scale": 1.3,
+          "options": {
+            "seed": 3,
+            "produce": "fruit"
+          }
+        },
+        {
+          "type": "crate",
+          "position": [
+            -2.2,
+            0,
+            0.7
+          ],
+          "layer": "mid",
+          "scale": 1.3,
+          "options": {
+            "seed": 8,
+            "produce": "greens"
+          }
+        },
+        {
+          "type": "scale",
+          "position": [
+            9.5,
+            0
+          ],
+          "layer": "mid",
+          "scale": 1.4,
+          "options": {
+            "seed": 4
+          }
+        },
+        {
+          "type": "flourSack",
+          "position": [
+            11.5,
+            0,
+            0.5
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 9,
+            "color": "tan"
+          }
+        },
+        {
+          "type": "shopkeeper",
+          "position": [
+            3,
+            0
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 2,
+            "animal": "panda"
+          }
+        },
+        {
+          "type": "shopkeeper",
+          "position": [
+            -5.5,
+            0
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 5,
+            "animal": "bear"
+          }
+        },
+        {
+          "type": "shopkeeper",
+          "position": [
+            8.5,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 7,
+            "animal": "fox"
+          }
+        },
+        {
+          "type": "basket",
+          "position": [
+            -4.5,
+            0
+          ],
+          "layer": 1.5,
+          "scale": 1.2,
+          "options": {
+            "seed": 6
+          }
+        },
+        {
+          "type": "shoppingCart",
+          "position": [
+            12.5,
+            0
+          ],
+          "layer": "front",
+          "scale": 1.2,
+          "options": {
+            "seed": 3
+          }
+        },
+        {
+          "type": "flowerPot",
+          "position": [
+            -12,
+            0
+          ],
+          "layer": "front",
+          "scale": 1.4,
+          "options": {
+            "seed": 2
+          }
+        },
+        {
+          "type": "flowerPot",
+          "position": [
+            -10.8,
+            0,
+            0.5
+          ],
+          "layer": "front",
+          "scale": 1.2,
+          "options": {
+            "seed": 8
+          }
+        }
+      ],
+      "steps": [
+        {
+          "part": {
+            "type": "text",
+            "title": "The Market",
+            "body": "Fresh from the meadow,\nweighed with love.",
+            "tilt": -2
+          }
+        },
+        {
+          "part": {
+            "type": "bullets",
+            "title": "Shop pack, alive",
+            "items": [
+              "The hanging sign swings in the breeze",
+              "The scale needle wiggles as it weighs",
+              "Flowers sway, shopkeepers blink",
+              "Pandas run the till"
+            ],
+            "tilt": 1.5
+          }
+        },
+        {
+          "part": {
+            "type": "chart",
+            "chart": "bar",
+            "title": "Best sellers",
+            "data": [
+              {
+                "label": "Bread",
+                "value": 34
+              },
+              {
+                "label": "Apples",
+                "value": 22
+              },
+              {
+                "label": "Flowers",
+                "value": 12
+              }
+            ],
+            "tilt": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "outro",
+      "title": "Thank You",
+      "props": [
+        {
+          "type": "pineTree",
+          "position": [
+            -7,
+            0
+          ],
+          "layer": "back",
+          "scale": 1.2,
+          "options": {
+            "seed": 5,
+            "tiers": 5
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            8,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 14
+          }
+        },
+        {
+          "type": "cottage",
+          "position": [
+            4,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "options": {
+            "variant": "plain",
+            "seed": 3
+          }
+        },
+        {
+          "type": "fence",
+          "position": [
+            6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "length": 5,
+            "seed": 7
+          }
+        },
+        {
+          "type": "haystack",
+          "position": [
+            -4.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 2
+          }
+        },
+        {
+          "type": "sheep",
+          "position": [
+            3,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 8
+          }
+        },
+        {
+          "type": "lamb",
+          "position": [
+            -2.5,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 9,
+            "animation": "graze"
+          }
+        }
+      ],
+      "steps": [
+        {
+          "part": {
+            "type": "text",
+            "title": "That's WolfDeck",
+            "body": "Copy the templates in SCENES.md\nand make it yours.",
+            "tilt": -1.5
+          }
+        }
+      ]
+    }
+  ]
+}
