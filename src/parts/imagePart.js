@@ -59,7 +59,7 @@ export function imagePart(def) {
     canvas.height = Math.round(capH * PX);
     const ctx = canvas.getContext('2d');
     ctx.font = `italic 400 ${0.3 * PX}px ${FONT_STACK}`;
-    ctx.fillStyle = palette.deepBrown;
+    ctx.fillStyle = palette.inkBody;
     ctx.textAlign = 'center';
     const lines = wrapLines(ctx, def.caption, (w - 0.8) * PX);
     lines.forEach((line, i) => ctx.fillText(line, canvas.width / 2, 0.42 * PX + i * 0.4 * PX));

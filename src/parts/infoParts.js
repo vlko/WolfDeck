@@ -53,18 +53,18 @@ export function statPart(def) {
       const shown = anim ? anim.format(anim.number * ease.outCubic(k)) : value;
       let y = pad * 0.8 + 0.16 * PX + vSize * 0.82;
       ctx.textAlign = 'left';
-      ctx.fillStyle = palette.deepBrown;
+      ctx.fillStyle = palette.ink;
       ctx.font = `800 ${vSize}px ${FONT_STACK}`;
       ctx.fillText(shown, pad, y);
       y += vSize * 0.28;
-      ctx.fillStyle = palette.charcoal;
+      ctx.fillStyle = palette.inkBody;
       ctx.font = `700 ${labelSize}px ${FONT_STACK}`;
       for (const line of labelLines) {
         y += labelSize * 1.3;
         ctx.fillText(line, pad, y);
       }
       if (noteLines.length) y += 0.14 * PX;
-      ctx.fillStyle = palette.barkBrown;
+      ctx.fillStyle = palette.inkMuted;
       ctx.font = `400 ${noteSize}px ${FONT_STACK}`;
       for (const line of noteLines) {
         y += noteSize * LINE;
@@ -143,7 +143,7 @@ export function numberedPart(def) {
     return (ctx) => {
       ctx.textAlign = 'left';
       let y = pad + titleSize * 0.85;
-      ctx.fillStyle = palette.deepBrown;
+      ctx.fillStyle = palette.ink;
       ctx.font = titleFont;
       for (const line of titleLines) {
         ctx.fillText(line, pad, y);
@@ -171,12 +171,12 @@ export function numberedPart(def) {
         ctx.textAlign = 'left';
         let ty = y + bodySize * 0.9;
         if (it.title) {
-          ctx.fillStyle = palette.deepBrown;
+          ctx.fillStyle = palette.ink;
           ctx.font = itemTitleFont;
           ctx.fillText(it.title, textX, ty);
           ty += bodySize * 1.35;
         }
-        ctx.fillStyle = palette.charcoal;
+        ctx.fillStyle = palette.inkBody;
         ctx.font = bodyFont;
         for (const line of it.text) {
           ctx.fillText(line, textX, ty);
@@ -195,10 +195,11 @@ export function numberedPart(def) {
 
 // ── callout ── fields: text (or body), title?, tone: "info"|"positive"|
 // "warning" + shared fields. An accent-edged banner with a tone icon.
+// Deeper than the prop palette so the bar + icon read against the panel.
 const TONES = {
-  info: { icon: '→', color: palette.duckEggBlue },
-  positive: { icon: '✓', color: palette.sage },
-  warning: { icon: '!', color: palette.strawGold },
+  info: { icon: '→', color: '#4a7f96' },
+  positive: { icon: '✓', color: '#557a4e' },
+  warning: { icon: '!', color: '#c07f2f' },
 };
 
 export function calloutPart(def) {
@@ -224,9 +225,19 @@ export function calloutPart(def) {
   const h = typeof def.height === 'number' && def.height > 0 ? def.height : Math.max(hPx / PX, 1.15);
 
   return makeCard(w, h, (ctx, wPx, hPx2) => {
-    // accent edge down the left side
+    // accent edge down the left side, rounded to match the face corners
+    // (inner radius = slab radius 0.18 − face inset 0.06)
+    const r = 0.12 * PX;
     ctx.fillStyle = tone.color;
-    ctx.fillRect(0, 0, barW, hPx2);
+    ctx.beginPath();
+    ctx.moveTo(barW, 0);
+    ctx.lineTo(barW, hPx2);
+    ctx.lineTo(r, hPx2);
+    ctx.arcTo(0, hPx2, 0, hPx2 - r, r);
+    ctx.lineTo(0, r);
+    ctx.arcTo(0, 0, r, 0, r);
+    ctx.closePath();
+    ctx.fill();
     // tone icon in a paper circle
     const cx = pad + barW + iconR;
     const cy = hPx2 / 2;
@@ -241,13 +252,13 @@ export function calloutPart(def) {
     ctx.textAlign = 'left';
     const total = (titleLines.length + lines.length) * bodySize * LINE;
     let y = hPx2 / 2 - total / 2 + bodySize * 0.9;
-    ctx.fillStyle = palette.deepBrown;
+    ctx.fillStyle = palette.ink;
     ctx.font = titleFontStr;
     for (const line of titleLines) {
       ctx.fillText(line, textX, y);
       y += bodySize * LINE;
     }
-    ctx.fillStyle = palette.charcoal;
+    ctx.fillStyle = palette.inkBody;
     ctx.font = bodyFontStr;
     for (const line of lines) {
       ctx.fillText(line, textX, y);
@@ -317,7 +328,7 @@ export function tablePart(def) {
   return makeCard(w, h, (ctx) => {
     let y = pad + titleSize * 0.85;
     ctx.textAlign = 'left';
-    ctx.fillStyle = palette.deepBrown;
+    ctx.fillStyle = palette.ink;
     ctx.font = titleFont;
     for (const line of titleLines) {
       ctx.fillText(line, pad, y);
@@ -335,20 +346,20 @@ export function tablePart(def) {
     };
     if (columns.length) {
       ctx.font = headFont;
-      ctx.fillStyle = palette.barkBrown;
+      ctx.fillStyle = palette.inkMuted;
       columns.forEach((col, c) => {
         ctx.textAlign = align[c];
         ctx.fillText(col, cellX(c), y + headSize * 1.1);
       });
       y += headH;
-      ctx.fillStyle = palette.deepBrown;
+      ctx.fillStyle = palette.ink;
       ctx.fillRect(pad, y - 4, innerW, 4); // heavy rule under the header
     }
     ctx.font = cellFont;
     rows.forEach((row, r) => {
       row.forEach((cell, c) => {
         ctx.textAlign = align[c] ?? 'left';
-        ctx.fillStyle = c === 0 ? palette.deepBrown : palette.charcoal;
+        ctx.fillStyle = c === 0 ? palette.ink : palette.inkBody;
         ctx.fillText(cell, cellX(c), y + rowH * 0.68);
       });
       y += rowH;

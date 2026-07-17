@@ -79,7 +79,7 @@ function makeMark(type, size, color, seed) {
 }
 
 // A crisp free-floating text plane (no card) for kicker/subtitle lines.
-function textPlane(text, { size, weight = 600, color = palette.deepBrown, maxW = 14, spacing = 0 }) {
+function textPlane(text, { size, weight = 600, color = palette.ink, maxW = 14, spacing = 0 }) {
   const ctx = document.createElement('canvas').getContext('2d');
   ctx.font = `${weight} ${size * PX}px ${FONT_STACK}`;
   if (spacing) ctx.letterSpacing = `${spacing}px`;
@@ -146,7 +146,7 @@ export function createTitle(text, { color = palette.dustyRose, kicker, subtitle 
   const subPlanes = [];
   if (kicker) {
     const plane = textPlane(String(kicker).toUpperCase(), {
-      size: 0.34, weight: 700, color: palette.barkBrown, spacing: 4,
+      size: 0.34, weight: 700, color: palette.inkMuted, spacing: 4,
     });
     plane.position.y = topY + 0.55 + plane.userData.h / 2;
     inner.add(plane);
@@ -154,7 +154,7 @@ export function createTitle(text, { color = palette.dustyRose, kicker, subtitle 
   }
   if (subtitle) {
     const plane = textPlane(String(subtitle), {
-      size: 0.42, weight: 600, color: palette.deepBrown,
+      size: 0.42, weight: 600, color: palette.ink,
     });
     plane.position.y = botY - 0.5 - plane.userData.h / 2;
     inner.add(plane);

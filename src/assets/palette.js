@@ -45,14 +45,22 @@ export const palette = {
   skyCream: '#f2eee4',
   sunGold: '#e8cf9a',
   cloudWhite: '#faf7ef',
+
+  // presentation panels — near-white card faces and high-contrast inks
+  // (the diorama props keep the muted storybook tones above)
+  panel: '#fbf8f1',
+  ink: '#2b2620',
+  inkBody: '#3f3931',
+  inkMuted: '#6d6355',
 };
 
-// Categorical colors for chart series.
+// Categorical colors for chart series — deeper than the prop palette so
+// they hold their own against the near-white panel faces.
 export const chartColors = [
-  palette.sage,
-  palette.dustyRose,
-  palette.strawGold,
-  palette.duckEggBlue,
-  palette.roseMauve,
-  palette.tanBrown,
+  '#557a4e', // deep sage green
+  '#b25a5c', // brick rose
+  '#c68f35', // amber gold
+  '#4a7f96', // slate blue
+  '#8f5f7d', // plum mauve
+  '#8a6a44', // warm brown
 ];

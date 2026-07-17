@@ -67,7 +67,7 @@ function chartCard(def, w, h, drawExtra) {
         size *= 0.94;
         ctx.font = `700 ${size}px ${FONT_STACK}`;
       }
-      ctx.fillStyle = palette.deepBrown;
+      ctx.fillStyle = palette.ink;
       ctx.textAlign = 'center';
       ctx.fillText(def.title, wPx / 2, 0.72 * PX);
       ctx.fillStyle = palette.dustyRose;
@@ -93,14 +93,14 @@ function barChart(def, data) {
   const group = chartCard(def, w, h, (ctx) => {
     ctx.textAlign = 'center';
     ctx.font = `600 ${0.3 * PX}px ${FONT_STACK}`;
-    ctx.fillStyle = palette.deepBrown;
+    ctx.fillStyle = palette.ink;
     data.forEach((d, i) => {
       const [cx, cy] = px(-chartW / 2 + slot * (i + 0.5), baseY - 0.42);
       ctx.fillText(d.label, cx, cy);
     });
     if (def.valueLabels) {
       ctx.font = `700 ${0.26 * PX}px ${FONT_STACK}`;
-      ctx.fillStyle = palette.barkBrown;
+      ctx.fillStyle = palette.inkMuted;
       data.forEach((d, i) => {
         const barH = Math.max((d.value / maxV) * chartH, 0.02);
         const [cx, cy] = px(-chartW / 2 + slot * (i + 0.5), baseY + barH + 0.28);
@@ -108,7 +108,7 @@ function barChart(def, data) {
       });
     }
     // baseline
-    ctx.fillStyle = palette.barkBrown;
+    ctx.fillStyle = palette.inkMuted;
     const [bx, by] = px(-chartW / 2 - 0.1, baseY);
     ctx.fillRect(bx, by, (chartW + 0.2) * PX, 4);
   });
@@ -182,17 +182,17 @@ function groupedBarChart(def) {
       const ey = ly0 + e.row * 0.42 * PX;
       ctx.fillStyle = e.color;
       ctx.fillRect(ex, ey - 0.2 * PX, 0.22 * PX, 0.22 * PX);
-      ctx.fillStyle = palette.deepBrown;
+      ctx.fillStyle = palette.ink;
       ctx.fillText(e.name, ex + 0.32 * PX, ey);
     });
     ctx.textAlign = 'center';
     ctx.font = `600 ${0.3 * PX}px ${FONT_STACK}`;
-    ctx.fillStyle = palette.deepBrown;
+    ctx.fillStyle = palette.ink;
     labels.forEach((label, g) => {
       const [cx, cy] = px(-chartW / 2 + slot * (g + 0.5), baseY - 0.42);
       ctx.fillText(label, cx, cy);
     });
-    ctx.fillStyle = palette.barkBrown;
+    ctx.fillStyle = palette.inkMuted;
     const [bx, by] = px(-chartW / 2 - 0.1, baseY);
     ctx.fillRect(bx, by, (chartW + 0.2) * PX, 4);
   });
@@ -269,7 +269,7 @@ function barhChart(def, data) {
   const group = chartCard(def, w, h, (ctx) => {
     ctx.textAlign = 'right';
     ctx.font = labelFont;
-    ctx.fillStyle = palette.deepBrown;
+    ctx.fillStyle = palette.ink;
     data.forEach((d, i) => {
       const [cx, cy] = px(x0 - 0.18, rowY(i) - 0.1);
       ctx.fillText(d.label, cx, cy);
@@ -277,7 +277,7 @@ function barhChart(def, data) {
     // value labels just past each bar's end
     ctx.textAlign = 'left';
     ctx.font = `600 ${0.26 * PX}px ${FONT_STACK}`;
-    ctx.fillStyle = palette.barkBrown;
+    ctx.fillStyle = palette.inkMuted;
     if (def.valueLabels !== false) {
       data.forEach((d, i) => {
         const end = Math.max(d.value, d.plan ?? 0) / maxV * spanW;
@@ -286,7 +286,7 @@ function barhChart(def, data) {
       });
     }
     // vertical baseline the bars grow from
-    ctx.fillStyle = palette.barkBrown;
+    ctx.fillStyle = palette.inkMuted;
     const [bx, topPx] = px(x0, rowY(0) + rowH / 2 - 0.06);
     const [, botPx] = px(x0, rowY(data.length - 1) - rowH / 2 + 0.06);
     ctx.fillRect(bx - 2, topPx, 4, botPx - topPx);
@@ -346,20 +346,20 @@ function lineChart(def, data) {
   const group = chartCard(def, w, h, (ctx) => {
     ctx.textAlign = 'center';
     ctx.font = `600 ${0.3 * PX}px ${FONT_STACK}`;
-    ctx.fillStyle = palette.deepBrown;
+    ctx.fillStyle = palette.ink;
     data.forEach((d, i) => {
       const [cx, cy] = px(pts[i].x, baseY - 0.42);
       ctx.fillText(d.label, cx, cy);
     });
     if (def.valueLabels) {
       ctx.font = `700 ${0.26 * PX}px ${FONT_STACK}`;
-      ctx.fillStyle = palette.barkBrown;
+      ctx.fillStyle = palette.inkMuted;
       data.forEach((d, i) => {
         const [cx, cy] = px(pts[i].x, pts[i].y + 0.42);
         ctx.fillText(d.display ?? fmt(d.value), cx, cy);
       });
     }
-    ctx.fillStyle = palette.barkBrown;
+    ctx.fillStyle = palette.inkMuted;
     const [bx, by] = px(-chartW / 2 - 0.1, baseY);
     ctx.fillRect(bx, by, (chartW + 0.2) * PX, 4);
     // faint gridlines
@@ -471,7 +471,7 @@ function pieChart(def, data) {
       const eyPx = ly0 + e.row * 0.42 * PX;
       ctx.fillStyle = e.color;
       ctx.fillRect(exPx, eyPx - 0.22 * PX, 0.24 * PX, 0.24 * PX);
-      ctx.fillStyle = palette.deepBrown;
+      ctx.fillStyle = palette.ink;
       ctx.fillText(e.text, exPx + 0.34 * PX, eyPx);
     });
     if (donut && (def.centerLabel || def.centerSub)) {
@@ -479,12 +479,12 @@ function pieChart(def, data) {
       const [ccx, ccy] = px(0, centerY);
       if (def.centerLabel) {
         ctx.font = `800 ${centerSize}px ${FONT_STACK}`;
-        ctx.fillStyle = palette.deepBrown;
+        ctx.fillStyle = palette.ink;
         ctx.fillText(String(def.centerLabel), ccx, ccy + (def.centerSub ? -0.02 * PX : 0.12 * PX));
       }
       if (def.centerSub) {
         ctx.font = `600 ${0.22 * PX}px ${FONT_STACK}`;
-        ctx.fillStyle = palette.barkBrown;
+        ctx.fillStyle = palette.inkMuted;
         ctx.fillText(String(def.centerSub), ccx, ccy + 0.3 * PX);
       }
     }

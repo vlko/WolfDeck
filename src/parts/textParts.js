@@ -53,7 +53,7 @@ export function textPart(def) {
     ctx.textAlign = center ? 'center' : 'left';
     const tx = center ? wPx / 2 : pad;
     let y = pad + titleSize * 0.85;
-    ctx.fillStyle = palette.deepBrown;
+    ctx.fillStyle = palette.ink;
     ctx.font = titleFont;
     for (const line of titleLines) {
       ctx.fillText(line, tx, y);
@@ -66,7 +66,7 @@ export function textPart(def) {
       ctx.fillRect(ux, y - titleSize * LINE + titleSize * 0.3, 1.1 * PX, 5);
       y += 0.24 * PX;
     }
-    ctx.fillStyle = palette.charcoal;
+    ctx.fillStyle = palette.inkBody;
     ctx.font = bodyFont;
     for (const line of bodyLines) {
       ctx.fillText(line, tx, y);
@@ -96,7 +96,7 @@ export function bulletsPart(def) {
 
   return makeCard(w, h, (ctx) => {
     let y = pad + titleSize * 0.85;
-    ctx.fillStyle = palette.deepBrown;
+    ctx.fillStyle = palette.ink;
     ctx.font = titleFont;
     for (const line of titleLines) {
       ctx.fillText(line, pad, y);
@@ -110,13 +110,13 @@ export function bulletsPart(def) {
     ctx.font = bodyFont;
     for (const lines of wrapped) {
       // papercraft diamond marker
-      ctx.fillStyle = palette.sage;
+      ctx.fillStyle = palette.sageDark;
       ctx.save();
       ctx.translate(pad + 0.11 * PX, y - bodySize * 0.32);
       ctx.rotate(Math.PI / 4);
       ctx.fillRect(-0.08 * PX, -0.08 * PX, 0.16 * PX, 0.16 * PX);
       ctx.restore();
-      ctx.fillStyle = palette.charcoal;
+      ctx.fillStyle = palette.inkBody;
       for (const line of lines) {
         ctx.fillText(line, pad + 0.45 * PX, y);
         y += bodySize * LINE;

@@ -47,6 +47,27 @@ export function makeCard(w, h, draw, opts = {}) {
   canvas.width = Math.round(w * PX);
   canvas.height = Math.round(h * PX);
   const ctx = canvas.getContext('2d');
+  // The face plane is unlit (MeshBasicMaterial), so an opaque near-white
+  // background keeps panels bright and high-contrast regardless of scene
+  // lighting — the lit slab still shows as a papery border around it. The
+  // fill is a rounded rect nested in the slab's die-cut corners, following
+  // the concentric-corner rule: inner radius = outer radius − padding
+  // (the face plane is inset 0.06 per side).
+  const faceFill = opts.bare ? null : (opts.face ?? opts.color ?? palette.panel);
+  const faceRadius = Math.max((opts.radius ?? 0.18) - 0.06, 0.04) * (canvas.width / (w - 0.12));
+  function fillFace() {
+    const r = Math.min(faceRadius, canvas.width / 2, canvas.height / 2);
+    ctx.fillStyle = faceFill;
+    ctx.beginPath();
+    ctx.moveTo(r, 0);
+    ctx.arcTo(canvas.width, 0, canvas.width, canvas.height, r);
+    ctx.arcTo(canvas.width, canvas.height, 0, canvas.height, r);
+    ctx.arcTo(0, canvas.height, 0, 0, r);
+    ctx.arcTo(0, 0, canvas.width, 0, r);
+    ctx.closePath();
+    ctx.fill();
+  }
+  if (faceFill) fillFace();
   draw(ctx, canvas.width, canvas.height);
 
   const tex = new THREE.CanvasTexture(canvas);
@@ -73,6 +94,7 @@ export function makeCard(w, h, draw, opts = {}) {
   // Redraw hook for parts that animate their canvas (e.g. stat count-up).
   group.userData.redraw = (drawFn = draw) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (faceFill) fillFace();
     drawFn(ctx, canvas.width, canvas.height);
     tex.needsUpdate = true;
   };
