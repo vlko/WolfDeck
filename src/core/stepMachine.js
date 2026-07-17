@@ -16,7 +16,9 @@ import { finishAllTweens } from '../engine/tween.js';
 // presses are dropped (a same-direction press still kicks in hurry), so a
 // long transition never fires a burst of reveals on arrival.
 
-export function createStepMachine({ deckView, hero }) {
+// onArrive(sceneIndex) — optional; fires when the hero has actually arrived
+// at a scene (end of the walk, or right after a teleport jump).
+export function createStepMachine({ deckView, hero, onArrive }) {
   const sceneCount = deckView.sceneCount;
   let s = 0;
   let k = 0;
@@ -38,6 +40,7 @@ export function createStepMachine({ deckView, hero }) {
       k = 0;
       deckView.onSceneChange(s, +1);
       await hero.walkTo(sceneX(s));
+      onArrive?.(s);
     } else {
       await hero.hop();
     }
@@ -52,9 +55,31 @@ export function createStepMachine({ deckView, hero }) {
       k = deckView.stepCount(s);
       deckView.onSceneChange(s, -1);
       await hero.walkTo(sceneX(s));
+      onArrive?.(s);
     } else {
       await hero.hop();
     }
+  }
+
+  // Teleport straight to a scene (URL-hash navigation). Replays the missing
+  // reveals/hides so the invariant "scenes before the current one are fully
+  // revealed, the current and later ones are not" still holds, then snaps
+  // the tweens — a jump is a teleport, not a walk-through.
+  async function doJump(target) {
+    if (target === s && k === 0) return;
+    for (let j = 0; j < sceneCount; j += 1) {
+      const want = j < target ? deckView.stepCount(j) : 0;
+      const have = j < s ? deckView.stepCount(j) : (j === s ? k : 0);
+      for (let q = have; q < want; q += 1) deckView.revealStep(j, q);
+      for (let q = have - 1; q >= want; q -= 1) deckView.hideStep(j, q);
+    }
+    finishAllTweens();
+    const dir = target > s ? +1 : -1;
+    s = target;
+    k = 0;
+    deckView.onSceneChange(s, dir);
+    hero.snapTo(sceneX(s));
+    onArrive?.(s);
   }
 
   async function drain() {
@@ -63,14 +88,25 @@ export function createStepMachine({ deckView, hero }) {
     while (queue.length) {
       // More presses waiting → snap any content animation still running.
       if (queue.length > 1) finishAllTweens();
-      const dir = queue.shift();
-      if (dir > 0) await doNext(); else await doPrev();
+      const intent = queue.shift();
+      if (typeof intent === 'object') await doJump(intent.jump);
+      else if (intent > 0) await doNext();
+      else await doPrev();
     }
     busy = false;
   }
 
   return {
     get state() { return { scene: s, step: k }; },
+    // Teleport to a scene (URL-hash navigation). Pending intents are dropped;
+    // an in-flight walk finishes first, then the jump snaps everything.
+    jumpTo(target) {
+      const i = Math.max(0, Math.min(sceneCount - 1, Math.trunc(target) || 0));
+      queue.length = 0;
+      queue.push({ jump: i });
+      finishAllTweens();
+      drain();
+    },
     push(dir) {
       if (hero.walking) {
         // A same-direction press mid-walk kicks the wolf into a run.

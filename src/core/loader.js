@@ -66,6 +66,8 @@ function normalize(raw) {
     out.scenes.push({
       id,
       title: typeof scene.title === 'string' ? scene.title : '',
+      kicker: typeof scene.kicker === 'string' ? scene.kicker : '',
+      subtitle: typeof scene.subtitle === 'string' ? scene.subtitle : '',
       props: props.map((p, j) => normalizeProp(p, `scene "${id}" prop ${j}`)),
       steps: steps.map((st, j) => normalizeStep(st, `scene "${id}" step ${j}`)).filter(Boolean),
     });
@@ -103,6 +105,9 @@ function normalizeStep(st, context) {
   // default cascade (each panel in front of the previous) by the deck.
   const pos = Array.isArray(part.position) ? part.position : null;
   return {
+    // clears: revealing this step retires the scene's previously revealed
+    // panels (they return when stepping back) — "pages" within one scene.
+    clears: step.clears === true || part.clears === true,
     part: {
       ...part,
       type: String(part.type ?? 'text'),

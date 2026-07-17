@@ -276,7 +276,93 @@ function well(options = {}) {
   return group;
 }
 
+// ── churchTower ─────────────────────────────────────────────────────────────
+// White village church with a slender clock tower and a teal spire — the
+// Námestovo skyline silhouette. options: seed, wallColor, spireColor, height
+function churchTower(options = {}) {
+  const seed = options.seed ?? 0;
+  const r = rng(seed);
+  const wallColor = options.wallColor ?? palette.paperWhite;
+  const spireColor = options.spireColor ?? palette.waterTeal;
+  const towerH = options.height ?? 4.4;
+  const group = new THREE.Group();
+
+  // Nave: long white body with a teal gabled roof.
+  const naveW = 3.2;
+  const naveD = 1.7;
+  const naveH = 1.9;
+  const nave = paperMesh(new THREE.BoxGeometry(naveW, naveH, naveD), wallColor, seed);
+  nave.position.set(0.8, naveH / 2, 0);
+  group.add(nave);
+  const naveRoof = paperMesh(prismGeometry(naveW * 1.08, 1.0, naveD * 1.18), spireColor, seed + 1, 0.06);
+  naveRoof.position.set(0.8, naveH, 0);
+  group.add(naveRoof);
+
+  // Arched nave windows (round-top slits).
+  for (let i = 0; i < 3; i += 1) {
+    const win = paperMesh(new THREE.CapsuleGeometry(0.11, 0.3, 2, 6), palette.charcoal, seed + 2 + i, 0.02);
+    win.position.set(0.15 + i * 0.85, naveH * 0.55, naveD / 2 + 0.01);
+    group.add(win);
+  }
+
+  // Tower: slender white shaft at the left end.
+  const towerW = 1.15;
+  const tower = paperMesh(new THREE.BoxGeometry(towerW, towerH, towerW), wallColor, seed + 6);
+  tower.position.set(-1.35, towerH / 2, 0);
+  group.add(tower);
+
+  // Clock face near the top: white disc, teal ring, two hands.
+  const face = new THREE.Group();
+  const dial = paperMesh(new THREE.CircleGeometry(0.3, 12), palette.cream, seed + 7, 0.02);
+  face.add(dial);
+  const ring = paperMesh(new THREE.RingGeometry(0.3, 0.37, 12), spireColor, seed + 8, 0.03);
+  ring.position.z = 0.004;
+  face.add(ring);
+  const hourHand = paperMesh(new THREE.BoxGeometry(0.045, 0.18, 0.02), palette.deepBrown, seed + 9);
+  hourHand.position.set(0, 0.06, 0.01);
+  hourHand.rotation.z = r() * Math.PI * 2;
+  face.add(hourHand);
+  const minHand = paperMesh(new THREE.BoxGeometry(0.035, 0.26, 0.02), palette.deepBrown, seed + 10);
+  minHand.position.set(0, 0.1, 0.012);
+  minHand.rotation.z = r() * Math.PI * 2;
+  face.add(minHand);
+  face.position.set(-1.35, towerH - 0.75, towerW / 2 + 0.01);
+  group.add(face);
+
+  // Belfry slit above the clock.
+  const slit = paperMesh(new THREE.CapsuleGeometry(0.09, 0.22, 2, 6), palette.charcoal, seed + 11, 0.02);
+  slit.position.set(-1.35, towerH - 0.22, towerW / 2 + 0.01);
+  group.add(slit);
+
+  // Teal spire: eaves collar + tall faceted cone + tiny orb and cross.
+  const collar = paperMesh(new THREE.BoxGeometry(towerW * 1.22, 0.16, towerW * 1.22), spireColor, seed + 12);
+  collar.position.set(-1.35, towerH + 0.08, 0);
+  group.add(collar);
+  const spireH = 1.7;
+  const spire = paperMesh(facetedCone(towerW * 0.62, spireH, 8, 0, seed + 13), spireColor, seed + 13, 0.07);
+  spire.position.set(-1.35, towerH + 0.16 + spireH / 2, 0);
+  group.add(spire);
+  const orb = paperMesh(new THREE.OctahedronGeometry(0.09, 0), palette.strawGold, seed + 14, 0.04);
+  orb.position.set(-1.35, towerH + 0.16 + spireH + 0.06, 0);
+  group.add(orb);
+  const crossV = paperMesh(new THREE.BoxGeometry(0.045, 0.34, 0.045), palette.strawGold, seed + 15);
+  crossV.position.set(-1.35, towerH + 0.16 + spireH + 0.32, 0);
+  group.add(crossV);
+  const crossH = paperMesh(new THREE.BoxGeometry(0.2, 0.045, 0.045), palette.strawGold, seed + 16);
+  crossH.position.set(-1.35, towerH + 0.16 + spireH + 0.38, 0);
+  group.add(crossH);
+
+  // Door at the tower base.
+  const door = plankDoor(0.6, 1.05, palette.plankBrown, seed + 17);
+  door.position.set(-1.35, 0, towerW / 2 + 0.01);
+  group.add(door);
+
+  group.add(blobShadow(2.2));
+  return group;
+}
+
 register('cottage', cottage);
 register('barn', barn);
 register('hut', hut);
 register('well', well);
+register('churchTower', churchTower);

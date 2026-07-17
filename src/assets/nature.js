@@ -142,6 +142,52 @@ function haystack(options = {}) {
   return group;
 }
 
+// ── mountainBackdrop ────────────────────────────────────────────────────────
+// Wide faceted ridge band for the very back of a scene — layered jagged
+// silhouettes in fading sage tones (Oravská Magura). Place on the back row
+// (or a deeper numeric layer like -9). options: seed, width, height, layers,
+// color
+function mountainBackdrop(options = {}) {
+  const seed = options.seed ?? 0;
+  const width = options.width ?? 26;
+  const height = options.height ?? 5;
+  const layers = Math.min(Math.max(options.layers ?? 3, 1), 4);
+  const base = new THREE.Color(options.color ?? palette.sage);
+  const group = new THREE.Group();
+
+  const tint = new THREE.Color();
+  for (let l = 0; l < layers; l += 1) {
+    const r = rng(seed + l * 17);
+    const k = layers === 1 ? 0 : l / (layers - 1); // 0 = farthest, 1 = nearest
+    const layerH = height * (0.55 + k * 0.45);
+    const peaks = 4 + Math.floor(width / 6) + Math.floor(r() * 2);
+
+    // Jagged ridge polygon: baseline, then alternating peaks and saddles.
+    const shape = new THREE.Shape();
+    shape.moveTo(-width / 2, 0);
+    for (let p = 0; p <= peaks; p += 1) {
+      const x = -width / 2 + (p / peaks) * width + (r() - 0.5) * (width / peaks) * 0.35;
+      const peakY = layerH * (0.55 + r() * 0.45);
+      const saddleY = layerH * (0.18 + r() * 0.2);
+      shape.lineTo(Math.max(Math.min(x, width / 2), -width / 2), p % 2 ? saddleY : peakY);
+    }
+    shape.lineTo(width / 2, 0);
+    shape.closePath();
+
+    // Farther layers are lighter, like distance haze in the reference.
+    tint.copy(base).offsetHSL(0, -0.06 * (1 - k), 0.14 * (1 - k) + (r() - 0.5) * 0.02);
+    const ridge = paperMesh(
+      new THREE.ExtrudeGeometry(shape, { depth: 0.3, bevelEnabled: false }),
+      `#${tint.getHexString()}`, seed + 40 + l, 0.05,
+    );
+    ridge.position.z = -2.2 * (layers - 1 - l);
+    group.add(ridge);
+  }
+
+  return group;
+}
+
 register('pineTree', pineTree);
 register('fence', fence);
 register('haystack', haystack);
+register('mountainBackdrop', mountainBackdrop);

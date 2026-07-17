@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "title": "prop test",
+    "seed": 7,
+    "roads": [
+      { "z": 2, "width": 2.4, "from": 55, "to": 81 },
+      { "z": 2, "width": 2.4, "from": 123, "to": 149 }
+    ]
+  },
+  "scenes": [
+    {
+      "id": "identity",
+      "title": "Vzdelávanie a šťastie",
+      "kicker": "Časť 1 · Mestský rozpočet",
+      "subtitle": "ľščťžýáíéô — diakritika v titulku",
+      "props": [
+        { "type": "mountainBackdrop", "position": [0, 0], "layer": -9, "options": { "seed": 4, "width": 30 } },
+        { "type": "churchTower", "position": [-6, 0], "layer": "back", "options": { "seed": 2 } },
+        { "type": "cottage", "position": [-1, 0], "layer": "back", "options": { "seed": 3, "variant": "timber" } },
+        { "type": "pineTree", "position": [8, 0], "layer": "back", "options": { "seed": 5 } },
+        { "type": "sheep", "position": [5, 0], "layer": 1.5, "options": { "seed": 6 } }
+      ],
+      "steps": []
+    },
+    {
+      "id": "finance",
+      "title": "Financie",
+      "kicker": "Nové assety · finance.js",
+      "subtitle": "vault (zatvorený + otvorený), coinStack, moneyBag, piggyBank, ledger",
+      "props": [
+        { "type": "vault", "position": [-7, 0], "layer": "back", "options": { "seed": 1 } },
+        { "type": "vault", "position": [-3, 0], "layer": "mid", "options": { "seed": 2, "open": true } },
+        { "type": "coinStack", "position": [-0.5, 0], "layer": 1.5, "options": { "seed": 3, "height": 0.8 } },
+        { "type": "coinStack", "position": [1, 0], "layer": 0.5, "options": { "seed": 4, "height": 0.5 } },
+        { "type": "moneyBag", "position": [2.5, 0], "layer": 1.5, "options": { "seed": 5 } },
+        { "type": "piggyBank", "position": [5, 0], "layer": 1, "options": { "seed": 6 } },
+        { "type": "ledger", "position": [7, 0], "layer": 2, "options": { "seed": 7 } }
+      ],
+      "steps": []
+    },
+    {
+      "id": "school",
+      "title": "Škola",
+      "kicker": "Nové assety · school.js",
+      "subtitle": "schoolhouse, blackboard, schoolDesk, pupil, schoolBus",
+      "props": [
+        { "type": "schoolhouse", "position": [-6, 0], "layer": "back", "options": { "seed": 1 } },
+        { "type": "blackboard", "position": [-1, 0], "layer": "mid", "options": { "seed": 2 } },
+        { "type": "schoolDesk", "position": [1.5, 0], "layer": 1, "options": { "seed": 3 } },
+        { "type": "pupil", "position": [3.5, 0], "layer": 1.5, "options": { "seed": 4, "animal": "fox" } },
+        { "type": "pupil", "position": [5, 0], "layer": 1.5, "options": { "seed": 5, "animal": "bunny" } },
+        { "type": "schoolBus", "position": [0, 0], "layer": 2, "options": { "seed": 6, "path": [-12, 12], "speed": 2.5 } }
+      ],
+      "steps": []
+    },
+    {
+      "id": "construction",
+      "title": "Výstavba",
+      "kicker": "Nové assety · construction.js",
+      "subtitle": "crane, scaffold, excavator, builder, trafficCone",
+      "props": [
+        { "type": "crane", "position": [-5, 0], "layer": "back", "options": { "seed": 1 } },
+        { "type": "scaffold", "position": [-1, 0], "layer": "mid", "options": { "seed": 2, "levels": 3 } },
+        { "type": "excavator", "position": [2, 0], "layer": 0, "options": { "seed": 3 } },
+        { "type": "builder", "position": [5, 0], "layer": 1.5, "options": { "seed": 4 } },
+        { "type": "trafficCone", "position": [6.5, 0], "layer": 2.5, "options": { "seed": 5 } },
+        { "type": "trafficCone", "position": [7.5, 0], "layer": 2, "options": { "seed": 6 } }
+      ],
+      "steps": []
+    },
+    {
+      "id": "civic",
+      "title": "Služby mesta",
+      "kicker": "Nové assety · civic.js",
+      "subtitle": "zevoPlant, garbageTruck, recyclingBin, carer, elder, footballGoal, ball, pram",
+      "props": [
+        { "type": "zevoPlant", "position": [-6, 0], "layer": "back", "options": { "seed": 1 } },
+        { "type": "recyclingBin", "position": [-1.5, 0], "layer": 1, "options": { "seed": 2 } },
+        { "type": "recyclingBin", "position": [-0.5, 0], "layer": 1, "options": { "seed": 3, "color": "#a9c0b4" } },
+        { "type": "carer", "position": [2, 0], "layer": 1.5, "options": { "seed": 4 } },
+        { "type": "elder", "position": [3.5, 0], "layer": 1.5, "options": { "seed": 5, "variant": "cane" } },
+        { "type": "ball", "position": [5.2, 0], "layer": 1.8, "options": { "seed": 7 } },
+        { "type": "footballGoal", "position": [6.5, 0], "layer": 1, "options": { "seed": 6 } },
+        { "type": "pram", "position": [8.5, 0], "layer": 1.5, "options": { "seed": 8 } },
+        { "type": "garbageTruck", "position": [0, 0], "layer": 2, "options": { "seed": 9, "path": [-12, 12], "speed": 2.2 } }
+      ],
+      "steps": []
+    }
+  ]
+}

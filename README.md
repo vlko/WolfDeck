@@ -30,7 +30,11 @@ his post on his own.
 ## Author your deck
 
 Everything lives in **`public/presentation.json`** — scenes, props, titles
-and step-by-step floating parts. No code needed.
+and step-by-step floating parts. No code needed. Any other `.json` in
+`public/` presents with `?deck=my-deck.json`; the shipped
+`public/showcase.json` demos every part type live, and
+`public/rozpocet-2025.json` is a full 12-scene real-world deck. Every scene
+has a shareable deep link (`#<scene-id>` in the URL).
 
 - [SPECIFICATION.md](SPECIFICATION.md) — full reference: JSON schema, the
   depth-row model, controls, part types, extending the asset library.
@@ -60,18 +64,35 @@ and step-by-step floating parts. No code needed.
   market stall, produce crates and baskets, flour sacks, a bread shelf, a
   swinging hanging sign, a shopping cart, a weighing scale with a wiggling
   needle, swaying potted flowers — and panda, bear and wolf shopkeepers.
+- **School, finance, construction & civic packs** — a bell-gabled
+  schoolhouse, blackboard, pupil desks, backpacked animal pupils and a
+  driving school bus; a round-door vault, coin stacks, money bag, blinking
+  piggy bank and ledger; a slewing tower crane, digging excavator, scaffold,
+  cones and a hammering builder; a garbage truck, recycling bins, a
+  waste-to-energy plant puffing paper smoke, carer and elder characters, a
+  football goal with a bouncing ball, and a parent with a pram — plus a
+  white church tower and layered mountain-ridge backdrops for town skylines.
 - **Natural parallax** — a perspective camera pitched 20° down trails the
   walking wolf; back rows drift, front rows sweep. Nothing scripted.
-- **In-place presentation parts** — text, bullets, images and 3D charts
-  (rising bars, popping pie wedges, drawn line ribbons) on papercraft cards
-  that float *inside* the scene; foreground props can genuinely pass in
-  front of them.
+- **In-place presentation parts** — text, bullets, images, KPI stat tiles
+  with counting numbers, numbered lists, tone callouts, data tables and 3D
+  charts (rising bars, horizontal plan-vs-actual bars, grouped series,
+  popping pie/donut wedges, drawn line ribbons) on papercraft cards that
+  float *inside* the scene; foreground props can genuinely pass in front of
+  them. Cards take custom widths, heights, font scales and colors; a step
+  can `clears` the previous panels to start a fresh "page" mid-scene. See
+  `public/showcase.json` (`?deck=showcase.json`) for all of it live.
 - **A rolling low-poly world** — seeded terrain ribbon with a parchment
   diorama edge, river fords the wolf splashes through, paper sun, drifting
   faceted clouds.
 - **Presenter-proof navigation** — presses queue during walks, mashing
   fast-forwards animations, forward/back is perfectly symmetric, deck ends
-  answer with a hop.
+  answer with a hop. The URL always carries the current scene (`#scene-id`)
+  as a shareable deep link, and the wolf announces each arrival with a
+  little papercraft speech bubble.
+- **Titles that speak your language** — scene titles take a kicker and
+  subtitle, render full diacritics (á č š ž …) as folded-paper accents over
+  the extruded letters, and float behind your panels, never over them.
 - **Lenient by design** — typos become magenta placeholders and console
   warnings, never a crash.
 

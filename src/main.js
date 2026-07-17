@@ -8,6 +8,8 @@ import { createHero } from './core/hero.js';
 import { createStepMachine } from './core/stepMachine.js';
 import { bindInput } from './core/input.js';
 import { bindOrbit } from './core/orbit.js';
+import { bindUrlHash } from './core/urlHash.js';
+import { createSpeechBubble } from './core/speechBubble.js';
 
 // Register the asset library (side-effect imports).
 import './assets/nature.js';
@@ -16,10 +18,17 @@ import './assets/animals.js';
 import './assets/city.js';
 import './assets/office.js';
 import './assets/shop.js';
+import './assets/school.js';
+import './assets/finance.js';
+import './assets/construction.js';
+import './assets/civic.js';
 import './assets/wolf.js';
 
 async function start() {
-  const deck = await loadPresentation();
+  // ?deck=other.json presents a different deck from public/ — handy for
+  // authoring a new presentation next to the shipped demo.
+  const deckUrl = new URLSearchParams(window.location.search).get('deck') ?? 'presentation.json';
+  const deck = await loadPresentation(deckUrl);
 
   const { renderer, scene } = createRenderer();
   const cameraRig = createCameraRig();
@@ -38,14 +47,29 @@ async function start() {
   scene.add(hero.group);
   cameraRig.snapTo(hero.x);
 
-  const stepMachine = createStepMachine({ deckView, hero });
+  // The wolf announces every scene in a papercraft bubble — on arrival,
+  // not when he sets off.
+  const bubble = createSpeechBubble(hero);
+  scene.add(bubble.group);
+
+  const stepMachine = createStepMachine({
+    deckView,
+    hero,
+    onArrive: (i) => bubble.announce(i + 1),
+  });
   bindInput(stepMachine, hero);
   bindOrbit(cameraRig, renderer.domElement);
+
+  bubble.announce(1); // greet on the opening scene
+  // #<scene-id> in the URL ↔ current scene; editing the hash jumps there.
+  // (A deep-link jump re-announces the landing scene via onArrive.)
+  bindUrlHash({ deck, deckView, stepMachine, cameraRig });
 
   const ticker = createTicker();
   ticker.add((t, dt) => {
     tickTweens(dt);
     hero.update(t, dt);
+    bubble.update(t, dt);
     cameraRig.setTarget(hero.x); // camera trails the wolf with damped easing
     cameraRig.update(t, dt);
     deckView.update(t, dt, cameraRig.x);

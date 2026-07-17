@@ -6,6 +6,15 @@ example. For the full reference (every field, every asset option), see
 [SPECIFICATION.md](SPECIFICATION.md); each asset's look and allowed
 animations live in [docs/assets/](docs/assets/).
 
+Three decks ship with the framework, and you can present any of them (or
+your own file in `public/`) with `?deck=<file>.json`:
+
+- `presentation.json` — the annotated demo this guide walks through.
+- `showcase.json` — every part type and styling option, live.
+- `rozpocet-2025.json` — a full real-world deck: 12 data-heavy scenes of a
+  municipal budget, built with pages, stat tiles, tables and every chart
+  kind. Steal from it freely.
+
 ## Think of each scene as a diorama on a shelf
 
 A scene = one low-poly papercraft world built from three ingredients:
@@ -24,8 +33,9 @@ thank-you last.
 ```
 ──────────────  cream sky · paper sun · drifting clouds (deep, slow)  ──────────────
 
-                        「 The Meadow 」          ← 3D title, y ≈ 9
-
+                        「 The Meadow 」          ← 3D title (kicker above,
+                                                    subtitle below) — parked
+                                                    BEHIND the panel zone
    back   row (z −7):    🌲 🌲  🏠  🏚   🌲       tall scenery, slow parallax
    mid    row (z −3.5):    ⛲  🪵fence  🌾        medium props
    action row (z 0):      🐺 → 🐑 🐑              the wolf's row
@@ -168,6 +178,100 @@ foreground. Three things move on their own: the hanging `shopSign` swings,
 the `scale` needle wiggles as it weighs, and the flowers sway while the
 keepers blink.
 
+## More packs: school, finance, construction, civic, landmarks
+
+Four more themed packs (plus two landmark props) cover civic storytelling —
+`rozpocet-2025.json` shows each one composed into a scene:
+
+- **School** (`#skolstvo`): the bell-gabled `schoolhouse` anchors the back,
+  a `blackboard` and `schoolDesk`s dress the yard, `pupil`s (fox / bunny /
+  bear / cat) stand off the wolf's rail at layer `1.5`, and a `schoolBus`
+  drives a `meta.roads` lane exactly like the city `bus`.
+- **Finance** (`#rezervy`): a `vault` and `coinStack`s make a treasury;
+  the `piggyBank` blinks on its own; `moneyBag` and `ledger` are small
+  set-dressing for mid rows.
+- **Construction** (`#investicie`): the `crane` is back-row scenery on the
+  officeTower scale, its jib slowly slewing; the `excavator` digs on loop;
+  `scaffold`, `trafficCone`s and a hammering `builder` fill the site.
+- **Civic** (`#technicke`, `#buducnost`): a `garbageTruck` patrols a road
+  lane, `recyclingBin`s take a per-bin `color`, the `zevoPlant` puffs paper
+  smoke on the horizon; `carer` + `elder` make a care-home beat, and
+  `footballGoal` + bouncing `ball` a sports field; a parent with a `pram`
+  strolls for demographic scenes.
+- **Landmarks**: `churchTower` gives a town its silhouette;
+  `mountainBackdrop` is a wide layered ridge band for the very back — place
+  it on a deep numeric layer (`-9`) so all scenery overlaps it.
+
+## Data-heavy slides: stat, numbered, callout, table
+
+Beyond text/bullets/image/chart, four info parts carry dense content (all
+demonstrated in `showcase.json`):
+
+```jsonc
+{ "part": { "type": "stat", "value": "16 553 897 €", "label": "Plnenie príjmov",
+            "note": "94,3 % z rozpočtu po zmenách" } },        // number counts up
+{ "part": { "type": "numbered", "items": [ { "title": "First", "text": "…" } ] } },
+{ "part": { "type": "callout", "tone": "positive", "text": "Good news…" } },
+{ "part": { "type": "table", "columns": ["Fond", "€"], "rows": [["Rezervný", "1 069 996"]] } }
+```
+
+Charts grew variants to match: `"chart": "barh"` (horizontal, value labels
+at the bar ends), plan-vs-actual (`plan` per datum → muted backing bar +
+percentage), grouped series (`labels` + `series`), and donuts
+(`donut: true`, `centerLabel`, `legendValues`). Every card takes `width`,
+`height`, `fontScale`, `align`, `cardColor`, `accentColor` and `card: false`
+— see SPECIFICATION.md §6 for the full field tables.
+
+Three stat tiles in a row make a great slide opener:
+
+```jsonc
+{ "part": { "type": "stat", "value": "7,55 M€", "label": "…", "position": [-4.8, 6], "depth": "mid" } },
+{ "part": { "type": "stat", "value": "54 %",    "label": "…", "position": [0, 6],    "depth": "mid" } },
+{ "part": { "type": "stat", "value": "98,6 %",  "label": "…", "position": [4.8, 6],  "depth": "mid" } }
+```
+
+Panels of one page that share a depth never share a *plane*: each later
+step is nudged 0.5 closer to the camera automatically, so when they overlap
+they occlude cleanly, in reveal order.
+
+## Pages within a scene: `clears`
+
+A topic scene can hold several slides' worth of content without crowding:
+mark a step with `"clears": true` and the previous panels fold away as it
+lands — a fresh "page" in the same diorama. Stepping back restores them
+exactly.
+
+```jsonc
+"steps": [
+  { "part": { "type": "stat", "value": "94,3 %", "label": "…" } },   // page 1
+  { "part": { "type": "callout", "text": "…" } },
+  { "clears": true,
+    "part": { "type": "chart", "chart": "barh", "data": [ … ] } },   // page 2
+  { "part": { "type": "callout", "tone": "warning", "text": "…" } }
+]
+```
+
+The automatic cascade restarts on each page, so page two's panels land on
+the same comfortable spots page one used. In `rozpocet-2025.json` every
+scene covers 1–4 HTML slides this way (`#programy` has four pages).
+
+## Kicker & subtitle
+
+A scene heading can be a full three-liner — small uppercase strapline,
+extruded 3D title, wrapped subtitle:
+
+```jsonc
+{ "id": "dane", "title": "Dane a príjmy",
+  "kicker": "Časť 1 · Mestský rozpočet",
+  "subtitle": "Odkiaľ prichádzajú peniaze mesta", … }
+```
+
+The kicker and subtitle greet the audience while the diorama is clean, then
+fade aside the moment the first panel reveals (and return when you step back
+to the empty scene). The title itself is parked behind the panel zone, so
+cards always pass in front of it. Diacritics work everywhere — the letters
+are extruded and the accents laid over them as folded paper.
+
 ## A minimal scene skeleton
 
 ```json
@@ -195,7 +299,11 @@ keepers blink.
   `front` pops at the viewer; behind a front-row prop = a curtain reveal.
 - **A degree or three of `tilt`** makes cards look hand-placed.
 - 1–3 steps per scene keeps a nice walking rhythm; a scene with **no** steps
-  is a pure walk-through beat.
+  is a pure walk-through beat. Data decks go denser: 4–6 steps per *page*,
+  a `clears` step between pages, 2–4 pages per scene.
+- **Long notes make tall cards.** A `stat` with a three-line note is ~2.5
+  units tall — leave that much vertical room between stacked tiles, or trim
+  with `fontScale`.
 
 ## Checklist before presenting
 
@@ -206,4 +314,7 @@ keepers blink.
    chart without data, missing image).
 3. Check every scene at your projector's aspect ratio (resize the window;
    narrow windows automatically pull the camera back).
-4. `npm run build && npm run preview` if you present from a static host.
+4. While tuning one scene, deep-link straight to it — the URL hash carries
+   the scene id (`?deck=my-deck.json#my-scene`), and editing the hash jumps
+   there with earlier scenes revealed as if presented.
+5. `npm run build && npm run preview` if you present from a static host.

@@ -1,5 +1,6 @@
 import { makeCard, makeFloatingPart } from './card.js';
 import { textPart, bulletsPart } from './textParts.js';
+import { statPart, numberedPart, calloutPart, tablePart } from './infoParts.js';
 import { imagePart } from './imagePart.js';
 import { chartPart } from './charts.js';
 import { palette } from '../assets/palette.js';
@@ -26,10 +27,14 @@ export function buildPart(def) {
     switch (def.type) {
       case 'text': content = textPart(def); break;
       case 'bullets': content = bulletsPart(def); break;
+      case 'stat': content = statPart(def); break;
+      case 'numbered': content = numberedPart(def); break;
+      case 'callout': content = calloutPart(def); break;
+      case 'table': content = tablePart(def); break;
       case 'image': content = imagePart(def); break;
       case 'chart': content = chartPart(def); break;
       default:
-        warn(`unknown part type "${def.type}" — magenta placeholder used (known: text, bullets, image, chart)`);
+        warn(`unknown part type "${def.type}" — magenta placeholder used (known: text, bullets, stat, numbered, callout, table, image, chart)`);
     }
   } catch (err) {
     warn(`part "${def.type}" failed to build:`, err);

@@ -37,9 +37,11 @@ export function makeSlab(w, h, { color = palette.paperWhite, thickness = 0.12, r
 }
 
 // Canvas-faced card. draw(ctx, wPx, hPx) paints the front face.
+// opts: color/thickness/radius/seed (slab), bare (no slab — floating canvas
+// only), accent (CSS color — papercraft strip along the top edge).
 export function makeCard(w, h, draw, opts = {}) {
   const group = new THREE.Group();
-  group.add(makeSlab(w, h, opts));
+  if (!opts.bare) group.add(makeSlab(w, h, opts));
 
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(w * PX);
@@ -50,13 +52,60 @@ export function makeCard(w, h, draw, opts = {}) {
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 4;
-  const faceGeo = plainColors(new THREE.PlaneGeometry(w - 0.12, h - 0.12));
+  const inset = opts.bare ? 0 : 0.12;
+  const faceGeo = plainColors(new THREE.PlaneGeometry(w - inset, h - inset));
   const face = new THREE.Mesh(faceGeo, new THREE.MeshBasicMaterial({
     map: tex, transparent: true,
   }));
   face.position.z = 0.005;
   group.add(face);
+
+  if (opts.accent && !opts.bare) {
+    // border-top flourish: a thin die-cut paper strip laid over the top edge
+    const strip = new THREE.Mesh(
+      facetColors(new THREE.BoxGeometry(w - 0.34, 0.16, 0.08), (opts.seed ?? 1) + 7, 0.05),
+      paperMaterial(opts.accent),
+    );
+    strip.position.set(0, h / 2 - 0.16, 0.03);
+    group.add(strip);
+  }
+
+  // Redraw hook for parts that animate their canvas (e.g. stat count-up).
+  group.userData.redraw = (drawFn = draw) => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawFn(ctx, canvas.width, canvas.height);
+    tex.needsUpdate = true;
+  };
   return group;
+}
+
+// Maps author-facing JSON fields to makeCard/makeSlab options — shared by
+// every part builder so all panels speak the same customization dialect:
+//   cardColor (slab color), card: false (no slab), accentColor (top strip)
+export function cardOptsFrom(def, extra = {}) {
+  const opts = { ...extra };
+  if (typeof def.cardColor === 'string') opts.color = def.cardColor;
+  if (def.card === false) opts.bare = true;
+  if (typeof def.accentColor === 'string') opts.accent = def.accentColor;
+  return opts;
+}
+
+// Shared grow-in driver: tween {k: 0→1}; apply(k) positions every element.
+// Attached to a part's content group; the reveal pipeline calls it after the
+// card lands (see makeFloatingPart / charts).
+export function growDriver(group, apply, duration = 0.9) {
+  const state = { k: 0 };
+  apply(0);
+  group.userData.growIn = () => tween(state, { k: 1 }, duration, ease.outCubic, () => apply(state.k)).done;
+  group.userData.growInInstant = () => { state.k = 1; apply(1); };
+  group.userData.resetGrow = () => { state.k = 0; apply(0); };
+}
+
+// Per-element stagger: element i of n gets progress 0..1 within global k.
+export function windowK(k, i, n, overlap = 0.55) {
+  const span = 1 / (n - (n - 1) * overlap || 1);
+  const start = i * span * (1 - overlap);
+  return Math.max(0, Math.min((k - start) / span, 1));
 }
 
 // Shared canvas text helpers ------------------------------------------------

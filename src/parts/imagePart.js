@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { makeSlab, wrapLines, FONT_STACK, PX } from './card.js';
+import { makeSlab, cardOptsFrom, wrapLines, FONT_STACK, PX } from './card.js';
 import { plainColors } from '../assets/materials.js';
 import { palette } from '../assets/palette.js';
 import { warn } from '../config.js';
@@ -21,7 +21,8 @@ export function imagePart(def) {
   let picH = picW * 0.72;
   const h = picH + mat * 2 + capH;
 
-  group.add(makeSlab(w, h, { color: palette.paperWhite }));
+  const cardOpts = cardOptsFrom(def, { color: palette.paperWhite });
+  if (!cardOpts.bare) group.add(makeSlab(w, h, cardOpts));
 
   const picGeo = plainColors(new THREE.PlaneGeometry(1, 1));
   const picMat = new THREE.MeshBasicMaterial({ color: 0xff00ff });

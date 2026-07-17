@@ -42,6 +42,12 @@ export const REVEAL_DURATION = 0.45;
 // unmistakable and leaves plenty of room for the 3D chart elements.
 export const PART_CASCADE = { x0: -6, dx: 2.1, y: 4.2, yAlt: 0.55, z0: -3, dz: 1.2 };
 
+// Panels of one page that resolve to the SAME depth never share a plane:
+// each later step is nudged this much closer to the camera, in reveal order.
+// 0.5 clears a card's slab (0.12) plus the tallest 3D chart relief (~0.32),
+// so an overlapping later panel always reads as cleanly "in front".
+export const PART_STACK_DZ = 0.5;
+
 export const WARN_PREFIX = '[wolfdeck]';
 
 export function warn(...args) {
