@@ -23,6 +23,7 @@ export function imagePart(def) {
 
   const cardOpts = cardOptsFrom(def, { color: palette.paperWhite });
   if (!cardOpts.bare) group.add(makeSlab(w, h, cardOpts));
+  group.userData.cardSize = { w, h };
 
   const picGeo = plainColors(new THREE.PlaneGeometry(1, 1));
   const picMat = new THREE.MeshBasicMaterial({ color: 0xff00ff });

@@ -35,6 +35,7 @@ npm run preview      # test the built bundle locally
 | ----- | ------ |
 | `Space` / `→` | Next step: reveal the next part, or walk to the next scene when the current scene is done |
 | `Backspace` / `←` | Previous step: hide the last part, or walk back to the previous scene |
+| `P` | Presentation (focus) mode: the camera flattens to a straight-on orthographic view anchored to the ground — the diorama reads as a 2D paper theatre along the bottom of the screen, everything stays visible and keeps animating. The title moves to the top and the visible panels are automatically restacked into clean centered rows in front of the scenery; on exit everything returns to its authored 3D spot |
 | Hold mouse + drag | Peek around the diorama (orbit left/right/up/down, clamped). Release and the camera glides back to exactly the default framing — presentation state never changes |
 | `W` `A` `S` `D` | Walk the wolf freely: `A` left, `D` right, `W` back (away from the viewer), `S` front (toward the viewer); combine for diagonals. Five seconds after the last movement key he trots back to his presenter post by himself. Pure showmanship — presentation state never changes |
 | URL hash | The address bar always carries the current scene (`#<scene-id>`) — a shareable deep link. Editing the hash (an id, or a 1-based number like `#4`), browser Back/Forward, or opening a link with one **jumps** straight to that scene with the reveal state replayed correctly |

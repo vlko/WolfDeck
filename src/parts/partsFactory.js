@@ -44,5 +44,9 @@ export function buildPart(def) {
 
   const part = makeFloatingPart(content, { scale: def.scale, tilt: def.tilt });
   part.position.set(def.x, def.y, def.z);
+  // Footprint in world units — the focus-mode 2D layout packs panels by it.
+  const size = content.userData.cardSize ?? { w: 4, h: 2.5 };
+  const s = def.scale ?? 1;
+  part.userData.footprint = { w: size.w * s, h: size.h * s };
   return part;
 }

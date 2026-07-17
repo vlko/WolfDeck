@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { palette } from '../assets/palette.js';
+import { CONTENT_LAYER } from '../core/focusMode.js';
 
 // Creates the WebGL renderer, root scene and lights. Returns { renderer, scene }.
 export function createRenderer() {
@@ -14,6 +15,7 @@ export function createRenderer() {
   scene.fog = new THREE.Fog(palette.skyCream, 55, 110);
 
   // Soft storybook lighting: warm key from the upper right, cool-cream ambient dome.
+  // Lights also join the content layer so focus mode's content-only pass is lit.
   const hemi = new THREE.HemisphereLight(0xfff6e8, 0x9aa78e, 1.05);
   scene.add(hemi);
 
@@ -24,6 +26,8 @@ export function createRenderer() {
   const fill = new THREE.DirectionalLight(0xdfe8ea, 0.35);
   fill.position.set(-8, 6, 4);
   scene.add(fill);
+
+  for (const light of [hemi, key, fill]) light.layers.enable(CONTENT_LAYER);
 
   return { renderer, scene };
 }

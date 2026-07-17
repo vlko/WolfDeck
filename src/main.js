@@ -8,6 +8,7 @@ import { createHero } from './core/hero.js';
 import { createStepMachine } from './core/stepMachine.js';
 import { bindInput } from './core/input.js';
 import { bindOrbit } from './core/orbit.js';
+import { createFocusMode } from './core/focusMode.js';
 import { bindUrlHash } from './core/urlHash.js';
 import { createSpeechBubble } from './core/speechBubble.js';
 
@@ -57,7 +58,8 @@ async function start() {
     hero,
     onArrive: (i) => bubble.announce(i + 1),
   });
-  bindInput(stepMachine, hero);
+  const focus = createFocusMode();
+  bindInput(stepMachine, hero, focus);
   bindOrbit(cameraRig, renderer.domElement);
 
   bubble.announce(1); // greet on the opening scene
@@ -72,12 +74,12 @@ async function start() {
     bubble.update(t, dt);
     cameraRig.setTarget(hero.x); // camera trails the wolf with damped easing
     cameraRig.update(t, dt);
-    deckView.update(t, dt, cameraRig.x);
-    renderer.render(scene, cameraRig.camera);
+    deckView.update(t, dt, cameraRig.x, focus);
+    focus.render(renderer, scene, cameraRig.camera);
   });
 
   // Console debugging handle.
-  window.wolfdeck = { deck, deckView, hero, stepMachine, cameraRig, scene };
+  window.wolfdeck = { deck, deckView, hero, stepMachine, cameraRig, scene, focus, renderer };
 }
 
 start();

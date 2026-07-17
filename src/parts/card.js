@@ -91,6 +91,8 @@ export function makeCard(w, h, draw, opts = {}) {
     group.add(strip);
   }
 
+  group.userData.cardSize = { w, h }; // for the focus-mode 2D layout
+
   // Redraw hook for parts that animate their canvas (e.g. stat count-up).
   group.userData.redraw = (drawFn = draw) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -201,6 +203,7 @@ export function makeFloatingPart(contentGroup, { scale = 1, tilt = 0 } = {}) {
     applyState();
     if (contentGroup.userData.growInInstant) contentGroup.userData.growInInstant();
   };
+  anchor.userData.isRevealed = () => revealed;
   anchor.userData.update = (t) => {
     if (revealed) floater.position.y = Math.sin(t * 0.8 + phase) * 0.07;
   };

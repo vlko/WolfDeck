@@ -1,6 +1,9 @@
 // Space / → = next, Backspace / ← = previous. Ignored while an input field
 // has focus. Every press counts — the step machine queues them.
 //
+// P toggles presentation (focus) mode: the diorama washes into a flat 2D
+// backdrop and the title + panels come to the front.
+//
 // W/A/S/D walk the wolf around freely (A left, D right, W back away from
 // the viewer, S front toward the viewer; combine for diagonals). Five
 // seconds after the last movement key he trots back to his presenter post
@@ -12,7 +15,7 @@ const MOVE_KEYS = {
   KeyS: [0, 1],
 };
 
-export function bindInput(stepMachine, hero) {
+export function bindInput(stepMachine, hero, focus) {
   const held = new Set();
 
   function pushDir() {
@@ -35,6 +38,9 @@ export function bindInput(stepMachine, hero) {
     } else if (e.code === 'Backspace' || e.code === 'ArrowLeft') {
       e.preventDefault();
       stepMachine.push(-1);
+    } else if (e.code === 'KeyP' && !e.repeat) {
+      e.preventDefault();
+      focus?.toggle();
     } else if (e.code in MOVE_KEYS && !e.repeat) {
       e.preventDefault();
       held.add(e.code);

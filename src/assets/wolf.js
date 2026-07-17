@@ -139,17 +139,20 @@ export function buildWolf(options = {}) {
   group.add(head);
 
   // ── legs ── hip-pivoted; diagonal pairs swing in anti-phase when trotting.
+  // The shin runs the full way from the hip pivot to the ground, so the paw
+  // bottoms rest exactly at y = 0 — no hovering in side-on views.
   const legs = [];
+  const hipY = bodyY + 0.1;
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
       const leg = new THREE.Group();
-      const shin = paperMesh(new THREE.BoxGeometry(0.2, legH + 0.25, 0.2), sz > 0 ? cream : gray, seed + 8, 0.05);
-      shin.position.y = -(legH + 0.25) / 2;
+      const shin = paperMesh(new THREE.BoxGeometry(0.2, hipY, 0.2), sz > 0 ? cream : gray, seed + 8, 0.05);
+      shin.position.y = -hipY / 2;
       leg.add(shin);
       const paw = paperMesh(new THREE.BoxGeometry(0.24, 0.14, 0.26), `#${grayDark.getHexString()}`, seed + 9, 0.05);
-      paw.position.set(0, -(legH + 0.25) + 0.07, 0.03);
+      paw.position.set(0, -hipY + 0.07, 0.03);
       leg.add(paw);
-      leg.position.set(sx * bodyW * 0.3, bodyY + 0.1, sz * bodyD * 0.28);
+      leg.position.set(sx * bodyW * 0.3, hipY, sz * bodyD * 0.28);
       group.add(leg);
       legs.push({ pivot: leg, diag: sx * sz, front: sz > 0 }); // diag ±1 → trot pairs
     }

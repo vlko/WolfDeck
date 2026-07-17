@@ -5,7 +5,14 @@ import { createSun } from '../environment/sky.js';
 import { createClouds } from '../environment/clouds.js';
 import { createTitle } from '../parts/title.js';
 import { buildPart } from '../parts/partsFactory.js';
+import { CONTENT_LAYER } from './focusMode.js';
 import { ACTIVE_SCENE_RADIUS, PART_CASCADE, PART_STACK_DZ } from '../config.js';
+
+// Tags an object tree as presentation CONTENT so focus mode (P) can
+// re-render it in front of the veiled diorama.
+function tagContent(obj) {
+  obj.traverse((child) => child.layers.enable(CONTENT_LAYER));
+}
 
 // Builds the whole diorama from the normalized deck and exposes the deckView
 // the step machine drives. Every scene's props AND parts are built up front —
@@ -61,6 +68,7 @@ export function buildDeck(deck, scene3) {
     // needs headroom above the letters, so that variant sits a bit lower.
     title.position.set(0, sceneDef.kicker ? 7.9 : 8.5, -6.5);
     title.scale.setScalar(1.12);
+    tagContent(title);
     group.add(title);
     updatables.push(title.userData.update);
 
@@ -87,12 +95,17 @@ export function buildDeck(deck, scene3) {
       const part = buildPart(def);
       // part y is height above the terrain at its own footprint
       part.position.y += ground.heightAt(originX + part.position.x, part.position.z);
+      tagContent(part);
       group.add(part);
       updatables.push(part.userData.update);
       return part;
     });
 
     const clears = sceneDef.steps.map((step) => step.clears);
+    // Remember every anchor's authored 3D spot — focus mode restacks
+    // panels for the flat view and puts them back on exit.
+    title.userData.pos3d = title.position.clone();
+    for (const part of parts) part.userData.pos3d = part.position.clone();
     return { group, originX, title, parts, clears, updatables };
   });
 
@@ -103,6 +116,60 @@ export function buildDeck(deck, scene3) {
   function pageStart(clears, k) {
     for (let j = k - 1; j >= 0; j -= 1) if (clears[j]) return j;
     return 0;
+  }
+
+  // ── focus-mode 2D layout ──────────────────────────────────────────────
+  // In the flat presentation view the authored 3D positions waste space and
+  // overlap, so the current scene's visible panels are restacked: title at
+  // the top, panels flowing into centered rows below it, ground kept clear.
+  let focusLayouted = false;
+
+  function layoutFocus(cameraX, frame) {
+    focusLayouted = true;
+    const i = Math.max(0, Math.min(sceneCount - 1, Math.round(cameraX / spacing)));
+    const s = scenes[i];
+
+    // Title tucked against the top edge (kicker rides just above it).
+    s.title.position.set(0, frame.top - 1.7, s.title.userData.pos3d.z);
+
+    const visible = s.parts.filter((p) => p.userData.isRevealed?.());
+    const usableW = frame.halfW * 2 - 1.6;
+    const gap = 0.45;
+    let yCursor = frame.top - 3.4; // below the title block
+
+    // Greedy row packing in reveal order, each row centered.
+    let row = [];
+    let rowW = 0;
+    const flushRow = () => {
+      if (!row.length) return;
+      const totalW = rowW + gap * (row.length - 1);
+      const rowH = Math.max(...row.map((p) => p.userData.footprint.h));
+      let x = -totalW / 2;
+      for (const p of row) {
+        const { w } = p.userData.footprint;
+        p.position.x = x + w / 2;
+        p.position.y = yCursor - rowH / 2;
+        x += w + gap;
+      }
+      yCursor -= rowH + gap;
+      row = [];
+      rowW = 0;
+    };
+    for (const p of visible) {
+      const { w } = p.userData.footprint;
+      if (row.length && rowW + gap * row.length + w > usableW) flushRow();
+      row.push(p);
+      rowW += w;
+    }
+    flushRow();
+  }
+
+  function restoreFocus() {
+    focusLayouted = false;
+    for (const s of scenes) {
+      s.title.position.copy(s.title.userData.pos3d);
+      for (const p of s.parts) p.position.copy(p.userData.pos3d);
+    }
   }
 
   return {
@@ -144,7 +211,9 @@ export function buildDeck(deck, scene3) {
       scenes.forEach((s, i) => s.title.userData.setShown(i === to));
     },
 
-    update(t, dt, cameraX) {
+    update(t, dt, cameraX, focus) {
+      if (focus?.active) layoutFocus(cameraX, focus.frame);
+      else if (focusLayouted) restoreFocus();
       clouds.userData.update(t, dt);
       for (const s of scenes) {
         if (Math.abs(s.originX - cameraX) > ACTIVE_SCENE_RADIUS) continue;

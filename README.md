@@ -20,7 +20,11 @@ npm run dev      # present at http://localhost:3000
 ```
 
 Press `Space` to advance, `Backspace` to go back — N forward, N back always
-lands where you started. A second `Space` mid-walk makes the wolf run;
+lands where you started. `P` toggles **presentation mode**: the camera
+flattens to a straight-on 2D view with the meadow along the bottom edge —
+a paper theatre — while the title moves up top and your panels restack
+into clean rows in front of the scenery. The whole world stays visible and
+keeps animating; a second `P` puts every panel back in its 3D spot. A second `Space` mid-walk makes the wolf run;
 while he walks, only your next keystroke is buffered, so a long transition
 never bursts through several reveals on arrival. Hold the mouse button and drag to peek around
 the diorama; let go and the camera glides back to its place. `W`/`A`/`S`/`D`
