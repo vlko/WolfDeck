@@ -234,26 +234,37 @@ Panels of one page that share a depth never share a *plane*: each later
 step is nudged 0.5 closer to the camera automatically, so when they overlap
 they occlude cleanly, in reveal order.
 
-## Pages within a scene: `clears`
+## Pages within a scene: batches + `clears`
 
-A topic scene can hold several slides' worth of content without crowding:
-mark a step with `"clears": true` and the previous panels fold away as it
-lands — a fresh "page" in the same diorama. Stepping back restores them
-exactly.
+A topic scene can hold several slides' worth of content without crowding.
+Two tools compose here:
+
+- **Batches** — a step with `"parts": [...]` reveals all of its panels on
+  one press (they also fold away together on the way back).
+- **`clears`** — a step marked `"clears": true` retires the previous
+  panels as it lands: a fresh "page" in the same diorama. Stepping back
+  restores them exactly.
+
+Together they give the classic rhythm — arrive (title only), then one
+press per page:
 
 ```jsonc
 "steps": [
-  { "part": { "type": "stat", "value": "94,3 %", "label": "…" } },   // page 1
-  { "part": { "type": "callout", "text": "…" } },
+  { "parts": [                                                       // page 1
+      { "type": "stat", "value": "94,3 %", "label": "…" },
+      { "type": "chart", "chart": "bar", "data": [ … ] } ] },
   { "clears": true,
-    "part": { "type": "chart", "chart": "barh", "data": [ … ] } },   // page 2
-  { "part": { "type": "callout", "tone": "warning", "text": "…" } }
+    "parts": [                                                       // page 2
+      { "type": "chart", "chart": "barh", "data": [ … ] },
+      { "type": "callout", "tone": "warning", "text": "…" } ] }
 ]
 ```
 
 The automatic cascade restarts on each page, so page two's panels land on
-the same comfortable spots page one used. In `rozpocet-2025.json` every
-scene covers 1–4 HTML slides this way (`#programy` has four pages).
+the same comfortable spots page one used. Both shipped decks present this
+way: in `rozpocet-2025.json` every scene covers 1–4 HTML slides as pages
+(`#programy` has four), and the demo deck plays each scene in two beats
+(intro batch, then the charts).
 
 ## Kicker & subtitle
 

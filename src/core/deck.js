@@ -74,39 +74,44 @@ export function buildDeck(deck, scene3) {
 
     let slot = 0; // cascade slot — restarts on a clearing step (new "page")
     let zSeen = new Map(); // same-depth stacking, also per page
-    const parts = sceneDef.steps.map((step) => {
-      // Steps without an explicit position/depth land on the cascade:
-      // each new panel in front of the older ones, fanned to the right.
+    const stepParts = sceneDef.steps.map((step) => {
+      // A step reveals its whole batch of parts on one press. Parts
+      // without an explicit position/depth land on the cascade: each new
+      // panel in front of the older ones, fanned to the right.
       if (step.clears) { slot = 0; zSeen = new Map(); }
-      const def = {
-        ...step.part,
-        x: step.part.x ?? PART_CASCADE.x0 + PART_CASCADE.dx * slot,
-        y: step.part.y ?? PART_CASCADE.y + (slot % 2 ? -PART_CASCADE.yAlt : PART_CASCADE.yAlt),
-        z: step.part.z ?? PART_CASCADE.z0 + PART_CASCADE.dz * slot,
-      };
-      slot += 1;
-      // Panels of one page sharing a depth never sit in the same plane —
-      // each later one steps a little toward the camera, in reveal order,
-      // so overlapping cards always occlude cleanly instead of bleeding.
-      const zKey = def.z.toFixed(2);
-      const stacked = zSeen.get(zKey) ?? 0;
-      zSeen.set(zKey, stacked + 1);
-      def.z += stacked * PART_STACK_DZ;
-      const part = buildPart(def);
-      // part y is height above the terrain at its own footprint
-      part.position.y += ground.heightAt(originX + part.position.x, part.position.z);
-      tagContent(part);
-      group.add(part);
-      updatables.push(part.userData.update);
-      return part;
+      return step.parts.map((partDef) => {
+        const def = {
+          ...partDef,
+          x: partDef.x ?? PART_CASCADE.x0 + PART_CASCADE.dx * slot,
+          y: partDef.y ?? PART_CASCADE.y + (slot % 2 ? -PART_CASCADE.yAlt : PART_CASCADE.yAlt),
+          z: partDef.z ?? PART_CASCADE.z0 + PART_CASCADE.dz * slot,
+        };
+        slot += 1;
+        // Panels of one page sharing a depth never sit in the same plane —
+        // each later one steps a little toward the camera, in reveal order,
+        // so overlapping cards always occlude cleanly instead of bleeding.
+        const zKey = def.z.toFixed(2);
+        const stacked = zSeen.get(zKey) ?? 0;
+        zSeen.set(zKey, stacked + 1);
+        def.z += stacked * PART_STACK_DZ;
+        const part = buildPart(def);
+        // part y is height above the terrain at its own footprint
+        part.position.y += ground.heightAt(originX + part.position.x, part.position.z);
+        tagContent(part);
+        group.add(part);
+        updatables.push(part.userData.update);
+        return part;
+      });
     });
 
     const clears = sceneDef.steps.map((step) => step.clears);
     // Remember every anchor's authored 3D spot — focus mode restacks
     // panels for the flat view and puts them back on exit.
     title.userData.pos3d = title.position.clone();
-    for (const part of parts) part.userData.pos3d = part.position.clone();
-    return { group, originX, title, parts, clears, updatables };
+    for (const batch of stepParts) {
+      for (const part of batch) part.userData.pos3d = part.position.clone();
+    }
+    return { group, originX, title, stepParts, clears, updatables };
   });
 
   if (scenes[0]) scenes[0].title.userData.setShown(true, true);
@@ -119,9 +124,11 @@ export function buildDeck(deck, scene3) {
   }
 
   // ── focus-mode 2D layout ──────────────────────────────────────────────
-  // In the flat presentation view the authored 3D positions waste space and
-  // overlap, so the current scene's visible panels are restacked: title at
-  // the top, panels flowing into centered rows below it, ground kept clear.
+  // In the flat presentation view the title moves to the top edge and the
+  // current scene's visible panels stay AT their authored positions — they
+  // are only nudged apart where they overlap (and clamped into the frame),
+  // so the 2D slide keeps the same arrangement the audience saw in 3D
+  // while every panel becomes fully visible.
   let focusLayouted = false;
 
   function layoutFocus(cameraX, frame) {
@@ -132,43 +139,83 @@ export function buildDeck(deck, scene3) {
     // Title tucked against the top edge (kicker rides just above it).
     s.title.position.set(0, frame.top - 1.7, s.title.userData.pos3d.z);
 
-    const visible = s.parts.filter((p) => p.userData.isRevealed?.());
-    const usableW = frame.halfW * 2 - 1.6;
-    const gap = 0.45;
-    let yCursor = frame.top - 3.4; // below the title block
+    const visible = s.stepParts.flat().filter((p) => p.userData.isRevealed?.());
+    if (!visible.length) return;
 
-    // Greedy row packing in reveal order, each row centered.
-    let row = [];
-    let rowW = 0;
-    const flushRow = () => {
-      if (!row.length) return;
-      const totalW = rowW + gap * (row.length - 1);
-      const rowH = Math.max(...row.map((p) => p.userData.footprint.h));
-      let x = -totalW / 2;
-      for (const p of row) {
-        const { w } = p.userData.footprint;
-        p.position.x = x + w / 2;
-        p.position.y = yCursor - rowH / 2;
-        x += w + gap;
-      }
-      yCursor -= rowH + gap;
-      row = [];
-      rowW = 0;
+    const margin = 0.35; // minimum air between panels
+    const minX = -frame.halfW + 0.7;
+    const maxX = frame.halfW - 0.7;
+    const minY = frame.bottom + 0.9; // above the ground strip
+    const maxY = frame.top - 2.8; // below the title block
+
+    const rects = visible.map((p) => ({
+      p,
+      hw: p.userData.footprint.w / 2 + margin / 2,
+      hh: p.userData.footprint.h / 2 + margin / 2,
+      x: p.userData.pos3d.x,
+      y: p.userData.pos3d.y,
+    }));
+    const clamp = (r) => {
+      r.x = Math.min(Math.max(r.x, minX + r.hw), maxX - r.hw);
+      r.y = Math.min(Math.max(r.y, minY + r.hh), maxY - r.hh);
     };
-    for (const p of visible) {
-      const { w } = p.userData.footprint;
-      if (row.length && rowW + gap * row.length + w > usableW) flushRow();
-      row.push(p);
-      rowW += w;
+    rects.forEach(clamp);
+
+    // Push-apart relaxation: overlapping pairs separate along the axis of
+    // least penetration, half-and-half, staying inside the frame. Same
+    // input every frame → same stable result. The `spill` pass instead
+    // moves DEEPLY stuck pairs sideways — a stack that ran out of vertical
+    // room (column taller than the frame) escapes along x; slivers are
+    // left alone so they don't trigger chain reactions.
+    const relax = (iters, spill) => {
+      for (let it = 0; it < iters; it += 1) {
+        let moved = false;
+        for (let a = 0; a < rects.length; a += 1) {
+          for (let b = a + 1; b < rects.length; b += 1) {
+            const A = rects[a];
+            const B = rects[b];
+            const ox = A.hw + B.hw - Math.abs(A.x - B.x);
+            const oy = A.hh + B.hh - Math.abs(A.y - B.y);
+            if (ox <= 0 || oy <= 0) continue;
+            if (spill && oy <= 0.45) continue;
+            moved = true;
+            if (!spill && ox < oy) {
+              const dir = A.x <= B.x ? 1 : -1;
+              A.x -= (dir * ox) / 2;
+              B.x += (dir * ox) / 2;
+            } else if (spill) {
+              const dir = A.x <= B.x ? 1 : -1;
+              A.x -= (dir * ox) / 2;
+              B.x += (dir * ox) / 2;
+            } else {
+              const dir = A.y <= B.y ? 1 : -1;
+              A.y -= (dir * oy) / 2;
+              B.y += (dir * oy) / 2;
+            }
+            clamp(A);
+            clamp(B);
+          }
+        }
+        if (!moved) break;
+      }
+    };
+    relax(24, false); // settle by least penetration
+    relax(8, true); // spill hard conflicts sideways
+    relax(12, false); // clean up what the spill disturbed
+
+    for (const r of rects) {
+      r.p.position.x = r.x;
+      r.p.position.y = r.y;
     }
-    flushRow();
   }
 
   function restoreFocus() {
     focusLayouted = false;
     for (const s of scenes) {
       s.title.position.copy(s.title.userData.pos3d);
-      for (const p of s.parts) p.position.copy(p.userData.pos3d);
+      for (const batch of s.stepParts) {
+        for (const p of batch) p.position.copy(p.userData.pos3d);
+      }
     }
   }
 
@@ -177,19 +224,20 @@ export function buildDeck(deck, scene3) {
     sceneCount,
 
     sceneX(i) { return scenes[i].originX; },
-    stepCount(i) { return scenes[i].parts.length; },
+    stepCount(i) { return scenes[i].stepParts.length; },
 
-    // A step marked "clears" retires the previous page of panels when it
-    // lands and brings that page back when stepped over backwards — the
-    // page window runs from the previous clearing step (or 0) up to k−1.
+    // A step reveals its whole batch of panels at once. A step marked
+    // "clears" retires the previous page of panels when it lands and
+    // brings that page back when stepped over backwards — the page window
+    // runs from the previous clearing step (or 0) up to k−1.
     revealStep(i, k) {
       const s = scenes[i];
       // The first panel takes the kicker/subtitle's sky — fade them aside.
       if (k === 0) s.title.userData.setSubShown?.(false);
-      const jobs = [s.parts[k].userData.reveal()];
+      const jobs = s.stepParts[k].map((p) => p.userData.reveal());
       if (s.clears[k]) {
         for (let j = pageStart(s.clears, k); j < k; j += 1) {
-          jobs.push(s.parts[j].userData.hide());
+          for (const p of s.stepParts[j]) jobs.push(p.userData.hide());
         }
       }
       return Promise.all(jobs);
@@ -197,10 +245,10 @@ export function buildDeck(deck, scene3) {
     hideStep(i, k) {
       const s = scenes[i];
       if (k === 0) s.title.userData.setSubShown?.(true);
-      const jobs = [s.parts[k].userData.hide()];
+      const jobs = s.stepParts[k].map((p) => p.userData.hide());
       if (s.clears[k]) {
         for (let j = pageStart(s.clears, k); j < k; j += 1) {
-          jobs.push(s.parts[j].userData.reveal());
+          for (const p of s.stepParts[j]) jobs.push(p.userData.reveal());
         }
       }
       return Promise.all(jobs);

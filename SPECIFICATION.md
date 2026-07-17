@@ -35,7 +35,7 @@ npm run preview      # test the built bundle locally
 | ----- | ------ |
 | `Space` / `→` | Next step: reveal the next part, or walk to the next scene when the current scene is done |
 | `Backspace` / `←` | Previous step: hide the last part, or walk back to the previous scene |
-| `P` | Presentation (focus) mode: the camera flattens to a straight-on orthographic view anchored to the ground — the diorama reads as a 2D paper theatre along the bottom of the screen, everything stays visible and keeps animating. The title moves to the top and the visible panels are automatically restacked into clean centered rows in front of the scenery; on exit everything returns to its authored 3D spot |
+| `P` | Presentation (focus) mode: the camera flattens to a straight-on orthographic view anchored to the ground — the diorama reads as a 2D paper theatre along the bottom of the screen, everything stays visible and keeps animating. The title moves to the top; panels keep their authored arrangement and are only nudged apart where they overlap (spilling sideways when a stack outgrows the frame), so every panel is fully visible. On exit everything returns to its exact 3D spot |
 | Hold mouse + drag | Peek around the diorama (orbit left/right/up/down, clamped). Release and the camera glides back to exactly the default framing — presentation state never changes |
 | `W` `A` `S` `D` | Walk the wolf freely: `A` left, `D` right, `W` back (away from the viewer), `S` front (toward the viewer); combine for diagonals. Five seconds after the last movement key he trots back to his presenter post by himself. Pure showmanship — presentation state never changes |
 | URL hash | The address bar always carries the current scene (`#<scene-id>`) — a shareable deep link. Editing the hash (an id, or a 1-based number like `#4`), browser Back/Forward, or opening a link with one **jumps** straight to that scene with the reveal state replayed correctly |
@@ -386,23 +386,44 @@ with drama.
 Parts from *previous* scenes stay revealed — they simply scroll off-screen,
 which is what makes going backward perfectly symmetric.
 
-### Pages within a scene: `clears`
+### Batches: several panels on one press
 
-A content-heavy scene can present in pages. Mark a step with
-`"clears": true` (next to `part`, not inside it):
+A step may carry a whole **batch** of parts — use `"parts": [...]` instead
+of a single `"part"`. Every panel of the batch lands together on one
+`Space` press (and folds away together on `Backspace`). The automatic
+cascade and same-depth stacking advance per panel, so an unpositioned
+batch fans out exactly like the same panels revealed one by one.
 
 ```jsonc
 "steps": [
-  { "part": { "type": "text", "title": "Page one" } },
-  { "part": { "type": "bullets", "items": ["…"] } },
-  { "clears": true, "part": { "type": "text", "title": "Page two" } }
+  { "parts": [
+      { "type": "stat", "value": "94,3 %", "label": "…" },
+      { "type": "stat", "value": "95,1 %", "label": "…" },
+      { "type": "chart", "chart": "bar", "data": [ … ] }
+  ] }
+]
+```
+
+### Pages within a scene: `clears`
+
+A content-heavy scene can present in pages. Mark a step with
+`"clears": true` (next to `part`/`parts`, not inside them):
+
+```jsonc
+"steps": [
+  { "parts": [ { "type": "text", "title": "Page one" },
+               { "type": "bullets", "items": ["…"] } ] },
+  { "clears": true,
+    "parts": [ { "type": "text", "title": "Page two" } ] }
 ]
 ```
 
 When the clearing step reveals, every panel of the previous page shrinks
 away; stepping back over it brings them back — forward/back stays perfectly
 symmetric. The automatic cascade restarts at each page, so page two's panels
-land on the same comfortable spots page one used.
+land on the same comfortable spots page one used. Combined with batches
+this gives the classic deck rhythm: arrive (title only) → one press per
+page — the shipped `rozpocet-2025.json` presents exactly this way.
 
 ### The 3D title
 

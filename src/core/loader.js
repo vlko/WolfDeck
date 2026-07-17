@@ -94,28 +94,37 @@ function normalizeProp(p, context) {
   };
 }
 
-function normalizeStep(st, context) {
-  const step = typeof st === 'object' && st !== null ? st : {};
-  const part = step.part ?? step.popup; // "popup" accepted for old decks
-  if (typeof part !== 'object' || part === null) {
-    warn(`${context}: step has no "part" — skipped`);
-    return null;
-  }
-  // position and depth are optional — steps without them are placed on the
+function normalizePart(part, context) {
+  // position and depth are optional — parts without them are placed on the
   // default cascade (each panel in front of the previous) by the deck.
   const pos = Array.isArray(part.position) ? part.position : null;
   return {
+    ...part,
+    type: String(part.type ?? 'text'),
+    x: pos ? Number(pos[0]) || 0 : null,
+    y: pos && pos[1] != null ? Number(pos[1]) || 0 : null,
+    z: part.depth != null ? resolveDepth(part.depth, 4, context) : null,
+    scale: typeof part.scale === 'number' ? part.scale : 1,
+    tilt: (Number(part.tilt) || 0) * (Math.PI / 180),
+  };
+}
+
+function normalizeStep(st, context) {
+  const step = typeof st === 'object' && st !== null ? st : {};
+  // A step reveals one part ("part", legacy "popup") or a whole batch
+  // ("parts") — every panel of a batch lands on the same press.
+  const raw = Array.isArray(step.parts) ? step.parts : [step.part ?? step.popup];
+  const parts = raw
+    .filter((p) => typeof p === 'object' && p !== null)
+    .map((p) => normalizePart(p, context));
+  if (!parts.length) {
+    warn(`${context}: step has no "part(s)" — skipped`);
+    return null;
+  }
+  return {
     // clears: revealing this step retires the scene's previously revealed
     // panels (they return when stepping back) — "pages" within one scene.
-    clears: step.clears === true || part.clears === true,
-    part: {
-      ...part,
-      type: String(part.type ?? 'text'),
-      x: pos ? Number(pos[0]) || 0 : null,
-      y: pos && pos[1] != null ? Number(pos[1]) || 0 : null,
-      z: part.depth != null ? resolveDepth(part.depth, 4, context) : null,
-      scale: typeof part.scale === 'number' ? part.scale : 1,
-      tilt: (Number(part.tilt) || 0) * (Math.PI / 180),
-    },
+    clears: step.clears === true || raw.some((p) => p?.clears === true),
+    parts,
   };
 }

@@ -209,101 +209,113 @@
       ],
       "steps": [
         {
-          "part": {
-            "type": "text",
-            "title": "Hello!",
-            "body": "A presentation that lives\ninside a papercraft diorama.",
-            "tilt": -2
-          }
+          "parts": [
+            {
+              "type": "text",
+              "title": "Hello!",
+              "body": "A presentation that lives\ninside a papercraft diorama.",
+              "tilt": -2
+            },
+            {
+              "type": "bullets",
+              "title": "How it works",
+              "items": [
+                "Everything is one JSON file",
+                "Space reveals the next idea",
+                "Backspace rewinds it exactly"
+              ],
+              "tilt": 1.5
+            },
+            {
+              "type": "image",
+              "src": "images/demo.png",
+              "caption": "Images float in the scene too",
+              "width": 4.4
+            }
+          ]
         },
         {
-          "part": {
-            "type": "bullets",
-            "title": "How it works",
-            "items": [
-              "Everything is one JSON file",
-              "Space reveals the next idea",
-              "Backspace rewinds it exactly"
-            ],
-            "tilt": 1.5
-          }
-        },
-        {
-          "part": {
-            "type": "image",
-            "src": "images/demo.png",
-            "caption": "Images float in the scene too",
-            "width": 4.4
-          }
-        },
-        {
-          "part": {
-            "type": "chart",
-            "chart": "bar",
-            "title": "Sheep counted",
-            "data": [
-              {
-                "label": "Mon",
-                "value": 12
-              },
-              {
-                "label": "Tue",
-                "value": 19
-              },
-              {
-                "label": "Wed",
-                "value": 31
-              }
-            ],
-            "tilt": 2
-          }
-        },
-        {
-          "part": {
-            "type": "chart",
-            "chart": "pie",
-            "title": "Flock mood",
-            "data": [
-              {
-                "label": "Cozy",
-                "value": 70
-              },
-              {
-                "label": "Curious",
-                "value": 20
-              },
-              {
-                "label": "Baa",
-                "value": 10
-              }
-            ],
-            "tilt": -3
-          }
-        },
-        {
-          "part": {
-            "type": "chart",
-            "chart": "line",
-            "title": "Grass, over time",
-            "data": [
-              {
-                "label": "Q1",
-                "value": 5
-              },
-              {
-                "label": "Q2",
-                "value": 9
-              },
-              {
-                "label": "Q3",
-                "value": 7
-              },
-              {
-                "label": "Q4",
-                "value": 12
-              }
-            ]
-          }
+          "clears": true,
+          "parts": [
+            {
+              "type": "chart",
+              "chart": "bar",
+              "title": "Sheep counted",
+              "data": [
+                {
+                  "label": "Mon",
+                  "value": 12
+                },
+                {
+                  "label": "Tue",
+                  "value": 19
+                },
+                {
+                  "label": "Wed",
+                  "value": 31
+                }
+              ],
+              "tilt": 2,
+              "position": [
+                -6.3,
+                4.8
+              ],
+              "depth": "mid"
+            },
+            {
+              "type": "chart",
+              "chart": "pie",
+              "title": "Flock mood",
+              "data": [
+                {
+                  "label": "Cozy",
+                  "value": 70
+                },
+                {
+                  "label": "Curious",
+                  "value": 20
+                },
+                {
+                  "label": "Baa",
+                  "value": 10
+                }
+              ],
+              "tilt": -3,
+              "position": [
+                0,
+                4.8
+              ],
+              "depth": "mid"
+            },
+            {
+              "type": "chart",
+              "chart": "line",
+              "title": "Grass, over time",
+              "data": [
+                {
+                  "label": "Q1",
+                  "value": 5
+                },
+                {
+                  "label": "Q2",
+                  "value": 9
+                },
+                {
+                  "label": "Q3",
+                  "value": 7
+                },
+                {
+                  "label": "Q4",
+                  "value": 12
+                }
+              ],
+              "position": [
+                6.3,
+                4.8
+              ],
+              "depth": "mid"
+            }
+          ]
         }
       ]
     },
@@ -556,69 +568,80 @@
       ],
       "steps": [
         {
-          "part": {
-            "type": "text",
-            "title": "Welcome downtown",
-            "body": "Same paper, taller stories.\nThe wolf moved to the city.",
-            "tilt": -2
-          }
+          "parts": [
+            {
+              "type": "text",
+              "title": "Welcome downtown",
+              "body": "Same paper, taller stories.\nThe wolf moved to the city.",
+              "tilt": -2
+            },
+            {
+              "type": "bullets",
+              "title": "Alive by default",
+              "items": [
+                "Tower windows flicker on and off",
+                "Cars and the bus patrol the road",
+                "The traffic light runs its cycle",
+                "Streetlamps breathe warm light"
+              ],
+              "tilt": 1.5
+            }
+          ]
         },
         {
-          "part": {
-            "type": "bullets",
-            "title": "Alive by default",
-            "items": [
-              "Tower windows flicker on and off",
-              "Cars and the bus patrol the road",
-              "The traffic light runs its cycle",
-              "Streetlamps breathe warm light"
-            ],
-            "tilt": 1.5
-          }
-        },
-        {
-          "part": {
-            "type": "chart",
-            "chart": "bar",
-            "title": "Morning traffic",
-            "data": [
-              {
-                "label": "Paws",
-                "value": 28
-              },
-              {
-                "label": "Cars",
-                "value": 14
-              },
-              {
-                "label": "Buses",
-                "value": 6
-              }
-            ],
-            "tilt": 2
-          }
-        },
-        {
-          "part": {
-            "type": "chart",
-            "chart": "pie",
-            "title": "Who rides the bus",
-            "data": [
-              {
-                "label": "Foxes",
-                "value": 55
-              },
-              {
-                "label": "Sheep",
-                "value": 30
-              },
-              {
-                "label": "Wolves",
-                "value": 15
-              }
-            ],
-            "tilt": -2.5
-          }
+          "clears": true,
+          "parts": [
+            {
+              "type": "chart",
+              "chart": "bar",
+              "title": "Morning traffic",
+              "data": [
+                {
+                  "label": "Paws",
+                  "value": 28
+                },
+                {
+                  "label": "Cars",
+                  "value": 14
+                },
+                {
+                  "label": "Buses",
+                  "value": 6
+                }
+              ],
+              "tilt": 2,
+              "position": [
+                -4.2,
+                4.8
+              ],
+              "depth": "mid"
+            },
+            {
+              "type": "chart",
+              "chart": "pie",
+              "title": "Who rides the bus",
+              "data": [
+                {
+                  "label": "Foxes",
+                  "value": 55
+                },
+                {
+                  "label": "Sheep",
+                  "value": 30
+                },
+                {
+                  "label": "Wolves",
+                  "value": 15
+                }
+              ],
+              "tilt": -2.5,
+              "position": [
+                3.8,
+                4.8
+              ],
+              "depth": "mid"
+            }
+          ]
         }
       ]
     },
@@ -856,47 +879,55 @@
       ],
       "steps": [
         {
-          "part": {
-            "type": "text",
-            "title": "The Office",
-            "body": "Where the flock plans its quarter.\nCoffee is mandatory.",
-            "tilt": -2
-          }
+          "parts": [
+            {
+              "type": "text",
+              "title": "The Office",
+              "body": "Where the flock plans its quarter.\nCoffee is mandatory.",
+              "tilt": -2
+            },
+            {
+              "type": "bullets",
+              "title": "Office pack, alive",
+              "items": [
+                "The monitor flickers while someone works",
+                "The chair swivels, the mug steams",
+                "Colleagues blink and look around",
+                "Lamp glows warm over the table"
+              ],
+              "tilt": 1.5
+            }
+          ]
         },
         {
-          "part": {
-            "type": "bullets",
-            "title": "Office pack, alive",
-            "items": [
-              "The monitor flickers while someone works",
-              "The chair swivels, the mug steams",
-              "Colleagues blink and look around",
-              "Lamp glows warm over the table"
-            ],
-            "tilt": 1.5
-          }
-        },
-        {
-          "part": {
-            "type": "chart",
-            "chart": "pie",
-            "title": "Where the day goes",
-            "data": [
-              {
-                "label": "Meetings",
-                "value": 45
-              },
-              {
-                "label": "Coffee",
-                "value": 20
-              },
-              {
-                "label": "Actual work",
-                "value": 35
-              }
-            ],
-            "tilt": -2.5
-          }
+          "clears": true,
+          "parts": [
+            {
+              "type": "chart",
+              "chart": "pie",
+              "title": "Where the day goes",
+              "data": [
+                {
+                  "label": "Meetings",
+                  "value": 45
+                },
+                {
+                  "label": "Coffee",
+                  "value": 20
+                },
+                {
+                  "label": "Actual work",
+                  "value": 35
+                }
+              ],
+              "tilt": -2.5,
+              "position": [
+                0,
+                4.8
+              ],
+              "depth": "mid"
+            }
+          ]
         }
       ]
     },
@@ -1149,47 +1180,55 @@
       ],
       "steps": [
         {
-          "part": {
-            "type": "text",
-            "title": "The Market",
-            "body": "Fresh from the meadow,\nweighed with love.",
-            "tilt": -2
-          }
+          "parts": [
+            {
+              "type": "text",
+              "title": "The Market",
+              "body": "Fresh from the meadow,\nweighed with love.",
+              "tilt": -2
+            },
+            {
+              "type": "bullets",
+              "title": "Shop pack, alive",
+              "items": [
+                "The hanging sign swings in the breeze",
+                "The scale needle wiggles as it weighs",
+                "Flowers sway, shopkeepers blink",
+                "Pandas run the till"
+              ],
+              "tilt": 1.5
+            }
+          ]
         },
         {
-          "part": {
-            "type": "bullets",
-            "title": "Shop pack, alive",
-            "items": [
-              "The hanging sign swings in the breeze",
-              "The scale needle wiggles as it weighs",
-              "Flowers sway, shopkeepers blink",
-              "Pandas run the till"
-            ],
-            "tilt": 1.5
-          }
-        },
-        {
-          "part": {
-            "type": "chart",
-            "chart": "bar",
-            "title": "Best sellers",
-            "data": [
-              {
-                "label": "Bread",
-                "value": 34
-              },
-              {
-                "label": "Apples",
-                "value": 22
-              },
-              {
-                "label": "Flowers",
-                "value": 12
-              }
-            ],
-            "tilt": 2
-          }
+          "clears": true,
+          "parts": [
+            {
+              "type": "chart",
+              "chart": "bar",
+              "title": "Best sellers",
+              "data": [
+                {
+                  "label": "Bread",
+                  "value": 34
+                },
+                {
+                  "label": "Apples",
+                  "value": 22
+                },
+                {
+                  "label": "Flowers",
+                  "value": 12
+                }
+              ],
+              "tilt": 2,
+              "position": [
+                0,
+                4.8
+              ],
+              "depth": "mid"
+            }
+          ]
         }
       ]
     },
