@@ -141,3 +141,7 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Working copy of the presenter photo dropped at the repo root — the deck
+# uses public/images/vlko.jpg, which IS committed.
+/vlko.jpg
