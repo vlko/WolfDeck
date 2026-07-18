@@ -11,6 +11,7 @@ import { bindOrbit } from './core/orbit.js';
 import { createFocusMode } from './core/focusMode.js';
 import { bindUrlHash } from './core/urlHash.js';
 import { createSpeechBubble } from './core/speechBubble.js';
+import { createSceneMenu } from './core/sceneMenu.js';
 
 // Register the asset library (side-effect imports).
 import './assets/nature.js';
@@ -53,19 +54,22 @@ async function start() {
   const bubble = createSpeechBubble(hero);
   scene.add(bubble.group);
 
+  let notifyState = () => {}; // set once the URL-hash sync exists (below)
   const stepMachine = createStepMachine({
     deckView,
     hero,
     onArrive: (i) => bubble.announce(i + 1),
+    onStateChange: (s, k) => notifyState(s, k),
   });
   const focus = createFocusMode();
-  bindInput(stepMachine, hero, focus);
+  const sceneMenu = createSceneMenu({ deckView, stepMachine });
+  bindInput(stepMachine, hero, focus, sceneMenu);
   bindOrbit(cameraRig, renderer.domElement);
 
   bubble.announce(1); // greet on the opening scene
-  // #<scene-id> in the URL ↔ current scene; editing the hash jumps there.
-  // (A deep-link jump re-announces the landing scene via onArrive.)
-  bindUrlHash({ deck, deckView, stepMachine, cameraRig });
+  // #<slide-id> in the URL ↔ current slide; editing the hash jumps there.
+  const urlHash = bindUrlHash({ deck, deckView, stepMachine, cameraRig });
+  notifyState = urlHash.writeHashForState; // hash follows every slide change
 
   const ticker = createTicker();
   ticker.add((t, dt) => {
@@ -79,7 +83,7 @@ async function start() {
   });
 
   // Console debugging handle.
-  window.wolfdeck = { deck, deckView, hero, stepMachine, cameraRig, scene, focus, renderer };
+  window.wolfdeck = { deck, deckView, hero, stepMachine, cameraRig, scene, focus, sceneMenu, renderer };
 }
 
 start();

@@ -34,7 +34,6 @@
   "scenes": [
     {
       "id": "uvod",
-      "title": "Mestský rozpočet Námestovo 2025",
       "kicker": "Časť 1 · Mestský rozpočet Námestovo 2025",
       "props": [
         {
@@ -170,91 +169,108 @@
           "scale": 0.85
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "cover",
+          "title": "Mestský rozpočet Námestovo 2025",
+          "subtitle": "Ako mesto spravuje svoje financie – schválený rozpočet, päť zmien počas roka a skutočné plnenie k 31. 12. 2025.",
+          "groups": []
+        },
+        {
+          "id": "vlko",
+          "title": "Marián Vlčák — „vlko\"",
+          "subtitle": "Prečo vám o rozpočte rozpráva chlapík v tričku a nie úradník? Lebo dáta ma bavia a toto je moje mesto.",
+          "kicker": "O prednášajúcom",
+          "groups": [
             {
-              "type": "image",
-              "src": "images/vlko.jpg",
-              "caption": "Marián „vlko\" Vlčák",
-              "width": 4.8,
-              "position": [
-                -4.2,
-                4.9
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "bullets",
-              "title": "O prednášajúcom",
-              "items": [
-                "prisťahovalý Námestovčan — mesto som si nevybral rodom, ale rozhodnutím",
-                "„skoro\" spoluzakladateľ FinStat s.r.o. — dátový portál o firmách, ktorý som po večeroch nakódil",
-                "amatérsky bloger a podcaster — blog.vyvojari.dev, podcast Link a „Vlkov mesačník\"",
-                "otec 3 detí a manžel jednej super ženy — moja najdôležitejšia „rozpočtová položka\""
-              ],
-              "width": 6.4,
-              "fontScale": 0.82,
-              "position": [
-                3.5,
-                4.9
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "image",
+                  "src": "images/vlko.jpg",
+                  "caption": "Marián „vlko\" Vlčák",
+                  "width": 4.8,
+                  "position": [
+                    -4.2,
+                    4.9
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "bullets",
+                  "title": "O prednášajúcom",
+                  "items": [
+                    "prisťahovalý Námestovčan — mesto som si nevybral rodom, ale rozhodnutím",
+                    "„skoro\" spoluzakladateľ FinStat s.r.o. — dátový portál o firmách, ktorý som po večeroch nakódil",
+                    "amatérsky bloger a podcaster — blog.vyvojari.dev, podcast Link a „Vlkov mesačník\"",
+                    "otec 3 detí a manžel jednej super ženy — moja najdôležitejšia „rozpočtová položka\""
+                  ],
+                  "width": 6.4,
+                  "fontScale": 0.82,
+                  "position": [
+                    3.5,
+                    4.9
+                  ],
+                  "depth": "mid"
+                }
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "o-namestove",
+          "title": "O Námestove a rozpočte",
+          "groups": [
             {
-              "type": "stat",
-              "value": "≈ 7 244",
-              "label": "Obyvateľov k 31. 12. 2025",
-              "note": "Pokles o 58: 85 narodených, 58 zomrelých, 162 odhlásených, 78 prihlásených.",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -4.9,
-                5.9
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "bullets",
-              "title": "Čo je mestský rozpočet?",
-              "items": [
-                "Ročný finančný plán mesta schvaľovaný zastupiteľstvom (rozpočet 2025 schválený 9. 12. 2024).",
-                "Zoznam príjmov – odkiaľ pochádzajú peniaze.",
-                "Zoznam výdavkov – na čo sa peniaze míňajú."
-              ],
-              "width": 6.5,
-              "fontScale": 0.82,
-              "position": [
-                3.3,
-                5.5
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Rozpočet nie je nemenný: v roku 2025 ho zastupiteľstvo a primátor upravili piatimi rozpočtovými opatreniami (28. 4., 30. 6., 22. 9., 18. 11. a 29. 12. 2025).",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.3
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "≈ 7 244",
+                  "label": "Obyvateľov k 31. 12. 2025",
+                  "note": "Pokles o 58: 85 narodených, 58 zomrelých, 162 odhlásených, 78 prihlásených.",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -4.9,
+                    5.9
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Čo je mestský rozpočet?",
+                  "items": [
+                    "Ročný finančný plán mesta schvaľovaný zastupiteľstvom (rozpočet 2025 schválený 9. 12. 2024).",
+                    "Zoznam príjmov – odkiaľ pochádzajú peniaze.",
+                    "Zoznam výdavkov – na čo sa peniaze míňajú."
+                  ],
+                  "width": 6.5,
+                  "fontScale": 0.82,
+                  "position": [
+                    3.3,
+                    5.5
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Rozpočet nie je nemenný: v roku 2025 ho zastupiteľstvo a primátor upravili piatimi rozpočtovými opatreniami (28. 4., 30. 6., 22. 9., 18. 11. a 29. 12. 2025).",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Ako mesto spravuje svoje financie – schválený rozpočet, päť zmien a skutočné plnenie"
+      ]
     },
     {
       "id": "prehlad",
-      "title": "Prehľad rozpočtu 2025",
       "kicker": "Časť 1 · Mestský rozpočet Námestovo 2025",
       "props": [
         {
@@ -356,170 +372,179 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "prehlad-rozpoctu",
+          "title": "Prehľad rozpočtu 2025: plán vs. skutočnosť",
+          "subtitle": "Rozpočet bol schválený ako vyrovnaný. Päť zmien počas roka ho zdvihlo o 3,1 milióna € – najmä vďaka dotácii z Environmentálneho fondu.",
+          "groups": [
             {
-              "type": "chart",
-              "chart": "bar",
-              "title": "Plán vs. skutočnosť",
-              "labels": [
-                "Príjmy",
-                "Výdavky"
-              ],
-              "series": [
+              "parts": [
                 {
-                  "name": "Schválený",
-                  "values": [
-                    14438006,
-                    14438006
-                  ]
+                  "type": "chart",
+                  "chart": "bar",
+                  "title": "Plán vs. skutočnosť",
+                  "labels": [
+                    "Príjmy",
+                    "Výdavky"
+                  ],
+                  "series": [
+                    {
+                      "name": "Schválený",
+                      "values": [
+                        14438006,
+                        14438006
+                      ]
+                    },
+                    {
+                      "name": "Po zmenách",
+                      "values": [
+                        17560400,
+                        14796405
+                      ]
+                    },
+                    {
+                      "name": "Skutočnosť",
+                      "values": [
+                        16553897,
+                        14074624
+                      ]
+                    }
+                  ],
+                  "width": 7.2,
+                  "position": [
+                    -3.9,
+                    5.0
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "name": "Po zmenách",
-                  "values": [
-                    17560400,
-                    14796405
-                  ]
+                  "type": "stat",
+                  "value": "94,3 %",
+                  "label": "Plnenie príjmov",
+                  "note": "16 553 897 € zo 17 560 400 €",
+                  "width": 3.8,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.4,
+                    7.0
+                  ],
+                  "depth": "front"
                 },
                 {
-                  "name": "Skutočnosť",
-                  "values": [
-                    16553897,
-                    14074624
-                  ]
+                  "type": "stat",
+                  "value": "95,1 %",
+                  "label": "Plnenie výdavkov",
+                  "note": "14 074 624 € zo 14 796 405 €",
+                  "width": 3.8,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.4,
+                    4.4
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "stat",
+                  "value": "+2 479 272 €",
+                  "label": "Výsledok hospodárenia",
+                  "note": "Vrátane finančných operácií; k štruktúre sa vrátime v závere.",
+                  "width": 3.8,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.4,
+                    1.9
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 7.2,
-              "position": [
-                -3.9,
-                5.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "94,3 %",
-              "label": "Plnenie príjmov",
-              "note": "16 553 897 € zo 17 560 400 €",
-              "width": 3.8,
-              "fontScale": 0.9,
-              "position": [
-                5.4,
-                7.0
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "stat",
-              "value": "95,1 %",
-              "label": "Plnenie výdavkov",
-              "note": "14 074 624 € zo 14 796 405 €",
-              "width": 3.8,
-              "fontScale": 0.9,
-              "position": [
-                5.4,
-                4.4
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "stat",
-              "value": "+2 479 272 €",
-              "label": "Výsledok hospodárenia",
-              "note": "Vrátane finančných operácií; k štruktúre sa vrátime v závere.",
-              "width": 3.8,
-              "fontScale": 0.9,
-              "position": [
-                5.4,
-                1.9
-              ],
-              "depth": "front"
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "odkial-peniaze",
+          "title": "Odkiaľ mesto získava peniaze?",
+          "groups": [
             {
-              "type": "stat",
-              "value": "12 752 066 €",
-              "label": "Bežné príjmy",
-              "note": "Plnenie 100,2 %. Dane, poplatky a bežné transfery zo štátu.",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "12 752 066 €",
+                  "label": "Bežné príjmy",
+                  "note": "Plnenie 100,2 %. Dane, poplatky a bežné transfery zo štátu.",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "2 555 677 €",
+                  "label": "Kapitálové príjmy",
+                  "note": "Plnenie 100,3 %. Predaj pozemkov + kapitálové dotácie 2 517 426 €.",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "1 246 154 €",
+                  "label": "Finančné operácie",
+                  "note": "Plnenie len 54,6 %. Prevod z rezervného fondu, zábezpeky.",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                }
+              ]
             },
             {
-              "type": "stat",
-              "value": "2 555 677 €",
-              "label": "Kapitálové príjmy",
-              "note": "Plnenie 100,3 %. Predaj pozemkov + kapitálové dotácie 2 517 426 €.",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "1 246 154 €",
-              "label": "Finančné operácie",
-              "note": "Plnenie len 54,6 %. Prevod z rezervného fondu, zábezpeky.",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Čo sú finančné operácie",
+                  "items": [
+                    "Nie sú skutočným príjmom – je to presun vlastných úspor (rezervný fond) alebo návratné zdroje.",
+                    "Plán počítal s čerpaním 1 820 000 € z rezervného fondu, reálne stačilo 790 000 €."
+                  ],
+                  "width": 7.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    -0.8,
+                    5.1
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "positive",
+                  "text": "Nízke plnenie finančných operácií je tu dobrá správa: mesto nemuselo siahnuť hlboko do rezerv, lebo investície pokryla mimoriadna dotácia z Environmentálneho fondu.",
+                  "width": 8.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "bullets",
-              "title": "Čo sú finančné operácie",
-              "items": [
-                "Nie sú skutočným príjmom – je to presun vlastných úspor (rezervný fond) alebo návratné zdroje.",
-                "Plán počítal s čerpaním 1 820 000 € z rezervného fondu, reálne stačilo 790 000 €."
-              ],
-              "width": 7.8,
-              "fontScale": 0.82,
-              "position": [
-                -0.8,
-                5.1
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "positive",
-              "text": "Nízke plnenie finančných operácií je tu dobrá správa: mesto nemuselo siahnuť hlboko do rezerv, lebo investície pokryla mimoriadna dotácia z Environmentálneho fondu.",
-              "width": 8.8,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.3
-              ],
-              "depth": "front"
-            }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Vyrovnaný plán, päť zmien, +3,1 mil. € – najmä dotácia z Environmentálneho fondu"
+      ]
     },
     {
       "id": "dane",
-      "title": "Dane a príjmy",
       "kicker": "Časť 1 · Mestský rozpočet Námestovo 2025",
       "props": [
         {
@@ -628,129 +653,138 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "dane",
+          "title": "Dane: hlavný zdroj financovania",
+          "groups": [
             {
-              "type": "numbered",
-              "title": "Dane: hlavný zdroj financovania",
-              "items": [
+              "parts": [
                 {
-                  "title": "Zdieľané dane (od štátu)",
-                  "text": "5 444 594 € – 84 % daňových príjmov, 42,7 % bežných príjmov mesta. Štát prerozdeľuje podiel dane z príjmov FO. Plnenie 99,8 %."
+                  "type": "numbered",
+                  "title": "Dane: hlavný zdroj financovania",
+                  "items": [
+                    {
+                      "title": "Zdieľané dane (od štátu)",
+                      "text": "5 444 594 € – 84 % daňových príjmov, 42,7 % bežných príjmov mesta. Štát prerozdeľuje podiel dane z príjmov FO. Plnenie 99,8 %."
+                    },
+                    {
+                      "title": "Miestne dane (vyberané mestom)",
+                      "text": "Daň z nehnuteľností: 598 657 € (sadzby sa nemenili 17 rokov). Daň za psa 3 858 €, verejné priestranstvo 56 645 €, ubytovanie 7 092 €."
+                    },
+                    {
+                      "title": "Miestne poplatky",
+                      "text": "Poplatok za komunálny odpad: 364 024 € (plnenie 100,6 %). Správne a administratívne poplatky: 231 854 €."
+                    }
+                  ],
+                  "width": 8.2,
+                  "fontScale": 0.78,
+                  "position": [
+                    -1.3,
+                    5.2
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "title": "Miestne dane (vyberané mestom)",
-                  "text": "Daň z nehnuteľností: 598 657 € (sadzby sa nemenili 17 rokov). Daň za psa 3 858 €, verejné priestranstvo 56 645 €, ubytovanie 7 092 €."
-                },
-                {
-                  "title": "Miestne poplatky",
-                  "text": "Poplatok za komunálny odpad: 364 024 € (plnenie 100,6 %). Správne a administratívne poplatky: 231 854 €."
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Miestne dane a poplatky mesto reguluje všeobecne záväznými nariadeniami (VZN). Viac pracujúcich ľudí a podnikov v meste = viac príjmov pre mesto.",
+                  "width": 8.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.25
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 8.2,
-              "fontScale": 0.78,
-              "position": [
-                -1.3,
-                5.2
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Miestne dane a poplatky mesto reguluje všeobecne záväznými nariadeniami (VZN). Viac pracujúcich ľudí a podnikov v meste = viac príjmov pre mesto.",
-              "width": 8.8,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.25
-              ],
-              "depth": "front"
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "struktura-prijmov",
+          "title": "Štruktúra príjmov: plán vs. skutočnosť",
+          "groups": [
             {
-              "type": "chart",
-              "chart": "pie",
-              "donut": true,
-              "centerLabel": "17,56 M€",
-              "centerSub": "plán",
-              "legendValues": true,
-              "title": "Rozpočet po zmenách",
-              "data": [
+              "parts": [
                 {
-                  "label": "Bežné príjmy",
-                  "value": 12728706
+                  "type": "chart",
+                  "chart": "pie",
+                  "donut": true,
+                  "centerLabel": "17,56 M€",
+                  "centerSub": "plán",
+                  "legendValues": true,
+                  "title": "Rozpočet po zmenách",
+                  "data": [
+                    {
+                      "label": "Bežné príjmy",
+                      "value": 12728706
+                    },
+                    {
+                      "label": "Kapitálové",
+                      "value": 2547140
+                    },
+                    {
+                      "label": "Finančné op.",
+                      "value": 2284554
+                    }
+                  ],
+                  "width": 5.6,
+                  "position": [
+                    -4.3,
+                    5.5
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "label": "Kapitálové",
-                  "value": 2547140
+                  "type": "chart",
+                  "chart": "pie",
+                  "donut": true,
+                  "centerLabel": "16,55 M€",
+                  "centerSub": "skutočnosť",
+                  "legendValues": true,
+                  "title": "Skutočnosť k 31. 12. 2025",
+                  "data": [
+                    {
+                      "label": "Bežné príjmy",
+                      "value": 12752066
+                    },
+                    {
+                      "label": "Kapitálové",
+                      "value": 2555677
+                    },
+                    {
+                      "label": "Finančné op.",
+                      "value": 1246154
+                    }
+                  ],
+                  "width": 5.6,
+                  "position": [
+                    4.3,
+                    5.5
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "label": "Finančné op.",
-                  "value": 2284554
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Kľúčová zmena oproti plánu: z rezervného fondu sa čerpalo len 790 000 € z plánovaných 1 820 000 € (43,4 %) – veľkú investíciu do IBV Vojenské 1 pokryla dotácia 2,2 mil. € z Environmentálneho fondu.",
+                  "width": 9.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.3
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 5.6,
-              "position": [
-                -4.3,
-                5.5
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "chart",
-              "chart": "pie",
-              "donut": true,
-              "centerLabel": "16,55 M€",
-              "centerSub": "skutočnosť",
-              "legendValues": true,
-              "title": "Skutočnosť k 31. 12. 2025",
-              "data": [
-                {
-                  "label": "Bežné príjmy",
-                  "value": 12752066
-                },
-                {
-                  "label": "Kapitálové",
-                  "value": 2555677
-                },
-                {
-                  "label": "Finančné op.",
-                  "value": 1246154
-                }
-              ],
-              "width": 5.6,
-              "position": [
-                4.3,
-                5.5
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Kľúčová zmena oproti plánu: z rezervného fondu sa čerpalo len 790 000 € z plánovaných 1 820 000 € (43,4 %) – veľkú investíciu do IBV Vojenské 1 pokryla dotácia 2,2 mil. € z Environmentálneho fondu.",
-              "width": 9.8,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.3
-              ],
-              "depth": "front"
+              ]
             }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Odkiaľ prichádzajú peniaze mesta"
+      ]
     },
     {
       "id": "programy",
-      "title": "Kam idú peniaze?",
       "kicker": "Časť 1 · Mestský rozpočet Námestovo 2025",
       "props": [
         {
@@ -845,295 +879,317 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "kam-idu-peniaze",
+          "title": "Kam idú peniaze?",
+          "subtitle": "Skutočné výdavky 2025 podľa deviatich programov mesta (bez výdavkových finančných operácií 120 000 €).",
+          "groups": [
             {
-              "type": "chart",
-              "chart": "pie",
-              "donut": true,
-              "centerLabel": "13,95 M€",
-              "centerSub": "výdavky 2025",
-              "legendValues": true,
-              "title": "Výdavky podľa programov",
-              "data": [
+              "parts": [
                 {
-                  "label": "Školstvo",
-                  "value": 7553866
+                  "type": "chart",
+                  "chart": "pie",
+                  "donut": true,
+                  "centerLabel": "13,95 M€",
+                  "centerSub": "výdavky 2025",
+                  "legendValues": true,
+                  "title": "Výdavky podľa programov",
+                  "data": [
+                    {
+                      "label": "Školstvo",
+                      "value": 7553866
+                    },
+                    {
+                      "label": "Investície",
+                      "value": 1679838
+                    },
+                    {
+                      "label": "Sociálne zabezpečenie",
+                      "value": 1271342
+                    },
+                    {
+                      "label": "Verejné služby",
+                      "value": 1089409
+                    },
+                    {
+                      "label": "Bývanie",
+                      "value": 706527
+                    },
+                    {
+                      "label": "Kultúra",
+                      "value": 698731
+                    },
+                    {
+                      "label": "Životné prostredie",
+                      "value": 532843
+                    },
+                    {
+                      "label": "Doprava",
+                      "value": 213985
+                    },
+                    {
+                      "label": "Verejný poriadok",
+                      "value": 208084
+                    }
+                  ],
+                  "width": 7.6,
+                  "position": [
+                    -1.3,
+                    5.4
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "label": "Investície",
-                  "value": 1679838
-                },
-                {
-                  "label": "Sociálne zabezpečenie",
-                  "value": 1271342
-                },
-                {
-                  "label": "Verejné služby",
-                  "value": 1089409
-                },
-                {
-                  "label": "Bývanie",
-                  "value": 706527
-                },
-                {
-                  "label": "Kultúra",
-                  "value": 698731
-                },
-                {
-                  "label": "Životné prostredie",
-                  "value": 532843
-                },
-                {
-                  "label": "Doprava",
-                  "value": 213985
-                },
-                {
-                  "label": "Verejný poriadok",
-                  "value": 208084
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Viac ako polovica rozpočtu (54 %) ide na školstvo. Druhou najväčšou položkou sú investície, treťou sociálne služby.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.35
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 7.6,
-              "position": [
-                -1.3,
-                5.4
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Viac ako polovica rozpočtu (54 %) ide na školstvo. Druhou najväčšou položkou sú investície, treťou sociálne služby.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.35
-              ],
-              "depth": "front"
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "prenesene-pravomoci",
+          "title": "Prenesené právomoci: štát prikazuje, mesto dopláca",
+          "subtitle": "Úlohy, ktoré mestu zveril štát – sivý podklad = skutočné náklady 2025, tmavý pruh = štátne transfery.",
+          "groups": [
             {
-              "type": "chart",
-              "chart": "barh",
-              "title": "Prenesené právomoci: štát vs. náklady",
-              "data": [
+              "parts": [
                 {
-                  "label": "Školstvo",
-                  "value": 3769734,
-                  "plan": 7553866
+                  "type": "chart",
+                  "chart": "barh",
+                  "title": "Prenesené právomoci: štát vs. náklady",
+                  "data": [
+                    {
+                      "label": "Školstvo",
+                      "value": 3769734,
+                      "plan": 7553866
+                    },
+                    {
+                      "label": "Sociálne služby (CSS)",
+                      "value": 647349,
+                      "plan": 1163738
+                    },
+                    {
+                      "label": "Úrady (matrika, stavebný…)",
+                      "value": 68337,
+                      "plan": 152161
+                    }
+                  ],
+                  "width": 7.6,
+                  "position": [
+                    -1.3,
+                    5.4
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "label": "Sociálne služby (CSS)",
-                  "value": 647349,
-                  "plan": 1163738
-                },
-                {
-                  "label": "Úrady (matrika, stavebný…)",
-                  "value": 68337,
-                  "plan": 152161
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "„Doplatok\" má logiku: ZUŠ, školské kluby, jedálne aj neštátne školy sa financujú z výnosu dane z príjmov, ktorý sa obciam rozdeľuje aj podľa počtu žiakov (27 %) – použitie je z veľkej časti predpísané zákonom.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.35
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 7.6,
-              "position": [
-                -1.3,
-                5.4
-              ],
-              "depth": "mid"
+              ]
             },
             {
-              "type": "callout",
-              "tone": "info",
-              "text": "„Doplatok\" má logiku: ZUŠ, školské kluby, jedálne aj neštátne školy sa financujú z výnosu dane z príjmov, ktorý sa obciam rozdeľuje aj podľa počtu žiakov (27 %) – použitie je z veľkej časti predpísané zákonom.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.35
-              ],
-              "depth": "front"
-            }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "stat",
-              "value": "≈ 50 %",
-              "label": "Toľko pokryje štát",
-              "note": "školstvo 49,9 %, sociálne služby 55,6 %, úrady len 44,9 %",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "1,45 mil. €",
-              "label": "Transfery neštátnym školám a ZUŠ",
-              "note": "mesto na ich žiakov dostáva podielové dane a zo zákona im posiela min. 88 % sumy na žiaka",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "3,66 mil. €",
-              "label": "Dopláca mesto ročne",
-              "note": "z podielových daní; vrátane 1,45 mil. € povinných transferov neštátnym zriaďovateľom",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.0
-              ],
-              "depth": "mid"
-            }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "bullets",
-              "title": "Originálne právomoci I",
-              "items": [
-                "Miestne komunikácie a chodníky – 213 985 €: výstavba a oprava ciest.",
-                "Nakladanie s odpadmi – 532 843 €: organizácia zberu; poplatok určuje mesto.",
-                "Verejný poriadok – 126 674 €: mestská polícia a bezpečnosť."
-              ],
-              "width": 6.3,
-              "fontScale": 0.82,
-              "position": [
-                -3.8,
-                5.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "bullets",
-              "title": "Originálne právomoci II",
-              "items": [
-                "Materské školy – 1 147 383 €: od 2025 väčšinu kryje štátny normatív (990 697 €).",
-                "Kultúra a šport – Dom kultúry 267 767 €, dotácie klubom 156 640 €.",
-                "Územné plánovanie a rozvoj mesta – 504 728 €."
-              ],
-              "width": 6.3,
-              "fontScale": 0.82,
-              "position": [
-                3.8,
-                5.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Zdroje financovania: vlastné dane a poplatky. Mesto má voľnú ruku pri určovaní priorít – práve tu sa rozhoduje o charaktere mesta.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.3
-              ],
-              "depth": "front"
-            }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "chart",
-              "chart": "barh",
-              "title": "Plnenie výdavkov programov",
-              "data": [
+              "parts": [
                 {
-                  "label": "Školstvo",
-                  "value": 7553866,
-                  "plan": 7659933
+                  "type": "stat",
+                  "value": "≈ 50 %",
+                  "label": "Toľko pokryje štát",
+                  "note": "školstvo 49,9 %, sociálne služby 55,6 %, úrady len 44,9 %",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "label": "Investície",
-                  "value": 1679838,
-                  "plan": 2033702
+                  "type": "stat",
+                  "value": "1,45 mil. €",
+                  "label": "Transfery neštátnym školám a ZUŠ",
+                  "note": "mesto na ich žiakov dostáva podielové dane a zo zákona im posiela min. 88 % sumy na žiaka",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.0
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "label": "Sociálne zabezpečenie",
-                  "value": 1271342,
-                  "plan": 1293329
-                },
-                {
-                  "label": "Verejné služby",
-                  "value": 1089409,
-                  "plan": 1225432
-                },
-                {
-                  "label": "Bývanie",
-                  "value": 706527,
-                  "plan": 785903
-                },
-                {
-                  "label": "Kultúra",
-                  "value": 698731,
-                  "plan": 718120
-                },
-                {
-                  "label": "Životné prostredie",
-                  "value": 532843,
-                  "plan": 532843
-                },
-                {
-                  "label": "Doprava",
-                  "value": 213985,
-                  "plan": 213985
-                },
-                {
-                  "label": "Verejný poriadok",
-                  "value": 208084,
-                  "plan": 213857
+                  "type": "stat",
+                  "value": "3,66 mil. €",
+                  "label": "Dopláca mesto ročne",
+                  "note": "z podielových daní; vrátane 1,45 mil. € povinných transferov neštátnym zriaďovateľom",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
                 }
-              ],
-              "width": 7.6,
-              "position": [
-                -1.3,
-                5.4
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "warning",
-              "text": "Bežné výdavky sa plnili na 97,1 %, ale kapitálové (investičné) len na 84,0 % – najslabšie plnenie spomedzi všetkých zložiek rozpočtu.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.35
-              ],
-              "depth": "front"
+              ]
             }
-          ],
-          "clears": true
+          ]
+        },
+        {
+          "id": "originalne-pravomoci",
+          "title": "Originálne právomoci",
+          "subtitle": "Úlohy, ktoré mesto plní z vlastnej zodpovednosti a z vlastných zdrojov – skutočné výdavky 2025.",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Originálne právomoci I",
+                  "items": [
+                    "Miestne komunikácie a chodníky – 213 985 €: výstavba a oprava ciest.",
+                    "Nakladanie s odpadmi – 532 843 €: organizácia zberu; poplatok určuje mesto.",
+                    "Verejný poriadok – 126 674 €: mestská polícia a bezpečnosť."
+                  ],
+                  "width": 6.3,
+                  "fontScale": 0.82,
+                  "position": [
+                    -3.8,
+                    5.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Originálne právomoci II",
+                  "items": [
+                    "Materské školy – 1 147 383 €: od 2025 väčšinu kryje štátny normatív (990 697 €).",
+                    "Kultúra a šport – Dom kultúry 267 767 €, dotácie klubom 156 640 €.",
+                    "Územné plánovanie a rozvoj mesta – 504 728 €."
+                  ],
+                  "width": 6.3,
+                  "fontScale": 0.82,
+                  "position": [
+                    3.8,
+                    5.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Zdroje financovania: vlastné dane a poplatky. Mesto má voľnú ruku pri určovaní priorít – práve tu sa rozhoduje o charaktere mesta.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hlavne-oblasti",
+          "title": "Hlavné oblasti výdavkov: rozpočet vs. skutočnosť",
+          "subtitle": "Sivý podklad = rozpočet po zmenách, modrý pruh = skutočné čerpanie k 31. 12. 2025.",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "chart",
+                  "chart": "barh",
+                  "title": "Plnenie výdavkov programov",
+                  "data": [
+                    {
+                      "label": "Školstvo",
+                      "value": 7553866,
+                      "plan": 7659933
+                    },
+                    {
+                      "label": "Investície",
+                      "value": 1679838,
+                      "plan": 2033702
+                    },
+                    {
+                      "label": "Sociálne zabezpečenie",
+                      "value": 1271342,
+                      "plan": 1293329
+                    },
+                    {
+                      "label": "Verejné služby",
+                      "value": 1089409,
+                      "plan": 1225432
+                    },
+                    {
+                      "label": "Bývanie",
+                      "value": 706527,
+                      "plan": 785903
+                    },
+                    {
+                      "label": "Kultúra",
+                      "value": 698731,
+                      "plan": 718120
+                    },
+                    {
+                      "label": "Životné prostredie",
+                      "value": 532843,
+                      "plan": 532843
+                    },
+                    {
+                      "label": "Doprava",
+                      "value": 213985,
+                      "plan": 213985
+                    },
+                    {
+                      "label": "Verejný poriadok",
+                      "value": 208084,
+                      "plan": 213857
+                    }
+                  ],
+                  "width": 7.6,
+                  "position": [
+                    -1.3,
+                    5.4
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "warning",
+                  "text": "Bežné výdavky sa plnili na 97,1 %, ale kapitálové (investičné) len na 84,0 % – najslabšie plnenie spomedzi všetkých zložiek rozpočtu.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.35
+                  ],
+                  "depth": "front"
+                }
+              ]
+            }
+          ]
         }
-      ],
-      "subtitle": "Deväť programov mesta – prenesené aj originálne právomoci"
+      ]
     },
     {
       "id": "skolstvo",
-      "title": "Vzdelávanie",
       "kicker": "Časť 2 · Analýza výdavkov mestského rozpočtu",
       "props": [
         {
@@ -1249,142 +1305,157 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "cast-2",
+          "title": "Analýza výdavkov mestského rozpočtu",
+          "subtitle": "Komplexná analýza toho, ako boli v roku 2025 prostriedky mestského rozpočtu skutočne vynaložené v jednotlivých sektoroch.",
+          "groups": []
+        },
+        {
+          "id": "prehlad-vzdelavanie",
+          "title": "Prehľad rozpočtu na vzdelávanie",
+          "groups": [
             {
-              "type": "stat",
-              "value": "7,55 M€",
-              "label": "Skutočné výdavky na školstvo",
-              "note": "Komplexné financovanie všetkých vzdelávacích zariadení.",
-              "width": 4.4,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.8
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "54 %",
-              "label": "Podiel v rozpočte",
-              "note": "Viac ako polovica celkových výdavkov mesta.",
-              "width": 4.4,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.8
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "98,6 %",
-              "label": "Plnenie rozpočtu",
-              "note": "7 553 866 € zo 7 659 933 € – najspoľahlivejšie čerpaná kapitola.",
-              "width": 4.4,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.8
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "bullets",
-              "title": "Typy zariadení",
-              "items": [
-                "3 materské školy (Veterná 118 detí, Bernolákova 69, Komenského 66)",
-                "2 základné školy (Komenského 342 žiakov, Slnečná 300 žiakov)",
-                "ZUŠ Ignáca Kolčáka (53 zamestnancov) + 2 súkromné ZUŠ, školské kluby a jedálne"
-              ],
-              "width": 8.4,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                2.6
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "7,55 M€",
+                  "label": "Skutočné výdavky na školstvo",
+                  "note": "Komplexné financovanie všetkých vzdelávacích zariadení.",
+                  "width": 4.4,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.8
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "54 %",
+                  "label": "Podiel v rozpočte",
+                  "note": "Viac ako polovica celkových výdavkov mesta.",
+                  "width": 4.4,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.8
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "98,6 %",
+                  "label": "Plnenie rozpočtu",
+                  "note": "7 553 866 € zo 7 659 933 € – najspoľahlivejšie čerpaná kapitola.",
+                  "width": 4.4,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.8
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Typy zariadení",
+                  "items": [
+                    "3 materské školy (Veterná 118 detí, Bernolákova 69, Komenského 66)",
+                    "2 základné školy (Komenského 342 žiakov, Slnečná 300 žiakov)",
+                    "ZUŠ Ignáca Kolčáka (53 zamestnancov) + 2 súkromné ZUŠ, školské kluby a jedálne"
+                  ],
+                  "width": 8.4,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    2.6
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "kam-smeruju",
+          "title": "Kam smerujú prostriedky na vzdelávanie",
+          "groups": [
             {
-              "type": "chart",
-              "chart": "barh",
-              "title": "Kam smerujú prostriedky na vzdelávanie",
-              "data": [
+              "parts": [
                 {
-                  "label": "Základné školy",
-                  "value": 3540773
+                  "type": "chart",
+                  "chart": "barh",
+                  "title": "Kam smerujú prostriedky na vzdelávanie",
+                  "data": [
+                    {
+                      "label": "Základné školy",
+                      "value": 3540773
+                    },
+                    {
+                      "label": "ZUŠ Ignáca Kolčáka",
+                      "value": 1387636
+                    },
+                    {
+                      "label": "Súkromné ZUŠ",
+                      "value": 1360311
+                    },
+                    {
+                      "label": "Materské školy (3×)",
+                      "value": 1116126
+                    },
+                    {
+                      "label": "Cirkevná ZŠ, súkr. MŠ/CVČ",
+                      "value": 92774
+                    },
+                    {
+                      "label": "Školský úrad",
+                      "value": 34833
+                    },
+                    {
+                      "label": "Údržba budov",
+                      "value": 21415
+                    }
+                  ],
+                  "width": 7.0,
+                  "position": [
+                    -3.6,
+                    5.4
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "label": "ZUŠ Ignáca Kolčáka",
-                  "value": 1387636
+                  "type": "text",
+                  "title": "Prečo je to nákladné",
+                  "body": "Prevádzka ZŠ Komenského (342 žiakov, 16 tried) a ZŠ Slnečná (300 žiakov, 15 tried) – normatív, mzdy, energie, strava.",
+                  "width": 4.0,
+                  "fontScale": 0.88,
+                  "position": [
+                    5.1,
+                    5.7
+                  ],
+                  "depth": "front"
                 },
                 {
-                  "label": "Súkromné ZUŠ",
-                  "value": 1360311
-                },
-                {
-                  "label": "Materské školy (3×)",
-                  "value": 1116126
-                },
-                {
-                  "label": "Cirkevná ZŠ, súkr. MŠ/CVČ",
-                  "value": 92774
-                },
-                {
-                  "label": "Školský úrad",
-                  "value": 34833
-                },
-                {
-                  "label": "Údržba budov",
-                  "value": 21415
+                  "type": "callout",
+                  "tone": "warning",
+                  "text": "Slabé miesto: údržba škôl sa čerpala len na 40 % (ZŠ 6 971 € zo 17 250 €, MŠ 14 444 € z 33 300 €) – odkladaná údržba sa v budúcnosti predraží.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.35
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 7.0,
-              "position": [
-                -3.6,
-                5.4
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "text",
-              "title": "Prečo je to nákladné",
-              "body": "Prevádzka ZŠ Komenského (342 žiakov, 16 tried) a ZŠ Slnečná (300 žiakov, 15 tried) – normatív, mzdy, energie, strava.",
-              "width": 4.0,
-              "fontScale": 0.88,
-              "position": [
-                5.1,
-                5.7
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "callout",
-              "tone": "warning",
-              "text": "Slabé miesto: údržba škôl sa čerpala len na 40 % (ZŠ 6 971 € zo 17 250 €, MŠ 14 444 € z 33 300 €) – odkladaná údržba sa v budúcnosti predraží.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.35
-              ],
-              "depth": "front"
+              ]
             }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "54 % rozpočtu – najväčšia kapitola mesta"
+      ]
     },
     {
       "id": "socialne",
-      "title": "Sociálne služby",
       "kicker": "Časť 2 · Analýza výdavkov mestského rozpočtu",
       "props": [
         {
@@ -1470,110 +1541,119 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "socialne-sluzby",
+          "title": "Sociálne služby",
+          "groups": [
             {
-              "type": "stat",
-              "value": "1,27 M€",
-              "label": "Skutočné výdavky programu",
-              "note": "1 271 342 € – plnenie 98,3 % rozpočtu po zmenách.",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "9,1 %",
-              "label": "Podiel na rozpočte",
-              "note": "Tretia najväčšia oblasť výdavkov mesta.",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "91,5 %",
-              "label": "Ide na Centrum sociálnych služieb",
-              "note": "1 163 738 € vrátane 40 000 € investícií (evakuačný výťah, záložný zdroj).",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Štátny transfer na CSS bol 613 824 € – zvyšok dopláca mesto. Sociálne služby sú typický „nepriamy mandát\": povinnosť rastie rýchlejšie ako štátne financovanie.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                2.1
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "1,27 M€",
+                  "label": "Skutočné výdavky programu",
+                  "note": "1 271 342 € – plnenie 98,3 % rozpočtu po zmenách.",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "9,1 %",
+                  "label": "Podiel na rozpočte",
+                  "note": "Tretia najväčšia oblasť výdavkov mesta.",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "91,5 %",
+                  "label": "Ide na Centrum sociálnych služieb",
+                  "note": "1 163 738 € vrátane 40 000 € investícií (evakuačný výťah, záložný zdroj).",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Štátny transfer na CSS bol 613 824 € – zvyšok dopláca mesto. Sociálne služby sú typický „nepriamy mandát\": povinnosť rastie rýchlejšie ako štátne financovanie.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    2.1
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "kto-profituje",
+          "title": "Kto profituje zo sociálnych služieb",
+          "groups": [
             {
-              "type": "numbered",
-              "title": "Kto profituje zo sociálnych služieb",
-              "items": [
+              "parts": [
                 {
-                  "title": "Centrum starostlivosti o seniorov (1,16 mil. €)",
-                  "text": "52 umiestnených seniorov a 12 prijímateľov opatrovateľskej služby. K tomu 40 000 € investícií do bezpečnosti."
+                  "type": "numbered",
+                  "title": "Kto profituje zo sociálnych služieb",
+                  "items": [
+                    {
+                      "title": "Centrum starostlivosti o seniorov (1,16 mil. €)",
+                      "text": "52 umiestnených seniorov a 12 prijímateľov opatrovateľskej služby. K tomu 40 000 € investícií do bezpečnosti."
+                    },
+                    {
+                      "title": "Priama pomoc občanom (89 tis. €)",
+                      "text": "Rodina a deti 49 624 €, hmotná núdza 39 490 € – školské stravovanie a núdzová pomoc."
+                    },
+                    {
+                      "title": "Podpora neziskových organizácií (18 tis. €)",
+                      "text": "Terézia n.o., Dom charity sv. Kamily – služby, ktoré mesto nezabezpečuje vlastnými kapacitami."
+                    }
+                  ],
+                  "width": 8.2,
+                  "fontScale": 0.78,
+                  "position": [
+                    -1.3,
+                    5.2
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "title": "Priama pomoc občanom (89 tis. €)",
-                  "text": "Rodina a deti 49 624 €, hmotná núdza 39 490 € – školské stravovanie a núdzová pomoc."
-                },
-                {
-                  "title": "Podpora neziskových organizácií (18 tis. €)",
-                  "text": "Terézia n.o., Dom charity sv. Kamily – služby, ktoré mesto nezabezpečuje vlastnými kapacitami."
+                  "type": "callout",
+                  "tone": "warning",
+                  "text": "Výzva nepriameho mandátu: starnutie populácie zvyšuje dopyt po sociálnych službách. Štátny transfer pokrýva len časť skutočných nákladov CSS.",
+                  "width": 8.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.25
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 8.2,
-              "fontScale": 0.78,
-              "position": [
-                -1.3,
-                5.2
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "warning",
-              "text": "Výzva nepriameho mandátu: starnutie populácie zvyšuje dopyt po sociálnych službách. Štátny transfer pokrýva len časť skutočných nákladov CSS.",
-              "width": 8.8,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.25
-              ],
-              "depth": "front"
+              ]
             }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Tretia najväčšia oblasť výdavkov mesta"
+      ]
     },
     {
       "id": "technicke",
-      "title": "Technické služby",
       "kicker": "Časť 2 · Analýza výdavkov mestského rozpočtu",
       "props": [
         {
@@ -1683,94 +1763,98 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "technicke-sluzby",
+          "title": "Technické služby",
+          "subtitle": "Príspevková organizácia mesta – príspevky z rozpočtu 2025 podľa účelu.",
+          "groups": [
             {
-              "type": "chart",
-              "chart": "barh",
-              "title": "Príspevky mesta TS 2025 podľa účelu",
-              "data": [
+              "parts": [
                 {
-                  "label": "Nakladanie s odpadom",
-                  "value": 261551
+                  "type": "chart",
+                  "chart": "barh",
+                  "title": "Príspevky mesta TS 2025 podľa účelu",
+                  "data": [
+                    {
+                      "label": "Nakladanie s odpadom",
+                      "value": 261551
+                    },
+                    {
+                      "label": "Rozvoj obcí, zeleň",
+                      "value": 213101
+                    },
+                    {
+                      "label": "Údržba komunikácií",
+                      "value": 132900
+                    },
+                    {
+                      "label": "Verejné osvetlenie",
+                      "value": 97526
+                    }
+                  ],
+                  "width": 7.0,
+                  "position": [
+                    -3.6,
+                    5.0
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "label": "Rozvoj obcí, zeleň",
-                  "value": 213101
-                },
-                {
-                  "label": "Údržba komunikácií",
-                  "value": 132900
-                },
-                {
-                  "label": "Verejné osvetlenie",
-                  "value": 97526
+                  "type": "bullets",
+                  "title": "Doplnkové služby",
+                  "items": [
+                    "kosenie a údržba parkov",
+                    "zimná údržba ciest",
+                    "správa cintorínov",
+                    "prevádzka zberného dvora"
+                  ],
+                  "width": 4.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    5.0,
+                    4.8
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 7.0,
-              "position": [
-                -3.6,
-                5.0
-              ],
-              "depth": "mid"
+              ]
             },
             {
-              "type": "bullets",
-              "title": "Doplnkové služby",
-              "items": [
-                "kosenie a údržba parkov",
-                "zimná údržba ciest",
-                "správa cintorínov",
-                "prevádzka zberného dvora"
-              ],
-              "width": 4.2,
-              "fontScale": 0.82,
-              "position": [
-                5.0,
-                4.8
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "705 078 €",
+                  "label": "Príspevky mesta TS spolu",
+                  "note": "Popri tom mesto platí externý odber a likvidáciu odpadu 270 316 €.",
+                  "width": 4.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    -3.4,
+                    5.9
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "−71 676 €",
+                  "label": "Výsledok hlavnej činnosti TS",
+                  "note": "Podnikateľská činnosť skončila +24 526 € – stratu hlavnej činnosti tlmí.",
+                  "width": 4.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    3.4,
+                    5.9
+                  ],
+                  "depth": "mid"
+                }
+              ]
             }
           ]
-        },
-        {
-          "parts": [
-            {
-              "type": "stat",
-              "value": "705 078 €",
-              "label": "Príspevky mesta TS spolu",
-              "note": "Popri tom mesto platí externý odber a likvidáciu odpadu 270 316 €.",
-              "width": 4.9,
-              "fontScale": 0.9,
-              "position": [
-                -3.4,
-                5.9
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "−71 676 €",
-              "label": "Výsledok hlavnej činnosti TS",
-              "note": "Podnikateľská činnosť skončila +24 526 € – stratu hlavnej činnosti tlmí.",
-              "width": 4.9,
-              "fontScale": 0.9,
-              "position": [
-                3.4,
-                5.9
-              ],
-              "depth": "mid"
-            }
-          ],
-          "clears": true
         }
-      ],
-      "subtitle": "Odpad, osvetlenie, cesty a zeleň – príspevková organizácia mesta"
+      ]
     },
     {
       "id": "sport-kultura",
-      "title": "Šport a kultúra",
       "kicker": "Časť 2 · Analýza výdavkov mestského rozpočtu",
       "props": [
         {
@@ -1843,97 +1927,100 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "sport-kultura",
+          "title": "Šport a kultúra: investície do kvality života",
+          "groups": [
             {
-              "type": "text",
-              "title": "Šport – dotácie klubom 156 640 €",
-              "body": "MŠK Námestovo 98 000 €, TJ Oravan 36 800 €, Vodáci 4 000 €, ŠK Dúha 2 700 € + menšie granty (VZN 1/2020).",
-              "width": 6.3,
-              "fontScale": 0.88,
-              "position": [
-                -3.8,
-                5.7
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "text",
+                  "title": "Šport – dotácie klubom 156 640 €",
+                  "body": "MŠK Námestovo 98 000 €, TJ Oravan 36 800 €, Vodáci 4 000 €, ŠK Dúha 2 700 € + menšie granty (VZN 1/2020).",
+                  "width": 6.3,
+                  "fontScale": 0.88,
+                  "position": [
+                    -3.8,
+                    5.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "text",
+                  "title": "Kultúra – 698 731 € (5,0 %)",
+                  "body": "Dom kultúry 267 767 € + investície 175 114 € (kinotechnika 85 275 €, javisko 76 863 €), kronika, vysielanie.",
+                  "width": 6.3,
+                  "fontScale": 0.88,
+                  "position": [
+                    3.8,
+                    5.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "positive",
+                  "text": "Atletická dráha vybudovaná v roku 2024 získala certifikát World Athletics – veľká investícia do športu sa zúročila.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             },
             {
-              "type": "text",
-              "title": "Kultúra – 698 731 € (5,0 %)",
-              "body": "Dom kultúry 267 767 € + investície 175 114 € (kinotechnika 85 275 €, javisko 76 863 €), kronika, vysielanie.",
-              "width": 6.3,
-              "fontScale": 0.88,
-              "position": [
-                3.8,
-                5.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "positive",
-              "text": "Atletická dráha vybudovaná v roku 2024 získala certifikát World Athletics – veľká investícia do športu sa zúročila.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.3
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "28 474",
+                  "label": "Divákov v kine",
+                  "note": "269 filmových podujatí",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "10 353",
+                  "label": "Divákov divadla",
+                  "note": "44 predstavení",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "612",
+                  "label": "Čitateľov knižnice",
+                  "note": "8 392 návštev",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                }
+              ]
             }
           ]
-        },
-        {
-          "parts": [
-            {
-              "type": "stat",
-              "value": "28 474",
-              "label": "Divákov v kine",
-              "note": "269 filmových podujatí",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "10 353",
-              "label": "Divákov divadla",
-              "note": "44 predstavení",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "612",
-              "label": "Čitateľov knižnice",
-              "note": "8 392 návštev",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.0
-              ],
-              "depth": "mid"
-            }
-          ],
-          "clears": true
         }
-      ],
-      "subtitle": "Investície do kvality života"
+      ]
     },
     {
       "id": "investicie",
-      "title": "Kapitálové investície",
       "kicker": "Časť 2 · Analýza výdavkov mestského rozpočtu",
       "props": [
         {
@@ -2032,106 +2119,109 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "kapitalove-investicie",
+          "title": "Kapitálové investície: plán vs. realita 2025",
+          "groups": [
             {
-              "type": "stat",
-              "value": "1 894 952 €",
-              "label": "Preinvestované v roku 2025",
-              "note": "z rozpočtovaných 2 256 399 € po zmenách",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "1 894 952 €",
+                  "label": "Preinvestované v roku 2025",
+                  "note": "z rozpočtovaných 2 256 399 € po zmenách",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "84,0 %",
+                  "label": "Plnenie kapitálového rozpočtu",
+                  "note": "najslabšie plnená zložka rozpočtu",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "2,52 M€",
+                  "label": "Kapitálové dotácie",
+                  "note": "väčšinu investícií zaplatili externé zdroje, nie mestská kasa",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                }
+              ]
             },
             {
-              "type": "stat",
-              "value": "84,0 %",
-              "label": "Plnenie kapitálového rozpočtu",
-              "note": "najslabšie plnená zložka rozpočtu",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "2,52 M€",
-              "label": "Kapitálové dotácie",
-              "note": "väčšinu investícií zaplatili externé zdroje, nie mestská kasa",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Dokončené projekty 2025",
+                  "items": [
+                    "Kruhový objazd + ul. Štefánikova: 747 238 €",
+                    "Náučný chodník, cyklochodník a mólo: 399 981 €",
+                    "Energetická efektívnosť ŠJ Komenského: 276 873 €",
+                    "Kino, malý amfiteáter a herný prvok „Maják\": 284 400 €"
+                  ],
+                  "width": 6.3,
+                  "fontScale": 0.82,
+                  "position": [
+                    -3.8,
+                    5.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Nezrealizované / zrušené",
+                  "items": [
+                    "Učebne ZUŠ I. Kolčáka: plán 700 000 € → 5 986 € (dotácia stiahnutá)",
+                    "Siete IBV Vojenské 1: plán 150 000 € → 0 € (presun do 2026, kryté dotáciou EF)",
+                    "Technika pre odpadové hospodárstvo: 36 750 € → 0 €"
+                  ],
+                  "width": 6.3,
+                  "fontScale": 0.82,
+                  "position": [
+                    3.8,
+                    5.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "warning",
+                  "text": "Nízke plnenie investícií je najčastejší rozdiel medzi sľubmi rozpočtu a realitou: kapitálové výdavky tvorili 13,5 % výdavkov a najväčší plánovaný projekt sa nezrealizoval.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
           ]
-        },
-        {
-          "parts": [
-            {
-              "type": "bullets",
-              "title": "Dokončené projekty 2025",
-              "items": [
-                "Kruhový objazd + ul. Štefánikova: 747 238 €",
-                "Náučný chodník, cyklochodník a mólo: 399 981 €",
-                "Energetická efektívnosť ŠJ Komenského: 276 873 €",
-                "Kino, malý amfiteáter a herný prvok „Maják\": 284 400 €"
-              ],
-              "width": 6.3,
-              "fontScale": 0.82,
-              "position": [
-                -3.8,
-                5.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "bullets",
-              "title": "Nezrealizované / zrušené",
-              "items": [
-                "Učebne ZUŠ I. Kolčáka: plán 700 000 € → 5 986 € (dotácia stiahnutá)",
-                "Siete IBV Vojenské 1: plán 150 000 € → 0 € (presun do 2026, kryté dotáciou EF)",
-                "Technika pre odpadové hospodárstvo: 36 750 € → 0 €"
-              ],
-              "width": 6.3,
-              "fontScale": 0.82,
-              "position": [
-                3.8,
-                5.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "warning",
-              "text": "Nízke plnenie investícií je najčastejší rozdiel medzi sľubmi rozpočtu a realitou: kapitálové výdavky tvorili 13,5 % výdavkov a najväčší plánovaný projekt sa nezrealizoval.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.3
-              ],
-              "depth": "front"
-            }
-          ],
-          "clears": true
         }
-      ],
-      "subtitle": "Plán vs. realita 2025"
+      ]
     },
     {
       "id": "rezervy",
-      "title": "Rezervy a dlh",
       "kicker": "Časť 2 · Analýza výdavkov mestského rozpočtu",
       "props": [
         {
@@ -2229,220 +2319,236 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "financne-rezervy",
+          "title": "Finančné rezervy: naša záchranná sieť",
+          "groups": [
             {
-              "type": "table",
-              "title": "Rezervný fond 2025",
-              "columns": [
-                "Pohyb",
-                "€"
-              ],
-              "rows": [
-                [
-                  "Stav k 1. 1. 2025",
-                  "1 718 873"
-                ],
-                [
-                  "+ prídel z prebytku 2024",
-                  "126 187"
-                ],
-                [
-                  "+ úroky",
-                  "18 439"
-                ],
-                [
-                  "− rekonštrukcie majetku",
-                  "−790 000"
-                ],
-                [
-                  "− ostatné úbytky",
-                  "−3 503"
-                ],
-                [
-                  "Stav k 31. 12. 2025",
-                  "1 069 996"
-                ]
-              ],
-              "width": 6.5,
-              "position": [
-                -3.6,
-                5.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "1 204 840 €",
-              "label": "Všetky fondy spolu",
-              "note": "rezervný 1 069 996 + rozvoja bývania 74 509 + opráv 44 041 + sociálny 16 293",
-              "width": 3.9,
-              "fontScale": 0.9,
-              "position": [
-                5.1,
-                6.1
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "stat",
-              "value": "−38 %",
-              "label": "Pokles rezervného fondu",
-              "note": "z 1,72 mil. € na 1,07 mil. € – rezervy kryjú ~1 mesiac prevádzky mesta",
-              "width": 3.9,
-              "fontScale": 0.9,
-              "position": [
-                5.1,
-                3.0
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "table",
+                  "title": "Rezervný fond 2025",
+                  "columns": [
+                    "Pohyb",
+                    "€"
+                  ],
+                  "rows": [
+                    [
+                      "Stav k 1. 1. 2025",
+                      "1 718 873"
+                    ],
+                    [
+                      "+ prídel z prebytku 2024",
+                      "126 187"
+                    ],
+                    [
+                      "+ úroky",
+                      "18 439"
+                    ],
+                    [
+                      "− rekonštrukcie majetku",
+                      "−790 000"
+                    ],
+                    [
+                      "− ostatné úbytky",
+                      "−3 503"
+                    ],
+                    [
+                      "Stav k 31. 12. 2025",
+                      "1 069 996"
+                    ]
+                  ],
+                  "width": 6.5,
+                  "position": [
+                    -3.6,
+                    5.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "1 204 840 €",
+                  "label": "Všetky fondy spolu",
+                  "note": "rezervný 1 069 996 + rozvoja bývania 74 509 + opráv 44 041 + sociálny 16 293",
+                  "width": 3.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.1,
+                    6.1
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "stat",
+                  "value": "−38 %",
+                  "label": "Pokles rezervného fondu",
+                  "note": "z 1,72 mil. € na 1,07 mil. € – rezervy kryjú ~1 mesiac prevádzky mesta",
+                  "width": 3.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.1,
+                    3.0
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "dlhova-brzda",
+          "title": "Čo je dlhová brzda?",
+          "subtitle": "Ústavný zákon o rozpočtovej zodpovednosti chráni verejné financie: keď dlh štátu prekročí sankčné pásma, obmedzenia dopadajú aj na obce a mestá.",
+          "groups": [
             {
-              "type": "numbered",
-              "title": "Čo je dlhová brzda?",
-              "items": [
+              "parts": [
                 {
-                  "title": "Limity pre samosprávy",
-                  "text": "Zákon 583/2004 (§ 17): dlh obce max. 60 % bežných príjmov; ročné splátky max. 25 %. Od 50 % nápravné opatrenia, od 60 % pokuta."
+                  "type": "numbered",
+                  "title": "Čo je dlhová brzda?",
+                  "items": [
+                    {
+                      "title": "Limity pre samosprávy",
+                      "text": "Zákon 583/2004 (§ 17): dlh obce max. 60 % bežných príjmov; ročné splátky max. 25 %. Od 50 % nápravné opatrenia, od 60 % pokuta."
+                    },
+                    {
+                      "title": "Sankčné pásma štátneho dlhu",
+                      "text": "Pri prekročení pásiem ústavného zákona 493/2011 musia obce schváliť „zmrazené rozpočty\" (od 46 % HDP), vo vyššom pásme len vyrovnaný rozpočet (od 48 %)."
+                    },
+                    {
+                      "title": "Výnimka po nástupe vlády",
+                      "text": "Sankcie sa neuplatňujú 24 mesiacov od programového vyhlásenia vlády – výnimka uplynula 21. novembra 2025."
+                    }
+                  ],
+                  "width": 7.4,
+                  "fontScale": 0.78,
+                  "position": [
+                    -2.7,
+                    5.7
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "title": "Sankčné pásma štátneho dlhu",
-                  "text": "Pri prekročení pásiem ústavného zákona 493/2011 musia obce schváliť „zmrazené rozpočty\" (od 46 % HDP), vo vyššom pásme len vyrovnaný rozpočet (od 48 %)."
+                  "type": "stat",
+                  "value": "61,4 %",
+                  "label": "Dlh SR koncom 2025",
+                  "note": "historické maximum – hlboko v najvyššom sankčnom pásme; limit pre 2026 je 51 % HDP",
+                  "width": 3.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.2,
+                    6.7
+                  ],
+                  "depth": "front"
                 },
                 {
-                  "title": "Výnimka po nástupe vlády",
-                  "text": "Sankcie sa neuplatňujú 24 mesiacov od programového vyhlásenia vlády – výnimka uplynula 21. novembra 2025."
+                  "type": "stat",
+                  "value": "60 % / 25 %",
+                  "label": "Limity obcí",
+                  "note": "dlh / dlhová služba z bežných príjmov (zákon 583/2004, § 17)",
+                  "width": 3.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.2,
+                    4.0
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "callout",
+                  "tone": "warning",
+                  "text": "Sankcie sú od 22. 11. 2025 právne aktívne, na rozpočty 2026 sa však v praxi nevymáhali. Skutočný test prídu rozpočty 2027.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.25
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 7.4,
-              "fontScale": 0.78,
-              "position": [
-                -2.7,
-                5.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "61,4 %",
-              "label": "Dlh SR koncom 2025",
-              "note": "historické maximum – hlboko v najvyššom sankčnom pásme; limit pre 2026 je 51 % HDP",
-              "width": 3.9,
-              "fontScale": 0.9,
-              "position": [
-                5.2,
-                6.7
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "stat",
-              "value": "60 % / 25 %",
-              "label": "Limity obcí",
-              "note": "dlh / dlhová služba z bežných príjmov (zákon 583/2004, § 17)",
-              "width": 3.9,
-              "fontScale": 0.9,
-              "position": [
-                5.2,
-                4.0
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "callout",
-              "tone": "warning",
-              "text": "Sankcie sú od 22. 11. 2025 právne aktívne, na rozpočty 2026 sa však v praxi nevymáhali. Skutočný test prídu rozpočty 2027.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.25
-              ],
-              "depth": "front"
+              ]
             }
-          ],
-          "clears": true
+          ]
         },
         {
-          "parts": [
+          "id": "dlhova-brzda-namestovo",
+          "title": "Dlhová brzda a Námestovo: ako to dopadlo",
+          "subtitle": "Rok 2025 bol poslednou príležitosťou investovať pred aktiváciou sankcií dlhovej brzdy. Výsledok:",
+          "groups": [
             {
-              "type": "numbered",
-              "title": "Dlhová brzda a Námestovo",
-              "items": [
+              "parts": [
                 {
-                  "title": "21. 11. 2025: výnimka uplynula",
-                  "text": "Sankcie sa aktivovali; dlh SR dosiahol rekordných 61,4 % HDP, obmedzenia výdavkov samospráv formálne platia."
+                  "type": "numbered",
+                  "title": "Dlhová brzda a Námestovo",
+                  "items": [
+                    {
+                      "title": "21. 11. 2025: výnimka uplynula",
+                      "text": "Sankcie sa aktivovali; dlh SR dosiahol rekordných 61,4 % HDP, obmedzenia výdavkov samospráv formálne platia."
+                    },
+                    {
+                      "title": "Námestovo úver nezobralo",
+                      "text": "Investície 2025 pokryl rezervný fond (790 000 €), bežný prebytok a kapitálové dotácie 2,52 mil. €."
+                    },
+                    {
+                      "title": "Paradox bezdlhového mesta",
+                      "text": "Nulový dlh znamená nevyužitý investičný potenciál – no plnú flexibilitu do ďalších rokov."
+                    }
+                  ],
+                  "width": 7.4,
+                  "fontScale": 0.78,
+                  "position": [
+                    -2.7,
+                    5.2
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "title": "Námestovo úver nezobralo",
-                  "text": "Investície 2025 pokryl rezervný fond (790 000 €), bežný prebytok a kapitálové dotácie 2,52 mil. €."
+                  "type": "stat",
+                  "value": "0 €",
+                  "label": "Celkový dlh mesta",
+                  "note": "0 % z bežných príjmov (limit 60 %)",
+                  "width": 3.8,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.2,
+                    7.0
+                  ],
+                  "depth": "front"
                 },
                 {
-                  "title": "Paradox bezdlhového mesta",
-                  "text": "Nulový dlh znamená nevyužitý investičný potenciál – no plnú flexibilitu do ďalších rokov."
+                  "type": "stat",
+                  "value": "0 %",
+                  "label": "Dlhová služba",
+                  "note": "žiadne splátky istiny ani úrokov (limit 25 %)",
+                  "width": 3.8,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.2,
+                    4.4
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "stat",
+                  "value": "282 621 €",
+                  "label": "Krátkodobé záväzky",
+                  "note": "všetky v lehote splatnosti",
+                  "width": 3.8,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.2,
+                    1.9
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 7.4,
-              "fontScale": 0.78,
-              "position": [
-                -2.7,
-                5.2
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "0 €",
-              "label": "Celkový dlh mesta",
-              "note": "0 % z bežných príjmov (limit 60 %)",
-              "width": 3.8,
-              "fontScale": 0.9,
-              "position": [
-                5.2,
-                7.0
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "stat",
-              "value": "0 %",
-              "label": "Dlhová služba",
-              "note": "žiadne splátky istiny ani úrokov (limit 25 %)",
-              "width": 3.8,
-              "fontScale": 0.9,
-              "position": [
-                5.2,
-                4.4
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "stat",
-              "value": "282 621 €",
-              "label": "Krátkodobé záväzky",
-              "note": "všetky v lehote splatnosti",
-              "width": 3.8,
-              "fontScale": 0.9,
-              "position": [
-                5.2,
-                1.9
-              ],
-              "depth": "front"
+              ]
             }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Záchranná sieť mesta a dlhová brzda"
+      ]
     },
     {
       "id": "realita",
-      "title": "Realita rozpočtu",
       "kicker": "Časť 3 · Realita mestského rozpočtu",
       "props": [
         {
@@ -2543,188 +2649,203 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "cast-3",
+          "title": "Realita mestského rozpočtu",
+          "subtitle": "Pochopenie toho, ako vaše mesto spravuje financie, prijíma rozhodnutia a plánuje budúcnosť. Širší kontext s dátami roka 2025.",
+          "groups": []
+        },
+        {
+          "id": "konsolidacia",
+          "title": "Konsolidovaná účtovná závierka",
+          "subtitle": "Čo znamená „konsolidovaná“? Ako korporátna skupina: mesto musí ukázať kompletný obraz vrátane svojich organizácií.",
+          "groups": [
             {
-              "type": "bullets",
-              "title": "Konsolidovaný celok mesta",
-              "items": [
-                "Mestský úrad – hlavný rozpočet",
-                "rozpočtové organizácie: ZŠ Komenského, ZŠ Slnečná, ZUŠ",
-                "príspevkové organizácie: Dom kultúry, TS, CSS",
-                "Bytová spoločnosť s.r.o. (100 % mesta), MsP, MŠ"
-              ],
-              "width": 6.3,
-              "fontScale": 0.82,
-              "position": [
-                -3.8,
-                5.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Konsolidovaný celok mesta",
+                  "items": [
+                    "Mestský úrad – hlavný rozpočet",
+                    "rozpočtové organizácie: ZŠ Komenského, ZŠ Slnečná, ZUŠ",
+                    "príspevkové organizácie: Dom kultúry, TS, CSS",
+                    "Bytová spoločnosť s.r.o. (100 % mesta), MsP, MŠ"
+                  ],
+                  "width": 6.3,
+                  "fontScale": 0.82,
+                  "position": [
+                    -3.8,
+                    5.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "table",
+                  "title": "Výsledky organizácií 2025",
+                  "columns": [
+                    "Organizácia",
+                    "€"
+                  ],
+                  "rows": [
+                    [
+                      "Dom kultúry (DKN)",
+                      "+2 599"
+                    ],
+                    [
+                      "Centrum soc. služieb",
+                      "+2 326"
+                    ],
+                    [
+                      "TS – hlavná činnosť",
+                      "−71 676"
+                    ],
+                    [
+                      "TS – podnikateľská",
+                      "+24 526"
+                    ]
+                  ],
+                  "width": 6.3,
+                  "position": [
+                    3.8,
+                    5.0
+                  ],
+                  "depth": "mid"
+                }
+              ]
             },
             {
-              "type": "table",
-              "title": "Výsledky organizácií 2025",
-              "columns": [
-                "Organizácia",
-                "€"
-              ],
-              "rows": [
-                [
-                  "Dom kultúry (DKN)",
-                  "+2 599"
-                ],
-                [
-                  "Centrum soc. služieb",
-                  "+2 326"
-                ],
-                [
-                  "TS – hlavná činnosť",
-                  "−71 676"
-                ],
-                [
-                  "TS – podnikateľská",
-                  "+24 526"
-                ]
-              ],
-              "width": 6.3,
-              "position": [
-                3.8,
-                5.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "44,04 M€",
+                  "label": "Majetok mesta k 31. 12. 2025",
+                  "note": "nárast z 40,99 M€; vlastné imanie 17,30 M€",
+                  "width": 5.0,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    5.4
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Zákon 431/2002 § 22a ukladá povinnosť predkladať konsolidované účtovné závierky do 30. júna nasledujúceho roka; zverejňujú sa v Registri účtovných závierok.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.9
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "ako-ovplyvnuju-prijmy",
+          "title": "Ako mestá ovplyvňujú svoje príjmy",
+          "subtitle": "Zdieľané dane: najväčší zdroj, najmenšia kontrola. O ich výške rozhoduje výlučne štát – vzorec platný od 1. 1. 2026.",
+          "groups": [
             {
-              "type": "stat",
-              "value": "44,04 M€",
-              "label": "Majetok mesta k 31. 12. 2025",
-              "note": "nárast z 40,99 M€; vlastné imanie 17,30 M€",
-              "width": 5.0,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                5.4
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Zákon 431/2002 § 22a ukladá povinnosť predkladať konsolidované účtovné závierky do 30. júna nasledujúceho roka; zverejňujú sa v Registri účtovných závierok.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.9
-              ],
-              "depth": "front"
-            }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "numbered",
-              "title": "Vzorec podielových daní (od 2026)",
-              "items": [
+              "parts": [
                 {
-                  "title": "Obyvateľstvo (28,0 %)",
-                  "text": "z toho 57 % prepočítaných koeficientom nadmorskej výšky obce."
+                  "type": "numbered",
+                  "title": "Vzorec podielových daní (od 2026)",
+                  "items": [
+                    {
+                      "title": "Obyvateľstvo (28,0 %)",
+                      "text": "z toho 57 % prepočítaných koeficientom nadmorskej výšky obce."
+                    },
+                    {
+                      "title": "Obyvateľstvo × veľkosť (38,9 %)",
+                      "text": "obce do 1 000 obyvateľov: 0,89; Košice 1,50 a Bratislava 2,35."
+                    },
+                    {
+                      "title": "Počet žiakov (27,0 %)",
+                      "text": "od 2026 zvýšené z 24,9 % kvôli valorizácii platov v školstve."
+                    },
+                    {
+                      "title": "Seniori nad 62 rokov (6,1 %)",
+                      "text": "vyššie potreby staršej populácie = viac financií."
+                    }
+                  ],
+                  "width": 7.4,
+                  "fontScale": 0.78,
+                  "position": [
+                    -2.7,
+                    5.2
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "title": "Obyvateľstvo × veľkosť (38,9 %)",
-                  "text": "obce do 1 000 obyvateľov: 0,89; Košice 1,50 a Bratislava 2,35."
+                  "type": "stat",
+                  "value": "5 444 594 €",
+                  "label": "Podielové dane 2025",
+                  "note": "42,7 % bežných príjmov mesta",
+                  "width": 3.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.2,
+                    6.1
+                  ],
+                  "depth": "front"
                 },
                 {
-                  "title": "Počet žiakov (27,0 %)",
-                  "text": "od 2026 zvýšené z 24,9 % kvôli valorizácii platov v školstve."
-                },
-                {
-                  "title": "Seniori nad 62 rokov (6,1 %)",
-                  "text": "vyššie potreby staršej populácie = viac financií."
+                  "type": "stat",
+                  "value": "53,0 %",
+                  "label": "Podiel obcí na DPFO od 2026",
+                  "note": "pokles z 55,1 % – zníženie je v zákone trvalé, bez návratu",
+                  "width": 3.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.2,
+                    3.0
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 7.4,
-              "fontScale": 0.78,
-              "position": [
-                -2.7,
-                5.2
-              ],
-              "depth": "mid"
+              ]
             },
             {
-              "type": "stat",
-              "value": "5 444 594 €",
-              "label": "Podielové dane 2025",
-              "note": "42,7 % bežných príjmov mesta",
-              "width": 3.9,
-              "fontScale": 0.9,
-              "position": [
-                5.2,
-                6.1
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "stat",
-              "value": "53,0 %",
-              "label": "Podiel obcí na DPFO od 2026",
-              "note": "pokles z 55,1 % – zníženie je v zákone trvalé, bez návratu",
-              "width": 3.9,
-              "fontScale": 0.9,
-              "position": [
-                5.2,
-                3.0
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Rast obyvateľstva: najdôležitejšia páka",
+                  "items": [
+                    "Mestá môžu: vytvárať bývanie, kvalitné školy, motivovať k trvalému pobytu.",
+                    "Mestá nemôžu: určovať výšku zdieľaných daní ani obchádzať vzorec rozdelenia."
+                  ],
+                  "width": 7.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    -0.8,
+                    5.1
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Zdieľané dane sú najväčší zdroj s najmenšou kontrolou: 40–60 % príjmov miest, o ktorých výške rozhoduje výlučne štát.",
+                  "width": 8.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "bullets",
-              "title": "Rast obyvateľstva: najdôležitejšia páka",
-              "items": [
-                "Mestá môžu: vytvárať bývanie, kvalitné školy, motivovať k trvalému pobytu.",
-                "Mestá nemôžu: určovať výšku zdieľaných daní ani obchádzať vzorec rozdelenia."
-              ],
-              "width": 7.8,
-              "fontScale": 0.82,
-              "position": [
-                -0.8,
-                5.1
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Zdieľané dane sú najväčší zdroj s najmenšou kontrolou: 40–60 % príjmov miest, o ktorých výške rozhoduje výlučne štát.",
-              "width": 8.8,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.3
-              ],
-              "depth": "front"
-            }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Širší kontext financovania samosprávy – dáta roka 2025"
+      ]
     },
     {
       "id": "rizika",
-      "title": "Riziká a demografia",
       "kicker": "Časť 3 · Realita mestského rozpočtu",
       "props": [
         {
@@ -2845,197 +2966,205 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "rizika-financovania",
+          "title": "Riziká financovania samospráv",
+          "subtitle": "Najhoršia finančná kríza samospráv od získania nezávislosti – odhady ZMOS, overené k júlu 2026.",
+          "groups": [
             {
-              "type": "stat",
-              "value": "≈ 1 mld. €",
-              "label": "Výpadok 2023 + 2024",
-              "note": "chýbajúce príjmy miest a obcí za dva roky (ZMOS)",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.7
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "≈ 1 mld. €",
+                  "label": "Výpadok 2023 + 2024",
+                  "note": "chýbajúce príjmy miest a obcí za dva roky (ZMOS)",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "534 mil. €",
+                  "label": "Výpadok v roku 2026",
+                  "note": "300 mil. € konsolidácia + 234 mil. € znížený podiel na DPFO",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "> 3,1 mld. €",
+                  "label": "Kumulatívne do konca 2027",
+                  "note": "odhad ZMOS (9/2025)",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Čísla sú odhady ZMOS voči stavu bez opatrení – RRZ upozorňuje, že nominálne podielové dane obcí v 2026 aj tak vzrastú. Námestovo krízu zatiaľ tlmí nulovým dlhom a rezervami.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    2.1
+                  ],
+                  "depth": "front"
+                }
+              ]
             },
             {
-              "type": "stat",
-              "value": "534 mil. €",
-              "label": "Výpadok v roku 2026",
-              "note": "300 mil. € konsolidácia + 234 mil. € znížený podiel na DPFO",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "> 3,1 mld. €",
-              "label": "Kumulatívne do konca 2027",
-              "note": "odhad ZMOS (9/2025)",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Čísla sú odhady ZMOS voči stavu bez opatrení – RRZ upozorňuje, že nominálne podielové dane obcí v 2026 aj tak vzrastú. Námestovo krízu zatiaľ tlmí nulovým dlhom a rezervami.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                2.1
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Hlavné príčiny",
+                  "items": [
+                    "zníženie podielu obcí na DPFO z 55,1 % na 53,0 % od 2026",
+                    "zníženie daňového bonusu na dieťa (~300 mil. € ročne)",
+                    "konsolidácia štátneho rozpočtu prenesená na samosprávy",
+                    "rastúce mzdové náklady bez plnej kompenzácie"
+                  ],
+                  "width": 6.3,
+                  "fontScale": 0.82,
+                  "position": [
+                    -3.8,
+                    5.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Dopad na občanov",
+                  "items": [
+                    "mestá vyčerpávajú posledné rezervy",
+                    "obmedzovanie dotačných programov, zmrazovanie investícií",
+                    "neschopnosť spolufinancovať EÚ fondy",
+                    "„režim prežitia\": samosprávy len prevádzkujú úrad"
+                  ],
+                  "width": 6.3,
+                  "fontScale": 0.82,
+                  "position": [
+                    3.8,
+                    5.0
+                  ],
+                  "depth": "mid"
+                }
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "demograficky-kolaps",
+          "title": "Demografický kolaps: kríza populácie",
+          "groups": [
             {
-              "type": "bullets",
-              "title": "Hlavné príčiny",
-              "items": [
-                "zníženie podielu obcí na DPFO z 55,1 % na 53,0 % od 2026",
-                "zníženie daňového bonusu na dieťa (~300 mil. € ročne)",
-                "konsolidácia štátneho rozpočtu prenesená na samosprávy",
-                "rastúce mzdové náklady bez plnej kompenzácie"
-              ],
-              "width": 6.3,
-              "fontScale": 0.82,
-              "position": [
-                -3.8,
-                5.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "≈ −600 000",
+                  "label": "Obyvateľov SR do 2070",
+                  "note": "z 5,42 mil. (2025) na 4,83 mil. – Eurostat EUROPOP2023",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "119 → 214",
+                  "label": "Index starnutia",
+                  "note": "seniorov 65+ na 100 detí do 14 rokov (dnes 119, 2070 ~214)",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "53 → 80",
+                  "label": "Pomer závislosti",
+                  "note": "detí a seniorov na 100 osôb v produktívnom veku 15–64",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                }
+              ]
             },
             {
-              "type": "bullets",
-              "title": "Dopad na občanov",
-              "items": [
-                "mestá vyčerpávajú posledné rezervy",
-                "obmedzovanie dotačných programov, zmrazovanie investícií",
-                "neschopnosť spolufinancovať EÚ fondy",
-                "„režim prežitia\": samosprávy len prevádzkujú úrad"
-              ],
-              "width": 6.3,
-              "fontScale": 0.82,
-              "position": [
-                3.8,
-                5.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "−58",
+                  "label": "Námestovo 2025",
+                  "note": "85 narodených, 58 zomrelých, 162 odhlásených – trend sa nevyhýba ani nám",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -4.9,
+                    5.9
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Čo to znamená pre obce",
+                  "items": [
+                    "Pokles príjmov – menej obyvateľov = nižšie podielové dane.",
+                    "Explózia výdavkov – sociálne služby pre seniorov rastú exponenciálne.",
+                    "Nedostatok pracovnej sily – učitelia, sociálni a zdravotní pracovníci."
+                  ],
+                  "width": 6.5,
+                  "fontScale": 0.82,
+                  "position": [
+                    3.3,
+                    5.5
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "CSS už dnes eviduje 52 umiestnených seniorov a rastúci dopyt po opatrovateľskej službe – demografia je reálny tlak na rozpočet.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "stat",
-              "value": "≈ −600 000",
-              "label": "Obyvateľov SR do 2070",
-              "note": "z 5,42 mil. (2025) na 4,83 mil. – Eurostat EUROPOP2023",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "119 → 214",
-              "label": "Index starnutia",
-              "note": "seniorov 65+ na 100 detí do 14 rokov (dnes 119, 2070 ~214)",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "53 → 80",
-              "label": "Pomer závislosti",
-              "note": "detí a seniorov na 100 osôb v produktívnom veku 15–64",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.0
-              ],
-              "depth": "mid"
-            }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "stat",
-              "value": "−58",
-              "label": "Námestovo 2025",
-              "note": "85 narodených, 58 zomrelých, 162 odhlásených – trend sa nevyhýba ani nám",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -4.9,
-                5.9
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "bullets",
-              "title": "Čo to znamená pre obce",
-              "items": [
-                "Pokles príjmov – menej obyvateľov = nižšie podielové dane.",
-                "Explózia výdavkov – sociálne služby pre seniorov rastú exponenciálne.",
-                "Nedostatok pracovnej sily – učitelia, sociálni a zdravotní pracovníci."
-              ],
-              "width": 6.5,
-              "fontScale": 0.82,
-              "position": [
-                3.3,
-                5.5
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "CSS už dnes eviduje 52 umiestnených seniorov a rastúci dopyt po opatrovateľskej službe – demografia je reálny tlak na rozpočet.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.3
-              ],
-              "depth": "front"
-            }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Najhoršia finančná kríza samospráv od nezávislosti – a starnúca populácia"
+      ]
     },
     {
       "id": "odpady",
-      "title": "Odpadové hospodárstvo",
       "kicker": "Časť 3 · Realita mestského rozpočtu",
       "props": [
         {
@@ -3144,192 +3273,200 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "uspory-odpady",
+          "title": "Úspory v odpadovom hospodárstve",
+          "groups": [
             {
-              "type": "stat",
-              "value": "532 843 €",
-              "label": "Náklady na odpady 2025",
-              "note": "zber, likvidácia, zberný dvor, príspevok TS",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "532 843 €",
+                  "label": "Náklady na odpady 2025",
+                  "note": "zber, likvidácia, zberný dvor, príspevok TS",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "364 024 €",
+                  "label": "Vybraté poplatky za odpad",
+                  "note": "systém je dotovaný z rozpočtu ~169 000 € ročne",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "2 093 t",
+                  "label": "Komunálny odpad 2025",
+                  "note": "vytriedené: sklo 117 t, papier 95 t, plasty 38 t",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.0
+                  ],
+                  "depth": "mid"
+                }
+              ]
             },
             {
-              "type": "stat",
-              "value": "364 024 €",
-              "label": "Vybraté poplatky za odpad",
-              "note": "systém je dotovaný z rozpočtu ~169 000 € ročne",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "2 093 t",
-              "label": "Komunálny odpad 2025",
-              "note": "vytriedené: sklo 117 t, papier 95 t, plasty 38 t",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.0
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Inšpirácia: plať toľko, koľko vyhodíš",
+                  "items": [
+                    "Košeca – elektronická evidencia (RFID/QR): netriediaci 25 €/os., najlepší ~11 €/os. – úspora 55 %.",
+                    "Rakovnica – žetónový systém: −33 % zmesového odpadu, −37 % nákladov (IEP, 2019).",
+                    "Benchmark: Trenčín 43,40 €, Žilina 44,20 €, Trnava 63,60 €/obyv. – rozdiel 46 % len dizajnom systému."
+                  ],
+                  "width": 7.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    -0.8,
+                    5.1
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Námestovo: ~74 €/obyv. ročne, nad benchmarkom krajských miest – argument pre množstvový zber.",
+                  "width": 8.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "zevo",
+          "title": "Premena odpadu na energiu (ZEVO): alternatíva k skládkam",
+          "subtitle": "ZEVO = zariadenie na energetické využitie odpadu: zmesový odpad sa spáli a vyrobí sa z neho elektrina a teplo.",
+          "groups": [
             {
-              "type": "bullets",
-              "title": "Inšpirácia: plať toľko, koľko vyhodíš",
-              "items": [
-                "Košeca – elektronická evidencia (RFID/QR): netriediaci 25 €/os., najlepší ~11 €/os. – úspora 55 %.",
-                "Rakovnica – žetónový systém: −33 % zmesového odpadu, −37 % nákladov (IEP, 2019).",
-                "Benchmark: Trenčín 43,40 €, Žilina 44,20 €, Trnava 63,60 €/obyv. – rozdiel 46 % len dizajnom systému."
-              ],
-              "width": 7.8,
-              "fontScale": 0.82,
-              "position": [
-                -0.8,
-                5.1
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Námestovo: ~74 €/obyv. ročne, nad benchmarkom krajských miest – argument pre množstvový zber.",
-              "width": 8.8,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.3
-              ],
-              "depth": "front"
-            }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "chart",
-              "chart": "barh",
-              "title": "Náklady na tonu zmesového odpadu (€/t)",
-              "data": [
+              "parts": [
                 {
-                  "label": "Skládka 2018",
-                  "value": 40,
-                  "display": "40 €/t"
+                  "type": "chart",
+                  "chart": "barh",
+                  "title": "Náklady na tonu zmesového odpadu (€/t)",
+                  "data": [
+                    {
+                      "label": "Skládka 2018",
+                      "value": 40,
+                      "display": "40 €/t"
+                    },
+                    {
+                      "label": "Skládka 2021",
+                      "value": 76,
+                      "display": "76 €/t"
+                    },
+                    {
+                      "label": "Skládka + úprava 2025/26",
+                      "value": 125,
+                      "display": "125 €/t"
+                    },
+                    {
+                      "label": "ZEVO (OLO, 2026)",
+                      "value": 116,
+                      "display": "116 €/t"
+                    }
+                  ],
+                  "colors": [
+                    "#c9a1a6",
+                    "#c9a1a6",
+                    "#a98289",
+                    "#7d8b74"
+                  ],
+                  "width": 7.2,
+                  "position": [
+                    -3.7,
+                    5.0
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "label": "Skládka 2021",
-                  "value": 76,
-                  "display": "76 €/t"
+                  "type": "stat",
+                  "value": "116 €/t",
+                  "label": "ZEVO – zhodnotenie ZKO",
+                  "note": "cenník ZEVO OLO Bratislava od 1. 1. 2026",
+                  "width": 3.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.2,
+                    6.1
+                  ],
+                  "depth": "front"
                 },
                 {
-                  "label": "Skládka + úprava 2025/26",
-                  "value": 125,
-                  "display": "125 €/t"
-                },
-                {
-                  "label": "ZEVO (OLO, 2026)",
-                  "value": 116,
-                  "display": "116 €/t"
+                  "type": "stat",
+                  "value": "10 %",
+                  "label": "Limit skládkovania EÚ do 2035",
+                  "note": "smernica (EÚ) 2018/850 – bez alternatívy extrémne náklady",
+                  "width": 3.9,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.2,
+                    3.0
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "colors": [
-                "#c9a1a6",
-                "#c9a1a6",
-                "#a98289",
-                "#7d8b74"
-              ],
-              "width": 7.2,
-              "position": [
-                -3.7,
-                5.0
-              ],
-              "depth": "mid"
+              ]
             },
             {
-              "type": "stat",
-              "value": "116 €/t",
-              "label": "ZEVO – zhodnotenie ZKO",
-              "note": "cenník ZEVO OLO Bratislava od 1. 1. 2026",
-              "width": 3.9,
-              "fontScale": 0.9,
-              "position": [
-                5.2,
-                6.1
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "stat",
-              "value": "10 %",
-              "label": "Limit skládkovania EÚ do 2035",
-              "note": "smernica (EÚ) 2018/850 – bez alternatívy extrémne náklady",
-              "width": 3.9,
-              "fontScale": 0.9,
-              "position": [
-                5.2,
-                3.0
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Prečo ZEVO",
+                  "items": [
+                    "ZEVO je dnes cenovo porovnateľné až lacnejšie ako skládka s povinnou úpravou.",
+                    "Skládkovanie zdraželo 3–4× (poplatky, povinná úprava od 2025, inflácia, klesajúca kapacita).",
+                    "Pre Námestovo (~2 000 t) ide rádovo o desiatky tisíc € ročne."
+                  ],
+                  "width": 7.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    -0.8,
+                    5.1
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Na Slovensku fungujú dve ZEVO – v Bratislave (OLO) a Košiciach (KOSIT). Ceny overené k 07/2026 (cenník OLO 2026).",
+                  "width": 8.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "bullets",
-              "title": "Prečo ZEVO",
-              "items": [
-                "ZEVO je dnes cenovo porovnateľné až lacnejšie ako skládka s povinnou úpravou.",
-                "Skládkovanie zdraželo 3–4× (poplatky, povinná úprava od 2025, inflácia, klesajúca kapacita).",
-                "Pre Námestovo (~2 000 t) ide rádovo o desiatky tisíc € ročne."
-              ],
-              "width": 7.8,
-              "fontScale": 0.82,
-              "position": [
-                -0.8,
-                5.1
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Na Slovensku fungujú dve ZEVO – v Bratislave (OLO) a Košiciach (KOSIT). Ceny overené k 07/2026 (cenník OLO 2026).",
-              "width": 8.8,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.3
-              ],
-              "depth": "front"
-            }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Úspory, motivácia a premena odpadu na energiu (ZEVO)"
+      ]
     },
     {
       "id": "buducnost",
-      "title": "Budúcnosť samosprávy",
       "kicker": "Časť 3 · Realita mestského rozpočtu",
       "props": [
         {
@@ -3446,139 +3583,148 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "buducnost-samospravy",
+          "title": "Budúcnosť samosprávy: efektívnosť vs. identita",
+          "subtitle": "Slovensko je v trojici najrozdrobenejších krajín EÚ – 2 890 obcí s priemerom 1 875 obyvateľov (medián len ~670).",
+          "groups": [
             {
-              "type": "stat",
-              "value": "146",
-              "label": "Obcí pod 100 obyvateľov",
-              "note": "k 31. 12. 2024; žije v nich len 9 407 ľudí (0,17 %)",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                -5.0,
-                6.7
-              ],
-              "depth": "mid"
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "146",
+                  "label": "Obcí pod 100 obyvateľov",
+                  "note": "k 31. 12. 2024; žije v nich len 9 407 ľudí (0,17 %)",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    -5.0,
+                    6.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "91 %",
+                  "label": "Obcí pod 3 000 obyvateľov",
+                  "note": "2 631 z 2 890 obcí – žije v nich však len 39 % obyvateľov",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    0,
+                    6.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "61k / 15k",
+                  "label": "Priemer Dánsko / Poľsko",
+                  "note": "veľkosť obcí po reformách (98 obcí / 2 479 gmín)",
+                  "width": 4.5,
+                  "fontScale": 0.9,
+                  "position": [
+                    5.0,
+                    6.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Slovensko je s Českom a Francúzskom v trojici najrozdrobenejších krajín EÚ – 2 890 obcí, priemer 1 875 obyvateľov (medián ~670).",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    2.1
+                  ],
+                  "depth": "front"
+                }
+              ]
             },
             {
-              "type": "stat",
-              "value": "91 %",
-              "label": "Obcí pod 3 000 obyvateľov",
-              "note": "2 631 z 2 890 obcí – žije v nich však len 39 % obyvateľov",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                0,
-                6.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "stat",
-              "value": "61k / 15k",
-              "label": "Priemer Dánsko / Poľsko",
-              "note": "veľkosť obcí po reformách (98 obcí / 2 479 gmín)",
-              "width": 4.5,
-              "fontScale": 0.9,
-              "position": [
-                5.0,
-                6.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Slovensko je s Českom a Francúzskom v trojici najrozdrobenejších krajín EÚ – 2 890 obcí, priemer 1 875 obyvateľov (medián ~670).",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                2.1
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "text",
+                  "title": "Problém efektívnosti",
+                  "body": "Najmenšie obce (pod 250 obyv.) minú na vlastnú administratívu viac než polovicu výdavkov. Na služby ostáva menšina rozpočtu.",
+                  "width": 6.3,
+                  "fontScale": 0.88,
+                  "position": [
+                    -3.8,
+                    5.0
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "text",
+                  "title": "Väčšie samosprávy",
+                  "body": "Mestá s 20–50 tis. obyv. dávajú na administratívu ~10 %. Konsolidácia by podľa IFP uvoľnila 181–316 mil. € ročne. Námestovo patrí k efektívnejšej časti.",
+                  "width": 6.3,
+                  "fontScale": 0.88,
+                  "position": [
+                    3.8,
+                    5.0
+                  ],
+                  "depth": "mid"
+                }
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "riesenia-konsolidacie",
+          "title": "Riešenia konsolidácie: medzinárodné skúsenosti",
+          "groups": [
             {
-              "type": "text",
-              "title": "Problém efektívnosti",
-              "body": "Najmenšie obce (pod 250 obyv.) minú na vlastnú administratívu viac než polovicu výdavkov. Na služby ostáva menšina rozpočtu.",
-              "width": 6.3,
-              "fontScale": 0.88,
-              "position": [
-                -3.8,
-                5.0
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "text",
-              "title": "Väčšie samosprávy",
-              "body": "Mestá s 20–50 tis. obyv. dávajú na administratívu ~10 %. Konsolidácia by podľa IFP uvoľnila 181–316 mil. € ročne. Námestovo patrí k efektívnejšej časti.",
-              "width": 6.3,
-              "fontScale": 0.88,
-              "position": [
-                3.8,
-                5.0
-              ],
-              "depth": "mid"
-            }
-          ],
-          "clears": true
-        },
-        {
-          "parts": [
-            {
-              "type": "numbered",
-              "title": "Riešenia konsolidácie: skúsenosti",
-              "items": [
+              "parts": [
                 {
-                  "title": "Dánsko 2007",
-                  "text": "271 → 98 obcí; obce si partnerov vyberali prevažne dobrovoľne. Priemerná obec dnes ~60 000 obyvateľov."
+                  "type": "numbered",
+                  "title": "Riešenia konsolidácie: skúsenosti",
+                  "items": [
+                    {
+                      "title": "Dánsko 2007",
+                      "text": "271 → 98 obcí; obce si partnerov vyberali prevažne dobrovoľne. Priemerná obec dnes ~60 000 obyvateľov."
+                    },
+                    {
+                      "title": "Poľsko 1999",
+                      "text": "16 vojvodstiev, 380 okresov, 2 479 gmín s priemerom ~15 000 obyvateľov. Funguje vyše 25 rokov."
+                    },
+                    {
+                      "title": "Vysoké Tatry",
+                      "text": "Osady zjednotené už v r. 1947; identita cez 15 mestských častí – konsolidácia funguje, keď sa zachová charakter."
+                    }
+                  ],
+                  "width": 8.2,
+                  "fontScale": 0.78,
+                  "position": [
+                    -1.3,
+                    5.2
+                  ],
+                  "depth": "mid"
                 },
                 {
-                  "title": "Poľsko 1999",
-                  "text": "16 vojvodstiev, 380 okresov, 2 479 gmín s priemerom ~15 000 obyvateľov. Funguje vyše 25 rokov."
-                },
-                {
-                  "title": "Vysoké Tatry",
-                  "text": "Osady zjednotené už v r. 1947; identita cez 15 mestských častí – konsolidácia funguje, keď sa zachová charakter."
+                  "type": "callout",
+                  "tone": "positive",
+                  "text": "Slovenské riešenie – centrá zdieľaných služieb: efektívnosť bez straty identity. Prvé otvorené 1. 3. 2025 v Tornali, slúži 30 samosprávam (~20 000 obyv.) so 6 zamestnancami.",
+                  "width": 8.8,
+                  "fontScale": 0.82,
+                  "position": [
+                    0.4,
+                    1.25
+                  ],
+                  "depth": "front"
                 }
-              ],
-              "width": 8.2,
-              "fontScale": 0.78,
-              "position": [
-                -1.3,
-                5.2
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "positive",
-              "text": "Slovenské riešenie – centrá zdieľaných služieb: efektívnosť bez straty identity. Prvé otvorené 1. 3. 2025 v Tornali, slúži 30 samosprávam (~20 000 obyv.) so 6 zamestnancami.",
-              "width": 8.8,
-              "fontScale": 0.82,
-              "position": [
-                0.4,
-                1.25
-              ],
-              "depth": "front"
+              ]
             }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Efektívnosť vs. identita – a osvedčené riešenia konsolidácie"
+      ]
     },
     {
       "id": "zaver",
-      "title": "Ďakujem za pozornosť",
       "kicker": "Ďakujem za pozornosť",
       "props": [
         {
@@ -3715,103 +3861,115 @@
           }
         }
       ],
-      "steps": [
+      "slides": [
         {
-          "parts": [
+          "id": "vyzvy-su-realne",
+          "title": "Výzvy sú reálne – riešenia existujú",
+          "groups": [
             {
-              "type": "bullets",
-              "title": "Realita Námestova 2025",
-              "items": [
-                "Výsledok +2,48 mil. € – po vylúčení viazaných 2,36 mil. € je upravený výsledok −1,07 mil. €.",
-                "Rezervný fond klesol o 38 % na 1,07 mil. €.",
-                "Dlh mesta: 0 € – plná flexibilita do ťažších rokov.",
-                "Investičný rozpočet splnený na 84 % – najväčší priestor na zlepšenie."
-              ],
-              "width": 6.3,
-              "fontScale": 0.82,
-              "position": [
-                -3.8,
-                5.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "bullets",
-              "title": "Vaša úloha ako občana",
-              "items": [
-                "Monitorujte rozhodnutia zastupiteľstva – opatrenia menia rozpočet o milióny.",
-                "Pripomienkujte nariadenia (VZN) – dane, poplatky, dotácie.",
-                "Zapojte sa do prerokovaní záverečného účtu. Transparentnosť začína záujmom."
-              ],
-              "width": 6.3,
-              "fontScale": 0.82,
-              "position": [
-                3.8,
-                5.7
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Prezentácia vychádza zo záverečného účtu mesta Námestovo za rok 2025 (schválený MsZ 29. 6. 2026) a jeho programovej prílohy.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.3
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Realita Námestova 2025",
+                  "items": [
+                    "Výsledok +2,48 mil. € – po vylúčení viazaných 2,36 mil. € je upravený výsledok −1,07 mil. €.",
+                    "Rezervný fond klesol o 38 % na 1,07 mil. €.",
+                    "Dlh mesta: 0 € – plná flexibilita do ťažších rokov.",
+                    "Investičný rozpočet splnený na 84 % – najväčší priestor na zlepšenie."
+                  ],
+                  "width": 6.3,
+                  "fontScale": 0.82,
+                  "position": [
+                    -3.8,
+                    5.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Vaša úloha ako občana",
+                  "items": [
+                    "Monitorujte rozhodnutia zastupiteľstva – opatrenia menia rozpočet o milióny.",
+                    "Pripomienkujte nariadenia (VZN) – dane, poplatky, dotácie.",
+                    "Zapojte sa do prerokovaní záverečného účtu. Transparentnosť začína záujmom."
+                  ],
+                  "width": 6.3,
+                  "fontScale": 0.82,
+                  "position": [
+                    3.8,
+                    5.7
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Prezentácia vychádza zo záverečného účtu mesta Námestovo za rok 2025 (schválený MsZ 29. 6. 2026) a jeho programovej prílohy.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
           ]
         },
         {
-          "parts": [
+          "id": "dakujem",
+          "title": "Ďakujem za pozornosť",
+          "subtitle": "Rozpočet je príbeh o tom, aké mesto chceme. Píšme ho spoločne.",
+          "kicker": "Ďakujem za pozornosť",
+          "groups": [
             {
-              "type": "bullets",
-              "title": "Ďakujem — a čo ďalej",
-              "items": [
-                "Dáta sú verejné — rozpočet a záverečný účet nájdete na webe mesta.",
-                "Pýtajte sa — najlepší rozpočet vzniká, keď sa oň občania zaujímajú.",
-                "Prelistujte si to sami — táto prezentácia je interaktívna (šípky / klik).",
-                "Nabudúce dovidenia — diskusie o meste organizuje združenie OKNO Námestovo."
-              ],
-              "width": 6.7,
-              "fontScale": 0.82,
-              "position": [
-                -3.4,
-                5.5
-              ],
-              "depth": "mid"
-            },
-            {
-              "type": "image",
-              "src": "images/qr-okno.png",
-              "caption": "ok-no.sk",
-              "width": 3.7,
-              "position": [
-                5.3,
-                5.6
-              ],
-              "depth": "front"
-            },
-            {
-              "type": "callout",
-              "tone": "info",
-              "text": "Túto prednášku prináša OKNO Námestovo – séria diskusií o tom, ako spolu tvoríme naše mesto: financie, urbanizmus, história, identita.",
-              "width": 9.2,
-              "fontScale": 0.82,
-              "position": [
-                0,
-                1.3
-              ],
-              "depth": "front"
+              "parts": [
+                {
+                  "type": "bullets",
+                  "title": "Ďakujem — a čo ďalej",
+                  "items": [
+                    "Dáta sú verejné — rozpočet a záverečný účet nájdete na webe mesta.",
+                    "Pýtajte sa — najlepší rozpočet vzniká, keď sa oň občania zaujímajú.",
+                    "Prelistujte si to sami — táto prezentácia je interaktívna (šípky / klik).",
+                    "Nabudúce dovidenia — diskusie o meste organizuje združenie OKNO Námestovo."
+                  ],
+                  "width": 6.7,
+                  "fontScale": 0.82,
+                  "position": [
+                    -3.4,
+                    5.5
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "image",
+                  "src": "images/qr-okno.png",
+                  "caption": "ok-no.sk",
+                  "width": 3.7,
+                  "position": [
+                    5.3,
+                    5.6
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "callout",
+                  "tone": "info",
+                  "text": "Túto prednášku prináša OKNO Námestovo – séria diskusií o tom, ako spolu tvoríme naše mesto: financie, urbanizmus, história, identita.",
+                  "width": 9.2,
+                  "fontScale": 0.82,
+                  "position": [
+                    0,
+                    1.3
+                  ],
+                  "depth": "front"
+                }
+              ]
             }
-          ],
-          "clears": true
+          ]
         }
-      ],
-      "subtitle": "Rozpočet je príbeh o tom, aké mesto chceme. Píšme ho spoločne."
+      ]
     }
   ]
 }

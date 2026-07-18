@@ -6,7 +6,13 @@ import { createClouds } from '../environment/clouds.js';
 import { createTitle } from '../parts/title.js';
 import { buildPart } from '../parts/partsFactory.js';
 import { CONTENT_LAYER } from './focusMode.js';
-import { ACTIVE_SCENE_RADIUS, PART_CASCADE, PART_STACK_DZ } from '../config.js';
+import { tween, ease } from '../engine/tween.js';
+import { ACTIVE_SCENE_RADIUS, PART_CASCADE, PART_STACK_DZ, PART_STAGGER } from '../config.js';
+
+// A tween-driven delay so it snaps when the presenter mashes forward.
+function delayThen(seconds, fn) {
+  return tween({ t: 0 }, { t: 1 }, seconds, ease.linear).done.then(fn);
+}
 
 // Tags an object tree as presentation CONTENT so focus mode (P) can
 // re-render it in front of the veiled diorama.
@@ -59,25 +65,27 @@ export function buildDeck(deck, scene3) {
       });
     }
 
-    const title = createTitle(sceneDef.title, {
-      kicker: sceneDef.kicker, subtitle: sceneDef.subtitle,
+    // One 3D title per virtual SLIDE — only the active slide's is shown.
+    // Titles live BEHIND the panel zone (parked between the mid and back
+    // rows), so panels always pass in front; scaled up a touch to offset the
+    // extra perspective distance, and dropped a little when a kicker needs
+    // headroom above the letters.
+    const slideTitles = sceneDef.slides.map((sl) => {
+      const t = createTitle(sl.title, { kicker: sl.kicker, subtitle: sl.subtitle });
+      t.position.set(0, sl.kicker ? 7.9 : 8.5, -6.5);
+      t.scale.setScalar(1.12);
+      t.userData.pos3d = t.position.clone();
+      tagContent(t);
+      group.add(t);
+      updatables.push(t.userData.update);
+      return t;
     });
-    // The title lives BEHIND the panel zone (mid row and nearer): parked
-    // between the mid and back rows, panels always pass in front of it.
-    // Slightly scaled up to offset the extra perspective distance; a kicker
-    // needs headroom above the letters, so that variant sits a bit lower.
-    title.position.set(0, sceneDef.kicker ? 7.9 : 8.5, -6.5);
-    title.scale.setScalar(1.12);
-    tagContent(title);
-    group.add(title);
-    updatables.push(title.userData.update);
 
-    let slot = 0; // cascade slot — restarts on a clearing step (new "page")
-    let zSeen = new Map(); // same-depth stacking, also per page
+    let slot = 0; // cascade slot — restarts each group (every group clears)
+    let zSeen = new Map(); // same-depth stacking, also per group
     const stepParts = sceneDef.steps.map((step) => {
-      // A step reveals its whole batch of parts on one press. Parts
-      // without an explicit position/depth land on the cascade: each new
-      // panel in front of the older ones, fanned to the right.
+      // A step reveals its whole batch of parts on one press. Parts without
+      // an explicit position/depth land on the cascade.
       if (step.clears) { slot = 0; zSeen = new Map(); }
       return step.parts.map((partDef) => {
         const def = {
@@ -87,15 +95,11 @@ export function buildDeck(deck, scene3) {
           z: partDef.z ?? PART_CASCADE.z0 + PART_CASCADE.dz * slot,
         };
         slot += 1;
-        // Panels of one page sharing a depth never sit in the same plane —
-        // each later one steps a little toward the camera, in reveal order,
-        // so overlapping cards always occlude cleanly instead of bleeding.
         const zKey = def.z.toFixed(2);
         const stacked = zSeen.get(zKey) ?? 0;
         zSeen.set(zKey, stacked + 1);
         def.z += stacked * PART_STACK_DZ;
         const part = buildPart(def);
-        // part y is height above the terrain at its own footprint
         part.position.y += ground.heightAt(originX + part.position.x, part.position.z);
         tagContent(part);
         group.add(part);
@@ -104,17 +108,43 @@ export function buildDeck(deck, scene3) {
       });
     });
 
-    const clears = sceneDef.steps.map((step) => step.clears);
-    // Remember every anchor's authored 3D spot — focus mode restacks
-    // panels for the flat view and puts them back on exit.
-    title.userData.pos3d = title.position.clone();
+    const meta = sceneDef.steps.map((step) => ({
+      clears: step.clears, slideIndex: step.slideIndex, slideStart: step.slideStart,
+    }));
     for (const batch of stepParts) {
       for (const part of batch) part.userData.pos3d = part.position.clone();
     }
-    return { group, originX, title, stepParts, clears, updatables };
+    return { group, originX, slideTitles, stepParts, meta, slides: sceneDef.slides, updatables };
   });
 
-  if (scenes[0]) scenes[0].title.userData.setShown(true, true);
+  // The single title visible right now (across all scenes/slides).
+  let shownTitle = null;
+  function showSlideTitle(sceneIndex, slideIndex) {
+    const t = scenes[sceneIndex].slideTitles[slideIndex];
+    if (t === shownTitle) return;
+    if (shownTitle) shownTitle.userData.setShown(false);
+    t.userData.setShown(true, !shownTitle); // instant for the very first
+    shownTitle = t;
+  }
+  // Active slide index for a state (scene, k = steps revealed): k=0 is the
+  // first slide (cover/arrival), otherwise the slide owning the last step.
+  function activeSlideIndex(s, k) {
+    return k > 0 ? scenes[s].meta[k - 1].slideIndex : 0;
+  }
+  // Subtitle shows while the active slide's TITLE BEAT is on screen (the empty
+  // step or the k=0 cover) and fades once one of its groups is visible.
+  function updateSubtitle(s, k) {
+    const active = activeSlideIndex(s, k);
+    const hasPanels = k > 0 && scenes[s].stepParts[k - 1].length > 0;
+    scenes[s].slideTitles[active].userData.setSubShown?.(!hasPanels);
+  }
+  if (scenes[0]) { showSlideTitle(0, 0); updateSubtitle(0, 0); }
+
+  // Flat, ordered list of every slide for the menu + URL hash.
+  const slideList = [];
+  scenes.forEach((s, si) => s.slides.forEach((sl) => {
+    slideList.push({ sceneIndex: si, jumpK: sl.jumpK, id: sl.id, title: sl.title, kicker: sl.kicker });
+  }));
 
   // First index of the page that step k belongs to: just past the previous
   // clearing step, or 0.
@@ -136,8 +166,8 @@ export function buildDeck(deck, scene3) {
     const i = Math.max(0, Math.min(sceneCount - 1, Math.round(cameraX / spacing)));
     const s = scenes[i];
 
-    // Title tucked against the top edge (kicker rides just above it).
-    s.title.position.set(0, frame.top - 1.7, s.title.userData.pos3d.z);
+    // The active slide's title tucks against the top edge in flat 2D view.
+    if (shownTitle) shownTitle.position.set(0, frame.top - 1.7, shownTitle.userData.pos3d.z);
 
     const visible = s.stepParts.flat().filter((p) => p.userData.isRevealed?.());
     if (!visible.length) return;
@@ -212,12 +242,14 @@ export function buildDeck(deck, scene3) {
   function restoreFocus() {
     focusLayouted = false;
     for (const s of scenes) {
-      s.title.position.copy(s.title.userData.pos3d);
+      for (const t of s.slideTitles) t.position.copy(t.userData.pos3d);
       for (const batch of s.stepParts) {
         for (const p of batch) p.position.copy(p.userData.pos3d);
       }
     }
   }
+
+  const clearsOf = (s) => s.meta.map((m) => m.clears);
 
   return {
     heightAt: ground.heightAt,
@@ -226,38 +258,76 @@ export function buildDeck(deck, scene3) {
     sceneX(i) { return scenes[i].originX; },
     stepCount(i) { return scenes[i].stepParts.length; },
 
-    // A step reveals its whole batch of panels at once. A step marked
-    // "clears" retires the previous page of panels when it lands and
-    // brings that page back when stepped over backwards — the page window
-    // runs from the previous clearing step (or 0) up to k−1.
-    revealStep(i, k) {
+    // Every group clears the previous one — only one group shows at a time.
+    // Revealing a group that STARTS a slide swaps the 3D title to that slide;
+    // the slide's first content group fades its subtitle aside.
+    revealStep(i, k, instant = false) {
       const s = scenes[i];
-      // The first panel takes the kicker/subtitle's sky — fade them aside.
-      if (k === 0) s.title.userData.setSubShown?.(false);
-      const jobs = s.stepParts[k].map((p) => p.userData.reveal());
-      if (s.clears[k]) {
-        for (let j = pageStart(s.clears, k); j < k; j += 1) {
+      const m = s.meta[k];
+      if (m.slideStart) showSlideTitle(i, m.slideIndex);
+      const batch = s.stepParts[k];
+      const clears = clearsOf(s);
+      const hideCleared = (jobs) => {
+        if (!clears[k]) return;
+        for (let j = pageStart(clears, k); j < k; j += 1) {
           for (const p of s.stepParts[j]) jobs.push(p.userData.hide());
         }
+      };
+      let out;
+      if (instant) { // URL / menu jumps land whole pages at once, no stagger
+        for (const p of batch) p.userData.revealInstant();
+        const jobs = [];
+        hideCleared(jobs);
+        out = Promise.all(jobs);
+      } else {
+        // Panels of a group appear one after another (PART_STAGGER apart), not
+        // all at once. The delay is a tween so mashing forward snaps it.
+        const jobs = batch.map((p, j) => (
+          j === 0 ? p.userData.reveal() : delayThen(j * PART_STAGGER, () => p.userData.reveal())
+        ));
+        hideCleared(jobs);
+        out = Promise.all(jobs);
       }
-      return Promise.all(jobs);
+      updateSubtitle(i, k + 1);
+      return out;
     },
     hideStep(i, k) {
       const s = scenes[i];
-      if (k === 0) s.title.userData.setSubShown?.(true);
+      const clears = clearsOf(s);
       const jobs = s.stepParts[k].map((p) => p.userData.hide());
-      if (s.clears[k]) {
-        for (let j = pageStart(s.clears, k); j < k; j += 1) {
+      if (clears[k]) {
+        for (let j = pageStart(clears, k); j < k; j += 1) {
           for (const p of s.stepParts[j]) jobs.push(p.userData.reveal());
         }
       }
+      // Returning to state k: show the now-active slide's title, and its
+      // subtitle if a title beat (not a group) is what's on screen.
+      showSlideTitle(i, activeSlideIndex(i, k));
+      updateSubtitle(i, k);
       return Promise.all(jobs);
     },
 
-    // Called when the hero starts walking to scene `to` — swap titles.
-    onSceneChange(to) {
-      scenes.forEach((s, i) => s.title.userData.setShown(i === to));
+    // Called when the hero starts walking to scene `to` (dir ±1) — show the
+    // active slide's title for the state he's arriving into.
+    onSceneChange(to, dir) {
+      const kAfter = dir > 0 ? 0 : scenes[to].stepParts.length;
+      showSlideTitle(to, activeSlideIndex(to, kAfter));
+      updateSubtitle(to, kAfter);
     },
+
+    // ── slide addressing (menu + URL) ──
+    slides: slideList,
+    // Flat-list index of the slide active at state (s, k) — for menu
+    // highlight and writing the URL hash.
+    activeSlide(s, k) {
+      const localIdx = activeSlideIndex(s, k);
+      let base = 0;
+      for (let j = 0; j < s; j += 1) base += scenes[j].slides.length;
+      return base + localIdx;
+    },
+    // Force the 3D title to the active slide for state (s, k) — used after a
+    // jump, where no reveal fired for a title-only landing.
+    showTitleFor(s, k) { showSlideTitle(s, activeSlideIndex(s, k)); updateSubtitle(s, k); },
 
     update(t, dt, cameraX, focus) {
       if (focus?.active) layoutFocus(cameraX, focus.frame);

@@ -128,7 +128,15 @@ export function createTitle(text, { color = palette.dustyRose, kicker, subtitle 
     const dx = -(bb.max.x + bb.min.x) / 2;
     const dy = -(bb.max.y + bb.min.y) / 2;
     geo.translate(dx, dy, 0);
-    inner.add(paperMesh(geo, color, base.length, 0.06));
+
+    // Long per-slide headings shrink to fit the frame width (3D text can't
+    // wrap). The letters + their accents live in one `letters` group scaled
+    // by `fit`; the kicker/subtitle keep their own size (they already wrap).
+    const MAX_W = 15.5; // world units before the outer 1.12 scale
+    const textW = bb.max.x - bb.min.x;
+    const fit = textW > MAX_W ? MAX_W / textW : 1;
+    const letters = new THREE.Group();
+    letters.add(paperMesh(geo, color, base.length, 0.06));
 
     // Papercraft diacritics over their base glyphs (helvetiker has none).
     const centers = glyphCenters(base, size);
@@ -137,11 +145,14 @@ export function createTitle(text, { color = palette.dustyRose, kicker, subtitle 
       const tall = ch !== ch.toLowerCase() || ASCENDERS.has(ch);
       const mark = makeMark(m.type, size, color, base.length + i);
       mark.position.set(centers[m.index] + dx, (tall ? 1.02 : 0.74) * size + dy, 0.15);
-      inner.add(mark);
+      letters.add(mark);
     });
+    letters.scale.setScalar(fit);
+    inner.add(letters);
 
-    topY = (bb.max.y - bb.min.y) / 2 + (marks.length ? 0.3 * size : 0);
-    botY = -(bb.max.y - bb.min.y) / 2;
+    const halfH = ((bb.max.y - bb.min.y) / 2) * fit;
+    topY = halfH + (marks.length ? 0.3 * size * fit : 0);
+    botY = -halfH;
   }
   const subPlanes = [];
   if (kicker) {

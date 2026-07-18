@@ -7,66 +7,275 @@
   "scenes": [
     {
       "id": "info-parts",
-      "title": "Info Parts",
       "kicker": "Časť 1 · Nové panely",
-      "subtitle": "stat, callout, numbered a table — s diakritikou: ľšťžýáíé",
       "props": [
-        { "type": "pineTree", "position": [-11, 0], "layer": "back", "options": { "seed": 3 } },
-        { "type": "cottage", "position": [9, 0], "layer": "back", "options": { "seed": 2 } },
-        { "type": "sheep", "position": [6, 0], "layer": 1.5, "options": { "seed": 4 } }
+        {
+          "type": "pineTree",
+          "position": [
+            -11,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 3
+          }
+        },
+        {
+          "type": "cottage",
+          "position": [
+            9,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 2
+          }
+        },
+        {
+          "type": "sheep",
+          "position": [
+            6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 4
+          }
+        }
       ],
-      "steps": [
-        { "part": { "type": "stat", "value": "16 553 897 €", "label": "Plnenie príjmov", "note": "94,3 % z rozpočtu po zmenách" } },
-        { "part": { "type": "stat", "value": "95,1 %", "label": "Plnenie výdavkov", "accentColor": "#7d8b74", "width": 3.2 } },
-        { "part": { "type": "callout", "tone": "positive", "title": "Dobrá správa", "text": "Mesto nemuselo siahnuť hlboko do rezerv — investície pokryla dotácia z Environmentálneho fondu." } },
-        { "part": { "type": "numbered", "title": "Dane", "items": [
-          { "title": "Zdieľané dane", "text": "5 444 594 € — 84 % daňových príjmov mesta." },
-          { "title": "Miestne dane", "text": "Daň z nehnuteľností 598 657 €." },
-          "Poplatok za komunálny odpad: 364 024 €."
-        ] } },
-        { "part": { "type": "table", "title": "Rezervy", "columns": ["Fond", "Stav", "Podiel"], "rows": [
-          ["Rezervný fond", "1 273 093 €", "68 %"],
-          ["Fond rozvoja", "590 210 €", "32 %"]
-        ], "width": 6 } }
+      "slides": [
+        {
+          "id": "info-parts",
+          "title": "Info Parts",
+          "subtitle": "stat, callout, numbered a table — s diakritikou: ľšťžýáíé",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "stat",
+                  "value": "16 553 897 €",
+                  "label": "Plnenie príjmov",
+                  "note": "94,3 % z rozpočtu po zmenách"
+                },
+                {
+                  "type": "stat",
+                  "value": "95,1 %",
+                  "label": "Plnenie výdavkov",
+                  "accentColor": "#7d8b74",
+                  "width": 3.2
+                },
+                {
+                  "type": "callout",
+                  "tone": "positive",
+                  "title": "Dobrá správa",
+                  "text": "Mesto nemuselo siahnuť hlboko do rezerv — investície pokryla dotácia z Environmentálneho fondu."
+                },
+                {
+                  "type": "numbered",
+                  "title": "Dane",
+                  "items": [
+                    {
+                      "title": "Zdieľané dane",
+                      "text": "5 444 594 € — 84 % daňových príjmov mesta."
+                    },
+                    {
+                      "title": "Miestne dane",
+                      "text": "Daň z nehnuteľností 598 657 €."
+                    },
+                    "Poplatok za komunálny odpad: 364 024 €."
+                  ]
+                },
+                {
+                  "type": "table",
+                  "title": "Rezervy",
+                  "columns": [
+                    "Fond",
+                    "Stav",
+                    "Podiel"
+                  ],
+                  "rows": [
+                    [
+                      "Rezervný fond",
+                      "1 273 093 €",
+                      "68 %"
+                    ],
+                    [
+                      "Fond rozvoja",
+                      "590 210 €",
+                      "32 %"
+                    ]
+                  ],
+                  "width": 6
+                }
+              ]
+            }
+          ]
+        }
       ]
     },
     {
       "id": "charts",
-      "title": "Charts",
       "kicker": "Časť 2 · Nové grafy",
-      "steps": [
-        { "part": { "type": "chart", "chart": "barh", "title": "Výdavky programov", "data": [
-          { "label": "Školstvo", "value": 7553866 },
-          { "label": "Investície", "value": 1679838 },
-          { "label": "Sociálne", "value": 1271342 }
-        ], "width": 7.5 } },
-        { "part": { "type": "chart", "chart": "barh", "title": "Plán vs. skutočnosť", "data": [
-          { "label": "Školstvo", "value": 3769734, "plan": 7553866 },
-          { "label": "Sociálne služby", "value": 647349, "plan": 1163738 },
-          { "label": "Úrady", "value": 68337, "plan": 152161 }
-        ], "colors": ["#a9c0b4"], "width": 7.5 } },
-        { "part": { "type": "chart", "chart": "bar", "title": "Rozpočet 2025", "labels": ["Príjmy", "Výdavky"], "series": [
-          { "name": "Schválený", "values": [14438006, 14438006] },
-          { "name": "Po zmenách", "values": [17560400, 14796405] },
-          { "name": "Skutočnosť", "values": [16553897, 14074624] }
-        ], "width": 7 } },
-        { "part": { "type": "chart", "chart": "pie", "donut": true, "centerLabel": "16,55 M€", "centerSub": "skutočnosť", "legendValues": true, "title": "Štruktúra príjmov", "data": [
-          { "label": "Bežné", "value": 12752066 },
-          { "label": "Kapitálové", "value": 2555677 },
-          { "label": "Finančné op.", "value": 1246154 }
-        ], "width": 6 } }
+      "slides": [
+        {
+          "id": "charts",
+          "title": "Charts",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "chart",
+                  "chart": "barh",
+                  "title": "Výdavky programov",
+                  "data": [
+                    {
+                      "label": "Školstvo",
+                      "value": 7553866
+                    },
+                    {
+                      "label": "Investície",
+                      "value": 1679838
+                    },
+                    {
+                      "label": "Sociálne",
+                      "value": 1271342
+                    }
+                  ],
+                  "width": 7.5
+                },
+                {
+                  "type": "chart",
+                  "chart": "barh",
+                  "title": "Plán vs. skutočnosť",
+                  "data": [
+                    {
+                      "label": "Školstvo",
+                      "value": 3769734,
+                      "plan": 7553866
+                    },
+                    {
+                      "label": "Sociálne služby",
+                      "value": 647349,
+                      "plan": 1163738
+                    },
+                    {
+                      "label": "Úrady",
+                      "value": 68337,
+                      "plan": 152161
+                    }
+                  ],
+                  "colors": [
+                    "#a9c0b4"
+                  ],
+                  "width": 7.5
+                },
+                {
+                  "type": "chart",
+                  "chart": "bar",
+                  "title": "Rozpočet 2025",
+                  "labels": [
+                    "Príjmy",
+                    "Výdavky"
+                  ],
+                  "series": [
+                    {
+                      "name": "Schválený",
+                      "values": [
+                        14438006,
+                        14438006
+                      ]
+                    },
+                    {
+                      "name": "Po zmenách",
+                      "values": [
+                        17560400,
+                        14796405
+                      ]
+                    },
+                    {
+                      "name": "Skutočnosť",
+                      "values": [
+                        16553897,
+                        14074624
+                      ]
+                    }
+                  ],
+                  "width": 7
+                },
+                {
+                  "type": "chart",
+                  "chart": "pie",
+                  "donut": true,
+                  "centerLabel": "16,55 M€",
+                  "centerSub": "skutočnosť",
+                  "legendValues": true,
+                  "title": "Štruktúra príjmov",
+                  "data": [
+                    {
+                      "label": "Bežné",
+                      "value": 12752066
+                    },
+                    {
+                      "label": "Kapitálové",
+                      "value": 2555677
+                    },
+                    {
+                      "label": "Finančné op.",
+                      "value": 1246154
+                    }
+                  ],
+                  "width": 6
+                }
+              ]
+            }
+          ]
+        }
       ]
     },
     {
       "id": "pages",
-      "title": "Pages",
       "kicker": "Časť 3 · Stránkovanie a štýly",
-      "subtitle": "clears: true začne novú stránku panelov",
-      "steps": [
-        { "part": { "type": "text", "title": "Stránka 1", "body": "Tento panel zmizne, keď príde stránka 2." } },
-        { "part": { "type": "bullets", "items": ["Aj tento.", "Späť ich vráti krok dozadu."], "fontScale": 0.85 } },
-        { "clears": true, "part": { "type": "text", "title": "Stránka 2", "body": "Predchádzajúce panely sa upratali.", "cardColor": "#e3dac8" } },
-        { "part": { "type": "text", "body": "Voľne plávajúci text bez kartičky.", "card": false, "fontScale": 1.3 } }
+      "slides": [
+        {
+          "id": "pages",
+          "title": "Pages",
+          "subtitle": "clears: true začne novú stránku panelov",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "title": "Stránka 1",
+                  "body": "Tento panel zmizne, keď príde stránka 2."
+                },
+                {
+                  "type": "bullets",
+                  "items": [
+                    "Aj tento.",
+                    "Späť ich vráti krok dozadu."
+                  ],
+                  "fontScale": 0.85
+                }
+              ]
+            },
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "title": "Stránka 2",
+                  "body": "Predchádzajúce panely sa upratali.",
+                  "cardColor": "#e3dac8"
+                },
+                {
+                  "type": "text",
+                  "body": "Voľne plávajúci text bez kartičky.",
+                  "card": false,
+                  "fontScale": 1.3
+                }
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

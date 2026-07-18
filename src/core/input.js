@@ -4,6 +4,8 @@
 // P toggles presentation (focus) mode: the diorama washes into a flat 2D
 // backdrop and the title + panels come to the front.
 //
+// L opens the scene menu (jump straight to any scene).
+//
 // W/A/S/D walk the wolf around freely (A left, D right, W back away from
 // the viewer, S front toward the viewer; combine for diagonals). Five
 // seconds after the last movement key he trots back to his presenter post
@@ -15,7 +17,7 @@ const MOVE_KEYS = {
   KeyS: [0, 1],
 };
 
-export function bindInput(stepMachine, hero, focus) {
+export function bindInput(stepMachine, hero, focus, menu) {
   const held = new Set();
 
   function pushDir() {
@@ -32,6 +34,12 @@ export function bindInput(stepMachine, hero, focus) {
     const tag = document.activeElement?.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable) return;
 
+    // While the scene menu is open it swallows navigation keys.
+    if (menu?.isOpen) {
+      if (menu.handleKey(e.code)) e.preventDefault();
+      return;
+    }
+
     if (e.code === 'Space' || e.code === 'ArrowRight') {
       e.preventDefault();
       stepMachine.push(+1);
@@ -41,6 +49,9 @@ export function bindInput(stepMachine, hero, focus) {
     } else if (e.code === 'KeyP' && !e.repeat) {
       e.preventDefault();
       focus?.toggle();
+    } else if (e.code === 'KeyL' && !e.repeat) {
+      e.preventDefault();
+      menu?.toggle();
     } else if (e.code in MOVE_KEYS && !e.repeat) {
       e.preventDefault();
       held.add(e.code);

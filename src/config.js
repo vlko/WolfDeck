@@ -31,6 +31,10 @@ export const ACTIVE_SCENE_RADIUS = 1.6 * SCENE_SPACING;
 // Part reveal timing.
 export const REVEAL_DURATION = 0.45;
 
+// Delay between panels of one page (batch) appearing — they come in one
+// after another, not all at once. Mashing forward snaps the whole stagger.
+export const PART_STAGGER = 0.25;
+
 // Default cascade for parts that don't give an explicit position/depth:
 // step k lands at (x0 + k·dx, y ± yAlt, z0 + k·dz) — every new panel in
 // FRONT of the older ones, fanned rightward and alternating slightly up/down

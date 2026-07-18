@@ -57,7 +57,9 @@ thank-you last.
 ## The demo deck, annotated
 
 The shipped `public/presentation.json` is the template. Scene 1, `meadow`,
-recreates the reference sheet:
+recreates the reference sheet. (The prop/position concepts below are current;
+for the exact reveal wrapper the deck now uses `slides` → `groups` as shown
+in "Slides & groups within a scene" further down, not the older `steps`.)
 
 ```jsonc
 {
@@ -234,74 +236,63 @@ Panels of one page that share a depth never share a *plane*: each later
 step is nudged 0.5 closer to the camera automatically, so when they overlap
 they occlude cleanly, in reveal order.
 
-## Pages within a scene: batches + `clears`
+## Slides & groups within a scene
 
-A topic scene can hold several slides' worth of content without crowding.
-Two tools compose here:
-
-- **Batches** — a step with `"parts": [...]` reveals all of its panels on
-  one press (they also fold away together on the way back).
-- **`clears`** — a step marked `"clears": true` retires the previous
-  panels as it lands: a fresh "page" in the same diorama. Stepping back
-  restores them exactly.
-
-Together they give the classic rhythm — arrive (title only), then one
-press per page:
+One diorama (scene) can carry many **slides** — each with its own title +
+subtitle + URL — and each slide holds one or more **groups** of panels:
 
 ```jsonc
-"steps": [
-  { "parts": [                                                       // page 1
-      { "type": "stat", "value": "94,3 %", "label": "…" },
-      { "type": "chart", "chart": "bar", "data": [ … ] } ] },
-  { "clears": true,
-    "parts": [                                                       // page 2
-      { "type": "chart", "chart": "barh", "data": [ … ] },
-      { "type": "callout", "tone": "warning", "text": "…" } ] }
-]
+{ "id": "dane", "kicker": "Časť 1 · Mestský rozpočet", "props": [ … ],
+  "slides": [
+    { "id": "dane-cover", "title": "Dane a príjmy",
+      "subtitle": "Odkiaľ prichádzajú peniaze mesta" },      // title-only beat
+    { "id": "odkial", "title": "Odkiaľ mesto získava peniaze?",
+      "groups": [
+        { "parts": [ { "type": "stat", … }, { "type": "stat", … }, { "type": "chart", … } ] },
+        { "parts": [ { "type": "bullets", … }, { "type": "callout", … } ] }
+      ] }
+  ] }
 ```
 
-The automatic cascade restarts on each page, so page two's panels land on
-the same comfortable spots page one used. Both shipped decks present this
-way: in `rozpocet-2025.json` every scene covers 1–4 HTML slides as pages
-(`#programy` has four), and the demo deck plays each scene in two beats
-(intro batch, then the charts).
+The rhythm: arrive at the scene → the first slide's title + subtitle → each
+`Space` reveals the next group (the previous clears; ≤4 panels on screen) →
+when the slide's groups are done, the next `Space` swaps to the next slide's
+title (no walk) → past the last slide, the wolf walks to the next scene.
 
-## Kicker & subtitle
+- **Group** = a batch of ≤4 panels revealed together (staggered). Split a
+  busy slide into several groups instead of crowding one.
+- **Slide** = the addressable unit: `#slide-id` in the URL, a row in the `L`
+  menu, a title-swap when you reach it. A `groups`-less slide is a
+  title-only divider/cover.
+- The kicker/subtitle greet while the diorama is clean, then the subtitle
+  fades as the slide's first group reveals. The title is parked behind the
+  panels, shrinks to fit long headings, and renders Slovak diacritics as
+  folded-paper accents.
 
-A scene heading can be a full three-liner — small uppercase strapline,
-extruded 3D title, wrapped subtitle:
-
-```jsonc
-{ "id": "dane", "title": "Dane a príjmy",
-  "kicker": "Časť 1 · Mestský rozpočet",
-  "subtitle": "Odkiaľ prichádzajú peniaze mesta", … }
-```
-
-The kicker and subtitle greet the audience while the diorama is clean, then
-fade aside the moment the first panel reveals (and return when you step back
-to the empty scene). The title itself is parked behind the panel zone, so
-cards always pass in front of it. Diacritics work everywhere — the letters
-are extruded and the accents laid over them as folded paper.
+`rozpocet-2025.json` is authored exactly this way — 15 scenes, 33 slides
+(one per source slide, headings preserved), ~42 groups.
 
 ## A minimal scene skeleton
 
 ```json
 {
   "id": "my-scene",
-  "title": "Chapter One",
+  "kicker": "Chapter One",
   "props": [
     { "type": "pineTree", "position": [-9, 0], "layer": "back", "options": { "seed": 1 } },
     { "type": "cottage",  "position": [5, 0],  "layer": "back", "options": { "seed": 2 } },
     { "type": "fence",    "position": [0, 0],  "layer": "mid",  "options": { "length": 5 } },
     { "type": "sheep",    "position": [3, 0],  "layer": "action", "options": { "animation": "graze" } }
   ],
-  "steps": [
-    { "part": { "type": "text", "title": "One idea", "body": "Per part.", "position": [-4, 5] } }
+  "slides": [
+    { "id": "hello", "title": "Chapter One", "subtitle": "How it begins" },
+    { "id": "idea", "title": "The idea",
+      "groups": [ { "parts": [ { "type": "text", "title": "One idea", "body": "Per group.", "position": [-4, 5] } ] } ] }
   ]
 }
 ```
 
-## Writing good steps
+## Writing good slides
 
 - **One idea per part.** Short titles, short bodies; `\n` for line breaks.
 - **Place parts in the sky gaps** you left between silhouettes; y ≈ 4–7 for
@@ -309,9 +300,9 @@ are extruded and the accents laid over them as folded paper.
 - **Use `depth` for theater.** `mid` behind the fence feels embedded;
   `front` pops at the viewer; behind a front-row prop = a curtain reveal.
 - **A degree or three of `tilt`** makes cards look hand-placed.
-- 1–3 steps per scene keeps a nice walking rhythm; a scene with **no** steps
-  is a pure walk-through beat. Data decks go denser: 4–6 steps per *page*,
-  a `clears` step between pages, 2–4 pages per scene.
+- One diorama can carry several slides — give each its own heading. Keep each
+  group ≤4 panels; split a busy slide into 2–3 groups rather than crowding.
+  A `groups`-less slide is a pure title beat (cover / section divider).
 - **Long notes make tall cards.** A `stat` with a three-line note is ~2.5
   units tall — leave that much vertical room between stacked tiles, or trim
   with `fontScale`.

@@ -18,7 +18,7 @@ import { finishAllTweens } from '../engine/tween.js';
 
 // onArrive(sceneIndex) — optional; fires when the hero has actually arrived
 // at a scene (end of the walk, or right after a teleport jump).
-export function createStepMachine({ deckView, hero, onArrive }) {
+export function createStepMachine({ deckView, hero, onArrive, onStateChange }) {
   const sceneCount = deckView.sceneCount;
   let s = 0;
   let k = 0;
@@ -61,23 +61,26 @@ export function createStepMachine({ deckView, hero, onArrive }) {
     }
   }
 
-  // Teleport straight to a scene (URL-hash navigation). Replays the missing
-  // reveals/hides so the invariant "scenes before the current one are fully
-  // revealed, the current and later ones are not" still holds, then snaps
-  // the tweens — a jump is a teleport, not a walk-through.
+  // Teleport straight to a slide — (scene, k). Replays the missing reveals/
+  // hides so the invariant "scenes before the target are fully revealed, the
+  // target scene up to k, later scenes hidden" holds, then snaps the tweens.
   async function doJump(target) {
-    if (target === s && k === 0) return;
+    const ts = target.scene;
+    const tk = Math.max(0, Math.min(target.k, deckView.stepCount(ts)));
+    if (ts === s && tk === k) return;
     for (let j = 0; j < sceneCount; j += 1) {
-      const want = j < target ? deckView.stepCount(j) : 0;
+      let want;
+      if (j < ts) want = deckView.stepCount(j);
+      else if (j === ts) want = tk;
+      else want = 0;
       const have = j < s ? deckView.stepCount(j) : (j === s ? k : 0);
-      for (let q = have; q < want; q += 1) deckView.revealStep(j, q);
+      for (let q = have; q < want; q += 1) deckView.revealStep(j, q, true); // instant, no stagger
       for (let q = have - 1; q >= want; q -= 1) deckView.hideStep(j, q);
     }
     finishAllTweens();
-    const dir = target > s ? +1 : -1;
-    s = target;
-    k = 0;
-    deckView.onSceneChange(s, dir);
+    s = ts;
+    k = tk;
+    deckView.showTitleFor(s, k); // correct title even for a title-only landing
     hero.snapTo(sceneX(s));
     onArrive?.(s);
   }
@@ -92,28 +95,30 @@ export function createStepMachine({ deckView, hero, onArrive }) {
       if (typeof intent === 'object') await doJump(intent.jump);
       else if (intent > 0) await doNext();
       else await doPrev();
+      onStateChange?.(s, k); // slide may have changed → update URL hash
     }
     busy = false;
   }
 
   return {
     get state() { return { scene: s, step: k }; },
-    // Teleport to a scene (URL-hash navigation). Pending intents are dropped;
-    // an in-flight walk finishes first, then the jump snaps everything.
-    jumpTo(target) {
-      const i = Math.max(0, Math.min(sceneCount - 1, Math.trunc(target) || 0));
+    // Teleport to a slide at (scene, k). Pending intents are dropped; an
+    // in-flight walk finishes first, then the jump snaps everything.
+    jumpTo(scene, kk = 0) {
+      const i = Math.max(0, Math.min(sceneCount - 1, Math.trunc(scene) || 0));
       queue.length = 0;
-      queue.push({ jump: i });
+      queue.push({ jump: { scene: i, k: Math.max(0, Math.trunc(kk) || 0) } });
       finishAllTweens();
       drain();
     },
     push(dir) {
       if (hero.walking) {
-        // A same-direction press mid-walk kicks the wolf into a run.
+        // A same-direction press mid-walk kicks the wolf into a run — but a
+        // scene transition never BUFFERS presses: it ends firmly at the new
+        // scene's title + subtitle, rather than bursting into the first
+        // panel on arrival. Use the scene menu (L) or the URL for fast jumps.
         if (hero.walkDir === dir) hero.hurry(dir);
-        // Only one keystroke is buffered during a movement animation —
-        // the rest are ignored so arrival doesn't burst through steps.
-        if (queue.length >= 1) return;
+        return;
       }
       queue.push(dir);
       if (queue.length > 1) finishAllTweens();

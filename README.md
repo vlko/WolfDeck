@@ -20,12 +20,14 @@ npm run dev      # present at http://localhost:3000
 ```
 
 Press `Space` to advance, `Backspace` to go back — N forward, N back always
-lands where you started. `P` toggles **presentation mode**: the camera
-flattens to a straight-on 2D view with the meadow along the bottom edge —
-a paper theatre — while the title moves up top and your panels, keeping
-the arrangement you authored, gently separate just enough that every one
-is fully visible in front of the scenery. The whole world stays animating;
-a second `P` puts every panel back in its exact 3D spot. A second `Space` mid-walk makes the wolf run;
+lands where you started. A scene holds several **slides** (each with its own
+title, subtitle and shareable `#slide-id`); advancing between them swaps the
+floating title in place, and the wolf only walks when you cross into the next
+scene. `L` opens a scrollable **slide menu** to jump anywhere; `P` toggles
+**presentation mode**: the camera flattens to a straight-on 2D view with the
+meadow along the bottom edge — a paper theatre — while the active slide's
+title moves up top and your panels, keeping the arrangement you authored,
+separate just enough to be fully visible. A second `P` restores the 3D view. A second `Space` mid-walk makes the wolf run;
 while he walks, only your next keystroke is buffered, so a long transition
 never bursts through several reveals on arrival. Hold the mouse button and drag to peek around
 the diorama; let go and the camera glides back to its place. `W`/`A`/`S`/`D`
@@ -34,12 +36,12 @@ his post on his own.
 
 ## Author your deck
 
-Everything lives in **`public/presentation.json`** — scenes, props, titles
-and step-by-step floating parts. No code needed. Any other `.json` in
-`public/` presents with `?deck=my-deck.json`; the shipped
-`public/showcase.json` demos every part type live, and
-`public/rozpocet-2025.json` is a full 12-scene real-world deck. Every scene
-has a shareable deep link (`#<scene-id>` in the URL).
+Everything lives in **`public/presentation.json`** — scenes → slides →
+groups of floating parts. No code needed. Any other `.json` in `public/`
+presents with `?deck=my-deck.json`; the shipped `public/showcase.json` demos
+every part type live, and `public/rozpocet-2025.json` is a full real-world
+deck (15 scenes, 33 slides). Every slide has a shareable deep link
+(`#<slide-id>` in the URL) and a row in the `L` menu.
 
 - [SPECIFICATION.md](SPECIFICATION.md) — full reference: JSON schema, the
   depth-row model, controls, part types, extending the asset library.

@@ -33,21 +33,24 @@ npm run preview      # test the built bundle locally
 
 | Input | Action |
 | ----- | ------ |
-| `Space` / `→` | Next step: reveal the next part, or walk to the next scene when the current scene is done |
-| `Backspace` / `←` | Previous step: hide the last part, or walk back to the previous scene |
-| `P` | Presentation (focus) mode: the camera flattens to a straight-on orthographic view anchored to the ground — the diorama reads as a 2D paper theatre along the bottom of the screen, everything stays visible and keeps animating. The title moves to the top; panels keep their authored arrangement and are only nudged apart where they overlap (spilling sideways when a stack outgrows the frame), so every panel is fully visible. On exit everything returns to its exact 3D spot |
+| `Space` / `→` | Next: reveal the next panel group, advance to the next slide, or walk to the next scene when the current scene is done |
+| `Backspace` / `←` | Previous: hide the last group, step back a slide, or walk back to the previous scene |
+| `L` | Open the **slide menu** ("Stránky"): a scrollable list of every slide (kicker + title). Click, or arrow ↑↓ and press Enter, to jump straight to any slide. `L` or `Esc` closes it |
+| `P` | Presentation (focus) mode: the camera flattens to a straight-on orthographic view anchored to the ground — the diorama reads as a 2D paper theatre along the bottom of the screen, everything stays visible and keeps animating. The active slide's title moves to the top; panels keep their authored arrangement and are only nudged apart where they overlap. On exit everything returns to its exact 3D spot |
 | Hold mouse + drag | Peek around the diorama (orbit left/right/up/down, clamped). Release and the camera glides back to exactly the default framing — presentation state never changes |
 | `W` `A` `S` `D` | Walk the wolf freely: `A` left, `D` right, `W` back (away from the viewer), `S` front (toward the viewer); combine for diagonals. Five seconds after the last movement key he trots back to his presenter post by himself. Pure showmanship — presentation state never changes |
-| URL hash | The address bar always carries the current scene (`#<scene-id>`) — a shareable deep link. Editing the hash (an id, or a 1-based number like `#4`), browser Back/Forward, or opening a link with one **jumps** straight to that scene with the reveal state replayed correctly |
+| URL hash | The address bar always carries the current **slide** (`#<slide-id>`) — a shareable deep link. Editing the hash (a slide id, a scene id, or a 1-based number like `#4`), browser Back/Forward, or opening a link with one **jumps** straight there with the reveal state replayed correctly |
 
 Behavior details:
 
-- **Reveals queue; walks buffer one.** Presses during reveals queue and
-  execute in order. While the wolf is **walking**, only the next keystroke
-  is buffered — extra presses are ignored, so a long transition never fires
-  a burst of reveals on arrival.
-- **Hurry.** A same-direction press mid-walk kicks the wolf into a 2.5× run
-  (and is the one buffered press).
+- **Reveals queue; scene transitions don't buffer.** Presses during reveals
+  queue and execute in order. While the wolf is **walking between scenes**,
+  presses are *not* buffered — the transition ends firmly at the new scene's
+  first slide (title + subtitle), never bursting into a panel on arrival.
+  Use the slide menu (`L`) or the URL for fast jumps.
+- **Hurry.** A same-direction press mid-walk kicks the wolf into a 2.5× run.
+- **Staggered reveal.** A group's panels appear one after another (a short
+  delay apart), not all at once; mashing forward snaps the whole stagger.
 - **Exact reversal.** Stepping N forward then N back always returns to the
   same state — hides mirror reveals one for one.
 - **Fast-forward.** Mashing keys snaps running reveal/chart animations to
@@ -125,27 +128,39 @@ props on the same lane (numeric `layer` = the road's `z`) and they drive it:
   },
   "scenes": [
     {
-      "id": "intro",                 // optional identifier (URL hash deep link + warnings)
-      "title": "Welcome!",           // floating 3D papercraft title
-      "kicker": "Part 1 · Intro",    // optional small uppercase strapline above the title
-      "subtitle": "Why we are here", // optional wrapped line below the title
+      "id": "intro",                 // scene identifier (diorama the wolf walks to)
+      "kicker": "Part 1 · Intro",    // small uppercase strapline above each slide's title
       "props": [ /* see §5 */ ],
-      "steps": [ /* see §6 */ ]
+      "slides": [ /* see §6 */ ]     // the virtual slides shown in this diorama
     }
   ]
 }
 ```
 
+**Scene → Slide → group.** A *scene* is a diorama the wolf walks to. Inside
+it live one or more **virtual slides** — each with its own `title`,
+`subtitle` and `id` — and advancing between slides swaps the floating 3D
+title/subtitle **without a walk**. Each slide holds one or more **groups**
+of panels (§6). So the hierarchy is:
+
+```
+Deck → Scene (diorama, kicker, props) → Slide (title, subtitle, id) → Group (≤4 panels)
+```
+
+Every slide is addressable: it has its own URL hash (`#intro`) and its own
+row in the slide menu (press **L**). The wolf walks only between scenes.
+
 Validation is lenient: typos produce console warnings and magenta
 placeholders, never a crash. Only unparseable JSON is fatal (shown as a
-readable overlay).
+readable overlay). (A scene given a legacy `steps[]`/`title` instead of
+`slides[]` still loads as a single implicit slide.)
 
 Another deck in `public/` can be presented without touching the demo:
 `http://localhost:3000/?deck=my-deck.json`. The shipped
-`public/showcase.json` exercises every part type and styling option — a
-handy live reference — and `public/rozpocet-2025.json` is a full
-real-world deck (12 data-heavy scenes). Combine with the URL hash to
-deep-link a scene: `?deck=rozpocet-2025.json#rezervy`.
+`public/showcase.json` exercises every part type and styling option, and
+`public/rozpocet-2025.json` is a full real-world deck (15 scenes, 33
+slides). Combine with the URL hash to deep-link a slide:
+`?deck=rozpocet-2025.json#rezervy`.
 
 ## 5. Props — populating a scene
 
@@ -294,27 +309,42 @@ The hero wolf is added automatically — you never declare it. Extra wolves can
 be placed as props. On every scene arrival the wolf announces himself with a
 little papercraft **speech bubble** (a random phrase + the scene number).
 
-## 6. Steps — revealing content with in-place parts
+## 6. Slides & groups — revealing content with in-place parts
 
-`steps` is the ordered list of reveals for the scene. Each step brings in one
-**part** — a papercraft panel that **floats in place inside the diorama** at
-the position and depth you give it. Parts grow in with a little overshoot,
-bob gently while shown, and shrink away when you step back — the exact
-reverse.
+A scene holds **slides**; a slide holds **groups**; a group holds **parts** —
+papercraft panels that **float in place inside the diorama** at the position
+and depth you give them. Parts grow in with a little overshoot, bob gently
+while shown, and shrink away when you step back — the exact reverse.
 
 ```jsonc
-"steps": [
-  { "part": { "type": "text", "title": "Hello", "body": "Line one.\nLine two.",
-              "position": [-4.5, 5], "depth": "mid", "tilt": -2 } },
-  { "part": { "type": "bullets", "title": "Agenda", "items": ["One", "Two", "Three"],
-              "position": [3.5, 5.4], "depth": "action" } },
-  { "part": { "type": "image", "src": "images/team.png", "caption": "The team",
-              "position": [-9.5, 6], "depth": "back", "width": 4.4 } },
-  { "part": { "type": "chart", "chart": "bar", "title": "Revenue",
-              "data": [ { "label": "Q1", "value": 40 }, { "label": "Q2", "value": 65 } ],
-              "position": [8.5, 5.6], "depth": "mid" } }
+"slides": [
+  { "id": "cover", "title": "Welcome!", "subtitle": "Why we are here" },  // title-only
+  {
+    "id": "revenue", "title": "Revenue", "subtitle": "Q1–Q2 in detail",
+    "groups": [
+      { "parts": [
+          { "type": "chart", "chart": "bar", "title": "Revenue",
+            "data": [ { "label": "Q1", "value": 40 }, { "label": "Q2", "value": 65 } ],
+            "position": [-3.5, 5], "depth": "mid" },
+          { "type": "stat", "value": "65", "label": "Best quarter", "position": [5, 5], "depth": "front" }
+      ] }
+    ]
+  }
 ]
 ```
+
+- A **slide** carries `id`, `title`, `subtitle?` (and an optional `kicker`
+  overriding the scene's). With no `groups` it's a **title-only slide** — a
+  section divider / cover that shows just the big 3D title + subtitle.
+- A **group** (`{ "parts": [...] }`) reveals its panels together on one
+  `Space` (staggered, one after another), and folds them away on `Backspace`.
+- **Groups clear each other** — advancing shows one group at a time, keeping
+  the frame uncluttered. Advancing to a new *slide* clears the previous
+  slide's panels **and swaps the 3D title/subtitle** (no wolf walk). The wolf
+  walks only between *scenes*.
+- Each slide has a URL hash (`#revenue`) and a row in the **L** menu.
+
+A group with a single panel may use `{ "part": {…} }` for brevity.
 
 ### Part types
 
@@ -353,16 +383,13 @@ stepping back resets them.
 
 ### Fields common to every part
 
-**Automatic cascade (the default).** Steps that give no `position`/`depth`
+**Automatic cascade (the default).** Parts that give no `position`/`depth`
 are placed on an ordered cascade spanning the diorama **from the mid row
 level to the front row level** (z −3 … +3 — never as deep as the trees and
-buildings in the back row): step *k* lands at `x = −6 + 2.1·k`, `y ≈ 4.2`
-(alternating slightly up/down so earlier titles stay visible),
-`z = −3 + 1.2·k` — **every new panel lands in front of the older ones**,
-early panels behind the wolf, later ones reaching the foreground, with
-generous z-gaps for the 3D chart elements that stand proud of each card.
-Give an explicit `position`/`depth` to any step to opt out and place it
-yourself.
+buildings in the back row): part *k* lands at `x = −6 + 2.1·k`, `y ≈ 4.2`
+(alternating slightly up/down), `z = −3 + 1.2·k` — **each new panel lands in
+front of the older ones**. Give an explicit `position`/`depth` to place it
+yourself (the data decks position everything explicitly for clean 2D too).
 
 | Field | Meaning |
 | ----- | ------- |
@@ -379,62 +406,37 @@ yourself.
 | `card` | `false` removes the slab — the content floats free |
 
 **Overlap is a feature.** Parts can overlap each other and be overlapped by
-scenery — order and depth are yours. Put a big card at `mid` behind the
-action, tuck a small one at `front` behind a foreground tree for a reveal
-with drama.
+scenery — order and depth are yours. Panels of one group that share a depth
+never sit in one plane: each later one is nudged 0.5 closer to the camera,
+in reveal order, so overlapping cards occlude cleanly.
 
-Parts from *previous* scenes stay revealed — they simply scroll off-screen,
-which is what makes going backward perfectly symmetric.
+Parts from *previous* scenes stay revealed off-screen, which is what makes
+going backward perfectly symmetric.
 
-### Batches: several panels on one press
+### Slides vs. groups — the deck rhythm
 
-A step may carry a whole **batch** of parts — use `"parts": [...]` instead
-of a single `"part"`. Every panel of the batch lands together on one
-`Space` press (and folds away together on `Backspace`). The automatic
-cascade and same-depth stacking advance per panel, so an unpositioned
-batch fans out exactly like the same panels revealed one by one.
+- **A group** reveals its ≤4 panels together (staggered). Split a busy slide
+  into several groups so only ≤4 panels are ever on screen; advancing shows
+  one group at a time (the previous clears, the title stays).
+- **A slide** is the addressable unit — its own title, subtitle, URL and menu
+  row. Advancing to the next slide clears the previous panels and swaps the
+  3D title/subtitle in place (no walk).
+- **A title-only slide** (`"groups": []` or omitted) is a section
+  divider/cover: just the big title + subtitle until you advance.
 
-```jsonc
-"steps": [
-  { "parts": [
-      { "type": "stat", "value": "94,3 %", "label": "…" },
-      { "type": "stat", "value": "95,1 %", "label": "…" },
-      { "type": "chart", "chart": "bar", "data": [ … ] }
-  ] }
-]
-```
-
-### Pages within a scene: `clears`
-
-A content-heavy scene can present in pages. Mark a step with
-`"clears": true` (next to `part`/`parts`, not inside them):
-
-```jsonc
-"steps": [
-  { "parts": [ { "type": "text", "title": "Page one" },
-               { "type": "bullets", "items": ["…"] } ] },
-  { "clears": true,
-    "parts": [ { "type": "text", "title": "Page two" } ] }
-]
-```
-
-When the clearing step reveals, every panel of the previous page shrinks
-away; stepping back over it brings them back — forward/back stays perfectly
-symmetric. The automatic cascade restarts at each page, so page two's panels
-land on the same comfortable spots page one used. Combined with batches
-this gives the classic deck rhythm: arrive (title only) → one press per
-page — the shipped `rozpocet-2025.json` presents exactly this way.
+The shipped `rozpocet-2025.json` is authored this way: 15 scenes (dioramas),
+33 slides (one per source slide, each with its heading), ~42 groups.
 
 ### The 3D title
 
-`scene.title` becomes extruded papercraft letters floating at the top of the
-scene, gently bobbing. It is parked **behind the panel zone** (between the
-mid and back rows, z −6.5), so revealed panels always pass in front of it.
-It scales in when the wolf arrives at the scene and away when he leaves, in
-both directions. `scene.kicker` floats as a small uppercase strapline above
-the letters and `scene.subtitle` as a wrapped line below — both ride the
-same show/hide, and both **fade aside when the scene's first panel reveals**
-(they return when you step back to the empty scene).
+Each slide's `title` becomes extruded papercraft letters floating at the top
+of the scene, gently bobbing, parked **behind the panel zone** (z −6.5) so
+panels always pass in front. Long headings **shrink to fit** the frame width
+(3D text can't wrap). The slide's `kicker` floats as a small uppercase
+strapline above the letters and its `subtitle` as a wrapped line below; the
+subtitle **fades aside as the slide's first panel group reveals** (and
+returns when you step back). Moving to the next slide scales the old title
+out and the new one in.
 
 Titles support full Latin-Extended text (Slovak diacritics included): the
 base letters are extruded and small folded-paper accent marks (´ ˇ ^ ¨) are
@@ -442,9 +444,10 @@ laid over the right glyphs.
 
 ## 7. Scenes, transitions, camera
 
-- Advancing past a scene's last step trots the wolf to the next scene; the
+- Advancing past a scene's last slide trots the wolf to the next scene; the
   camera **trails the wolf** with damped easing, so every depth row slides at
-  its natural parallax speed during the walk.
+  its natural parallax speed during the walk. Advancing between slides *within*
+  a scene never walks — the 3D title just swaps.
 - On arrival the wolf pops a small 3D **speech bubble** (a random phrase +
   the scene number) that holds for about a second and folds away.
 - While you talk over a slide, the wolf stays alive on his own: every few

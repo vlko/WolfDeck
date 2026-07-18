@@ -57,23 +57,79 @@ function normalize(raw) {
   const scenes = Array.isArray(deck.scenes) ? deck.scenes : [];
   if (!scenes.length) warn('deck has no scenes');
 
-  scenes.forEach((s, i) => {
-    const scene = typeof s === 'object' && s !== null ? s : {};
-    const id = scene.id ?? `scene-${i}`;
-    const props = Array.isArray(scene.props) ? scene.props : [];
-    const steps = Array.isArray(scene.steps) ? scene.steps : [];
+  scenes.forEach((s, i) => out.scenes.push(normalizeScene(s, i)));
+  return out;
+}
 
-    out.scenes.push({
-      id,
-      title: typeof scene.title === 'string' ? scene.title : '',
-      kicker: typeof scene.kicker === 'string' ? scene.kicker : '',
-      subtitle: typeof scene.subtitle === 'string' ? scene.subtitle : '',
-      props: props.map((p, j) => normalizeProp(p, `scene "${id}" prop ${j}`)),
-      steps: steps.map((st, j) => normalizeStep(st, `scene "${id}" step ${j}`)).filter(Boolean),
+// A scene is a diorama holding one or more virtual SLIDES (each with its own
+// title + subtitle + id). A slide holds panel GROUPS (batches of ≤4 panels
+// revealed one at a time). Internally we flatten to a list of `steps` (one per
+// group) tagged with which slide they belong to, plus a `slides` summary that
+// the menu / URL address. Every group clears the previous one.
+function normalizeScene(s, i) {
+  const scene = typeof s === 'object' && s !== null ? s : {};
+  const id = scene.id ?? `scene-${i}`;
+  const kicker = typeof scene.kicker === 'string' ? scene.kicker : '';
+  const props = (Array.isArray(scene.props) ? scene.props : [])
+    .map((p, j) => normalizeProp(p, `scene "${id}" prop ${j}`));
+
+  // Accept the modern slides[] form, or fold a legacy steps[]/part scene into
+  // a single implicit slide carrying the scene's own title/subtitle.
+  const rawSlides = Array.isArray(scene.slides) ? scene.slides : [{
+    id: `${id}-main`,
+    title: typeof scene.title === 'string' ? scene.title : '',
+    subtitle: typeof scene.subtitle === 'string' ? scene.subtitle : '',
+    steps: Array.isArray(scene.steps) ? scene.steps : [],
+    legacy: true,
+  }];
+
+  const steps = [];
+  const slides = rawSlides.map((sl, si) => {
+    const slide = typeof sl === 'object' && sl !== null ? sl : {};
+    const sid = slide.id ?? `${id}-s${si}`;
+    const ctx = `scene "${id}" slide "${sid}"`;
+
+    // A group is a batch of parts. Modern slides list them under `groups`;
+    // a folded legacy scene lists them under `steps` (each with its `clears`).
+    const rawGroups = Array.isArray(slide.groups) ? slide.groups
+      : (Array.isArray(slide.steps) ? slide.steps : []);
+    const groups = rawGroups
+      .map((g, gi) => {
+        const parts = normalizeGroup(g, `${ctx} group ${gi}`);
+        return parts ? { parts, legacyClears: g?.clears === true } : null;
+      })
+      .filter(Boolean);
+
+    const firstStep = steps.length;
+    const isFirst = si === 0 && !slide.legacy;
+    // Every slide opens with its title/subtitle/kicker shown ALONE (a "title
+    // beat") before its first group. The scene's first slide's title beat is
+    // simply the k=0 arrival state, so it needs no step; every later slide
+    // gets one empty step to land on. (Legacy single-slide scenes keep k=0.)
+    if (!isFirst && !slide.legacy) {
+      steps.push({ parts: [], clears: true, slideIndex: si, slideStart: true });
+    }
+    groups.forEach((g, gi) => {
+      // New format: every group clears the previous (one at a time). Legacy:
+      // honor each step's own clears. The title beat already carried the
+      // title, so groups are slideStart only for the first slide's opener.
+      const clears = slide.legacy ? g.legacyClears : (steps.length > 0);
+      const slideStart = slide.legacy ? gi === 0 : (isFirst && gi === 0);
+      steps.push({ parts: g.parts, clears, slideIndex: si, slideStart });
     });
+
+    return {
+      id: sid,
+      title: typeof slide.title === 'string' ? slide.title : '',
+      subtitle: typeof slide.subtitle === 'string' ? slide.subtitle : '',
+      kicker: typeof slide.kicker === 'string' ? slide.kicker : kicker, // slide overrides scene
+      // Jump target: the first slide is the k=0 arrival cover; every later
+      // slide lands on its title beat (steps 0..firstStep, visible = beat).
+      jumpK: isFirst ? 0 : firstStep + 1,
+    };
   });
 
-  return out;
+  return { id, kicker, props, steps, slides };
 }
 
 function normalizeProp(p, context) {
@@ -109,22 +165,18 @@ function normalizePart(part, context) {
   };
 }
 
-function normalizeStep(st, context) {
-  const step = typeof st === 'object' && st !== null ? st : {};
-  // A step reveals one part ("part", legacy "popup") or a whole batch
-  // ("parts") — every panel of a batch lands on the same press.
-  const raw = Array.isArray(step.parts) ? step.parts : [step.part ?? step.popup];
+// A group reveals a batch of panels together (staggered). Accepts a single
+// "part" (legacy "popup" too) or a "parts" array. Returns the normalized parts
+// array, or null when empty.
+function normalizeGroup(g, context) {
+  const group = typeof g === 'object' && g !== null ? g : {};
+  const raw = Array.isArray(group.parts) ? group.parts : [group.part ?? group.popup];
   const parts = raw
     .filter((p) => typeof p === 'object' && p !== null)
     .map((p) => normalizePart(p, context));
   if (!parts.length) {
-    warn(`${context}: step has no "part(s)" — skipped`);
+    warn(`${context}: no "part(s)" — skipped`);
     return null;
   }
-  return {
-    // clears: revealing this step retires the scene's previously revealed
-    // panels (they return when stepping back) — "pages" within one scene.
-    clears: step.clears === true || raw.some((p) => p?.clears === true),
-    parts,
-  };
+  return parts;
 }
