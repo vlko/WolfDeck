@@ -165,7 +165,7 @@ export function createTitle(text, { color = palette.dustyRose, kicker, subtitle 
   }
   if (subtitle) {
     const plane = textPlane(String(subtitle), {
-      size: 0.42, weight: 600, color: palette.ink,
+      size: 0.42, weight: 600, color: palette.ink, maxW: 19,
     });
     plane.position.y = botY - 0.5 - plane.userData.h / 2;
     inner.add(plane);
