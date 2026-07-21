@@ -217,6 +217,28 @@
           ]
         },
         {
+          "id": "cast-1",
+          "title": "Mestský rozpočet Námestovo 2025",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "body": "Prvá časť: základy mestského rozpočtu — čo to vlastne je, odkiaľ prichádzajú príjmy a na čo mesto míňa peniaze.",
+                  "align": "center",
+                  "fontScale": 1.3,
+                  "width": 11.85,
+                  "position": [
+                    0,
+                    4.3
+                  ],
+                  "depth": "mid"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "o-namestove",
           "title": "O Námestove a rozpočte",
           "groups": [
@@ -1309,8 +1331,24 @@
         {
           "id": "cast-2",
           "title": "Analýza výdavkov mestského rozpočtu",
-          "subtitle": "Komplexná analýza toho, ako boli v roku 2025 prostriedky mestského rozpočtu skutočne vynaložené v jednotlivých sektoroch – pre transparentnosť a efektívnosť v správe verejných zdrojov.",
-          "groups": []
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "body": "Komplexná analýza toho, ako boli v roku 2025 prostriedky mestského rozpočtu skutočne vynaložené v jednotlivých sektoroch – pre transparentnosť a efektívnosť v správe verejných zdrojov.",
+                  "align": "center",
+                  "fontScale": 1.3,
+                  "width": 11.85,
+                  "position": [
+                    0,
+                    4.3
+                  ],
+                  "depth": "mid"
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "prehlad-vzdelavanie",
@@ -2654,8 +2692,24 @@
         {
           "id": "cast-3",
           "title": "Realita mestského rozpočtu",
-          "subtitle": "Pochopenie toho, ako vaše mesto spravuje financie, prijíma rozhodnutia a plánuje budúcnosť. Transparentný pohľad na mestské rozpočtovanie a konsolidované finančné výkazy s dátami roka 2025.",
-          "groups": []
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "body": "Pochopenie toho, ako vaše mesto spravuje financie, prijíma rozhodnutia a plánuje budúcnosť. Transparentný pohľad na mestské rozpočtovanie a konsolidované finančné výkazy s dátami roka 2025.",
+                  "align": "center",
+                  "fontScale": 1.3,
+                  "width": 11.85,
+                  "position": [
+                    0,
+                    4.3
+                  ],
+                  "depth": "mid"
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "konsolidacia",
