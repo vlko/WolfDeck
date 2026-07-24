@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  // Emit relative asset URLs (./assets/…) so the built site works when served
+  // from any subfolder, resolving against the current document URL.
+  base: './',
   server: {
 	host: true, // bind 0.0.0.0 so Docker port mappings can reach the server
     port: 3000,
