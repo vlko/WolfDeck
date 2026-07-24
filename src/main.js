@@ -12,6 +12,7 @@ import { createFocusMode } from './core/focusMode.js';
 import { bindUrlHash } from './core/urlHash.js';
 import { createSpeechBubble } from './core/speechBubble.js';
 import { createSceneMenu } from './core/sceneMenu.js';
+import { createTouchControls } from './core/touchControls.js';
 
 // Register the asset library (side-effect imports).
 import './assets/nature.js';
@@ -65,6 +66,8 @@ async function start() {
   const sceneMenu = createSceneMenu({ deckView, stepMachine });
   bindInput(stepMachine, hero, focus, sceneMenu);
   bindOrbit(cameraRig, renderer.domElement);
+  // Touch/keyboard-less devices get corner buttons for the core shortcuts.
+  createTouchControls({ stepMachine, focus, menu: sceneMenu, hero, canvas: renderer.domElement });
 
   bubble.announce(1); // greet on the opening scene
   // #<slide-id> in the URL ↔ current slide; editing the hash jumps there.
