@@ -109,3 +109,15 @@ deck (15 scenes, 33 slides). Every slide has a shareable deep link
 npm run build    # static bundle in dist/
 npm run preview  # sanity-check it
 ```
+
+The bundle is fully static and uses relative asset URLs, so it runs from any
+subfolder — a USB stick, a venue laptop, or a web host.
+
+## Publish it
+
+Pushing to `main` deploys to <https://vlko.github.io/WolfDeck/> via
+`.github/workflows/pages.yml`. One-time setup: **Settings → Pages → Source:
+GitHub Actions**.
+
+Keep the trailing slash when you share the link — deck JSON is fetched relative
+to the document URL.
