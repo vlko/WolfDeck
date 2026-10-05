@@ -110,7 +110,7 @@ export function bulletsPart(def) {
     ctx.font = bodyFont;
     for (const lines of wrapped) {
       // papercraft diamond marker
-      ctx.fillStyle = palette.sageDark;
+      ctx.fillStyle = palette.sageDeep;
       ctx.save();
       ctx.translate(pad + 0.11 * PX, y - bodySize * 0.32);
       ctx.rotate(Math.PI / 4);

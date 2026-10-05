@@ -1,10 +1,11 @@
 import * as THREE from 'three';
-import { paperMaterial } from '../assets/materials.js';
+import { getWashTexture } from '../assets/materials.js';
 import { palette } from '../assets/palette.js';
 import { rng } from '../assets/helpers.js';
 
-// One continuous low-poly terrain ribbon under the whole deck, with a cream
-// front skirt (the diorama slab edge) and optional river inlays.
+// One continuous paper meadow under the whole deck: gently faceted sage
+// terrain washed with the watercolor texture, a layered-cardboard front edge
+// (the diorama slab), and optional river / road inlays.
 //
 // heightAt(x, z) exposes the same noise the vertices use, so the deck can
 // stand props (and the wolf) exactly on the surface.
@@ -12,6 +13,7 @@ import { rng } from '../assets/helpers.js';
 const GROUND_DEPTH = 16; // z extent: -GROUND_DEPTH/2-2 (far) … +GROUND_DEPTH/2 (near)
 const SEG = 1.2; // target segment size
 const NOISE_AMP = 0.4;
+const FAR_FIELD = '#b4bea6'; // meadow at the horizon
 
 function makeNoise(seed) {
   // Value noise on a coarse lattice, smoothly interpolated.
@@ -81,7 +83,7 @@ export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [] }) 
     // Damp bumps in a strip around the action row so the walk path is level.
     const damp = 0.12 + 0.88 * Math.min(Math.abs(z) / 5.5, 1);
     let h = noise(x, z) * NOISE_AMP * 2 * damp;
-    h -= riverFactor(x, z) * 0.55; // river bed dips
+    h -= riverFactor(x, z) * 0.3; // river bed dips
     h *= 1 - roadFactor(x, z) * 0.9; // roads are graded flat
     return h;
   }
@@ -101,74 +103,145 @@ export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [] }) 
   }
   geo.computeVertexNormals();
 
-  // Per-facet coloring: sage meadow with variation; river cells teal.
+  // Per-facet coloring: a calm, light sage meadow. The terrain is unlit
+  // like the sprites; each facet gets a gentle baked shade from its normal
+  // (light from the upper left, as on the sheets) so the folds read as
+  // paper, plus a small seeded jitter. Far rows fade toward the hills.
   const flat = geo.toNonIndexed();
+  flat.computeVertexNormals();
   const fpos = flat.attributes.position;
+  const fnorm = flat.attributes.normal;
   const colors = new Float32Array(fpos.count * 3);
   const base = new THREE.Color(palette.meadow);
-  const light = new THREE.Color(palette.sageLight);
-  const dark = new THREE.Color(palette.sage);
-  const water = new THREE.Color(palette.waterTeal);
+  const far = new THREE.Color(FAR_FIELD);
+  const water = new THREE.Color(palette.water);
   const tarmac = new THREE.Color(palette.asphalt);
+  const lightDir = new THREE.Vector3(-0.5, 1, 0.35).normalize();
+  const n = new THREE.Vector3();
   const r = rng(seed + 7);
   const tmp = new THREE.Color();
   for (let tri = 0; tri < fpos.count / 3; tri += 1) {
-    // Triangle centroid decides the color.
     let cx = 0;
     let cz = 0;
     for (let j = 0; j < 3; j += 1) {
       cx += fpos.getX(tri * 3 + j) / 3;
       cz += fpos.getZ(tri * 3 + j) / 3;
     }
+    n.set(fnorm.getX(tri * 3), fnorm.getY(tri * 3), fnorm.getZ(tri * 3));
+    const shade = Math.max(-0.12, (n.dot(lightDir) - lightDir.y) * 1.6) + (r() - 0.5) * 0.035;
     const rdf = roadFactor(cx, cz);
     const rf = riverFactor(cx, cz);
-    if (rdf > 0.3) {
-      tmp.copy(tarmac).offsetHSL(0, 0, (r() - 0.5) * 0.035);
-    } else if (rf > 0.25) {
-      tmp.copy(water).offsetHSL(0, 0, (r() - 0.5) * 0.03);
-    } else {
-      const mixed = r();
-      tmp.copy(base).lerp(mixed < 0.5 ? light : dark, Math.abs(mixed - 0.5) * 0.9);
-      tmp.offsetHSL(0, 0, (r() - 0.5) * 0.04);
+    if (rdf > 0.7) tmp.copy(tarmac);
+    else if (rf > 0.55) tmp.copy(water);
+    else {
+      tmp.copy(base);
+      // fade toward the horizon: z −1 … −10
+      tmp.lerp(far, Math.min(Math.max((-cz - 1) / 9, 0), 1) * 0.55);
     }
+    tmp.offsetHSL(0, 0, shade * 0.5);
     for (let j = 0; j < 3; j += 1) {
       colors.set([tmp.r, tmp.g, tmp.b], (tri * 3 + j) * 3);
     }
   }
   flat.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-  const terrain = new THREE.Mesh(flat, paperMaterial('#ffffff'));
+  // World-scaled watercolor wash (one tile ≈ 14 units).
+  const wash = getWashTexture(0.55).clone();
+  wash.needsUpdate = true;
+  wash.repeat.set(width / 14, (GROUND_DEPTH + 2) / 14);
+  const terrain = new THREE.Mesh(flat, new THREE.MeshBasicMaterial({ map: wash, vertexColors: true }));
   group.add(terrain);
 
-  // Front skirt: vertical strip along the near edge, dropping to y = -2.5 —
-  // the cut face of the diorama slab.
-  const nearZ = GROUND_DEPTH / 2 - 1;
-  const skirtGeo = new THREE.PlaneGeometry(width, 1, cols, 1);
-  const spos = skirtGeo.attributes.position;
-  for (let i = 0; i < spos.count; i += 1) {
-    const x = spos.getX(i) + minX + width / 2;
-    if (spos.getY(i) > 0) {
-      spos.setY(i, heightAt(x, nearZ));
-    } else {
-      spos.setY(i, -2.5);
+  // Rivers and roads get their own smooth paper ribbons laid over the
+  // terrain (the facet coloring underneath is only a fallback where the
+  // ribbon's sparse samples dip below the surface).
+  const ribbonMat = (color, strength) => {
+    const t = getWashTexture(strength).clone();
+    t.needsUpdate = true;
+    t.repeat.set(0.25, 0.25);
+    return new THREE.MeshBasicMaterial({ color, map: t, side: THREE.DoubleSide });
+  };
+  // A strip through centerline points [x, z] with half-width hw (per point).
+  function ribbon(points, hw, lift, material) {
+    const pos = [];
+    const uv = [];
+    const idx = [];
+    const ACROSS = 6;
+    points.forEach(([cx, cz, nx, nz], i) => {
+      for (let j = 0; j <= ACROSS; j += 1) {
+        const u = j / ACROSS - 0.5;
+        const x = cx + nx * u * 2 * hw;
+        const z = cz + nz * u * 2 * hw;
+        pos.push(x, heightAt(x, z) + lift, z);
+        uv.push(x * 0.1, z * 0.1);
+      }
+      if (i > 0) {
+        for (let j = 0; j < ACROSS; j += 1) {
+          const a = (i - 1) * (ACROSS + 1) + j;
+          const b = a + ACROSS + 1;
+          idx.push(a, b, a + 1, b, b + 1, a + 1);
+        }
+      }
+    });
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    return new THREE.Mesh(g, material);
+  }
+  const zNear = GROUND_DEPTH / 2 - 1;
+  const zFar = -GROUND_DEPTH / 2 - 2;
+  for (const rv of rivers) {
+    const pts = [];
+    for (let z = zFar; z <= zNear + 1e-6; z += 0.25) {
+      const cx = rv.x + Math.sin(z * 0.55 + rv.x) * 1.1;
+      const dxdz = Math.cos(z * 0.55 + rv.x) * 0.605;
+      const len = Math.hypot(1, dxdz);
+      pts.push([cx, z, 1 / len, -dxdz / len]);
     }
-    spos.setX(i, x);
+    group.add(ribbon(pts, rv.width * 0.4, 0.1, ribbonMat(palette.water, 0.8)));
   }
-  skirtGeo.translate(0, 0, 0);
-  skirtGeo.computeVertexNormals();
-  const skirtFlat = skirtGeo.toNonIndexed();
-  const scount = skirtFlat.attributes.position.count;
-  const scolors = new Float32Array(scount * 3);
-  const skirtCol = new THREE.Color(palette.parchment);
-  const r2 = rng(seed + 13);
-  for (let tri = 0; tri < scount / 3; tri += 1) {
-    tmp.copy(skirtCol).offsetHSL(0, 0, (r2() - 0.5) * 0.05);
-    for (let j = 0; j < 3; j += 1) scolors.set([tmp.r, tmp.g, tmp.b], (tri * 3 + j) * 3);
+  for (const rd of roads) {
+    const pts = [];
+    for (let x = rd.from; x <= rd.to + 1e-6; x += 0.5) pts.push([x, rd.z, 0, 1]);
+    group.add(ribbon(pts, rd.width * 0.5, 0.04, ribbonMat(palette.asphalt, 0.6)));
   }
-  skirtFlat.setAttribute('color', new THREE.BufferAttribute(scolors, 3));
-  const skirt = new THREE.Mesh(skirtFlat, paperMaterial('#ffffff', { side: THREE.DoubleSide }));
-  skirt.position.z = nearZ;
-  group.add(skirt);
+
+  // Far field: a flat meadow from the terrain's back edge to the hills, so
+  // the ground runs all the way to the horizon.
+  const farZ0 = -GROUND_DEPTH / 2 - 2;
+  const farGeo = new THREE.PlaneGeometry(width + 240, 60, 1, 1).rotateX(-Math.PI / 2);
+  const farMesh = new THREE.Mesh(farGeo, new THREE.MeshBasicMaterial({ color: FAR_FIELD, map: wash }));
+  farMesh.position.set(minX + width / 2, -0.25, farZ0 - 30 + 0.4);
+  group.add(farMesh);
+
+  // Front edge: the cut face of the diorama slab, built like layered card —
+  // a thin sage lip, a kraft core line, then cream board down to y = −2.5.
+  const nearZ = GROUND_DEPTH / 2 - 1;
+  const edgeGeo = (yTopFn, yBot) => {
+    const g = new THREE.PlaneGeometry(width, 1, cols, 1);
+    const p = g.attributes.position;
+    for (let i = 0; i < p.count; i += 1) {
+      const x = p.getX(i) + minX + width / 2;
+      p.setY(i, p.getY(i) > 0 ? yTopFn(x) : yBot(x));
+      p.setX(i, x);
+    }
+    return g;
+  };
+  const top = (x) => heightAt(x, nearZ);
+  const layers = [
+    [top, (x) => top(x) - 0.14, palette.sageDeep],
+    [(x) => top(x) - 0.14, (x) => top(x) - 0.3, palette.sand],
+    [(x) => top(x) - 0.3, () => -2.5, palette.cream],
+  ];
+  const edgeWash = getWashTexture().clone();
+  edgeWash.needsUpdate = true;
+  edgeWash.repeat.set(width / 10, 0.3);
+  for (const [a, b, col] of layers) {
+    const mesh = new THREE.Mesh(edgeGeo(a, b), new THREE.MeshBasicMaterial({ color: col, map: edgeWash, side: THREE.DoubleSide }));
+    mesh.position.z = nearZ;
+    group.add(mesh);
+  }
 
   return { group, heightAt };
 }

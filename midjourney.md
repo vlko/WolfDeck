@@ -1,10 +1,11 @@
 # Midjourney prompts for WolfDeck assets
 
 Recipe for generating new asset art in the exact style of the project's
-reference sheet [`visual.png`](visual.png) — papercraft low-poly, cozy
-storybook palette. Use it to concept new props/characters before modeling
-them procedurally, or to produce reference sheets for whole new environment
-packs (city, office, shop…).
+reference sheets ([`visual.png`](visual.png), `city 1.png`, `city 2.png`,
+`office.png`, `shop.png`) — papercraft low-poly, cozy storybook palette.
+WolfDeck's sprites are cut straight out of these sheets, so a new sheet made
+with this recipe becomes new props the moment you add its cut list (see
+SPECIFICATION.md §“Extending the asset library”).
 
 ---
 
@@ -55,16 +56,20 @@ Notes:
 | `soft ambient occlusion shadows` | the faint grounded shadow blob under every asset |
 | `no outlines, no gradients` | shapes are separated by color/facet only, never by line work |
 
-## Palette to name in prompts (from `src/assets/palette.js`)
+## Palette to name in prompts
 
-sage green `#7d8b74` · light sage `#a3b096` · pine `#6a7d68` · cream
-`#efe9dc` · parchment `#e3dac8` · dusty rose `#c9a1a6` · rose mauve
-`#a98289` · cheek pink `#d9a8ad` · straw gold `#c8ab74` · warm tan
-`#b39a77` · bark brown `#8a7359` · wolf gray `#9aa0a0` · slate `#8b9494`
-· duck-egg blue `#a9c0b4` · water teal `#8fb0a5`
+The nine swatches printed on `shop.png` — `src/assets/palette.js` builds the
+whole deck from them:
 
-Midjourney accepts hex values in-prompt: e.g. append
-`color palette #7d8b74 #efe9dc #c9a1a6 #b39a77 #9aa0a0`.
+mauve `#a5817f` · ochre `#bd9662` · sand `#d6b386` · cream `#e9e2d1` ·
+ivory `#ebe7d7` · light sage `#a4b1a2` · sage `#798877` · deep sage
+`#6d7a6c` · brown `#7b6548`
+
+Midjourney accepts hex values in-prompt: append
+`color palette #a5817f #bd9662 #d6b386 #e9e2d1 #ebe7d7 #a4b1a2 #798877 #6d7a6c #7b6548`.
+
+Ready-made prompts for every object the decks still miss are in
+[`docs/prompts/missing-objects.md`](docs/prompts/missing-objects.md).
 
 ## `{SUBJECT}` examples
 
@@ -84,8 +89,10 @@ Midjourney accepts hex values in-prompt: e.g. append
 2. Ask for **one pack per run** — mixed packs drift off-palette.
 3. Re-roll with the same prompt + `--seed` once a composition works; vary
    only `{SUBJECT}`.
-4. Upscale, then cut assets out on the white background (the `isolated on
-   white, soft ambient occlusion shadows` combo keeps edges clean).
-5. Generated art is **concept reference** for WolfDeck: model the winning
-   designs procedurally in `src/assets/` (see SPECIFICATION.md §“Extending
-   the asset library”) so they stay seeded, animated and palette-exact.
+4. Upscale. Keep the background **pure white** and objects **apart from
+   each other** — `tools/extract-sprites.mjs` floods the white (and the soft
+   shadows) from the border, and touching objects come out as one piece.
+5. Drop the sheet in the repo root, add it to `tools/sprites.config.js` with
+   one rectangle per piece, and run `npm run sprites`. Check the contact
+   sheet `docs/assets/sprites.jpg` for bites (use `tight`/`hull`) or
+   leftover shadow (use `hardShadow`).

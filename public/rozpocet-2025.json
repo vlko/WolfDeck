@@ -12,22 +12,40 @@
     ],
     "roads": [
       {
-        "z": 2,
-        "width": 2.4,
+        "z": 4.4,
+        "width": 4,
         "from": 126,
         "to": 146
       },
       {
-        "z": 2,
-        "width": 2.4,
+        "z": 4.4,
+        "width": 4,
         "from": 194,
         "to": 214
       },
       {
-        "z": 2,
-        "width": 2.4,
+        "z": 4.4,
+        "width": 4,
         "from": 330,
         "to": 350
+      },
+      {
+        "z": 4.4,
+        "width": 4,
+        "from": 90,
+        "to": 114
+      },
+      {
+        "z": 4.4,
+        "width": 4,
+        "from": 362,
+        "to": 386
+      },
+      {
+        "z": 4.4,
+        "width": 4,
+        "from": 260,
+        "to": 284
       }
     ]
   },
@@ -36,18 +54,6 @@
       "id": "uvod",
       "kicker": "Časť 1 · Mestský rozpočet Námestovo 2025",
       "props": [
-        {
-          "type": "mountainBackdrop",
-          "position": [
-            0,
-            0
-          ],
-          "layer": -9,
-          "options": {
-            "seed": 4,
-            "width": 32
-          }
-        },
         {
           "type": "churchTower",
           "position": [
@@ -167,6 +173,62 @@
             "seed": 14
           },
           "scale": 0.85
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -14.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 21
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            14.8,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 22
+          }
+        },
+        {
+          "type": "hut",
+          "position": [
+            15.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 23
+          }
+        },
+        {
+          "type": "flowerPot",
+          "position": [
+            -9.5,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 24
+          }
+        },
+        {
+          "type": "lake",
+          "position": [
+            1,
+            0
+          ],
+          "layer": -17,
+          "scale": 2.6,
+          "options": {
+            "seed": 221
+          }
         }
       ],
       "slides": [
@@ -392,6 +454,73 @@
           "options": {
             "seed": 10
           }
+        },
+        {
+          "type": "bookshelf",
+          "position": [
+            -13,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 31
+          }
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            -11.6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 32
+          }
+        },
+        {
+          "type": "deskLamp",
+          "position": [
+            9.6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 33
+          }
+        },
+        {
+          "type": "meetingTable",
+          "position": [
+            11.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 34
+          }
+        },
+        {
+          "type": "officeWorker",
+          "position": [
+            6.5,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 35,
+            "animal": "koala"
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            14.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 36
+          }
         }
       ],
       "slides": [
@@ -436,7 +565,7 @@
                   "width": 7.2,
                   "position": [
                     -3.9,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 },
@@ -449,7 +578,7 @@
                   "width": 3.8,
                   "position": [
                     5.4,
-                    7.0
+                    7
                   ],
                   "depth": "front"
                 },
@@ -497,8 +626,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    -5.0,
-                    6.0
+                    -5,
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -511,7 +640,7 @@
                   "width": 4.5,
                   "position": [
                     0,
-                    6.0
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -523,8 +652,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    5.0,
-                    6.0
+                    5,
+                    6
                   ],
                   "depth": "mid"
                 }
@@ -672,6 +801,73 @@
           "layer": "mid",
           "options": {
             "seed": 11
+          }
+        },
+        {
+          "type": "crate",
+          "position": [
+            10.8,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 41
+          }
+        },
+        {
+          "type": "basket",
+          "position": [
+            4.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 42
+          }
+        },
+        {
+          "type": "flourSack",
+          "position": [
+            12,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 43
+          }
+        },
+        {
+          "type": "shopSign",
+          "position": [
+            -11.8,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 44
+          }
+        },
+        {
+          "type": "shoppingCart",
+          "position": [
+            -8,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 45
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            13.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 46,
+            "shape": "round"
           }
         }
       ],
@@ -821,29 +1017,6 @@
           }
         },
         {
-          "type": "townhouse",
-          "position": [
-            9,
-            0
-          ],
-          "layer": "back",
-          "options": {
-            "seed": 4
-          }
-        },
-        {
-          "type": "townhouse",
-          "position": [
-            12,
-            0,
-            0.8
-          ],
-          "layer": "back",
-          "options": {
-            "seed": 5
-          }
-        },
-        {
           "type": "parkTree",
           "position": [
             -11.5,
@@ -898,6 +1071,77 @@
           "layer": "mid",
           "options": {
             "seed": 10
+          }
+        },
+        {
+          "type": "streetlamp",
+          "position": [
+            -7.4,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 51
+          }
+        },
+        {
+          "type": "citizen",
+          "position": [
+            4.8,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 52
+          }
+        },
+        {
+          "type": "coneTree",
+          "position": [
+            14.2,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 53
+          }
+        },
+        {
+          "type": "flowerPot",
+          "position": [
+            -9.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 54
+          }
+        },
+        {
+          "type": "car",
+          "position": [
+            0,
+            0
+          ],
+          "layer": 4.4,
+          "options": {
+            "seed": 55,
+            "path": [
+              -10,
+              10
+            ],
+            "speed": 2.8
+          }
+        },
+        {
+          "type": "townHall",
+          "position": [
+            10.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 231
           }
         }
       ],
@@ -1037,8 +1281,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    -5.0,
-                    6.0
+                    -5,
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -1051,7 +1295,7 @@
                   "width": 4.5,
                   "position": [
                     0,
-                    6.0
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -1063,8 +1307,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    5.0,
-                    6.0
+                    5,
+                    6
                   ],
                   "depth": "mid"
                 }
@@ -1268,7 +1512,7 @@
           "position": [
             8,
             0,
-            1
+            0.3
           ],
           "layer": 1.5,
           "options": {
@@ -1300,30 +1544,108 @@
           }
         },
         {
-          "type": "parkTree",
-          "position": [
-            11.8,
-            0
-          ],
-          "layer": "back",
-          "options": {
-            "seed": 10
-          }
-        },
-        {
           "type": "schoolBus",
           "position": [
             0,
             0
           ],
-          "layer": 2,
+          "layer": 4.4,
           "options": {
             "seed": 11,
             "path": [
-              126,
-              146
+              -9,
+              9
             ],
             "speed": 2.2
+          }
+        },
+        {
+          "type": "ball",
+          "position": [
+            4.4,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 61
+          }
+        },
+        {
+          "type": "bench",
+          "position": [
+            -6.6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 62
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -14,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 63
+          }
+        },
+        {
+          "type": "streetlamp",
+          "position": [
+            4.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 64
+          }
+        },
+        {
+          "type": "pupil",
+          "position": [
+            11.4,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 65,
+            "animal": "bear"
+          }
+        },
+        {
+          "type": "kindergarten",
+          "position": [
+            13.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 181
+          }
+        },
+        {
+          "type": "slide",
+          "position": [
+            10.8,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 182
+          }
+        },
+        {
+          "type": "teacher",
+          "position": [
+            6.2,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 183
           }
         }
       ],
@@ -1364,7 +1686,7 @@
                   "fontScale": 0.94,
                   "width": 4.4,
                   "position": [
-                    -5.0,
+                    -5,
                     6.8
                   ],
                   "depth": "mid"
@@ -1390,7 +1712,7 @@
                   "fontScale": 0.94,
                   "width": 4.4,
                   "position": [
-                    5.0,
+                    5,
                     6.8
                   ],
                   "depth": "mid"
@@ -1455,7 +1777,7 @@
                       "value": 21415
                     }
                   ],
-                  "width": 7.0,
+                  "width": 7,
                   "position": [
                     -3.6,
                     5.4
@@ -1510,20 +1832,9 @@
           }
         },
         {
-          "type": "bench",
-          "position": [
-            7.5,
-            0
-          ],
-          "layer": "mid",
-          "options": {
-            "seed": 4
-          }
-        },
-        {
           "type": "flowerPot",
           "position": [
-            6,
+            12.8,
             0,
             0.5
           ],
@@ -1535,7 +1846,7 @@
         {
           "type": "flowerPot",
           "position": [
-            9.2,
+            13.6,
             0,
             0.4
           ],
@@ -1547,7 +1858,7 @@
         {
           "type": "carer",
           "position": [
-            -4.6,
+            -6.4,
             0
           ],
           "layer": 1.5,
@@ -1564,7 +1875,8 @@
           ],
           "layer": 1.5,
           "options": {
-            "seed": 8
+            "seed": 8,
+            "variant": "bench"
           }
         },
         {
@@ -1576,6 +1888,109 @@
           "layer": "back",
           "options": {
             "seed": 9
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            -11.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 71,
+            "shape": "round"
+          }
+        },
+        {
+          "type": "cottage",
+          "position": [
+            3.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 72,
+            "variant": "rose"
+          }
+        },
+        {
+          "type": "pram",
+          "position": [
+            4.4,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 73
+          }
+        },
+        {
+          "type": "streetlamp",
+          "position": [
+            11.6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 74
+          }
+        },
+        {
+          "type": "well",
+          "position": [
+            -12.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 75
+          }
+        },
+        {
+          "type": "seniorHome",
+          "position": [
+            -1.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 211
+          }
+        },
+        {
+          "type": "wheelchair",
+          "position": [
+            -8.2,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 212
+          }
+        },
+        {
+          "type": "family",
+          "position": [
+            7.8,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 213,
+            "variant": "bearFamily"
+          }
+        },
+        {
+          "type": "family",
+          "position": [
+            10.4,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 214,
+            "variant": "lambBalloon"
           }
         }
       ],
@@ -1594,7 +2009,7 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    -5.0,
+                    -5,
                     6.7
                   ],
                   "depth": "mid"
@@ -1620,7 +2035,7 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    5.0,
+                    5,
                     6.7
                   ],
                   "depth": "mid"
@@ -1768,12 +2183,12 @@
             0,
             0
           ],
-          "layer": 2,
+          "layer": 4.4,
           "options": {
             "seed": 9,
             "path": [
-              194,
-              214
+              -9,
+              9
             ],
             "speed": 2
           }
@@ -1790,14 +2205,101 @@
           }
         },
         {
-          "type": "parkTree",
+          "type": "trafficCone",
           "position": [
-            -11.5,
+            -3,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 81
+          }
+        },
+        {
+          "type": "builder",
+          "position": [
+            9.5,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 82,
+            "animal": "bear",
+            "animation": "work"
+          }
+        },
+        {
+          "type": "bench",
+          "position": [
+            9.6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 83
+          }
+        },
+        {
+          "type": "coneTree",
+          "position": [
+            -13.5,
             0
           ],
           "layer": "back",
           "options": {
-            "seed": 11
+            "seed": 84
+          }
+        },
+        {
+          "type": "snowPlough",
+          "position": [
+            0,
+            0
+          ],
+          "layer": 4.4,
+          "options": {
+            "seed": 261,
+            "path": [
+              -9,
+              9
+            ],
+            "speed": 1.4,
+            "startAt": 0.8,
+            "direction": -1
+          }
+        },
+        {
+          "type": "bucketTruck",
+          "position": [
+            12.8,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 262
+          }
+        },
+        {
+          "type": "cemetery",
+          "position": [
+            -10.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 263
+          }
+        },
+        {
+          "type": "lawnMower",
+          "position": [
+            3.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 264,
+            "animation": "none"
           }
         }
       ],
@@ -1831,10 +2333,10 @@
                       "value": 97526
                     }
                   ],
-                  "width": 7.0,
+                  "width": 7,
                   "position": [
                     -3.6,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 },
@@ -1850,7 +2352,7 @@
                   "fontScale": 0.946,
                   "width": 4.33,
                   "position": [
-                    5.0,
+                    5,
                     4.8
                   ],
                   "depth": "front"
@@ -1896,18 +2398,6 @@
       "kicker": "Časť 2 · Analýza výdavkov mestského rozpočtu",
       "props": [
         {
-          "type": "townhouse",
-          "position": [
-            -8.5,
-            0
-          ],
-          "layer": "back",
-          "scale": 1.2,
-          "options": {
-            "seed": 3
-          }
-        },
-        {
           "type": "footballGoal",
           "position": [
             7.5,
@@ -1942,26 +2432,174 @@
           }
         },
         {
+          "type": "ball",
+          "position": [
+            -3.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 91
+          }
+        },
+        {
+          "type": "pupil",
+          "position": [
+            4.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 92,
+            "animal": "fox"
+          }
+        },
+        {
+          "type": "pupil",
+          "position": [
+            5.4,
+            0
+          ],
+          "layer": 2.4,
+          "options": {
+            "seed": 93,
+            "animal": "bunny"
+          }
+        },
+        {
           "type": "parkTree",
           "position": [
-            11,
+            -11.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 94,
+            "shape": "diamond"
+          }
+        },
+        {
+          "type": "streetlamp",
+          "position": [
+            -8,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 95
+          }
+        },
+        {
+          "type": "piano",
+          "position": [
+            -4.8,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 191
+          }
+        },
+        {
+          "type": "musicStand",
+          "position": [
+            -3.4,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 192
+          }
+        },
+        {
+          "type": "cinema",
+          "position": [
+            -9,
             0
           ],
           "layer": "back",
           "options": {
-            "seed": 7
+            "seed": 201
           }
         },
         {
-          "type": "citizen",
+          "type": "stadiumStand",
           "position": [
-            9.3,
-            0,
-            0.7
+            10.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 202,
+            "variant": "stadiumStand"
+          }
+        },
+        {
+          "type": "runningTrack",
+          "position": [
+            6,
+            0
+          ],
+          "layer": -2.2,
+          "options": {
+            "seed": 203
+          }
+        },
+        {
+          "type": "stage",
+          "position": [
+            14.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 204
+          }
+        },
+        {
+          "type": "lighthouse",
+          "position": [
+            -13.8,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 205
+          }
+        },
+        {
+          "type": "athlete",
+          "position": [
+            2.6,
+            0
           ],
           "layer": 1.5,
           "options": {
-            "seed": 8
+            "seed": 206,
+            "animal": "panda"
+          }
+        },
+        {
+          "type": "musician",
+          "position": [
+            -6.8,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 207,
+            "animal": "fox"
+          }
+        },
+        {
+          "type": "filmCamera",
+          "position": [
+            -10.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 208
           }
         }
       ],
@@ -2020,8 +2658,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    -5.0,
-                    6.0
+                    -5,
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -2034,7 +2672,7 @@
                   "width": 4.5,
                   "position": [
                     0,
-                    6.0
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -2046,8 +2684,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    5.0,
-                    6.0
+                    5,
+                    6
                   ],
                   "depth": "mid"
                 }
@@ -2075,7 +2713,7 @@
         {
           "type": "scaffold",
           "position": [
-            8.5,
+            9.6,
             0
           ],
           "layer": "mid",
@@ -2087,7 +2725,7 @@
         {
           "type": "excavator",
           "position": [
-            6,
+            4.6,
             0
           ],
           "layer": "mid",
@@ -2122,13 +2760,13 @@
           "type": "builder",
           "position": [
             7.4,
-            0,
-            0.9
+            0
           ],
           "layer": 1.5,
           "options": {
             "seed": 8,
-            "animation": "hammer"
+            "animation": "work",
+            "animal": "bear"
           }
         },
         {
@@ -2143,17 +2781,132 @@
           }
         },
         {
-          "type": "haystack",
+          "type": "trafficCone",
           "position": [
-            11.5,
-            0,
-            0.5
+            3.8,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 101
+          }
+        },
+        {
+          "type": "crate",
+          "position": [
+            10.4,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 102
+          }
+        },
+        {
+          "type": "shed",
+          "position": [
+            14.2,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 104
+          }
+        },
+        {
+          "type": "builder",
+          "position": [
+            -6.2,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 171,
+            "animal": "foreman"
+          }
+        },
+        {
+          "type": "cementMixer",
+          "position": [
+            12.4,
+            0
           ],
           "layer": "mid",
-          "scale": 0.7,
           "options": {
-            "seed": 10,
-            "color": "#8a7359"
+            "seed": 172
+          }
+        },
+        {
+          "type": "bricks",
+          "position": [
+            4.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 173
+          }
+        },
+        {
+          "type": "roadBarrier",
+          "position": [
+            -14.6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 174
+          }
+        },
+        {
+          "type": "roadBarrier",
+          "position": [
+            12.8,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 175
+          }
+        },
+        {
+          "type": "roadRoller",
+          "position": [
+            0,
+            0
+          ],
+          "layer": 4.4,
+          "options": {
+            "seed": 176,
+            "path": [
+              -8,
+              8
+            ],
+            "speed": 1.1
+          }
+        },
+        {
+          "type": "roundabout",
+          "position": [
+            -1.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 291,
+            "variant": "roundabout"
+          }
+        },
+        {
+          "type": "signpost",
+          "position": [
+            1.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 292,
+            "variant": "cycleSign"
           }
         }
       ],
@@ -2172,8 +2925,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    -5.0,
-                    6.0
+                    -5,
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -2186,7 +2939,7 @@
                   "width": 4.5,
                   "position": [
                     0,
-                    6.0
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -2198,8 +2951,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    5.0,
-                    6.0
+                    5,
+                    6
                   ],
                   "depth": "mid"
                 }
@@ -2329,7 +3082,8 @@
           ],
           "layer": 1.5,
           "options": {
-            "seed": 8
+            "seed": 8,
+            "variant": "whole"
           }
         },
         {
@@ -2354,6 +3108,96 @@
           "layer": "mid",
           "options": {
             "seed": 10
+          }
+        },
+        {
+          "type": "filingCabinet",
+          "position": [
+            -10.8,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 111
+          }
+        },
+        {
+          "type": "deskLamp",
+          "position": [
+            9.4,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 112
+          }
+        },
+        {
+          "type": "officeWorker",
+          "position": [
+            10.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 113,
+            "animal": "accountant"
+          }
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            -12.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 114
+          }
+        },
+        {
+          "type": "safetyNet",
+          "position": [
+            -2.6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 281
+          }
+        },
+        {
+          "type": "umbrella",
+          "position": [
+            2.6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 282,
+            "variant": "umbrellaDesk"
+          }
+        },
+        {
+          "type": "brakeLever",
+          "position": [
+            13.2,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 283
+          }
+        },
+        {
+          "type": "calculator",
+          "position": [
+            3.8,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 284
           }
         }
       ],
@@ -2397,11 +3241,11 @@
                       "1 069 996"
                     ]
                   ],
-                  "fontScale": 1.0,
+                  "fontScale": 1,
                   "width": 6.5,
                   "position": [
                     -3.6,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 },
@@ -2427,7 +3271,7 @@
                   "width": 3.9,
                   "position": [
                     5.1,
-                    3.0
+                    3
                   ],
                   "depth": "front"
                 }
@@ -2489,7 +3333,7 @@
                   "width": 3.9,
                   "position": [
                     5.2,
-                    4.0
+                    4
                   ],
                   "depth": "front"
                 },
@@ -2550,7 +3394,7 @@
                   "width": 3.8,
                   "position": [
                     5.2,
-                    7.0
+                    7
                   ],
                   "depth": "front"
                 },
@@ -2599,19 +3443,6 @@
           "layer": "back",
           "options": {
             "seed": 3
-          }
-        },
-        {
-          "type": "officeTower",
-          "position": [
-            11.5,
-            0,
-            0.8
-          ],
-          "layer": "back",
-          "scale": 0.9,
-          "options": {
-            "seed": 4
           }
         },
         {
@@ -2677,14 +3508,76 @@
             0,
             0
           ],
-          "layer": 2,
+          "layer": 4.4,
           "options": {
             "seed": 10,
             "path": [
-              330,
-              350
+              -9,
+              9
             ],
             "speed": 2.4
+          }
+        },
+        {
+          "type": "streetlamp",
+          "position": [
+            -9.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 121
+          }
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            12.5,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 122,
+            "shape": "cone"
+          }
+        },
+        {
+          "type": "car",
+          "position": [
+            0,
+            0
+          ],
+          "layer": 4.4,
+          "options": {
+            "seed": 123,
+            "path": [
+              -9,
+              9
+            ],
+            "speed": 3,
+            "startAt": 0.2
+          }
+        },
+        {
+          "type": "hydrant",
+          "position": [
+            -7,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 124
+          }
+        },
+        {
+          "type": "apartmentBlock",
+          "position": [
+            11.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 241
           }
         }
       ],
@@ -2731,7 +3624,7 @@
                   "width": 6.38,
                   "position": [
                     -3.8,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 },
@@ -2764,7 +3657,7 @@
                   "width": 6.38,
                   "position": [
                     3.8,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 }
@@ -2859,7 +3752,7 @@
                   "width": 3.9,
                   "position": [
                     5.2,
-                    3.0
+                    3
                   ],
                   "depth": "front"
                 }
@@ -2954,18 +3847,6 @@
           }
         },
         {
-          "type": "townhouse",
-          "position": [
-            6,
-            0,
-            0.5
-          ],
-          "layer": "back",
-          "options": {
-            "seed": 25
-          }
-        },
-        {
           "type": "busStop",
           "position": [
             8.5,
@@ -3020,6 +3901,67 @@
           "options": {
             "seed": 30
           }
+        },
+        {
+          "type": "car",
+          "position": [
+            0,
+            0
+          ],
+          "layer": 4.4,
+          "options": {
+            "seed": 131,
+            "path": [
+              -10,
+              10
+            ],
+            "speed": 2.4
+          }
+        },
+        {
+          "type": "citizen",
+          "position": [
+            6.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 132
+          }
+        },
+        {
+          "type": "hydrant",
+          "position": [
+            -6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 133
+          }
+        },
+        {
+          "type": "apartmentBlock",
+          "position": [
+            5.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 251
+          }
+        },
+        {
+          "type": "piggyBank",
+          "position": [
+            2.4,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 252,
+            "variant": "cracked"
+          }
         }
       ],
       "slides": [
@@ -3038,7 +3980,7 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    -5.0,
+                    -5,
                     6.7
                   ],
                   "depth": "mid"
@@ -3064,7 +4006,7 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    5.0,
+                    5,
                     6.7
                   ],
                   "depth": "mid"
@@ -3098,7 +4040,7 @@
                   "width": 6.38,
                   "position": [
                     -3.8,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 },
@@ -3115,7 +4057,7 @@
                   "width": 6.38,
                   "position": [
                     3.8,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 }
@@ -3137,8 +4079,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    -5.0,
-                    6.0
+                    -5,
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -3151,7 +4093,7 @@
                   "width": 4.5,
                   "position": [
                     0,
-                    6.0
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -3163,8 +4105,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    5.0,
-                    6.0
+                    5,
+                    6
                   ],
                   "depth": "mid"
                 }
@@ -3308,7 +4250,7 @@
         {
           "type": "pineTree",
           "position": [
-            -11.8,
+            -14.5,
             0
           ],
           "layer": "back",
@@ -3327,6 +4269,74 @@
           "options": {
             "seed": 11
           }
+        },
+        {
+          "type": "hydrant",
+          "position": [
+            3.5,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 141
+          }
+        },
+        {
+          "type": "builder",
+          "position": [
+            5.4,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 142,
+            "animal": "bear",
+            "animation": "work"
+          }
+        },
+        {
+          "type": "streetlamp",
+          "position": [
+            -12.8,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 143
+          }
+        },
+        {
+          "type": "landfill",
+          "position": [
+            3.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 271
+          }
+        },
+        {
+          "type": "skip",
+          "position": [
+            -7.4,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 272
+          }
+        },
+        {
+          "type": "wasteBear",
+          "position": [
+            -1.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 273
+          }
         }
       ],
       "slides": [
@@ -3344,8 +4354,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    -5.0,
-                    6.0
+                    -5,
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -3358,7 +4368,7 @@
                   "width": 4.5,
                   "position": [
                     0,
-                    6.0
+                    6
                   ],
                   "depth": "mid"
                 },
@@ -3370,8 +4380,8 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    5.0,
-                    6.0
+                    5,
+                    6
                   ],
                   "depth": "mid"
                 }
@@ -3453,7 +4463,7 @@
                   "width": 7.2,
                   "position": [
                     -3.7,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 },
@@ -3479,7 +4489,7 @@
                   "width": 3.99,
                   "position": [
                     5.2,
-                    3.0
+                    3
                   ],
                   "depth": "front"
                 }
@@ -3637,6 +4647,75 @@
           "options": {
             "seed": 39
           }
+        },
+        {
+          "type": "whiteboard",
+          "position": [
+            12.6,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 151
+          }
+        },
+        {
+          "type": "deskLamp",
+          "position": [
+            -3,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 152
+          }
+        },
+        {
+          "type": "mug",
+          "position": [
+            -6.2,
+            0,
+            0.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 153
+          }
+        },
+        {
+          "type": "wasteBasket",
+          "position": [
+            -3.2,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 154
+          }
+        },
+        {
+          "type": "signpost",
+          "position": [
+            1.8,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 301,
+            "variant": "signTangle"
+          }
+        },
+        {
+          "type": "chalet",
+          "position": [
+            14.6,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 302,
+            "variant": "chalet"
+          }
         }
       ],
       "slides": [
@@ -3655,7 +4734,7 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    -5.0,
+                    -5,
                     6.7
                   ],
                   "depth": "mid"
@@ -3681,7 +4760,7 @@
                   "fontScale": 0.94,
                   "width": 4.5,
                   "position": [
-                    5.0,
+                    5,
                     6.7
                   ],
                   "depth": "mid"
@@ -3710,7 +4789,7 @@
                   "width": 6.38,
                   "position": [
                     -3.8,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 },
@@ -3722,7 +4801,7 @@
                   "width": 6.38,
                   "position": [
                     3.8,
-                    5.0
+                    5
                   ],
                   "depth": "mid"
                 }
@@ -3783,18 +4862,6 @@
       "id": "zaver",
       "kicker": "Ďakujem za pozornosť",
       "props": [
-        {
-          "type": "mountainBackdrop",
-          "position": [
-            0,
-            0
-          ],
-          "layer": -9,
-          "options": {
-            "seed": 41,
-            "width": 32
-          }
-        },
         {
           "type": "churchTower",
           "position": [
@@ -3914,6 +4981,63 @@
           "scale": 0.85,
           "options": {
             "seed": 51
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -14.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 161
+          }
+        },
+        {
+          "type": "hut",
+          "position": [
+            15,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 162
+          }
+        },
+        {
+          "type": "sheep",
+          "position": [
+            4.6,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 163,
+            "animation": "graze"
+          }
+        },
+        {
+          "type": "flowerPot",
+          "position": [
+            -9.4,
+            0
+          ],
+          "layer": 1.5,
+          "options": {
+            "seed": 164
+          }
+        },
+        {
+          "type": "lake",
+          "position": [
+            1,
+            0
+          ],
+          "layer": -17,
+          "scale": 2.6,
+          "options": {
+            "seed": 221
           }
         }
       ],

@@ -1,111 +1,125 @@
 import * as THREE from 'three';
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import helvetikerBold from 'three/examples/fonts/helvetiker_bold.typeface.json';
-import { paperMesh } from '../assets/helpers.js';
 import { tween, ease } from '../engine/tween.js';
 import { palette } from '../assets/palette.js';
-import { plainColors } from '../assets/materials.js';
+import { plainColors, getGrainCanvas } from '../assets/materials.js';
 import { wrapLines, FONT_STACK, PX } from './card.js';
 
-// Floating 3D scene title: extruded bold letters in dusty rose — reads as
-// thick die-cut paper. Scales in when the wolf arrives at the scene and back
-// out when it leaves (both directions, symmetric). An optional kicker floats
-// above it (small uppercase strapline) and a subtitle below (wrapped body
-// text) — both flat canvas planes riding the same show/hide/bob.
+// Floating scene title, built like the cut-paper pieces on the reference
+// sheets: the heading is a die-cut paper layer in deep slate ink lifted
+// above a sand-colored backing layer (a real gap in z — orbit the camera and
+// the layers part). An optional kicker floats above (small uppercase mauve
+// strapline), a subtitle below (wrapped body text). Scales in on arrival
+// and back out on leave, both directions symmetric.
 
-const font = new FontLoader().parse(helvetikerBold);
+const TITLE_SIZE = 1.2; // world units (cap-height-ish)
+const MAX_W = 15.5; // widest single line before the title wraps/shrinks
+const LAYER_GAP = 0.09; // z gap between ink and backing layer
 
-// The bundled helvetiker font has no Latin-Extended glyphs (Slovak á č š ž…
-// would render as "?"). We extrude the base letters and lay small papercraft
-// diacritic marks over them instead — folded-paper accents.
-const MARK_TYPES = {
-  '́': 'acute', // á é í ý…  (ď ť ľ decompose to caron, handled below)
-  '̌': 'caron', // č š ž ň…
-  '̂': 'circumflex', // ô
-  '̈': 'umlaut', // ä
-  '̊': 'ring', // ů
-};
-const ASCENDERS = new Set('bdfhklt');
-
-// Splits text into helvetiker-safe base characters + a list of marks with
-// the base-string index they sit on.
-function stripDiacritics(text) {
-  const marks = [];
-  let base = '';
-  for (const ch of text.normalize('NFD')) {
-    if (MARK_TYPES[ch]) {
-      if (base.length) marks.push({ index: base.length - 1, type: MARK_TYPES[ch] });
-    } else if (ch.charCodeAt(0) < 0x300 || ch.charCodeAt(0) > 0x36f) {
-      base += ch;
-    }
-  }
-  return { base, marks };
+function makeTexture(canvas) {
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  return tex;
 }
 
-// Per-character x centers using the font's advance widths — mirrors how
-// TextGeometry lays glyphs out.
-function glyphCenters(base, size) {
-  const scale = size / font.data.resolution;
-  const centers = [];
-  let x = 0;
-  for (const ch of base) {
-    const glyph = font.data.glyphs[ch] ?? font.data.glyphs['?'];
-    const ha = (glyph?.ha ?? 600) * scale;
-    centers.push(x + ha / 2);
-    x += ha;
-  }
-  return centers;
+function plane(canvas, w, h) {
+  return new THREE.Mesh(
+    plainColors(new THREE.PlaneGeometry(w, h)),
+    new THREE.MeshBasicMaterial({ map: makeTexture(canvas), transparent: true, depthWrite: false }),
+  );
 }
 
-// A small extruded paper accent above (cx, top). All marks share the letter
-// color and depth so they read as part of the die-cut letter.
-function makeMark(type, size, color, seed) {
-  const g = new THREE.Group();
-  const t = size * 0.085; // stroke thickness
-  const wjs = size * 0.3; // mark width
-  const add = (w, rot, dx = 0, dy = 0) => {
-    const m = paperMesh(new THREE.BoxGeometry(w, t, 0.3), color, seed, 0.04);
-    m.rotation.z = rot;
-    m.position.set(dx, dy, 0);
-    g.add(m);
-  };
-  if (type === 'acute') add(wjs, 0.7);
-  if (type === 'caron') { add(wjs * 0.62, -0.7, -wjs * 0.2, t); add(wjs * 0.62, 0.7, wjs * 0.2, t); }
-  if (type === 'circumflex') { add(wjs * 0.62, 0.7, -wjs * 0.2, 0); add(wjs * 0.62, -0.7, wjs * 0.2, 0); }
-  if (type === 'umlaut') { add(t * 1.2, 0, -wjs * 0.24); add(t * 1.2, 0, wjs * 0.24); }
-  if (type === 'ring') { add(t * 1.6, 0, 0, t * 0.8); add(t * 1.6, 0, 0, -t * 0.8); }
-  return g;
-}
-
-// A crisp free-floating text plane (no card) for kicker/subtitle lines.
-function textPlane(text, { size, weight = 600, color = palette.ink, maxW = 14, spacing = 0 }) {
+// Lays out `text` in `font`, wrapping at maxW world units; returns canvas
+// geometry so several layers can be painted identically.
+function layout(text, { size, weight, maxW, spacing = 0, lineH = 1.18 }) {
   const ctx = document.createElement('canvas').getContext('2d');
-  ctx.font = `${weight} ${size * PX}px ${FONT_STACK}`;
+  const font = `${weight} ${size * PX}px ${FONT_STACK}`;
+  ctx.font = font;
   if (spacing) ctx.letterSpacing = `${spacing}px`;
   const lines = wrapLines(ctx, text, maxW * PX);
-  const wPx = Math.ceil(Math.max(...lines.map((l) => ctx.measureText(l).width), 1) + 8);
-  const hPx = Math.ceil(lines.length * size * PX * 1.35);
-  ctx.canvas.width = wPx;
-  ctx.canvas.height = hPx;
-  ctx.font = `${weight} ${size * PX}px ${FONT_STACK}`;
-  if (spacing) ctx.letterSpacing = `${spacing}px`;
-  ctx.fillStyle = color;
-  ctx.textAlign = 'center';
-  lines.forEach((l, i) => ctx.fillText(l, wPx / 2, size * PX * (0.95 + i * 1.35)));
+  const widths = lines.map((l) => ctx.measureText(l).width);
+  const pad = Math.ceil(size * PX * 0.18);
+  return {
+    lines, font, spacing, size, lineH, pad,
+    wPx: Math.ceil(Math.max(...widths, 1) + pad * 2),
+    hPx: Math.ceil(lines.length * size * PX * lineH + pad * 2),
+  };
+}
 
-  const tex = new THREE.CanvasTexture(ctx.canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
-  const mesh = new THREE.Mesh(
-    plainColors(new THREE.PlaneGeometry(wPx / PX, hPx / PX)),
-    new THREE.MeshBasicMaterial({ map: tex, transparent: true }),
-  );
-  mesh.userData.h = hPx / PX;
+function paint(L, color, { stroke = 0, label = null } = {}) {
+  const c = document.createElement('canvas');
+  c.width = L.wPx;
+  c.height = L.hPx;
+  const ctx = c.getContext('2d');
+  if (label) {
+    // a torn-paper label behind small text, so it reads over the hills
+    const r = Math.min(L.hPx / 2, L.size * PX * 0.6);
+    ctx.fillStyle = label;
+    ctx.beginPath();
+    ctx.roundRect(0, 0, c.width, c.height, r);
+    ctx.fill();
+    ctx.save();
+    ctx.clip();
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.globalAlpha = 0.5;
+    const g = getGrainCanvas();
+    for (let y = 0; y < c.height; y += g.height) for (let x = 0; x < c.width; x += g.width) ctx.drawImage(g, x, y);
+    ctx.restore();
+  }
+  ctx.font = L.font;
+  if (L.spacing) ctx.letterSpacing = `${L.spacing}px`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = color;
+  ctx.strokeStyle = color;
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = stroke;
+  L.lines.forEach((line, i) => {
+    const y = L.pad + L.size * PX * (0.92 + i * L.lineH);
+    if (stroke) ctx.strokeText(line, c.width / 2, y);
+    ctx.fillText(line, c.width / 2, y);
+  });
+  return c;
+}
+
+// The heading: ink layer + fattened sand backing layer behind it.
+function heading(text) {
+  let L = layout(text, { size: TITLE_SIZE, weight: 900, maxW: MAX_W * 1.6 });
+  let fit = 1;
+  if (L.wPx / PX > MAX_W) {
+    // Prefer shrinking (one line keeps the panel zone free); only very long
+    // headings wrap onto two lines.
+    if ((MAX_W * PX) / L.wPx >= 0.6) fit = (MAX_W * PX) / L.wPx;
+    else {
+      L = layout(text, { size: TITLE_SIZE, weight: 900, maxW: MAX_W * 0.98 });
+      fit = Math.min(1, (MAX_W * PX) / L.wPx);
+    }
+  }
+  const w = (L.wPx / PX) * fit;
+  const h = (L.hPx / PX) * fit;
+  const group = new THREE.Group();
+  const back = plane(paint(L, palette.sand, { stroke: TITLE_SIZE * PX * 0.06 }), w, h);
+  back.position.set(0.07, -0.08, -LAYER_GAP);
+  const ink = plane(paint(L, palette.slate), w, h);
+  group.add(back, ink);
+  group.userData.h = h - (L.pad * 2 * fit) / PX;
+  return group;
+}
+
+function textLine(text, { size, weight, color, maxW = 14, spacing = 0, label = null }) {
+  const L = layout(text, { size, weight, maxW, spacing, lineH: 1.35 });
+  if (label) { // roomier padding for the paper label
+    const extra = Math.round(size * PX * 0.7);
+    L.pad += extra / 2;
+    L.wPx += extra * 1.4;
+    L.hPx += extra;
+  }
+  const mesh = plane(paint(L, color, { label }), L.wPx / PX, L.hPx / PX);
+  mesh.userData.h = L.hPx / PX;
   return mesh;
 }
 
-export function createTitle(text, { color = palette.dustyRose, kicker, subtitle } = {}) {
+export function createTitle(text, { kicker, subtitle } = {}) {
   const group = new THREE.Group();
   if (!text && !kicker && !subtitle) return group;
 
@@ -114,64 +128,30 @@ export function createTitle(text, { color = palette.dustyRose, kicker, subtitle 
   let botY = 0;
 
   if (text) {
-    const size = 1.05;
-    const { base, marks } = stripDiacritics(String(text));
-    const geo = new TextGeometry(base, {
-      font,
-      size,
-      depth: 0.3,
-      curveSegments: 4,
-      bevelEnabled: false,
-    });
-    geo.computeBoundingBox();
-    const bb = geo.boundingBox;
-    const dx = -(bb.max.x + bb.min.x) / 2;
-    const dy = -(bb.max.y + bb.min.y) / 2;
-    geo.translate(dx, dy, 0);
-
-    // Long per-slide headings shrink to fit the frame width (3D text can't
-    // wrap). The letters + their accents live in one `letters` group scaled
-    // by `fit`; the kicker/subtitle keep their own size (they already wrap).
-    const MAX_W = 15.5; // world units before the outer 1.12 scale
-    const textW = bb.max.x - bb.min.x;
-    const fit = textW > MAX_W ? MAX_W / textW : 1;
-    const letters = new THREE.Group();
-    letters.add(paperMesh(geo, color, base.length, 0.06));
-
-    // Papercraft diacritics over their base glyphs (helvetiker has none).
-    const centers = glyphCenters(base, size);
-    marks.forEach((m, i) => {
-      const ch = base[m.index];
-      const tall = ch !== ch.toLowerCase() || ASCENDERS.has(ch);
-      const mark = makeMark(m.type, size, color, base.length + i);
-      mark.position.set(centers[m.index] + dx, (tall ? 1.02 : 0.74) * size + dy, 0.15);
-      letters.add(mark);
-    });
-    letters.scale.setScalar(fit);
-    inner.add(letters);
-
-    const halfH = ((bb.max.y - bb.min.y) / 2) * fit;
-    topY = halfH + (marks.length ? 0.3 * size * fit : 0);
-    botY = -halfH;
+    const hd = heading(String(text));
+    inner.add(hd);
+    topY = hd.userData.h / 2;
+    botY = -hd.userData.h / 2;
   }
   const subPlanes = [];
   if (kicker) {
-    const plane = textPlane(String(kicker).toUpperCase(), {
-      size: 0.34, weight: 700, color: palette.inkMuted, spacing: 4,
+    const p = textLine(String(kicker).toUpperCase(), {
+      size: 0.32, weight: 800, color: palette.roseMauve, spacing: 5, label: 'rgba(251,248,241,0.88)',
     });
-    plane.position.y = topY + 0.55 + plane.userData.h / 2;
-    inner.add(plane);
-    subPlanes.push(plane);
+    p.position.y = topY + 0.3 + p.userData.h / 2;
+    inner.add(p);
+    subPlanes.push(p);
   }
   if (subtitle) {
-    const plane = textPlane(String(subtitle), {
-      size: 0.42, weight: 600, color: palette.ink, maxW: 19,
+    const p = textLine(String(subtitle), {
+      size: 0.42, weight: 700, color: palette.inkBody, maxW: 18, label: 'rgba(251,248,241,0.9)',
     });
-    plane.position.y = botY - 0.5 - plane.userData.h / 2;
-    inner.add(plane);
-    subPlanes.push(plane);
+    p.position.y = botY - 0.35 - p.userData.h / 2;
+    inner.add(p);
+    subPlanes.push(p);
   }
   group.add(inner);
+  group.userData.hasKicker = Boolean(kicker);
 
   const state = { s: 0 };
   let shown = false;
@@ -195,14 +175,13 @@ export function createTitle(text, { color = palette.dustyRose, kicker, subtitle 
     }
   };
 
-  // Kicker + subtitle step aside once the scene starts revealing panels —
-  // they occupy the same sky the panels land in. Symmetric: stepping back
-  // to an empty scene brings them back.
+  // Kicker + subtitle step aside once the slide starts revealing panels —
+  // they occupy the same sky the panels land in. Symmetric on the way back.
   const subState = { o: 1 };
   function applySub() {
-    for (const plane of subPlanes) {
-      plane.material.opacity = subState.o;
-      plane.visible = subState.o > 0.02;
+    for (const p of subPlanes) {
+      p.material.opacity = subState.o;
+      p.visible = subState.o > 0.02;
     }
   }
   group.userData.setSubShown = (want) => {
@@ -212,8 +191,8 @@ export function createTitle(text, { color = palette.dustyRose, kicker, subtitle 
 
   group.userData.update = (t) => {
     if (!shown) return;
-    inner.position.y = Math.sin(t * 0.7 + phase) * 0.09;
-    inner.rotation.y = Math.sin(t * 0.45 + phase) * 0.035;
+    inner.position.y = Math.sin(t * 0.7 + phase) * 0.08;
+    inner.rotation.z = Math.sin(t * 0.45 + phase) * 0.008;
   };
 
   return group;

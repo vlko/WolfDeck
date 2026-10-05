@@ -1,12 +1,16 @@
 # WolfDeck — Framework Specification
 
-WolfDeck is a WebGL presentation framework styled as a **3D low-poly
-papercraft diorama**. Every scene is a little faceted world in a cozy
-storybook palette — sage meadows, cream skies, dusty-rose accents — matching
-the reference sheet `visual.png`. A cute origami gray wolf trots from scene to
-scene; your content (a floating 3D title plus text, bullets, images and 3D
-charts on papercraft cards) **floats in place inside the diorama** at
-positions and depths you choose, so scenery can genuinely pass in front of it.
+WolfDeck is a WebGL presentation framework styled as a **paper-theatre
+diorama**. Every tree, house, car and animal is a piece cut straight out of
+the illustrated reference sheets (`visual.png`, `city 1.png`, `city 2.png`,
+`office.png`, `shop.png`) and stood upright on a faceted paper meadow like a
+cardboard theatre figure. Sky, hills, panels and charts are drawn in code in
+the same nine-swatch palette (printed on `shop.png`) with the same paper
+grain, so everything reads as one illustration. A cute origami wolf trots
+from scene to scene; your content (a floating layered-paper title plus text,
+bullets, images and 3D charts on paper cards) **floats in place inside the
+diorama** at positions and depths you choose, so scenery can genuinely pass
+in front of it.
 
 You author a presentation **entirely in one JSON file** — no code required.
 
@@ -91,25 +95,44 @@ never clips.
 
 ### The ground
 
-One continuous low-poly terrain ribbon runs under the whole deck — gentle
-seeded bumps (damped to near-flat along the wolf's walk path), faceted sage
-coloring, and a parchment **front skirt** that reads as the cut edge of the
-diorama slab. Behind everything: cream sky, a faceted paper sun, drifting
-low-poly clouds at deep z (slow parallax).
+One continuous paper meadow runs under the whole deck — gentle seeded bumps
+(damped to near-flat along the wolf's walk path), softly faceted sage washed
+with a watercolor texture and fading toward the horizon, and a layered-card
+**front edge** (sage lip, kraft line, cream board) that reads as the cut edge
+of the diorama slab. Behind everything: a washed-paper sky, three bands of
+faceted paper hills (each peak split into a light and a shaded half, like
+the sheet's trees), a two-tone paper sun and drifting cut-paper clouds at
+deep z (slow parallax). Everything is unlit — shading is baked in, exactly
+like on the printed sprites.
 
-**Rivers**: `meta.rivers` inlays winding water bands into the terrain — the
-bed dips and the facets turn teal. Rivers run in z (across the stage) at a
+**Rivers**: `meta.rivers` lays a winding duck-egg paper ribbon across the
+terrain (the bed dips a little under it). Rivers run in z (across the stage) at a
 world x you give; place one between two scenes and the wolf fords it on his
 walk.
 
-**Roads**: `meta.roads` grades an asphalt band into the terrain, running
-along x within a world-x range, at the z lane you give — put `car`/`bus`
-props on the same lane (numeric `layer` = the road's `z`) and they drive it:
+**Roads**: `meta.roads` grades a flat paper-gray band into the terrain,
+running along x within a world-x range, at the z lane you give. Roads are
+**two-lane**: put `car` / `bus` / `schoolBus` / `garbageTruck` props on the
+road (numeric `layer` = the road's `z`) and they drive rightward in the near
+lane and leftward in the far lane, ping-ponging along their `path` (an
+x range relative to the prop) and U-turning across the road at the ends.
+Vehicles keep their distance, brake to a stop for whatever is ahead of them
+in their lane (another vehicle, one mid-U-turn, the wolf stepping onto the
+road) and only U-turn when the far lane is clear — they never drive through
+each other. Use `width: 4` and keep the road clear of props: the usual spot
+is `z: 4.4`, in front of the characters' row (1.5). `node
+tools/verify/overlaps.mjs` lists props standing on a road and props whose
+footprints overlap.
+
+**Walking around things**: every prop's ground footprint is an obstacle.
+The wolf plans his route between scenes (and back to his post after free
+roaming) with A* around them, slides along props when you steer him with
+W/A/S/D, and only trots toward the viewer when the way is clear.
 
 ```jsonc
 "meta": {
   "rivers": [ { "x": 17, "width": 3 } ],
-  "roads":  [ { "z": 2, "width": 2.4, "from": 21, "to": 47 } ]
+  "roads":  [ { "z": 4.4, "width": 4, "from": 21, "to": 47 } ]
 }
 ```
 
@@ -187,127 +210,47 @@ Placement tips:
 
 ### Asset catalog
 
-Every asset has a **full description file** in [`docs/assets/`](docs/assets/)
-— look, dimensions, options, allowed animations. Summary:
+The full catalog — every type, its sprite variants, default height and
+animations, plus a contact sheet of all sprites — lives in
+[`docs/assets/README.md`](docs/assets/README.md) (generated from the code).
+In short:
 
-| Type | Key options | Animations (default first) |
-| ---- | ----------- | -------------------------- |
-| [`wolf`](docs/assets/wolf.md) | `color` | `idle`, `walk`, `sit`, `none` — the hero is framework-driven |
-| [`sheep`](docs/assets/sheep.md) | `color` | `idle`, `graze`, `blink`, `none` |
-| [`lamb`](docs/assets/lamb.md) | `color` | `idle`, `graze`, `blink`, `none` |
-| [`pineTree`](docs/assets/pineTree.md) | `tiers`, `height`, `color` | `windSway`, `none` |
-| [`cottage`](docs/assets/cottage.md) | `variant: timber\|plain\|roundWindow`, `wallColor`, `roofColor`, `width` | none (static) |
-| [`barn`](docs/assets/barn.md) | `wallColor`, `roofColor`, `width` | none (static) |
-| [`fence`](docs/assets/fence.md) | `length`, `color` | none (static) |
-| [`haystack`](docs/assets/haystack.md) | `color` | none (static) |
-| [`hut`](docs/assets/hut.md) | `color`, `height` | none (static) |
-| [`well`](docs/assets/well.md) | `roofColor` | `none`, `crankTurn` |
+- **Every asset is a sprite standee** cut from the reference sheets: an
+  upright die-cut card with a sliver of cardboard edge and a soft contact
+  shadow. It has no back and no sides — that is the paper-theatre look.
+  `rotation` therefore only leans a card a little (±35°); yaw past 90°
+  mirrors it instead.
+- **Types group variants.** `cottage` has `variant: timber | plain |
+  roundWindow | rose | cabin`; `officeWorker` has `animal: bear | cat |
+  hamster | badger | boss`; `parkTree` has `shape: cone | ball | poplar |
+  round | diamond | trio`; `officeTower` also picks by nearest `color`;
+  otherwise `seed` picks. Every sprite is also a type by its own name
+  (`"type": "koalaWorker"`).
+- **Size** comes from each type's default height; `height` overrides it,
+  `scale` multiplies it, and the legacy `tiers` / `floors` knobs still work.
+- **Animations** are what a paper cut-out can do: `sway` (trees),
+  `idle` / `graze` (characters, sheep), `swing` (signs), `wobble`, `work`,
+  `drive` (vehicles on `path`), `cycle` (traffic light), `smoke`.
+  Lamps always glow.
 
-**City pack** (reference: `city 1.png` / `city 2.png`):
+| Group | Types |
+| ----- | ----- |
+| nature | `pineTree` `coneTree` `parkTree` `sheep` `lamb` `haystack` `hut` `well` `flowerPot` `officePlant` `cabbage` `ball` `fence` `mountainBackdrop` |
+| buildings | `cottage` `barn` `townhouse` `schoolhouse` `churchTower` `shed` `officeTower` `zevoPlant` `shopBuilding` `marketStall` `vault` |
+| street | `streetlamp` `trafficLight` `bench` `hydrant` `busStop` `recyclingBin` `signalPole` `trafficCone` `crane` `scaffold` `footballGoal` |
+| vehicles | `car` `bus` `schoolBus` `garbageTruck` `excavator` |
+| characters | `citizen` `pupil` `elder` `carer` `builder` `officeWorker` `shopkeeper` `mascot` `wolf` |
+| office | `desk` `schoolDesk` `officeChair` `bookshelf` `whiteboard` `blackboard` `meetingTable` `table` `filingCabinet` `deskLamp` `mug` `paperStack` `ledger` `wasteBasket` `clock` |
+| shop & money | `crate` `basket` `flourSack` `breadShelf` `shopSign` `shoppingCart` `pram` `scale` `moneyBag` `coinStack` `piggyBank` `gem` |
 
-| Type | Key options | Animations (default first) |
-| ---- | ----------- | -------------------------- |
-| [`officeTower`](docs/assets/officeTower.md) | `floors`, `width`, `color` | `windowGlow`, `none` |
-| [`townhouse`](docs/assets/townhouse.md) | `variant: awning\|steep\|timber`, `wallColor`, `roofColor` | none (static) |
-| [`parkTree`](docs/assets/parkTree.md) | `shape: cone\|ball\|poplar\|round`, `pot`, `color` | `windSway`, `none` |
-| [`streetlamp`](docs/assets/streetlamp.md) | | `glow`, `none` |
-| [`trafficLight`](docs/assets/trafficLight.md) | | `cycle`, `none` |
-| [`bench`](docs/assets/bench.md) | `color` | none (static) |
-| [`hydrant`](docs/assets/hydrant.md) | `color` | none (static) |
-| [`busStop`](docs/assets/busStop.md) | | none (static) |
-| [`car`](docs/assets/car.md) | `color`, `path: [x1, x2]`, `speed`, `startAt`, `direction` | `drive`, `none` |
-| [`bus`](docs/assets/bus.md) | same as `car` | `drive`, `none` |
-| [`citizen`](docs/assets/citizen.md) | `color` | `idle`, `none` |
-
-**Office pack** (reference: `office.png`):
-
-| Type | Key options | Animations (default first) |
-| ---- | ----------- | -------------------------- |
-| [`desk`](docs/assets/desk.md) | `color`, `monitor` — top ≈ y 1.05 for stacking | `screenGlow`, `none` |
-| [`officeChair`](docs/assets/officeChair.md) | `color` | `none`, `swivel` |
-| [`bookshelf`](docs/assets/bookshelf.md) | `color`, `shelves` | none (static) |
-| [`whiteboard`](docs/assets/whiteboard.md) | `seed` (scribbles) | none (static) |
-| [`meetingTable`](docs/assets/meetingTable.md) | `color`, `chairColor`, `chairs` — top ≈ y 1.07 | none (static) |
-| [`officePlant`](docs/assets/officePlant.md) | `color`, `potColor` | `leafSway`, `none` |
-| [`deskLamp`](docs/assets/deskLamp.md) | `shadeColor` — stack on tables via `y` | `glow`, `none` |
-| [`filingCabinet`](docs/assets/filingCabinet.md) | `color` | none (static) |
-| [`mug`](docs/assets/mug.md) | `color` — stack on desks via `y` | `steam`, `none` |
-| [`paperStack`](docs/assets/paperStack.md) | `seed` | none (static) |
-| [`wasteBasket`](docs/assets/wasteBasket.md) | `color` | none (static) |
-| [`officeWorker`](docs/assets/officeWorker.md) | `animal: bear\|cat\|hamster\|badger`, `suitColor` | `idle`, `none` |
-
-**Shop pack** (reference: `shop.png`):
-
-| Type | Key options | Animations (default first) |
-| ---- | ----------- | -------------------------- |
-| [`shopBuilding`](docs/assets/shopBuilding.md) | `width`, `wallColor`, `awningColor`, `stripeColor` | none (static) |
-| [`marketStall`](docs/assets/marketStall.md) | `seed` | none (static) |
-| [`shopSign`](docs/assets/shopSign.md) | `color` | `swing`, `none` |
-| [`shoppingCart`](docs/assets/shoppingCart.md) | `seed` | none (static) |
-| [`crate`](docs/assets/crate.md) | `produce: fruit\|greens\|plums\|empty` | none (static) |
-| [`basket`](docs/assets/basket.md) | `empty` | none (static) |
-| [`flourSack`](docs/assets/flourSack.md) | `color: cream\|tan\|hex` | none (static) |
-| [`breadShelf`](docs/assets/breadShelf.md) | `seed` | none (static) |
-| [`scale`](docs/assets/scale.md) | `color` | `weigh`, `none` |
-| [`flowerPot`](docs/assets/flowerPot.md) | `colors` | `sway`, `none` |
-| [`shopkeeper`](docs/assets/shopkeeper.md) | `animal: wolf\|bear\|panda\|fox`, `dressColor` | `idle`, `none` |
-
-(The city pack's [`parkTree`](docs/assets/parkTree.md) also gained a
-`diamond` shape — the faceted diamond-crown tree from the shop sheet.)
-
-**School pack**:
-
-| Type | Key options | Animations (default first) |
-| ---- | ----------- | -------------------------- |
-| [`schoolhouse`](docs/assets/schoolhouse.md) | `wallColor`, `roofColor` | none (static) |
-| [`blackboard`](docs/assets/blackboard.md) | `variant: lines\|figures` | none (static) |
-| [`schoolDesk`](docs/assets/schoolDesk.md) | | none (static) |
-| [`pupil`](docs/assets/pupil.md) | `animal: fox\|bunny\|bear\|cat` | `idle`, `wiggle`, `none` |
-| [`schoolBus`](docs/assets/schoolBus.md) | `color`, `path: [x1, x2]`, `speed`, `startAt`, `direction` | `drive`, `none` |
-
-**Finance pack**:
-
-| Type | Key options | Animations (default first) |
-| ---- | ----------- | -------------------------- |
-| [`vault`](docs/assets/vault.md) | `open` | none (static) |
-| [`coinStack`](docs/assets/coinStack.md) | `height` | none (static) |
-| [`moneyBag`](docs/assets/moneyBag.md) | | none (static) |
-| [`piggyBank`](docs/assets/piggyBank.md) | | `idle`, `none` |
-| [`ledger`](docs/assets/ledger.md) | | none (static) |
-
-**Construction pack**:
-
-| Type | Key options | Animations (default first) |
-| ---- | ----------- | -------------------------- |
-| [`crane`](docs/assets/crane.md) | `height` | `armSwing`, `none` |
-| [`excavator`](docs/assets/excavator.md) | | `dig`, `none` |
-| [`scaffold`](docs/assets/scaffold.md) | `levels` | none (static) |
-| [`trafficCone`](docs/assets/trafficCone.md) | | none (static) |
-| [`builder`](docs/assets/builder.md) | `animal: bear\|fox\|badger` | `idle`, `hammer`, `none` |
-
-**Civic pack** (town services, sport, demographics):
-
-| Type | Key options | Animations (default first) |
-| ---- | ----------- | -------------------------- |
-| [`garbageTruck`](docs/assets/garbageTruck.md) | `color`, `path: [x1, x2]`, `speed`, `startAt`, `direction` | `drive`, `none` |
-| [`recyclingBin`](docs/assets/recyclingBin.md) | `color` | none (static) |
-| [`zevoPlant`](docs/assets/zevoPlant.md) | | `smoke`, `none` |
-| [`carer`](docs/assets/carer.md) | `animal: bunny\|cat\|bear` | `idle`, `none` |
-| [`elder`](docs/assets/elder.md) | `variant: cane\|headscarf` | `idle`, `none` |
-| [`footballGoal`](docs/assets/footballGoal.md) | | none (static) |
-| [`ball`](docs/assets/ball.md) | | `bounce`, `none` |
-| [`pram`](docs/assets/pram.md) | | `stroll`, `none` |
-
-**Landmarks** (in the village/nature modules):
-
-| Type | Key options | Animations (default first) |
-| ---- | ----------- | -------------------------- |
-| [`churchTower`](docs/assets/churchTower.md) | `wallColor`, `spireColor`, `height` | none (static) |
-| [`mountainBackdrop`](docs/assets/mountainBackdrop.md) | `width`, `height`, `layers`, `color` — place on a deep layer (e.g. `-9`) | none (static) |
+The sheets have no crane, excavator or football goal, so those types map to
+the nearest printed piece (a striped construction pole, the pickup truck,
+a bench) — decks written for the old procedural library still load without
+warnings.
 
 The hero wolf is added automatically — you never declare it. Extra wolves can
 be placed as props. On every scene arrival the wolf announces himself with a
-little papercraft **speech bubble** (a random phrase + the scene number).
+little paper **speech bubble** (a random phrase + the scene number).
 
 ## 6. Slides & groups — revealing content with in-place parts
 
@@ -429,18 +372,21 @@ The shipped `rozpocet-2025.json` is authored this way: 15 scenes (dioramas),
 
 ### The 3D title
 
-Each slide's `title` becomes extruded papercraft letters floating at the top
-of the scene, gently bobbing, parked **behind the panel zone** (z −6.5) so
-panels always pass in front. Long headings **shrink to fit** the frame width
-(3D text can't wrap). The slide's `kicker` floats as a small uppercase
-strapline above the letters and its `subtitle` as a wrapped line below; the
+Each slide's `title` becomes a layered paper heading floating at the top of
+the scene — slate-ink letters lifted a little in front of a sand-colored
+backing layer (orbit the camera and the layers part) — gently bobbing,
+parked **behind the panel zone** (z −6.5) so panels always pass in front.
+Long headings **shrink to fit** the frame width; only very long ones wrap
+onto a second line. The slide's `kicker` floats as a small uppercase
+strapline above the letters and its `subtitle` as a wrapped line below —
+both on small ivory paper labels so they read over the hills; the
 subtitle **fades aside as the slide's first panel group reveals** (and
 returns when you step back). Moving to the next slide scales the old title
 out and the new one in.
 
-Titles support full Latin-Extended text (Slovak diacritics included): the
-base letters are extruded and small folded-paper accent marks (´ ˇ ^ ¨) are
-laid over the right glyphs.
+All text — titles, panels, charts, the slide menu — is set in **Nunito**
+(bundled, rounded and friendly like the cut-paper shapes), which covers
+Latin Extended, so Slovak diacritics render natively.
 
 ## 7. Scenes, transitions, camera
 
@@ -465,16 +411,20 @@ public/presentation.json      the demo deck (edit this, or add your own .json
 public/showcase.json          live reference deck: every part type + styling
 public/rozpocet-2025.json     a full real-world deck (12 scenes, Slovak)
 public/images/                your image-part files
-docs/assets/*.md              per-asset description files (look + animations)
+docs/assets/README.md         asset catalog (generated) + sprites.jpg contact sheet
+*.png (repo root)             the reference sheets every sprite is cut from
+tools/extract-sprites.mjs     cuts the sheets into src/sprites/ (npm run sprites)
+tools/sprites.config.js       the cut list: sprite name → sheet + rectangle
+tools/gen-asset-docs.mjs      regenerates docs/assets/README.md
 src/config.js                 rows, camera tilt/fov, spacing, speeds
 src/engine/                   renderer, camera rig, ticker, tween
 src/core/                     loader, deck assembly, step machine, hero,
                               input, URL-hash navigation, speech bubble
-src/environment/              terrain ribbon, sun, clouds
-src/assets/                   palette, paper materials, helpers, registry;
-                              wolf / animals / buildings / nature builders +
-                              city / office / shop / school / finance /
-                              construction / civic packs
+src/environment/              paper meadow, rivers/roads, sky, hills, sun, clouds
+src/sprites/                  the cut-out sprites (.webp) + manifest.json
+src/assets/                   palette (sheet swatches), paper textures and
+                              materials, sprite standees, the asset catalog,
+                              the wolf puppet, registry
 src/parts/                    card base, text/bullets/image, stat/numbered/callout/table, 3D charts, title
 ```
 
@@ -482,17 +432,19 @@ src/parts/                    card base, text/bullets/image, stat/numbered/callo
 
 ### Extending the asset library
 
-1. Write a builder `(options) => THREE.Group` in `src/assets/` — compose
-   `paperMesh(geometry, color, seed)` pieces (flat-shaded, facet-jittered,
-   paper-grain material) and add a `blobShadow(radius)`. Origin at
-   ground-center; y = 0 is standing on the terrain.
-2. Give it named animations with
-   `applyAnimation(group, { name: (t, dt, ctx) => {…} }, options, defaultName, assetName)`
-   — this wires the JSON `animation` option, warning on unknown names.
-   Animations tick only while the scene is near the camera.
-3. Register it: `register('myThing', myThing)` and import the module from
-   `src/main.js`.
-4. Add `docs/assets/myThing.md` from `_template.md` — look, dimensions,
-   options, allowed animations.
+New art comes from new reference sheets — generate them with the recipe in
+[midjourney.md](midjourney.md) so they match, then:
+
+1. Put the sheet (white background) in the repo root and add it to
+   `sheets` in `tools/sprites.config.js`.
+2. Add a cut line per piece: `[name, sheet, [x0, y0, x1, y1]]`, the rect in
+   the sheet's 2000-px-wide preview space (cut options: `maxH`, `tight`,
+   `hull`, `hardShadow`, `keepAll` — see the file's comments).
+3. `npm run sprites` — cuts `src/sprites/<name>.webp`, updates the manifest,
+   the contact sheet `docs/assets/sprites.jpg` and the catalog doc. Look at
+   the contact sheet (it's on meadow green, so fringes and bites show).
+4. The sprite is immediately usable as `"type": "<name>"`. To group variants
+   into a type with a default height and animations, add an entry to
+   `TYPES` in `src/assets/catalog.js`, then `npm run asset-docs`.
 5. Determinism rule: use `rng(seed)` from helpers, never `Math.random()`, for
-   anything that affects shape (random is fine for blink phases).
+   anything that affects what is shown (random is fine for animation phase).

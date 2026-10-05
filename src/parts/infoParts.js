@@ -123,14 +123,16 @@ export function numberedPart(def) {
   measureCtx.font = titleFont;
   const titleLines = def.title ? wrapLines(measureCtx, def.title, w * PX - pad * 2) : [];
   const wrapped = items.map((it) => {
+    measureCtx.font = itemTitleFont;
+    const title = it.title ? wrapLines(measureCtx, it.title, innerW) : [];
     measureCtx.font = bodyFont;
     const text = it.text ? wrapLines(measureCtx, it.text, innerW) : [];
-    return { ...it, text };
+    return { ...it, title, text };
   });
 
   const itemGap = 0.26 * PX;
   const itemH = (it) => Math.max(
-    (it.title ? bodySize * 1.35 : 0) + it.text.length * bodySize * LINE,
+    it.title.length * bodySize * 1.3 + (it.title.length ? bodySize * 0.05 : 0) + it.text.length * bodySize * LINE,
     badge,
   );
   const hPx = pad * 2
@@ -170,11 +172,14 @@ export function numberedPart(def) {
         ctx.fillText(String(start + i).padStart(2, '0'), cx, cy + 0.085 * PX);
         ctx.textAlign = 'left';
         let ty = y + bodySize * 0.9;
-        if (it.title) {
+        if (it.title.length) {
           ctx.fillStyle = palette.ink;
           ctx.font = itemTitleFont;
-          ctx.fillText(it.title, textX, ty);
-          ty += bodySize * 1.35;
+          for (const line of it.title) {
+            ctx.fillText(line, textX, ty);
+            ty += bodySize * 1.3;
+          }
+          ty += bodySize * 0.05;
         }
         ctx.fillStyle = palette.inkBody;
         ctx.font = bodyFont;
@@ -197,9 +202,9 @@ export function numberedPart(def) {
 // "warning" + shared fields. An accent-edged banner with a tone icon.
 // Deeper than the prop palette so the bar + icon read against the panel.
 const TONES = {
-  info: { icon: '→', color: '#4a7f96' },
-  positive: { icon: '✓', color: '#557a4e' },
-  warning: { icon: '!', color: '#c07f2f' },
+  info: { icon: '→', color: '#4f6670' }, // slate (chartColors[3])
+  positive: { icon: '✓', color: '#5f7a63' }, // deep sage
+  warning: { icon: '!', color: '#b4843f' }, // ochre
 };
 
 export function calloutPart(def) {

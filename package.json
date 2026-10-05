@@ -1,17 +1,22 @@
 {
   "name": "wolfdeck",
-  "version": "3.0.0",
-  "description": "WebGL presentation framework — a 3D low-poly papercraft diorama with a wolf presenter",
+  "version": "4.0.0",
+  "description": "WebGL presentation framework — a paper-theatre diorama of cut-out storybook sprites with a wolf presenter",
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
     "build": "vite build",
-    "preview": "vite preview --port 3000"
+    "preview": "vite preview --port 3000",
+    "sprites": "node tools/extract-sprites.mjs --sheet && node tools/gen-asset-docs.mjs",
+    "asset-docs": "node tools/gen-asset-docs.mjs"
   },
   "dependencies": {
+    "@fontsource/nunito": "^5.3.0",
     "three": "^0.178.0"
   },
   "devDependencies": {
+    "playwright-core": "^1.63.0",
+    "sharp": "^0.35.5",
     "vite": "^6.0.0"
   }
 }

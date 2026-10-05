@@ -3,9 +3,9 @@ import { palette } from '../assets/palette.js';
 import { paperMesh } from '../assets/helpers.js';
 import { FONT_STACK, PX } from '../parts/card.js';
 
-// Papercraft speech bubble over the wolf: an extruded paper-white balloon
-// with a pointed tail, sitting on a slightly larger deep-brown outline plate
-// — thick die-cut comic paper, matching the framework's look. announce(n)
+// Paper speech bubble over the wolf: an ivory balloon with a pointed tail,
+// mounted on a slightly larger kraft board — the same cut-paper build as the
+// panels (no ink outlines; the reference sheets have none). announce(n)
 // draws a random phrase + "#n" onto the front face; the step machine calls
 // it when the wolf ARRIVES at a scene. Pops in, holds, pops back out.
 // Purely presentational — Math.random is fine here (no geometry determinism).
@@ -73,11 +73,11 @@ function textPlane(phrase, label, w, h) {
   ctx.canvas.width = Math.ceil(w * PX);
   ctx.canvas.height = Math.ceil(h * PX);
   ctx.textAlign = 'center';
-  ctx.fillStyle = palette.deepBrown;
-  ctx.font = `800 ${0.42 * PX}px ${FONT_STACK}`;
+  ctx.fillStyle = palette.slate;
+  ctx.font = `900 ${0.42 * PX}px ${FONT_STACK}`;
   ctx.fillText(phrase, (w / 2) * PX, 0.52 * PX);
   ctx.fillStyle = palette.roseMauve;
-  ctx.font = `700 ${0.26 * PX}px ${FONT_STACK}`;
+  ctx.font = `800 ${0.26 * PX}px ${FONT_STACK}`;
   ctx.fillText(label, (w / 2) * PX, 0.9 * PX);
 
   const tex = new THREE.CanvasTexture(ctx.canvas);
@@ -92,24 +92,24 @@ function textPlane(phrase, label, w, h) {
 function makeBubble(phrase, number) {
   const label = `#${number}`;
   const measure = document.createElement('canvas').getContext('2d');
-  measure.font = `800 ${0.42 * PX}px ${FONT_STACK}`;
+  measure.font = `900 ${0.42 * PX}px ${FONT_STACK}`;
   const w = Math.max(measure.measureText(phrase).width / PX + 0.55, 1.35);
   const h = 1.1;
 
   const bubble = new THREE.Group();
 
-  // deep-brown die-cut outline plate behind the balloon
+  // kraft board behind the balloon
   const plate = paperMesh(
     new THREE.ExtrudeGeometry(balloonShape(w, h, RIM), { depth: DEPTH * 0.7, bevelEnabled: false }),
-    palette.deepBrown, 11, 0.03,
+    palette.panelEdge, 11, 0.03,
   );
   plate.position.z = -DEPTH * 0.45;
   bubble.add(plate);
 
-  // paper-white balloon body
+  // ivory balloon body
   const body = paperMesh(
     new THREE.ExtrudeGeometry(balloonShape(w, h, 0), { depth: DEPTH, bevelEnabled: false }),
-    palette.paperWhite, 12, 0.02,
+    palette.panel, 12, 0.02,
   );
   bubble.add(body);
 
@@ -161,7 +161,7 @@ export function createSpeechBubble(hero) {
       // group origin so the pop grows out of it. A slight yaw shows off the
       // paper thickness.
       const p = hero.group.position;
-      group.position.set(p.x + 0.55, p.y + 2.75, p.z + 0.35);
+      group.position.set(p.x + 0.55, p.y + 2.6, p.z + 0.35);
       group.rotation.y = -0.14;
       if (!bubble) return;
       age += dt;

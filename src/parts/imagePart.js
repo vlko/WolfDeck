@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { makeSlab, cardOptsFrom, wrapLines, FONT_STACK, PX } from './card.js';
-import { plainColors } from '../assets/materials.js';
+import { makeSlab, collageShadow, cardOptsFrom, wrapLines, FONT_STACK, PX } from './card.js';
+import { plainColors, getGrainTexture } from '../assets/materials.js';
 import { palette } from '../assets/palette.js';
 import { warn } from '../config.js';
 
@@ -13,7 +13,12 @@ const loader = new THREE.TextureLoader();
 export function imagePart(def) {
   const w = def.width ?? 5;
   const mat = 0.35; // paper border around the picture
-  const capH = def.caption ? 0.72 : 0;
+  // Caption lines are measured up front so the strip always fits them.
+  const capFont = `700 ${0.3 * PX}px ${FONT_STACK}`;
+  const measure = document.createElement('canvas').getContext('2d');
+  measure.font = capFont;
+  const capLines = def.caption ? wrapLines(measure, def.caption, (w - 0.8) * PX) : [];
+  const capH = capLines.length ? 0.32 + capLines.length * 0.4 : 0;
 
   const group = new THREE.Group();
   // Assume 4:3 until the texture arrives, then rescale the picture plane.
@@ -21,8 +26,18 @@ export function imagePart(def) {
   let picH = picW * 0.72;
   const h = picH + mat * 2 + capH;
 
-  const cardOpts = cardOptsFrom(def, { color: palette.paperWhite });
-  if (!cardOpts.bare) group.add(makeSlab(w, h, cardOpts));
+  const cardOpts = cardOptsFrom(def);
+  if (!cardOpts.bare) {
+    group.add(makeSlab(w, h, cardOpts));
+    group.add(collageShadow(w, h));
+    // ivory paper mat (unlit, like every panel face)
+    const mat3 = new THREE.Mesh(
+      plainColors(new THREE.PlaneGeometry(w - 0.12, h - 0.12)),
+      new THREE.MeshBasicMaterial({ color: cardOpts.color ?? palette.panel, map: getGrainTexture() }),
+    );
+    mat3.position.z = 0.003;
+    group.add(mat3);
+  }
   group.userData.cardSize = { w, h };
 
   const picGeo = plainColors(new THREE.PlaneGeometry(1, 1));
@@ -59,18 +74,17 @@ export function imagePart(def) {
     canvas.width = Math.round(w * PX);
     canvas.height = Math.round(capH * PX);
     const ctx = canvas.getContext('2d');
-    ctx.font = `italic 400 ${0.3 * PX}px ${FONT_STACK}`;
-    ctx.fillStyle = palette.inkBody;
+    ctx.font = capFont;
+    ctx.fillStyle = palette.inkMuted;
     ctx.textAlign = 'center';
-    const lines = wrapLines(ctx, def.caption, (w - 0.8) * PX);
-    lines.forEach((line, i) => ctx.fillText(line, canvas.width / 2, 0.42 * PX + i * 0.4 * PX));
+    capLines.forEach((line, i) => ctx.fillText(line, canvas.width / 2, 0.36 * PX + i * 0.4 * PX));
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
     const cap = new THREE.Mesh(
       plainColors(new THREE.PlaneGeometry(w - 0.2, capH)),
       new THREE.MeshBasicMaterial({ map: tex, transparent: true }),
     );
-    cap.position.set(0, -(h / 2) + capH / 2 + 0.12, 0.006);
+    cap.position.set(0, -(h / 2) + capH / 2 + 0.1, 0.006);
     group.add(cap);
   }
 

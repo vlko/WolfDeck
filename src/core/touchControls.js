@@ -13,13 +13,13 @@ const CSS = `
 .wd-touch { position: fixed; z-index: 25; display: none;
   align-items: center; justify-content: center;
   width: 60px; height: 60px; padding: 0; margin: 0;
-  border: none; border-radius: 16px; cursor: pointer;
-  background: #fbf8f1; color: #2b2620;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.28);
-  font: 26px/1 'Avenir Next','Trebuchet MS',Verdana,sans-serif;
+  border: 4px solid #d9ccb2; border-radius: 16px; cursor: pointer;
+  background: #fbf8f1; color: #4b5654;
+  box-shadow: 5px 7px 0 rgba(74,67,52,0.2);
+  font: 800 26px/1 Nunito,'Avenir Next','Trebuchet MS',sans-serif;
   -webkit-tap-highlight-color: transparent; touch-action: manipulation;
   transition: transform 0.08s ease, background 0.12s ease; }
-.wd-touch:active { transform: scale(0.92); background: #efe9dc; }
+.wd-touch:active { transform: scale(0.92); background: #ebe7d7; }
 .wd-touch.on { display: flex; }
 .wd-touch-bl { left: max(16px, env(safe-area-inset-left));
   bottom: max(16px, env(safe-area-inset-bottom)); }

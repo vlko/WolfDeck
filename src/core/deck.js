@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { build } from '../assets/registry.js';
 import { createGround } from '../environment/ground.js';
-import { createSun } from '../environment/sky.js';
+import { createSun, createBackdrop } from '../environment/sky.js';
 import { createClouds } from '../environment/clouds.js';
 import { createTitle } from '../parts/title.js';
 import { buildPart } from '../parts/partsFactory.js';
+import { addObstacle } from './world.js';
 import { CONTENT_LAYER } from './focusMode.js';
 import { tween, ease } from '../engine/tween.js';
 import { ACTIVE_SCENE_RADIUS, PART_CASCADE, PART_STACK_DZ, PART_STAGGER } from '../config.js';
@@ -18,6 +19,32 @@ function delayThen(seconds, fn) {
 // re-render it in front of the veiled diorama.
 function tagContent(obj) {
   obj.traverse((child) => child.layers.enable(CONTENT_LAYER));
+}
+
+// A prop's ground footprint joins the world's obstacles, so the wolf walks
+// around it and vehicles brake for nothing that isn't really in the way.
+// Vehicles move (traffic handles them) and backdrops are scenery.
+function registerObstacle(obj, prop, originX, z, sceneId) {
+  // vehicles move (traffic handles them), backdrops are scenery, and things
+  // stacked on furniture (a mug on a desk) stand on another obstacle
+  if (obj.userData.drives || prop.type === 'mountainBackdrop' || prop.y > 0.2) return;
+  const f = obj.userData.footprint3d;
+  const sp = obj.userData.sprite;
+  if (!f && !sp) return;
+  const sx = obj.scale.x;
+  const sz = obj.scale.z;
+  const rot = obj.rotation.y;
+  const cx = (f?.cx ?? 0) * sx;
+  const cz = (f?.cz ?? 0) * sz;
+  addObstacle({
+    x: originX + prop.x + cx * Math.cos(rot) + cz * Math.sin(rot),
+    z: z - cx * Math.sin(rot) + cz * Math.cos(rot),
+    hw: ((f?.w ?? sp.w) / 2) * sx * 0.92,
+    hd: ((f?.d ?? 0.3) / 2) * sz * 0.92,
+    rot,
+    type: prop.type,
+    scene: sceneId,
+  });
 }
 
 // Builds the whole diorama from the normalized deck and exposes the deckView
@@ -37,6 +64,9 @@ export function buildDeck(deck, scene3) {
     minX, maxX, seed: deck.meta.seed, rivers: deck.meta.rivers, roads: deck.meta.roads,
   });
   scene3.add(ground.group);
+
+  const backdrop = createBackdrop({ minX, maxX });
+  scene3.add(backdrop);
 
   const sun = createSun();
   sun.position.set(minX + (maxX - minX) * 0.22, 11, -32);
@@ -58,8 +88,23 @@ export function buildDeck(deck, scene3) {
       const z = prop.z + prop.dz;
       obj.position.set(prop.x, ground.heightAt(originX + prop.x, z) + prop.y, z);
       obj.scale.set(...prop.scale);
-      if (prop.rotation) obj.rotation.y = prop.rotation;
+      if (prop.rotation) {
+        if (obj.userData.sprite) {
+          // A paper standee can't turn its back: yaw past 90° mirrors the
+          // card instead, and the remaining lean is kept small.
+          let yaw = prop.rotation;
+          if (Math.cos(yaw) < 0) {
+            obj.userData.sprite.flip.scale.x *= -1;
+            yaw -= Math.PI;
+          }
+          yaw = Math.atan2(Math.sin(yaw), Math.cos(yaw));
+          obj.rotation.y = Math.max(-0.6, Math.min(0.6, yaw));
+        } else {
+          obj.rotation.y = prop.rotation;
+        }
+      }
       group.add(obj);
+      registerObstacle(obj, prop, originX, z, sceneDef.id);
       obj.traverse((child) => {
         if (child.userData.update) updatables.push(child.userData.update);
       });
@@ -167,7 +212,11 @@ export function buildDeck(deck, scene3) {
     const s = scenes[i];
 
     // The active slide's title tucks against the top edge in flat 2D view.
-    if (shownTitle) shownTitle.position.set(0, frame.top - 1.7, shownTitle.userData.pos3d.z);
+    // (a kicker strapline needs extra headroom above the letters)
+    if (shownTitle) {
+      const drop = shownTitle.userData.hasKicker ? 2.4 : 1.7;
+      shownTitle.position.set(0, frame.top - drop, shownTitle.userData.pos3d.z);
+    }
 
     const visible = s.stepParts.flat().filter((p) => p.userData.isRevealed?.());
     if (!visible.length) return;
@@ -332,6 +381,11 @@ export function buildDeck(deck, scene3) {
     update(t, dt, cameraX, focus) {
       if (focus?.active) layoutFocus(cameraX, focus.frame);
       else if (focusLayouted) restoreFocus();
+      // The flat 2D view has no perspective to shrink the far world: lower
+      // the hills and park the sun so they stay a quiet backdrop.
+      const flat = !!focus?.active;
+      sun.visible = !flat;
+      backdrop.scale.y = flat ? 0.45 : 1;
       clouds.userData.update(t, dt);
       for (const s of scenes) {
         if (Math.abs(s.originX - cameraX) > ACTIVE_SCENE_RADIUS) continue;

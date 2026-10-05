@@ -4,14 +4,14 @@
     "seed": 7,
     "roads": [
       {
-        "z": 2,
-        "width": 2.4,
+        "z": 4.4,
+        "width": 4,
         "from": 55,
         "to": 81
       },
       {
-        "z": 2,
-        "width": 2.4,
+        "z": 4.4,
+        "width": 4,
         "from": 123,
         "to": 149
       }
@@ -159,7 +159,8 @@
           ],
           "layer": 1,
           "options": {
-            "seed": 6
+            "seed": 6,
+            "variant": "whole"
           }
         },
         {
@@ -250,7 +251,7 @@
             0,
             0
           ],
-          "layer": 2,
+          "layer": 4.4,
           "options": {
             "seed": 6,
             "path": [
@@ -316,7 +317,8 @@
           ],
           "layer": 1.5,
           "options": {
-            "seed": 4
+            "seed": 4,
+            "animal": "bear"
           }
         },
         {
@@ -392,7 +394,7 @@
         {
           "type": "carer",
           "position": [
-            2,
+            0.8,
             0
           ],
           "layer": 1.5,
@@ -403,7 +405,7 @@
         {
           "type": "elder",
           "position": [
-            3.5,
+            4.1,
             0
           ],
           "layer": 1.5,
@@ -415,7 +417,7 @@
         {
           "type": "ball",
           "position": [
-            5.2,
+            6.6,
             0
           ],
           "layer": 1.8,
@@ -451,7 +453,7 @@
             0,
             0
           ],
-          "layer": 2,
+          "layer": 4.4,
           "options": {
             "seed": 9,
             "path": [

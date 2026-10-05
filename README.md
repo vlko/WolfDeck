@@ -1,14 +1,17 @@
 # 🐺 WolfDeck
 
-A WebGL presentation framework styled as a **3D low-poly papercraft
-diorama**. Faceted paper-toy scenes in a cozy storybook palette stand on a
-rolling meadow; a cute origami gray wolf trots between your slides, and your
-content — a floating 3D title, text, bullets, images and real 3D charts —
-floats in place inside the diorama at any depth you choose.
+A WebGL presentation framework styled as a **paper-theatre diorama**. Every
+tree, house, car and animal is cut straight out of the illustrated reference
+sheets in this repo and stood upright on a faceted paper meadow like a
+cardboard theatre figure; a cute origami wolf trots between your slides, and
+your content — a layered paper title, text, bullets, images and real 3D
+charts — floats in place inside the diorama at any depth you choose.
 
-The visual target is `visual.png`: flat faceted shapes, adorable wolf and
-sheep, triangular pines, tiny village props, paper-grain texture, sage /
-cream / dusty-rose palette.
+The art *is* the reference sheets — `visual.png`, `city 1.png`,
+`city 2.png`, `office.png`, `shop.png`: flat faceted shapes, watercolor paper
+grain, and the nine-swatch sage / sand / mauve palette printed on
+`shop.png`. Sky, hills, panels and charts are drawn in code in that same
+palette and grain, so the whole stage reads as one illustration.
 
 ![stack](https://img.shields.io/badge/three.js-r178-blue) ![build](https://img.shields.io/badge/vite-6-purple)
 
@@ -47,61 +50,67 @@ deck (15 scenes, 33 slides). Every slide has a shareable deep link
   depth-row model, controls, part types, extending the asset library.
 - [SCENES.md](SCENES.md) — authoring tutorial, built around the shipped demo
   deck with the reasoning annotated.
-- [docs/assets/](docs/assets/) — one file per asset: look, dimensions,
-  options and **allowed animations** (e.g. sheep: `idle`, `graze`, `blink`).
-- [midjourney.md](midjourney.md) — prompt recipe for generating new asset
-  concepts in the exact `visual.png` style.
+- [docs/assets/](docs/assets/README.md) — the asset catalog: every type,
+  its sprite variants, default height and **allowed animations**, plus a
+  contact sheet of all sprites.
+- [midjourney.md](midjourney.md) — prompt recipe for generating new
+  reference sheets in the same style (then cut them with `npm run sprites`).
 
 ## What's in the box
 
-- **True 3D papercraft assets** — all procedural, no art files: tiered
-  pines, three cottage variants, the big mauve-roofed barn, thatched hut,
-  stone well (with turning crank), picket fence, haystack, sheep, lamb — and
-  the wolf hero with trot, idle, blink, ear-twitch and hop. Left alone, he
-  sits down for a while, glances around, or trots up to the viewer and back.
-- **A city pack** — faceted towers with flickering lit windows, townhouses,
-  potted park trees, glowing streetlamps, a cycling traffic light, bench,
-  hydrant, bus stop, a fox citizen — and cars and a bus that drive a real
-  asphalt road graded into the terrain (`meta.roads`).
-- **An office pack** — teal desk with a flickering monitor, swivel chair,
-  bookshelves with colorful spines, scribbled easel whiteboards, meeting
-  table, faceted plants, warm desk lamp, filing cabinet, a steaming mug —
-  and big-headed animal colleagues in suits who blink and look around.
-- **A shop pack** — the corner shop with its striped scalloped awning, a
-  market stall, produce crates and baskets, flour sacks, a bread shelf, a
-  swinging hanging sign, a shopping cart, a weighing scale with a wiggling
-  needle, swaying potted flowers — and panda, bear and wolf shopkeepers.
-- **School, finance, construction & civic packs** — a bell-gabled
-  schoolhouse, blackboard, pupil desks, backpacked animal pupils and a
-  driving school bus; a round-door vault, coin stacks, money bag, blinking
-  piggy bank and ledger; a slewing tower crane, digging excavator, scaffold,
-  cones and a hammering builder; a garbage truck, recycling bins, a
-  waste-to-energy plant puffing paper smoke, carer and elder characters, a
-  football goal with a bouncing ball, and a parent with a pram — plus a
-  white church tower and layered mountain-ridge backdrops for town skylines.
+- **Hand-built 3D models of every sprite** — each piece on the sheets is
+  modeled in `src/models/` as a rigged, faceted paper object that matches the
+  illustration from the front and makes physical sense from every side:
+  characters blink, turn their heads, wave and flick their ears; the wolf
+  walks on four legs with his tail streaming behind (sitting, it wraps round
+  his flank as on the sheet); vehicles have four turning wheels and U-turn;
+  trees bend in the wind; chimneys smoke; the crane slews, the excavator
+  digs, the well's crank hauls the bucket. Compare a model with its sprite at
+  `/lab.html?m=<name>`. Objects no sheet has (crane, excavator, schoolhouse,
+  vault, piggy bank…) are modeled in the same style.
+- **120 cut-out sprites** (the fallback for anything without a model) — pines and cone trees, cottages, barn, hut,
+  well, haystack, sheep; towers, townhouses, chapel, park trees, lamps,
+  traffic light, benches, cars and buses; desks, bookshelves, flipchart,
+  meeting tables, filing cabinet, mug and plant; the striped-awning shop,
+  market stall, crates, baskets, bread shelves, sacks, scale; and a whole
+  cast of animal townsfolk (bears, panda, koala, cat, fox, boar, badger…).
+  `tools/extract-sprites.mjs` cuts them from the sheets — background and
+  soft shadows removed — and `npm run sprites` re-cuts after you add a
+  sheet. Catalog: [docs/assets/](docs/assets/README.md).
+- **Paper-theatre staging** — each sprite is a die-cut card with a sliver of
+  cardboard edge and a soft contact shadow. Trees sway about their foot,
+  characters breathe and hop, sheep graze, signs swing, vehicles drive a
+  road and turn by flipping their card, lamps glow, the traffic light
+  cycles. The wolf is a puppet: a waddling trot, a squash to sit, a hop,
+  and a card flip to turn around. Left alone he sits for a while, glances
+  around, or trots up to the viewer and back.
+- **A paper world** — a softly faceted, watercolor-washed meadow with a
+  layered-card front edge, smooth paper rivers and roads, three bands of
+  faceted hills, a two-tone paper sun and cut-paper clouds. Everything is
+  unlit with baked shading, exactly like the printed sprites.
 - **Natural parallax** — a perspective camera pitched 20° down trails the
   walking wolf; back rows drift, front rows sweep. Nothing scripted.
 - **In-place presentation parts** — text, bullets, images, KPI stat tiles
   with counting numbers, numbered lists, tone callouts, data tables and 3D
   charts (rising bars, horizontal plan-vs-actual bars, grouped series,
-  popping pie/donut wedges, drawn line ribbons) on papercraft cards that
-  float *inside* the scene; foreground props can genuinely pass in front of
-  them. Cards take custom widths, heights, font scales and colors; a step
-  can `clears` the previous panels to start a fresh "page" mid-scene. See
-  `public/showcase.json` (`?deck=showcase.json`) for all of it live.
-- **A rolling low-poly world** — seeded terrain ribbon with a parchment
-  diorama edge, river fords the wolf splashes through, paper sun, drifting
-  faceted clouds.
+  popping pie/donut wedges, drawn line ribbons) on ivory paper cards with a
+  kraft board edge and a collage shadow, floating *inside* the scene;
+  foreground props can genuinely pass in front of them. Cards take custom
+  widths, heights, font scales and colors; a step can `clears` the previous
+  panels to start a fresh "page" mid-scene. See `public/showcase.json`
+  (`?deck=showcase.json`) for all of it live.
 - **Presenter-proof navigation** — presses queue during walks, mashing
   fast-forwards animations, forward/back is perfectly symmetric, deck ends
-  answer with a hop. The URL always carries the current scene (`#scene-id`)
+  answer with a hop. The URL always carries the current slide (`#slide-id`)
   as a shareable deep link, and the wolf announces each arrival with a
-  little papercraft speech bubble.
-- **Titles that speak your language** — scene titles take a kicker and
-  subtitle, render full diacritics (á č š ž …) as folded-paper accents over
-  the extruded letters, and float behind your panels, never over them.
+  little paper speech bubble.
+- **Titles that speak your language** — everything is set in Nunito
+  (bundled, Latin Extended), so á č š ž ľ ô render natively. Slide titles
+  take a kicker and a subtitle and float behind your panels, never over
+  them.
 - **Lenient by design** — typos become magenta placeholders and console
-  warnings, never a crash.
+  warnings, never a crash. Decks written for the old procedural asset
+  library load unchanged: every old asset name maps to its nearest sprite.
 
 ## Build for a venue
 

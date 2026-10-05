@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { paperMaterial, facetColors } from './materials.js';
+import { paperMaterial, shadedColors } from './materials.js';
 import { warn } from '../config.js';
 
 // Deterministic PRNG — same seed, same diorama, every load.
@@ -13,68 +13,27 @@ export function rng(seed = 0) {
   };
 }
 
-// Papercraft mesh: facet-jittered flat-shaded geometry + cached paper material.
-export function paperMesh(geometry, color, seed = 0, jitter = 0.05) {
-  const geo = facetColors(geometry, seed, jitter);
-  return new THREE.Mesh(geo, paperMaterial(color));
+// Paper mesh: geometry with baked paper shading + cached unlit material.
+export function paperMesh(geometry, color, seed = 0, jitter = 0.05, opts = {}) {
+  const geo = shadedColors(geometry, seed, jitter);
+  return new THREE.Mesh(geo, paperMaterial(color, opts));
 }
 
-// Low-segment cone (faceted "paper" cone). Rim vertices optionally jittered.
-export function facetedCone(radius, height, segments = 7, rim = 0, seed = 0) {
-  const geo = new THREE.ConeGeometry(radius, height, segments, 1);
-  if (rim > 0) {
-    const r = rng(seed + 31);
-    const pos = geo.attributes.position;
-    for (let i = 0; i < pos.count; i += 1) {
-      if (Math.abs(pos.getY(i) + height / 2) < 1e-4 && (pos.getX(i) !== 0 || pos.getZ(i) !== 0)) {
-        pos.setY(i, pos.getY(i) + (r() - 0.5) * rim);
-      }
-    }
-  }
-  return geo;
-}
-
-// Triangular prism lying along x — the classic gabled roof. width along x,
-// height to the ridge, depth along z.
-export function prismGeometry(width, height, depth) {
-  const shape = new THREE.Shape();
-  shape.moveTo(-depth / 2, 0);
-  shape.lineTo(depth / 2, 0);
-  shape.lineTo(0, height);
-  shape.closePath();
-  const geo = new THREE.ExtrudeGeometry(shape, { depth: width, bevelEnabled: false });
-  geo.rotateY(Math.PI / 2);
-  geo.center();
-  geo.translate(0, height / 2, 0);
-  return geo;
-}
-
-// Soft dark disc under a prop — grounds it without shadow maps.
-export function blobShadow(radius, opacity = 0.16) {
-  const geo = new THREE.CircleGeometry(radius, 14);
-  geo.rotateX(-Math.PI / 2);
-  const mat = new THREE.MeshBasicMaterial({
-    color: 0x3a3a30, transparent: true, opacity, depthWrite: false,
-  });
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.y = 0.02;
-  mesh.renderOrder = -1;
-  return mesh;
-}
-
-// Wire a builder's named animations to the `animation` option.
+// Wire an asset's named animations to the `animation` option.
 // animations = { name: (t, dt, ctx) => {} }. The chosen one becomes
 // group.userData.update; `always` (if given) runs regardless of selection.
-export function applyAnimation(group, animations, options = {}, defaultName = null, assetName = '?') {
+// aliases = { legacyName: realName } — accepted silently.
+export function applyAnimation(group, animations, options = {}, defaultName = null, assetName = '?', aliases = {}) {
   group.userData.animations = animations;
   let name = options.animation ?? defaultName;
+  if (name && !animations[name] && aliases[name]) name = aliases[name]; // exact name wins over a legacy alias
   if (name && name !== 'none' && !animations[name]) {
-    warn(`asset "${assetName}": unknown animation "${name}" (has: ${Object.keys(animations).join(', ') || 'none'})`);
+    warn(`asset "${assetName}": unknown animation "${name}" (has: ${Object.keys(animations).filter((k) => k !== 'always').join(', ') || 'none'})`);
     name = defaultName;
   }
   const fn = name && name !== 'none' ? animations[name] : null;
   const always = animations.always || null;
-  const ctx = { group, phase: Math.random() * Math.PI * 2 };
+  const ctx = { group, phase: (options.seed ?? Math.random() * 100) * 1.7 + Math.random() * 6 };
   if (fn || always) {
     group.userData.update = (t, dt) => {
       if (always) always(t, dt, ctx);

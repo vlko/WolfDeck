@@ -1,12 +1,13 @@
 import * as THREE from 'three';
-import { paperMaterial, plainColors, facetColors } from '../assets/materials.js';
+import { paperMaterial, plainColors, shadedColors, getGrainCanvas } from '../assets/materials.js';
 import { palette } from '../assets/palette.js';
 import { tween, ease } from '../engine/tween.js';
 import { REVEAL_DURATION } from '../config.js';
 
-// Papercraft panel base shared by every in-place part: an extruded
-// rounded-rect slab with a crisp CanvasTexture front face, floating in the
-// diorama. Parts are hidden until their step reveals them (scale-up with
+// Paper panel base shared by every in-place part: an ivory sheet with the
+// same paper tooth as the sprites, mounted on a kraft-colored board (the
+// extruded slab — its edge shows as a warm rim) and casting a soft collage
+// shadow on the air behind it. The face is a crisp CanvasTexture. Parts are hidden until their step reveals them (scale-up with
 // overshoot + rise); hiding is the exact reverse; while revealed they bob on
 // a gentle sine float.
 
@@ -26,13 +27,35 @@ function roundedRectShape(w, h, r) {
   return s;
 }
 
+// Soft shadow behind a panel, offset down-right like a paper cut-out lifted
+// off the page. One shared texture, stretched per panel.
+let shadowTex = null;
+export function collageShadow(w, h) {
+  if (!shadowTex) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const ctx = c.getContext('2d');
+    ctx.filter = 'blur(10px)';
+    ctx.fillStyle = 'rgba(255,255,255,1)';
+    ctx.fillRect(22, 22, 84, 84);
+    shadowTex = new THREE.CanvasTexture(c);
+  }
+  const m = new THREE.Mesh(
+    plainColors(new THREE.PlaneGeometry(w * 1.5 + 0.2, h * 1.5 + 0.2)),
+    new THREE.MeshBasicMaterial({ map: shadowTex, color: 0x4a4334, transparent: true, opacity: 0.2, depthWrite: false }),
+  );
+  m.position.set(0.16, -0.2, -0.32);
+  m.renderOrder = -1;
+  return m;
+}
+
 // The bare slab (no canvas face) — charts build on this too.
-export function makeSlab(w, h, { color = palette.paperWhite, thickness = 0.12, radius = 0.18, seed = 1 } = {}) {
+export function makeSlab(w, h, { color = palette.panelEdge, thickness = 0.12, radius = 0.18, seed = 1 } = {}) {
   const geo = new THREE.ExtrudeGeometry(roundedRectShape(w, h, radius), {
     depth: thickness, bevelEnabled: false, curveSegments: 4,
   });
   geo.translate(0, 0, -thickness);
-  const slab = new THREE.Mesh(facetColors(geo, seed, 0.035), paperMaterial(color));
+  const slab = new THREE.Mesh(shadedColors(geo, seed, 0.03), paperMaterial(color));
   return slab;
 }
 
@@ -41,7 +64,10 @@ export function makeSlab(w, h, { color = palette.paperWhite, thickness = 0.12, r
 // only), accent (CSS color — papercraft strip along the top edge).
 export function makeCard(w, h, draw, opts = {}) {
   const group = new THREE.Group();
-  if (!opts.bare) group.add(makeSlab(w, h, opts));
+  if (!opts.bare) {
+    group.add(makeSlab(w, h, opts));
+    group.add(collageShadow(w, h));
+  }
 
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(w * PX);
@@ -66,6 +92,16 @@ export function makeCard(w, h, draw, opts = {}) {
     ctx.arcTo(0, 0, canvas.width, 0, r);
     ctx.closePath();
     ctx.fill();
+    // paper tooth, multiplied into the face only
+    ctx.save();
+    ctx.clip();
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.globalAlpha = 0.55;
+    const g = getGrainCanvas();
+    for (let y = 0; y < canvas.height; y += g.height) {
+      for (let x = 0; x < canvas.width; x += g.width) ctx.drawImage(g, x, y);
+    }
+    ctx.restore();
   }
   if (faceFill) fillFace();
   draw(ctx, canvas.width, canvas.height);
@@ -84,7 +120,7 @@ export function makeCard(w, h, draw, opts = {}) {
   if (opts.accent && !opts.bare) {
     // border-top flourish: a thin die-cut paper strip laid over the top edge
     const strip = new THREE.Mesh(
-      facetColors(new THREE.BoxGeometry(w - 0.34, 0.16, 0.08), (opts.seed ?? 1) + 7, 0.05),
+      shadedColors(new THREE.BoxGeometry(w - 0.34, 0.16, 0.08), (opts.seed ?? 1) + 7, 0.04),
       paperMaterial(opts.accent),
     );
     strip.position.set(0, h / 2 - 0.16, 0.03);
@@ -134,7 +170,7 @@ export function windowK(k, i, n, overlap = 0.55) {
 
 // Shared canvas text helpers ------------------------------------------------
 
-export const FONT_STACK = "'Avenir Next', 'Trebuchet MS', Verdana, sans-serif";
+export const FONT_STACK = "Nunito, 'Avenir Next', 'Trebuchet MS', sans-serif";
 
 export function wrapLines(ctx, text, maxWidth) {
   const lines = [];

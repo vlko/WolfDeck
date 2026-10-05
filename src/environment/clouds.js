@@ -3,31 +3,49 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { paperMesh, rng } from '../assets/helpers.js';
 import { palette } from '../assets/palette.js';
 
-// Low-poly cloud clusters drifting slowly in +x, wrapping around the deck
-// extents. Placed at deep z so they parallax behind everything.
-export function createClouds({ minX, maxX, count = 6, seed = 5 }) {
+// Flat cut-paper clouds: a few low-poly lumps on a flat base, ivory on top
+// and a faint shaded underside, drifting slowly in +x and wrapping around the
+// deck. Deep z, so they parallax behind everything.
+
+function lump(cx, cy, rx, ry, seg = 8) {
+  const s = new THREE.Shape();
+  for (let k = 0; k <= seg; k += 1) {
+    const a = Math.PI * (k / seg);
+    const x = cx + Math.cos(a) * rx;
+    const y = cy + Math.sin(a) * ry;
+    if (k === 0) s.moveTo(x, y); else s.lineTo(x, y);
+  }
+  s.closePath();
+  return new THREE.ShapeGeometry(s);
+}
+
+export function createClouds({ minX, maxX, count = 7, seed = 5 }) {
   const group = new THREE.Group();
   const r = rng(seed);
   const clouds = [];
 
   for (let i = 0; i < count; i += 1) {
-    const lumps = [];
-    const n = 3 + Math.floor(r() * 3);
+    const parts = [];
+    const n = 3 + Math.floor(r() * 2);
+    let x = 0;
     for (let j = 0; j < n; j += 1) {
-      const s = 0.9 + r() * 1.3;
-      const lump = new THREE.IcosahedronGeometry(s, 0);
-      lump.scale(1.4, 0.6, 1);
-      lump.translate((j - (n - 1) / 2) * s * 1.3, (r() - 0.5) * 0.5, (r() - 0.5) * 0.6);
-      lumps.push(lump);
+      const rx = 0.9 + r() * 0.9;
+      const ry = rx * (0.75 + r() * 0.35) * (j === 1 || j === 2 ? 1.25 : 0.85);
+      parts.push(lump(x + rx, 0, rx, ry));
+      x += rx * 1.35;
     }
-    const geo = BufferGeometryUtils.mergeGeometries(lumps);
-    const cloud = paperMesh(geo, palette.cloudWhite, seed + i, 0.04);
-    cloud.position.set(
-      minX + r() * (maxX - minX),
-      10.5 + r() * 3.5,
-      -20 - r() * 9,
-    );
-    cloud.userData.speed = 0.25 + r() * 0.35;
+    const top = BufferGeometryUtils.mergeGeometries(parts);
+    top.translate(-x / 2, 0, 0);
+    const cloud = new THREE.Group();
+    const body = paperMesh(top, palette.cloud, seed + i, 0.03, { unlit: true, side: THREE.DoubleSide });
+    cloud.add(body);
+    // shaded flat underside strip, like the folded base of a paper cloud
+    const base = paperMesh(new THREE.PlaneGeometry(x * 0.94, 0.3).translate(0, -0.15, 0.01), '#e9e4d6', seed + i + 50, 0.02, { unlit: true, side: THREE.DoubleSide });
+    cloud.add(base);
+    cloud.position.set(minX + r() * (maxX - minX), 11 + r() * 4, -22 - r() * 10);
+    const s = 0.8 + r() * 0.6;
+    cloud.scale.set(s, s, 1);
+    cloud.userData.speed = 0.2 + r() * 0.3;
     group.add(cloud);
     clouds.push(cloud);
   }
@@ -35,7 +53,7 @@ export function createClouds({ minX, maxX, count = 6, seed = 5 }) {
   group.userData.update = (t, dt) => {
     for (const c of clouds) {
       c.position.x += c.userData.speed * dt;
-      if (c.position.x > maxX + 14) c.position.x = minX - 14;
+      if (c.position.x > maxX + 18) c.position.x = minX - 18;
     }
   };
 

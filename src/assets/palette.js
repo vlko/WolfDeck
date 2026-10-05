@@ -1,66 +1,69 @@
-// The cozy storybook palette, sampled from visual.png.
-// Builders take colors only from here (plus per-prop option overrides).
-export const palette = {
-  // greens
-  sageDark: '#5d6b58',
-  sage: '#7d8b74',
-  sageLight: '#a3b096',
-  meadow: '#96a583',
-  pineDark: '#4f6152',
-  pine: '#6a7d68',
-  pineLight: '#8a9c85',
-
-  // neutrals
-  cream: '#efe9dc',
-  parchment: '#e3dac8',
-  paperWhite: '#f6f2e8',
-
-  // pinks / roses
-  dustyRose: '#c9a1a6',
-  roseMauve: '#a98289',
-  cheekPink: '#d9a8ad',
-
-  // browns
-  tanBrown: '#b39a77',
-  strawGold: '#c8ab74',
-  barkBrown: '#8a7359',
-  deepBrown: '#5f5142',
-  plankBrown: '#9c8163',
-
-  // grays
-  wolfGray: '#9aa0a0',
-  wolfGrayDark: '#7d8585',
-  slateGray: '#8b9494',
-  stoneGray: '#a8ada7',
-  charcoal: '#3d3a35',
-
-  // city
-  asphalt: '#858983',
-  towerSlate: '#6f7a74',
-  windowLit: '#f0e6c8',
-
-  // accents
-  duckEggBlue: '#a9c0b4',
-  waterTeal: '#8fb0a5',
-  skyCream: '#f2eee4',
-  sunGold: '#e8cf9a',
-  cloudWhite: '#faf7ef',
-
-  // presentation panels — near-white card faces and high-contrast inks
-  // (the diorama props keep the muted storybook tones above)
-  panel: '#fbf8f1',
-  ink: '#2b2620',
-  inkBody: '#3f3931',
-  inkMuted: '#6d6355',
+// The storybook palette, sampled from the reference sheets — the nine
+// swatches printed on shop.png are the backbone, the rest are measured off
+// the sprites themselves (tree slate, cheek pink, window glow).
+// Everything drawn by code (ground, sky, panels, charts) takes colors only
+// from here so it sits in the same world as the cut-out sprites.
+export const swatch = {
+  mauve: '#a5817f',
+  ochre: '#bd9662',
+  sand: '#d6b386',
+  cream: '#e9e2d1',
+  ivory: '#ebe7d7',
+  sageLight: '#a4b1a2',
+  sage: '#798877',
+  sageDeep: '#6d7a6c',
+  brown: '#7b6548',
 };
 
-// Categorical colors for chart series — deeper than the prop palette so
-// they hold their own against the near-white panel faces.
+export const palette = {
+  ...swatch,
+
+  // derived tones
+  slate: '#4b5654', // darkest tree / tower facets
+  slateSoft: '#6f7b78',
+  mintGray: '#b9c3b6',
+  meadow: '#9aa88a', // ground base, between sageLight and sage
+  meadowLight: '#b1bc9f',
+  meadowDark: '#86967a',
+  water: '#a9beb9',
+  asphalt: '#a9ab9e', // roads: warm paper gray, not tarmac
+  roseCheek: '#d79c92',
+  windowGlow: '#f3e3b8',
+  lampGlow: '#ffe7a8',
+  bark: '#6e563c',
+
+  // paper
+  paper: '#f5f1e8', // the white of the sheets, warmed
+  paperShade: '#e6dfcf',
+  sky: '#f3efe5',
+  skyLow: '#ece6d6',
+  sun: '#e2c48f',
+  cloud: '#faf7ef',
+
+  // presentation panels — ivory faces with warm, high-contrast inks
+  panel: '#fbf8f1',
+  panelEdge: '#d9ccb2',
+  ink: '#2f3431', // near-black with a hint of slate green
+  inkBody: '#454a45',
+  inkMuted: '#71705f',
+
+  // legacy keys still read by panel/chart code
+  paperWhite: '#fbf8f1',
+  parchment: '#e6dfcf',
+  dustyRose: '#b98a86', // accent strip / underline — mauve, a touch brighter
+  roseMauve: '#9a716e',
+  deepBrown: '#5d4a35',
+  charcoal: '#2f3431',
+  strawGold: '#bd9662',
+};
+
+// Categorical chart colors — the swatches pushed one step deeper so they
+// hold their own on the ivory panel faces (all ≥ 3:1 against #fbf8f1).
 export const chartColors = [
-  '#557a4e', // deep sage green
-  '#b25a5c', // brick rose
-  '#c68f35', // amber gold
-  '#4a7f96', // slate blue
-  '#8f5f7d', // plum mauve
-  '#8a6a44', // warm brown
+  '#5f7a63', // deep sage
+  '#a5645f', // brick mauve
+  '#b4843f', // ochre
+  '#4f6670', // slate blue-gray
+  '#8a6a82', // plum
+  '#7b6548', // brown
 ];

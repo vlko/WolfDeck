@@ -1,4 +1,4 @@
-// Slide menu (press L): a papercraft overlay listing every virtual slide
+// Slide menu (press L): a paper-card overlay listing every virtual slide
 // ("stránka"). Click an entry — or arrow to it and press Enter — to jump
 // straight there (the same teleport as the URL hash), then it closes. L or
 // Esc closes it too. Scrolls when there are many slides.
@@ -6,25 +6,26 @@
 const CSS = `
 .wd-menu { position: fixed; inset: 0; z-index: 30; display: none;
   align-items: center; justify-content: center;
-  background: rgba(30,26,20,0.42);
-  font-family: 'Avenir Next','Trebuchet MS',Verdana,sans-serif; }
+  background: rgba(47,52,49,0.38);
+  font-family: Nunito,'Avenir Next','Trebuchet MS',sans-serif; }
 .wd-menu.open { display: flex; }
-.wd-menu-panel { background: #fbf8f1; color: #2b2620;
-  border-radius: 16px; box-shadow: 0 24px 70px rgba(0,0,0,0.38);
+.wd-menu-panel { background: #fbf8f1; color: #2f3431;
+  border-radius: 14px; border: 6px solid #d9ccb2;
+  box-shadow: 10px 14px 0 rgba(74,67,52,0.18), 0 24px 60px rgba(0,0,0,0.25);
   width: min(600px, 90vw); max-height: 84vh; overflow: auto; padding: 8px; }
 .wd-menu-head { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: #6d6355; padding: 12px 16px 8px; }
+  font-weight: 800; color: #9a716e; padding: 12px 16px 8px; }
 .wd-menu-item { display: flex; gap: 14px; align-items: baseline;
   padding: 10px 16px; border-radius: 10px; cursor: pointer;
   border-left: 4px solid transparent; }
-.wd-menu-item:hover, .wd-menu-item.sel { background: #efe9dc; }
-.wd-menu-item.cur { border-left-color: #c9a1a6; }
-.wd-menu-num { color: #ab9e8a; font-weight: 800; min-width: 1.7em;
+.wd-menu-item:hover, .wd-menu-item.sel { background: #ebe7d7; }
+.wd-menu-item.cur { border-left-color: #b98a86; }
+.wd-menu-num { color: #a4b1a2; font-weight: 800; min-width: 1.7em;
   text-align: right; font-variant-numeric: tabular-nums; }
 .wd-menu-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .wd-menu-kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: #8a7b66; }
-.wd-menu-title { font-size: 16px; font-weight: 700; color: #2b2620; }
+  font-weight: 700; color: #71705f; }
+.wd-menu-title { font-size: 16px; font-weight: 800; color: #2f3431; }
 `;
 
 export function createSceneMenu({ deckView, stepMachine }) {

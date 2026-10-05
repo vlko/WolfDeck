@@ -17,10 +17,10 @@ your own file in `public/`) with `?deck=<file>.json`:
 
 ## Think of each scene as a diorama on a shelf
 
-A scene = one low-poly papercraft world built from three ingredients:
+A scene = one paper-theatre world built from three ingredients:
 
 1. **A floating 3D title** — your slide heading, hovering over the scene.
-2. **Props** — faceted papercraft assets standing on the rolling meadow in
+2. **Props** — cut-out sprite standees standing on the rolling meadow in
    depth rows.
 3. **Steps** — your content, revealed one `Space` press at a time as cards
    **floating in place** inside the diorama.
@@ -41,7 +41,7 @@ thank-you last.
    action row (z 0):      🐺 → 🐑 🐑              the wolf's row
    front  row (z +3):    🌲        🪵             foreground, fast, can cover parts
 
-   ~~~~~~ rolling low-poly meadow, seeded bumps, river fords ~~~~~~
+   ~~~~~~ rolling paper meadow, seeded bumps, river fords ~~~~~~
   ▓▓▓▓▓▓▓▓▓▓▓ parchment front skirt — the diorama's cut edge ▓▓▓▓▓▓▓▓▓▓▓
 ```
 
@@ -180,29 +180,31 @@ foreground. Three things move on their own: the hanging `shopSign` swings,
 the `scale` needle wiggles as it weighs, and the flowers sway while the
 keepers blink.
 
-## More packs: school, finance, construction, civic, landmarks
+## More types: school, finance, construction, civic, landmarks
 
-Four more themed packs (plus two landmark props) cover civic storytelling —
-`rozpocet-2025.json` shows each one composed into a scene:
+`rozpocet-2025.json` composes the civic types into scenes. They are all cut
+from the same sheets, so some are close cousins rather than literal objects
+— the sheets have no crane or football goal, for instance. See
+[docs/assets/](docs/assets/README.md) for which sprite each type uses.
 
-- **School** (`#skolstvo`): the bell-gabled `schoolhouse` anchors the back,
-  a `blackboard` and `schoolDesk`s dress the yard, `pupil`s (fox / bunny /
-  bear / cat) stand off the wolf's rail at layer `1.5`, and a `schoolBus`
-  drives a `meta.roads` lane exactly like the city `bus`.
-- **Finance** (`#rezervy`): a `vault` and `coinStack`s make a treasury;
-  the `piggyBank` blinks on its own; `moneyBag` and `ledger` are small
-  set-dressing for mid rows.
-- **Construction** (`#investicie`): the `crane` is back-row scenery on the
-  officeTower scale, its jib slowly slewing; the `excavator` digs on loop;
-  `scaffold`, `trafficCone`s and a hammering `builder` fill the site.
+- **School** (`#skolstvo`): `schoolhouse` anchors the back, a `blackboard`
+  (the flipchart) and `schoolDesk`s dress the yard, `pupil`s (the little
+  fox kit, the panda kid) stand off the wolf's rail at layer `1.5`, and a
+  `schoolBus` drives a `meta.roads` lane exactly like the city `bus`.
+- **Finance** (`#rezervy`): `vault` (filing cabinet), `coinStack`s (gold
+  gems), a `piggyBank`, `moneyBag` and `ledger` (a book stack).
+- **Construction** (`#investicie`): `crane` and `scaffold` are the striped
+  construction poles, the `excavator` is the pickup with its bear driver,
+  `trafficCone`s are short striped posts and the `builder` (the boar) bobs
+  at work.
 - **Civic** (`#technicke`, `#buducnost`): a `garbageTruck` patrols a road
-  lane, `recyclingBin`s take a per-bin `color`, the `zevoPlant` puffs paper
-  smoke on the horizon; `carer` + `elder` make a care-home beat, and
-  `footballGoal` + bouncing `ball` a sports field; a parent with a `pram`
-  strolls for demographic scenes.
-- **Landmarks**: `churchTower` gives a town its silhouette;
-  `mountainBackdrop` is a wide layered ridge band for the very back — place
-  it on a deep numeric layer (`-9`) so all scenery overlaps it.
+  lane, `recyclingBin`s line the curb, the `zevoPlant` tower puffs paper
+  smoke; `carer` + `elder` make a care-home beat; a `pram` for demographic
+  scenes.
+- **Landmarks**: `churchTower` (the mauve chapel) gives a town its
+  silhouette; `mountainBackdrop` is a wide band of faceted paper ridges for
+  the very back — place it on a deep numeric layer (`-9`) so all scenery
+  overlaps it.
 
 ## Data-heavy slides: stat, numbered, callout, table
 

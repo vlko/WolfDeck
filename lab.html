@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>WolfDeck model lab</title>
+  <style>
+    html, body { margin: 0; background: #f3efe5; font: 13px Nunito, sans-serif; color: #2f3431; }
+    .row { display: flex; align-items: stretch; height: 420px; border-bottom: 1px solid #d9ccb2; }
+    .cell { flex: 1; position: relative; display: flex; align-items: flex-end; justify-content: center; }
+    .cell img { max-height: 380px; max-width: 95%; object-fit: contain; margin-bottom: 20px; }
+    .label { position: absolute; top: 4px; left: 8px; font-weight: 800; }
+    canvas#gl { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+    #bar { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+      padding: 10px 12px; background: #f3efe5; border-bottom: 2px solid #d9ccb2; }
+    #bar button { font: 800 13px Nunito, sans-serif; color: #4b5654; background: #fbf8f1; border: 2px solid #d9ccb2;
+      border-radius: 10px; padding: 6px 10px; cursor: pointer; }
+    #bar button span { color: #9a716e; margin-left: 2px; }
+    #bar button.on { background: #6d7a6c; border-color: #6d7a6c; color: #fbf8f1; }
+    #bar button.on span { color: #ebe7d7; }
+    #bar input { font: 700 13px Nunito, sans-serif; border: 2px solid #d9ccb2; border-radius: 10px; padding: 6px 10px;
+      background: #fbf8f1; margin-left: auto; min-width: 160px; }
+    .none { color: #9a8f7c; font-weight: 700; margin-bottom: 40%; }
+  </style>
+</head>
+<body>
+  <div id="bar"></div>
+  <div id="rows"></div>
+  <canvas id="gl"></canvas>
+  <script type="module" src="/src/lab.js"></script>
+</body>
+</html>

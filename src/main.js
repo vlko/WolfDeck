@@ -13,25 +13,25 @@ import { bindUrlHash } from './core/urlHash.js';
 import { createSpeechBubble } from './core/speechBubble.js';
 import { createSceneMenu } from './core/sceneMenu.js';
 import { createTouchControls } from './core/touchControls.js';
+import * as world from './core/world.js';
+import * as traffic from './core/traffic.js';
 
-// Register the asset library (side-effect imports).
-import './assets/nature.js';
-import './assets/buildings.js';
-import './assets/animals.js';
-import './assets/city.js';
-import './assets/office.js';
-import './assets/shop.js';
-import './assets/school.js';
-import './assets/finance.js';
-import './assets/construction.js';
-import './assets/civic.js';
+import { preloadSprites } from './assets/sprites.js';
+import { loadFonts } from './parts/fonts.js';
+
+// Register the asset library (side-effect imports): every asset is a sprite
+// cut from the reference sheets (see tools/extract-sprites.mjs).
+import './assets/catalog.js';
 import './assets/wolf.js';
+import './models/index.js'; // hand-built 3D models (replace sprites as they land)
 
 async function start() {
   // ?deck=other.json presents a different deck from public/ — handy for
   // authoring a new presentation next to the shipped demo.
   const deckUrl = new URLSearchParams(window.location.search).get('deck') ?? 'presentation.json';
-  const deck = await loadPresentation(deckUrl);
+  // Sprites and the panel typeface load in parallel with the deck, so the
+  // first frame is complete — no pop-in, no fallback-font canvases.
+  const [deck] = await Promise.all([loadPresentation(deckUrl), preloadSprites(), loadFonts()]);
 
   const { renderer, scene } = createRenderer();
   const cameraRig = createCameraRig();
@@ -86,7 +86,7 @@ async function start() {
   });
 
   // Console debugging handle.
-  window.wolfdeck = { deck, deckView, hero, stepMachine, cameraRig, scene, focus, sceneMenu, renderer };
+  window.wolfdeck = { deck, deckView, hero, stepMachine, cameraRig, scene, focus, sceneMenu, renderer, world, traffic };
 }
 
 start();
