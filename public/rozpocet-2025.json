@@ -612,7 +612,13 @@
                     4.4
                   ],
                   "depth": "front"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "stat",
                   "value": "+2 479 272 €",
@@ -901,6 +907,7 @@
           "title": "Dane: hlavný zdroj financovania",
           "groups": [
             {
+              "closeup": {},
               "parts": [
                 {
                   "type": "numbered",
@@ -926,7 +933,12 @@
                     5.2
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -1006,7 +1018,13 @@
                     5.5
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -1229,7 +1247,13 @@
                     5.4
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -1322,7 +1346,13 @@
                     6
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "stat",
                   "value": "3,66 mil. €",
@@ -1459,7 +1489,13 @@
                     5.4
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "warning",
@@ -2069,7 +2105,13 @@
                     6.7
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -2403,7 +2445,13 @@
                     5.9
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "stat",
                   "value": "−71 676 €",
@@ -2663,7 +2711,13 @@
                     5.7
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "positive",
@@ -3006,7 +3060,13 @@
                     5.7
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "bullets",
                   "title": "Nezrealizované / zrušené",
@@ -3022,7 +3082,12 @@
                     5.7
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "warning",
@@ -3291,7 +3356,13 @@
                     6.1
                   ],
                   "depth": "front"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "stat",
                   "value": "−38 %",
@@ -3812,6 +3883,7 @@
               ]
             },
             {
+              "closeup": {},
               "parts": [
                 {
                   "type": "bullets",
@@ -3827,7 +3899,12 @@
                     5.1
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -4050,7 +4127,13 @@
                     6.7
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "stat",
                   "value": "> 3,1 mld. €",
@@ -4063,7 +4146,12 @@
                     6.7
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -4463,7 +4551,13 @@
                     5.1
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -4525,7 +4619,13 @@
                     5
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "stat",
                   "value": "116 €/t",
@@ -4538,7 +4638,12 @@
                     6.1
                   ],
                   "depth": "front"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "stat",
                   "value": "10 %",
@@ -4898,7 +5003,13 @@
                     5.2
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "positive",
@@ -5123,7 +5234,13 @@
                     5.7
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "bullets",
                   "title": "Vaša úloha ako občana",
@@ -5139,7 +5256,12 @@
                     5.7
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -5180,7 +5302,13 @@
                     5.5
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "image",
                   "src": "images/qr-okno.png",
@@ -5191,7 +5319,12 @@
                     5.6
                   ],
                   "depth": "front"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",

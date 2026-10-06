@@ -310,8 +310,9 @@ or `"part": i`, `"prop": i` (the scene's i-th prop) or `"at": [x, y, depth]`
 with an optional `"size": [w, h]`; `"zoom": 2` forces a distance (twice as
 close as the normal view) instead of fitting the target, `"delay"` the wait
 before the move. Closeups are skipped in the flat presentation view (P) and
-while the wolf walks. Keep them rare — `rozpocet-2025.json` has eight in 33
-slides (the speaker, what a municipal budget is, the 0 € debt…).
+while the wolf walks. Give them to the element each slide hinges on —
+`rozpocet-2025.json` has 26 across its 33 slides (the speaker, what a
+municipal budget is, the result of the year, the 0 € debt, the QR code…).
 
 ### Part types
 
