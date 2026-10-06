@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { getGrainTexture } from '../assets/materials.js';
-import { getMaterialTexture, TEXTURE_KINDS, texturesEnabled } from '../assets/materialTextures.js';
+import { getMaterialTexture, TEXTURE_KINDS, TEXTURE_STRENGTH, texturesEnabled } from '../assets/materialTextures.js';
 
 // Modeling kit for the hand-built 3D versions of the sheet sprites.
 //
@@ -42,6 +42,7 @@ uniform float uTexTile;
 uniform float uTexBump;
 uniform float uTexRot;
 uniform float uTexTri;
+uniform float uTexStrength;
 varying vec3 vTexPos;
 varying vec3 vTexNrm;
 `;
@@ -62,6 +63,7 @@ const TEX_FRAG_MAP = `
     texUv = mix(texUv, vec2(texUv.y, -texUv.x), uTexRot);
     texC = texture2D(uTexMap, texUv / uTexTile).rgb;
   }
+  texC = mix(vec3(1.0), texC, uTexStrength);
   diffuseColor.rgb *= texC;
   float texH = dot(texC, vec3(0.3333));
 `;
@@ -78,7 +80,7 @@ const TEX_FRAG_BUMP = `
     float tilePx = uTexTile / max(length(dFdx(vTexPos)) + length(dFdy(vTexPos)), 1e-5);
     float fade = smoothstep(60.0, 220.0, tilePx);
     vec3 grad = sign(det) * (dFdx(texH) * r1 + dFdy(texH) * r2);
-    normal = normalize(abs(det) * normal - grad * uTexBump * fade);
+    normal = normalize(abs(det) * normal - grad * uTexBump * fade * uTexStrength);
   }
 `;
 
@@ -113,6 +115,7 @@ export function mat(color, opts = {}) {
       if (kind) {
         shader.uniforms.uTexMap = { value: getMaterialTexture(tex) };
         shader.uniforms.uTexWorld = TEX_WORLD;
+        shader.uniforms.uTexStrength = TEXTURE_STRENGTH;
         shader.uniforms.uTexTile = { value: kind.tile * (opts.texScale ?? 1) };
         shader.uniforms.uTexBump = { value: kind.bump * 0.6 };
         shader.uniforms.uTexRot = { value: opts.texRotate ? 1 : 0 };

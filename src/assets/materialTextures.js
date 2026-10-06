@@ -229,7 +229,7 @@ const GEN = {
   // rendered wall — soft blotches and fine sand
   plaster(size, r) {
     const { c, ctx } = canvas(size);
-    mottle(ctx, size, r, 30, 0.032);
+    mottle(ctx, size, r, 30, 0.026);
     speckle(ctx, size, r, 16);
     return c;
   },
@@ -693,6 +693,11 @@ export function getMaterialTexture(kind) {
   }
   return textures.get(kind);
 }
+
+// How strongly textures show (1 = full). Presentation mode lowers it: the
+// flat front-on view shows the buildings big and square-on, where the full
+// tooth reads far busier than in the 3D diorama.
+export const TEXTURE_STRENGTH = { value: 1 };
 
 // ?tex=0 turns material textures off (comparison, very weak GPUs).
 export const texturesEnabled = typeof window === 'undefined'

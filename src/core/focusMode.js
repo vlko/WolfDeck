@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { FIT_ASPECT } from '../config.js';
+import { TEXTURE_STRENGTH } from '../assets/materialTextures.js';
 
 // Presentation (focus) mode — toggled with P. The camera flattens to a
 // straight-on ORTHOGRAPHIC view: no perspective, no downward tilt, so the
@@ -14,6 +15,7 @@ export const CONTENT_LAYER = 1;
 // bottom of the screen, all the space above it for the content.
 const FOCUS_BOTTOM = -0.6; // world y at the bottom edge of the screen
 const FOCUS_TOP = 12.6; // world y at the top edge (16:9 and wider)
+const FOCUS_TEXTURE = 0.4; // material texture strength in the 2D view
 
 export function createFocusMode() {
   const ortho = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 200);
@@ -52,6 +54,8 @@ export function createFocusMode() {
 
     // Replaces the plain renderer.render call in the ticker.
     render(renderer, scene, camera) {
+      // material textures read much busier flat and front-on: tone them down
+      TEXTURE_STRENGTH.value = on ? FOCUS_TEXTURE : 1;
       if (!on) {
         renderer.render(scene, camera);
         return;
