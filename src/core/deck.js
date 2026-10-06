@@ -7,13 +7,7 @@ import { createTitle } from '../parts/title.js';
 import { buildPart } from '../parts/partsFactory.js';
 import { addObstacle } from './world.js';
 import { CONTENT_LAYER } from './focusMode.js';
-import { tween, ease } from '../engine/tween.js';
 import { ACTIVE_SCENE_RADIUS, PART_CASCADE, PART_STACK_DZ, PART_STAGGER } from '../config.js';
-
-// A tween-driven delay so it snaps when the presenter mashes forward.
-function delayThen(seconds, fn) {
-  return tween({ t: 0 }, { t: 1 }, seconds, ease.linear).done.then(fn);
-}
 
 // Tags an object tree as presentation CONTENT so focus mode (P) can
 // re-render it in front of the veiled diorama.
@@ -318,7 +312,10 @@ export function buildDeck(deck, scene3) {
     // Every group clears the previous one — only one group shows at a time.
     // Revealing a group that STARTS a slide swaps the 3D title to that slide;
     // the slide's first content group fades its subtitle aside.
-    revealStep(i, k, instant = false) {
+    // Fire-and-forget: the returned promise is informational — the step
+    // machine never waits on it, so the presenter can click ahead freely.
+    // `speed` > 1 clears the outgoing panels faster (clicking ahead).
+    revealStep(i, k, instant = false, speed = 1) {
       const s = scenes[i];
       const m = s.meta[k];
       if (m.slideStart) showSlideTitle(i, m.slideIndex);
@@ -327,7 +324,7 @@ export function buildDeck(deck, scene3) {
       const hideCleared = (jobs) => {
         if (!clears[k]) return;
         for (let j = pageStart(clears, k); j < k; j += 1) {
-          for (const p of s.stepParts[j]) jobs.push(p.userData.hide());
+          for (const p of s.stepParts[j]) jobs.push(p.userData.hide(speed));
         }
       };
       let out;
@@ -338,20 +335,19 @@ export function buildDeck(deck, scene3) {
         out = Promise.all(jobs);
       } else {
         // Panels of a group appear one after another (PART_STAGGER apart), not
-        // all at once. The delay is a tween so mashing forward snaps it.
-        const jobs = batch.map((p, j) => (
-          j === 0 ? p.userData.reveal() : delayThen(j * PART_STAGGER, () => p.userData.reveal())
-        ));
+        // all at once. The delay lives in the part, so a quick step back
+        // cancels panels that haven't popped in yet.
+        const jobs = batch.map((p, j) => p.userData.reveal(j * PART_STAGGER));
         hideCleared(jobs);
         out = Promise.all(jobs);
       }
       updateSubtitle(i, k + 1);
       return out;
     },
-    hideStep(i, k) {
+    hideStep(i, k, speed = 1) {
       const s = scenes[i];
       const clears = clearsOf(s);
-      const jobs = s.stepParts[k].map((p) => p.userData.hide());
+      const jobs = s.stepParts[k].map((p) => p.userData.hide(speed));
       if (clears[k]) {
         for (let j = pageStart(clears, k); j < k; j += 1) {
           for (const p of s.stepParts[j]) jobs.push(p.userData.reveal());

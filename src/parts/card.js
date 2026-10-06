@@ -155,10 +155,14 @@ export function cardOptsFrom(def, extra = {}) {
 // card lands (see makeFloatingPart / charts).
 export function growDriver(group, apply, duration = 0.9) {
   const state = { k: 0 };
+  let h = null;
   apply(0);
-  group.userData.growIn = () => tween(state, { k: 1 }, duration, ease.outCubic, () => apply(state.k)).done;
-  group.userData.growInInstant = () => { state.k = 1; apply(1); };
-  group.userData.resetGrow = () => { state.k = 0; apply(0); };
+  group.userData.growIn = () => {
+    h = tween(state, { k: 1 }, duration, ease.outCubic, () => apply(state.k));
+    return h.done;
+  };
+  group.userData.growInInstant = () => { h?.cancel(); state.k = 1; apply(1); };
+  group.userData.resetGrow = () => { h?.cancel(); state.k = 0; apply(0); };
 }
 
 // Per-element stagger: element i of n gets progress 0..1 within global k.
@@ -217,24 +221,46 @@ export function makeFloatingPart(contentGroup, { scale = 1, tilt = 0 } = {}) {
     content.visible = state.s > 0.001;
   }
 
+  // Reveal and hide are fire-and-forget and interruptible: a hide during a
+  // pending (staggered) or running reveal cancels it and shrinks from where
+  // the panel is; `gen` stops a stale reveal from starting its grow-in.
+  const wait = { t: 0 };
+  let gen = 0;
   anchor.userData.part = true;
-  anchor.userData.reveal = () => {
+  anchor.userData.reveal = (delay = 0) => {
     revealed = true;
-    // Grow with overshoot while floating up into place.
-    const grow = tween(state, { s: 1 }, REVEAL_DURATION, ease.backOut, applyState);
-    tween(state, { y: 0 }, REVEAL_DURATION, ease.outCubic, applyState);
-    const extra = contentGroup.userData.growIn ? grow.done.then(() => contentGroup.userData.growIn()) : grow.done;
-    return extra;
+    const g = ++gen;
+    const go = () => {
+      if (g !== gen) return undefined;
+      // Grow with overshoot while floating up into place.
+      const grow = tween(state, { s: 1 }, REVEAL_DURATION, ease.backOut, applyState);
+      tween(state, { y: 0 }, REVEAL_DURATION, ease.outCubic, applyState);
+      return grow.done.then(() => {
+        if (g === gen && contentGroup.userData.growIn) return contentGroup.userData.growIn();
+        return undefined;
+      });
+    };
+    if (delay <= 0) return go();
+    wait.t = 0;
+    return tween(wait, { t: 1 }, delay, ease.linear).done.then(go);
   };
-  anchor.userData.hide = () => {
+  // speed > 1 clears faster (the presenter is clicking ahead)
+  anchor.userData.hide = (speed = 1) => {
     revealed = false;
+    gen += 1;
+    wait.t = 0;
+    tween(wait, { t: 0 }, 0); // cancels a pending staggered reveal
     if (contentGroup.userData.resetGrow) contentGroup.userData.resetGrow();
-    const shrink = tween(state, { s: 0 }, REVEAL_DURATION * 0.8, ease.inCubic, applyState);
-    tween(state, { y: -0.6 }, REVEAL_DURATION * 0.8, ease.inCubic, applyState);
+    const d = (REVEAL_DURATION * 0.8) / speed;
+    const shrink = tween(state, { s: 0 }, d, ease.inCubic, applyState);
+    tween(state, { y: -0.6 }, d, ease.inCubic, applyState);
     return shrink.done;
   };
   anchor.userData.revealInstant = () => {
     revealed = true;
+    gen += 1;
+    tween(wait, { t: 0 }, 0);
+    tween(state, { s: 1, y: 0 }, 0, ease.linear, applyState);
     state.s = 1; state.y = 0;
     applyState();
     if (contentGroup.userData.growInInstant) contentGroup.userData.growInInstant();

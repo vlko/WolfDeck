@@ -113,8 +113,9 @@ deck (15 scenes, 33 slides). Every slide has a shareable deep link
   widths, heights, font scales and colors; a step can `clears` the previous
   panels to start a fresh "page" mid-scene. See `public/showcase.json`
   (`?deck=showcase.json`) for all of it live.
-- **Presenter-proof navigation** — presses queue during walks, mashing
-  fast-forwards animations, forward/back is perfectly symmetric, deck ends
+- **Presenter-proof navigation** — animations never block a click (fast
+  clicks jump straight to the slide you want, old panels clear quicker),
+  forward/back is perfectly symmetric, deck ends
   answer with a hop. The URL always carries the current slide (`#slide-id`)
   as a shareable deep link, and the wolf announces each arrival with a
   little paper speech bubble.

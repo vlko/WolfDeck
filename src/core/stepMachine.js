@@ -10,11 +10,16 @@ import { finishAllTweens } from '../engine/tween.js';
 //           revealed — this is what makes N forward / N back exact)
 //           else → hop
 //
-// Input pushes ±1 intents into a queue; one is processed at a time. If more
-// intents are waiting, running reveal tweens are snapped (mash = fast-forward).
-// While the hero is WALKING, at most ONE keystroke is buffered — further
-// presses are dropped (a same-direction press still kicks in hurry), so a
-// long transition never fires a burst of reveals on arrival.
+// Input pushes ±1 intents. Stepping within a scene is NEVER blocked by
+// animations: a reveal or hide only starts its tweens (fire-and-forget) and
+// the state moves on at once, so fast clicks land exactly where the presenter
+// is heading. When clicks come quickly, the outgoing panels clear at
+// FAST_CLEAR× speed. Only a walk between scenes holds input: while the hero
+// is WALKING, a same-direction press kicks in hurry and others are dropped,
+// so a transition never fires a burst of reveals on arrival.
+
+const FAST_CLICK = 0.9; // s between presses that counts as clicking ahead
+const FAST_CLEAR = 3; // outgoing panels shrink this much faster then
 
 // onArrive(sceneIndex) — optional; fires when the hero has actually arrived
 // at a scene (end of the walk, or right after a teleport jump).
@@ -24,6 +29,8 @@ export function createStepMachine({ deckView, hero, onArrive, onStateChange }) {
   let k = 0;
   let busy = false;
   const queue = [];
+  let lastPress = -Infinity;
+  let speed = 1; // hide speed for the step being processed
 
   function sceneX(i) {
     return deckView.sceneX(i);
@@ -32,9 +39,8 @@ export function createStepMachine({ deckView, hero, onArrive, onStateChange }) {
   async function doNext() {
     const steps = deckView.stepCount(s);
     if (k < steps) {
-      const done = deckView.revealStep(s, k);
+      deckView.revealStep(s, k, false, speed); // not awaited — never blocks
       k += 1;
-      await done;
     } else if (s < sceneCount - 1) {
       s += 1;
       k = 0;
@@ -49,7 +55,7 @@ export function createStepMachine({ deckView, hero, onArrive, onStateChange }) {
   async function doPrev() {
     if (k > 0) {
       k -= 1;
-      await deckView.hideStep(s, k);
+      deckView.hideStep(s, k, speed); // not awaited — never blocks
     } else if (s > 0) {
       s -= 1;
       k = deckView.stepCount(s);
@@ -89,8 +95,6 @@ export function createStepMachine({ deckView, hero, onArrive, onStateChange }) {
     if (busy) return;
     busy = true;
     while (queue.length) {
-      // More presses waiting → snap any content animation still running.
-      if (queue.length > 1) finishAllTweens();
       const intent = queue.shift();
       if (typeof intent === 'object') await doJump(intent.jump);
       else if (intent > 0) await doNext();
@@ -120,8 +124,10 @@ export function createStepMachine({ deckView, hero, onArrive, onStateChange }) {
         if (hero.walkDir === dir) hero.hurry(dir);
         return;
       }
+      const now = performance.now() / 1000;
+      speed = now - lastPress < FAST_CLICK ? FAST_CLEAR : 1;
+      lastPress = now;
       queue.push(dir);
-      if (queue.length > 1) finishAllTweens();
       drain();
     },
   };

@@ -54,11 +54,16 @@ Behavior details:
   Use the slide menu (`L`) or the URL for fast jumps.
 - **Hurry.** A same-direction press mid-walk kicks the wolf into a 2.5× run.
 - **Staggered reveal.** A group's panels appear one after another (a short
-  delay apart), not all at once; mashing forward snaps the whole stagger.
+  delay apart), not all at once.
 - **Exact reversal.** Stepping N forward then N back always returns to the
   same state — hides mirror reveals one for one.
-- **Fast-forward.** Mashing keys snaps running reveal/chart animations to
-  their end state instead of dropping presses.
+- **Never blocked by animations.** Within a scene every press moves the
+  state at once — reveal, hide, chart and closeup animations run on their
+  own and are interrupted mid-way when the presenter clicks on (a panel
+  that hasn't popped in yet simply never does). Clicking quickly (presses
+  < 0.9 s apart) clears the outgoing panels 3× faster, and a closeup that is
+  clicked past never moves the camera. So fast clicks land exactly where
+  the presenter is heading.
 - At the ends of the deck the wolf does a little squash-stretch hop instead
   of moving.
 - Keys are ignored while an input field has focus.
