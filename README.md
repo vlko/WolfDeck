@@ -68,14 +68,20 @@ deck (15 scenes, 33 slides). Every slide has a shareable deep link
   digs, the well's crank hauls the bucket. Compare a model with its sprite at
   `/lab.html?m=<name>`. Objects no sheet has (crane, excavator, schoolhouse,
   vault, piggy bank…) are modeled in the same style.
-- **Material textures** — wood grain, boards, bricks, clay tiles, shingles,
-  thatch, plaster, fieldstone, fur, wool, cloth, sheet metal, leaves, bark
-  and asphalt, drawn procedurally at start-up (`src/assets/materialTextures.js`)
+- **Material textures** — five woods (knotty grain, fine joinery grain,
+  horizontal planks, vertical board-and-batten, logs), seven stones (cobble
+  courses, dressed ashlar, fieldstone rubble, concrete, paving slabs,
+  granite, roughcast plinth render), bricks, clay tiles, shingles, thatch,
+  plaster, fur, wool, cloth, sheet metal, leaves, bark and asphalt, drawn
+  procedurally at start-up (`src/assets/materialTextures.js`)
   as gray tiles that multiply the model's own color, so the palette stays
   intact. A part opts in with `mesh(geo, color, x, y, z, { tex: 'brick' })`;
   the texture is projected onto each flat facet in world units, so brick
   courses run level and a brick is the same size on a cottage and on the
-  town hall. `?tex=0` (or the lab's *Textúry* button) turns them off.
+  town hall; `texRotate` turns the pattern 90° (grain down a roof board).
+  Windows on folded fronts use `foldPanel()` so they bend with the wall.
+  `?tex=0` (or the lab's *Textúry* button) turns them off;
+  `node tools/verify/zoom.mjs <model> <1|2|3>` renders one lab view at 3×.
 - **120 cut-out sprites** (the fallback for anything without a model) — pines and cone trees, cottages, barn, hut,
   well, haystack, sheep; towers, townhouses, chapel, park trees, lamps,
   traffic light, benches, cars and buses; desks, bookshelves, flipchart,

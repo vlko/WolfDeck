@@ -24,7 +24,11 @@ function grid(aspect) {
 // material textures (see assets/materialTextures.js)
 const METAL = { tex: 'metal' };
 const WOOD = { tex: 'wood' };
-const STONE = { tex: 'stone' };
+const PLANKS = { tex: 'planks' };
+const CONCRETE = { tex: 'concrete' };
+const ASHLAR = { tex: 'ashlar' };
+const GRANITE = { tex: 'granite' };
+const BARK = { tex: 'bark' };
 const PLASTER = { tex: 'plaster' };
 const LEAF = { tex: 'leaf' };
 const FUR = { tex: 'fur' };
@@ -67,7 +71,7 @@ function wheels(body, xs, r, hz, w, opts = {}) {
 
 // Window glass panel on a side face (both sides of a vehicle at ±z).
 function sideGlass(body, x0, x1, y0, y1, hz, color = '#2a3533') {
-  for (const s of [-1, 1]) body.add(mesh(cbox(x1 - x0, y1 - y0, 0.8), color, (x0 + x1) / 2, (y0 + y1) / 2, s * (hz + 0.4)));
+  for (const s of [-1, 1]) body.add(mesh(cbox(x1 - x0, y1 - y0, 0.8), color, (x0 + x1) / 2, (y0 + y1) / 2, s * (hz + 0.8))); // 0.4 proud
 }
 
 // A cute little worker: round head with a hard hat and dark bob, pink
@@ -240,7 +244,11 @@ defineModel('landfill', (opts, rig) => {
   for (let i = 0; i < p.count; i += 1) {
     const y = p.getY(i);
     if (y > -24) {
-      const j = Math.sin(i * 12.9898) * 0.5 + 0.5;
+      // jitter keyed on the vertex's facet column + ring (not its index), so
+      // the lathe's duplicated seam vertices move together (no open crack)
+      const col = ((Math.round(Math.atan2(p.getX(i), p.getZ(i)) / (PI * 2 / 9)) % 9) + 9) % 9;
+      const ring = Math.round(y);
+      const j = Math.sin((col * 7 + ring * 13 + 1) * 12.9898) * 0.5 + 0.5;
       p.setX(i, p.getX(i) * (0.92 + j * 0.14));
       p.setZ(i, p.getZ(i) * 0.55 * (0.92 + j * 0.14));
       if (Math.abs(y) < 1) p.setY(i, y + (j - 0.5) * 6);
@@ -251,11 +259,11 @@ defineModel('landfill', (opts, rig) => {
   // pines standing on the ground at the flanks
   for (const [gx, h, z] of [[0.6, 48, 8], [8.6, 42, -4], [9.4, 36, 10]]) {
     g.add(mesh(new THREE.ConeGeometry(h * 0.32, h, 4).rotateY(PI / 4).translate(0, h / 2 + 3, 0), '#43554c', X(gx), 0, z, LEAF));
-    g.add(mesh(box(4, 5, 4), '#5b4532', X(gx), 0, z));
+    g.add(mesh(box(4, 5, 4), '#5b4532', X(gx), 0, z, BARK));
   }
   // crates half-buried in the slope
   g.add(mesh(cbox(10, 10, 10), '#d8b98a', X(3.2), 14, 38, WOOD));
-  g.add(mesh(cbox(9, 12, 9), '#d2b07c', X(6.4), 18, 34, WOOD));
+  g.add(mesh(cbox(9, 12, 9), '#d2b07c', X(6.4), 18, 34, PLANKS));
   // bulldozer: tracks, body, cab, blade — crawls back and forth on top
   const doz = group(0, 50, 0);
   g.add(doz);
@@ -384,7 +392,7 @@ defineModel('zevoChimney', (opts, rig) => {
   const g = rig.body;
   const H = 95;
   const shaft = new THREE.CylinderGeometry(5.4 / Math.SQRT2 * 2, 10.4 / Math.SQRT2 * 2, H, 4).rotateY(PI / 4).translate(0, H / 2, 0);
-  g.add(mesh(shaft, '#ece6d6', 0, 0, 0, PLASTER));
+  g.add(mesh(shaft, '#ece6d6', 0, 0, 0, CONCRETE));
   g.add(mesh(new THREE.ConeGeometry(6.6 / Math.SQRT2 * 2 * 0.9, 5, 4).rotateY(PI / 4).translate(0, H + 2.5, 0), '#3a4342', 0, 0, 0, METAL));
   // narrow dark slit windows on the front face (proud of the taper)
   for (const y of [22, 40]) {
@@ -411,16 +419,17 @@ defineModel('cemetery', (opts, rig) => {
   const hx1 = X(6.4);
   const hz = -8;
   g.add(mesh(box(hx1 - hx0, Y(0.4) - 2, 26), '#e7e1d1', (hx0 + hx1) / 2, 2, hz, PLASTER));
-  g.add(mesh(box(hx1 - hx0 + 6, 3, 30), '#c9d3c7', (hx0 + hx1) / 2, Y(0.4), hz, STONE));
-  g.add(mesh(cbox(5, 8, 1), '#3e5a50', X(4.85), Y(2.2), hz + 13.4));
-  g.add(mesh(cbox(5, 8, 1), '#e2bf62', X(5.95), Y(2.2), hz + 13.4));
-  g.add(mesh(box(8, 22, 1), '#1d2522', X(5.4), 2, hz + 13.4));
+  g.add(mesh(box(hx1 - hx0 + 6, 3, 30), '#c9d3c7', (hx0 + hx1) / 2, Y(0.4), hz, CONCRETE));
+  // windows + door sit proud of the wall face (hz + 13), never in it
+  g.add(mesh(cbox(5, 8, 1), '#3e5a50', X(4.85), Y(2.2), hz + 13.9));
+  g.add(mesh(cbox(5, 8, 1), '#e2bf62', X(5.95), Y(2.2), hz + 13.9));
+  g.add(mesh(box(8, 22, 1), '#1d2522', X(5.4), 2, hz + 13.9));
   // pillars with candles at both ends of the fence
   const flames = [];
   for (const gx of [0.3, 9.7]) {
     const px = X(gx);
-    g.add(mesh(box(10, Y(5.9) - 2, 10), '#ddd5c2', px, 2, front - 4, STONE));
-    g.add(mesh(box(12, 2.2, 12), '#3b3a36', px, Y(5.9), front - 4, STONE));
+    g.add(mesh(box(10, Y(5.9) - 2, 10), '#ddd5c2', px, 2, front - 4, ASHLAR));
+    g.add(mesh(box(12, 2.2, 12), '#3b3a36', px, Y(5.9), front - 4, GRANITE));
     g.add(mesh(new THREE.CylinderGeometry(2.6, 2.6, 8, 10), '#efe7d2', px, Y(5.9) + 6.2, front - 4));
     const f = new THREE.Mesh(new THREE.ConeGeometry(1.3, 4, 8), new THREE.MeshBasicMaterial({ color: '#f5c35a' }));
     f.position.set(px, Y(5.9) + 12.4, front - 4);
@@ -428,7 +437,7 @@ defineModel('cemetery', (opts, rig) => {
     flames.push(f);
   }
   // gate posts in the middle
-  for (const gx of [3.9, 6.1]) g.add(mesh(box(5, Y(6.4) - 2, 5), '#ddd5c2', X(gx), 2, front - 2, STONE));
+  for (const gx of [3.9, 6.1]) g.add(mesh(box(5, Y(6.4) - 2, 5), '#ddd5c2', X(gx), 2, front - 2, ASHLAR));
   // iron fence: rails + bars, with a gate (arched top) between the posts
   const iron = '#22282a';
   const bars = (xa, xb, y0, y1) => {
@@ -442,11 +451,11 @@ defineModel('cemetery', (opts, rig) => {
   g.add(mesh(new THREE.TorusGeometry((X(6.0) - X(4.0)) / 2, 0.8, 4, 14, PI), iron, X(5.0), Y(7.6), front - 2));
   // cypress tree behind the left fence + a rounded shrub on the right
   g.add(mesh(new THREE.SphereGeometry(1, 8, 10).scale(13, 34, 11).translate(0, 36, 0), '#3d5148', X(2.15), 0, front - 12, LEAF));
-  g.add(mesh(box(3, 6, 3), '#4b3c2c', X(2.15), 0, front - 12));
+  g.add(mesh(box(3, 6, 3), '#4b3c2c', X(2.15), 0, front - 12, BARK));
   g.add(mesh(new THREE.SphereGeometry(1, 8, 8).scale(9, 13, 8).translate(0, 14, 0), '#43554c', X(8.3), 0, front - 10, LEAF));
   // a small stone urn on a post behind the left gate post
-  g.add(mesh(box(5, 26, 5), '#cfc7b4', X(3.55), 2, front - 9, STONE));
-  g.add(mesh(new THREE.ConeGeometry(4, 6, 6).translate(0, 31, 0), '#a7a597', X(3.55), 0, front - 9, STONE));
+  g.add(mesh(box(5, 26, 5), '#cfc7b4', X(3.55), 2, front - 9, ASHLAR));
+  g.add(mesh(new THREE.ConeGeometry(4, 6, 6).translate(0, 31, 0), '#a7a597', X(3.55), 0, front - 9, GRANITE));
   rig.anims.always = (t) => {
     flames.forEach((f, i) => {
       const k = 1 + Math.sin(t * 13 + i * 2) * 0.15 + Math.sin(t * 29 + i) * 0.08;

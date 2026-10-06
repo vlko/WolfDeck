@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { defineModel, buildModel } from './registry.js';
 import { tieredTree } from './trees.js';
 import {
-  mesh, inkMesh, box, cbox, beam, gable, fold, group, smoke, eyes, cheek, blinker, facet, mat, ink, PI,
+  mesh, inkMesh, box, cbox, beam, gable, fold, foldPanel, group, smoke, eyes, cheek, blinker, facet, mat, ink, PI,
 } from './kit.js';
 
 // Models for the pieces on the "city 2" sheet. Same conventions as the
@@ -18,9 +18,13 @@ function grid(aspect) {
 }
 
 const WOOD = { tex: 'wood' };
+const WOOD_FINE = { tex: 'woodFine' };
+const BOARDS = { tex: 'boards' };
 const PLANKS = { tex: 'planks' };
 const PLASTER = { tex: 'plaster' };
-const STONE = { tex: 'stone' };
+const ASHLAR = { tex: 'ashlar' };
+const RUBBLE = { tex: 'rubble' };
+const PAVING = { tex: 'paving' };
 const SHINGLE = { tex: 'shingle' };
 const ROOF_TILE = { tex: 'roofTile' };
 const BRICK = { tex: 'brick' };
@@ -42,12 +46,10 @@ function pane(x, y, w, h, z, color, rotY = 0) {
   return m;
 }
 
-// Panes on a folded facade: z and tilt follow the fold's half-planes.
+// Panes on a folded facade: laid onto the fold's half-planes (split at the
+// crease), so the ridge never pokes through a window that straddles it.
 function facadePane(geo, cx, ridge, halfW, x, y, w, h, color, lift = 0.25) {
-  const mx = x + w / 2;
-  const m = pane(x, y, w, h, geo.userData.zAt(mx) + lift, color);
-  m.rotation.y = Math.sign(mx - cx) * Math.atan2(ridge, halfW);
-  return m;
+  return new THREE.Mesh(foldPanel(geo, x, x + w, y, y + h, lift), new THREE.MeshBasicMaterial({ color }));
 }
 
 // Lit windows that now and then flick on or off — the city breathes.
@@ -106,9 +108,9 @@ function roof(apexX, apexY, halfSpan, eaveY, t, d, color) {
   return mesh(roofSolid(apexX, apexY, halfSpan, eaveY, t, d), color);
 }
 
-function door(x, w, h, z, color, knob = true) {
+function door(x, w, h, z, color, tex = WOOD_FINE, knob = true) {
   const g = group(x, 0, z);
-  g.add(mesh(box(w, h, 1.6), color, 0, 0, 0, WOOD));
+  g.add(mesh(box(w, h, 1.6), color, 0, 0, 0, tex));
   if (knob) g.add(inkMesh(new THREE.SphereGeometry(Math.max(1, w * 0.07), 8, 6), '#1c1a17', w * 0.3, h * 0.42, 1.2));
   return g;
 }
@@ -121,7 +123,7 @@ defineModel('towerSlate', (opts, rig) => {
   const top = fold([[X(0), Y(7.2)], [X(10), Y(7.2)], [X(10), Y(0)], [X(0), Y(0)]], D, ridge, { cx: 0 });
   rig.body.add(mesh(top, '#7b8e82', 0, 0, 0, PLASTER));
   const base = fold([[X(0), Y(10)], [X(10), Y(10)], [X(10), Y(7.2)], [X(0), Y(7.2)]], D + 1, ridge + 0.5, { cx: 0 });
-  rig.body.add(mesh(base, '#68756f', 0, 0, 0, STONE));
+  rig.body.add(mesh(base, '#68756f', 0, 0, 0, ASHLAR));
   rig.body.add(mesh(box(S(10) + 1, 2, D + 2), '#5c6863', 0, 100 - 2, 0));
   const pattern = [[1, 0, 0], [1, 1, 0], [0, 1, 0], [1, 0, 1], [0, 0, 1], [1, 1, 0]];
   const cols = [[0.8, 2.6], [4.0, 5.8], [7.1, 8.9]];
@@ -176,8 +178,8 @@ defineModel('townhouseRose', (opts, rig) => {
   rig.body.add(mesh(box(S(1.0), 16, 6), '#7d5534', X(7.9), Y(1.6), -8, BRICK));
   // upper windows: dark panes with cream cross mullions
   for (const g0 of [1.2, 5.5]) {
-    rig.body.add(pane(X(g0), Y(4.4), S(1.6), Y(2.7) - Y(4.4), front + 0.2, '#4b2f22'));
-    rig.body.add(mullions(X(g0), Y(4.4), S(1.6), Y(2.7) - Y(4.4), front + 0.5, '#e9e1cf'));
+    rig.body.add(pane(X(g0), Y(4.4), S(1.6), Y(2.7) - Y(4.4), front + 0.5, '#4b2f22'));
+    rig.body.add(mullions(X(g0), Y(4.4), S(1.6), Y(2.7) - Y(4.4), front + 0.9, '#e9e1cf'));
   }
   // awning: a rose slab sloping out over the ground floor
   const aw = group(0, Y(5.0), front);
@@ -185,8 +187,8 @@ defineModel('townhouseRose', (opts, rig) => {
   slab.rotation.x = 0.8;
   aw.add(slab);
   rig.body.add(aw);
-  rig.body.add(pane(X(1.0), Y(8.9), S(1.6), Y(7.3) - Y(8.9), front + 0.2, GLOW));
-  rig.body.add(mullions(X(1.0), Y(8.9), S(1.6), Y(7.3) - Y(8.9), front + 0.5, '#d9c9a4'));
+  rig.body.add(pane(X(1.0), Y(8.9), S(1.6), Y(7.3) - Y(8.9), front + 0.5, GLOW));
+  rig.body.add(mullions(X(1.0), Y(8.9), S(1.6), Y(7.3) - Y(8.9), front + 0.9, '#d9c9a4'));
   rig.body.add(door(X(5.7), S(1.8), Y(7.3), front, '#9e4636'));
   // the awning flutters in the breeze
   rig.anims.always = (t, dt, ctx) => { aw.rotation.x = Math.sin(t * 1.6 + ctx.phase) * 0.025; };
@@ -198,19 +200,19 @@ defineModel('cabin', (opts, rig) => {
   const D = 46;
   const front = D / 2;
   const timber = '#a9926c';
-  rig.body.add(mesh(box(S(8.8), Y(4.6), D), '#9fb4a5', 0, 0, 0));
+  rig.body.add(mesh(box(S(8.8), Y(4.6), D), '#9fb4a5', 0, 0, 0, BOARDS));
   for (let g = 1.3; g < 9.2; g += 0.9) rig.body.add(mesh(box(0.9, Y(4.6) - 4, 0.8), '#8ea494', X(g), 3, front + 0.4));
   for (const g of [0.55, 9.45]) rig.body.add(mesh(box(S(0.5), Y(4.5), 4), timber, X(g), 0, front - 1, WOOD));
-  rig.body.add(mesh(box(S(9.4), 3, 4), '#bcb099', 0, 0, front));
+  rig.body.add(mesh(box(S(9.4), 3, 4), '#bcb099', 0, 0, front, PAVING));
   rig.body.add(mesh(box(S(9.4), 3, 4), timber, 0, Y(4.6), front, WOOD));
-  rig.body.add(mesh(gable(S(8.8), Y(0.4) - Y(4.6), D).translate(0, Y(4.6), 0), '#8aa38f', 0, 0, 0));
+  rig.body.add(mesh(gable(S(8.8), Y(0.4) - Y(4.6), D).translate(0, Y(4.6), 0), '#8aa38f', 0, 0, 0, BOARDS));
   rig.body.add(mesh(beam(0, Y(4.6), 0, Y(0.6), 2.4, 2.5), timber, 0, 0, front, WOOD));
   rig.body.add(mesh(beam(0, Y(4.0), X(2.9), Y(2.4), 2.2, 2.5), timber, 0, 0, front, WOOD));
   rig.body.add(mesh(beam(0, Y(4.0), X(7.1), Y(2.4), 2.2, 2.5), timber, 0, 0, front, WOOD));
   rig.body.add(mesh(roofOver(0, S(4.4), Y(4.6), Y(0.4), S(0.6), 4, D + 6), '#8e7550', 0, 0, 0, SHINGLE));
-  rig.body.add(pane(X(1.9), Y(8.4), S(2.2), Y(6.2) - Y(8.4), front + 0.5, GLOW));
-  rig.body.add(mullions(X(1.9), Y(8.4), S(2.2), Y(6.2) - Y(8.4), front + 0.8, '#d8c8a2'));
-  rig.body.add(door(X(5.6), S(2.3), Y(6.2), front, '#25322b'));
+  rig.body.add(pane(X(1.9), Y(8.4), S(2.2), Y(6.2) - Y(8.4), front + 1.1, GLOW));
+  rig.body.add(mullions(X(1.9), Y(8.4), S(2.2), Y(6.2) - Y(8.4), front + 1.5, '#d8c8a2'));
+  rig.body.add(door(X(5.6), S(2.3), Y(6.2), front + 0.4, '#25322b', BOARDS));
 });
 
 // ── cottageRose — cream cottage, rose roof, folded gable ────────────────────
@@ -219,17 +221,17 @@ defineModel('cottageRose', (opts, rig) => {
   const D = 46;
   const front = D / 2;
   rig.body.add(mesh(box(S(8.8), Y(5.0), D), '#e8e0c9', 0, 0, 0, PLASTER));
-  rig.body.add(mesh(box(S(8.9), Y(9.3), D + 0.6), '#c08d7c', 0, 0, 0, STONE));
+  rig.body.add(mesh(box(S(8.9), Y(9.3), D + 0.6), '#c08d7c', 0, 0, 0, RUBBLE));
   const gab = fold([[X(0.6), Y(5.0)], [X(9.4), Y(5.0)], [0, Y(0.4)]], D, 5, { cx: 0 });
   rig.body.add(mesh(gab, '#ebe3cc', 0, 0, 0, PLASTER));
   rig.body.add(mesh(roofOver(0, S(4.4), Y(5.0), Y(0.4), S(0.7), 3.6, D + 6), '#b07a69', 0, 0, 0, ROOF_TILE));
   rig.body.add(mesh(box(S(1.0), 24, 6), '#846637', X(2.8), Y(2.4), -10, BRICK));
-  rig.body.add(pane(X(1.9), Y(8.2), S(1.7), Y(6.3) - Y(8.2), front + 0.2, GLOW));
-  rig.body.add(mullions(X(1.9), Y(8.2), S(1.7), Y(6.3) - Y(8.2), front + 0.5, '#d9c7a0'));
-  const d = door(X(6.7), S(1.7), Y(6.0) - Y(9.4), front, '#7a4a3c');
+  rig.body.add(pane(X(1.9), Y(8.2), S(1.7), Y(6.3) - Y(8.2), front + 0.5, GLOW));
+  rig.body.add(mullions(X(1.9), Y(8.2), S(1.7), Y(6.3) - Y(8.2), front + 0.9, '#d9c7a0'));
+  const d = door(X(6.7), S(1.7), Y(6.0) - Y(9.4), front + 0.4, '#7a4a3c', BOARDS);
   d.position.y = Y(9.4);
   rig.body.add(d);
-  rig.body.add(mesh(box(S(3.3), Y(9.4), 8), '#c79a89', X(7.45), 0, front + 4, STONE));
+  rig.body.add(mesh(box(S(3.3), Y(9.4), 8), '#c79a89', X(7.45), 0, front + 4, PAVING));
   const sm = smoke(X(2.8), Y(0) + 2, -10, { size: 2.2, rise: 22, drift: 6 });
   rig.body.add(sm.group);
   rig.anims.always = (t) => sm.update(t);
@@ -307,9 +309,9 @@ defineModel('shed', (opts, rig) => {
   }
   // back wall up to the high eave
   rig.body.add(mesh(new THREE.ExtrudeGeometry(new THREE.Shape([new THREE.Vector2(-front, 0), new THREE.Vector2(front, 0), new THREE.Vector2(front, rise - 4)]), { depth: S(8.4), bevelEnabled: false }).rotateY(PI / 2).translate(-S(4.2), 0, 0), '#8a9c8e', X(4.8), Y(3.7), 0, PLANKS));
-  rig.body.add(pane(X(1.8), Y(7.8), S(2.2), Y(5.0) - Y(7.8), front + 0.2, '#2c3a2c'));
-  rig.body.add(mesh(cbox(1.3, Y(5.0) - Y(7.8), 0.8), '#94a698', X(2.9), (Y(5.0) + Y(7.8)) / 2, front + 0.5));
-  rig.body.add(door(X(5.7), S(2.3), Y(5.0), front, '#2a3324'));
+  rig.body.add(pane(X(1.8), Y(7.8), S(2.2), Y(5.0) - Y(7.8), front + 0.5, '#2c3a2c'));
+  rig.body.add(mesh(cbox(1.3, Y(5.0) - Y(7.8), 0.8), '#94a698', X(2.9), (Y(5.0) + Y(7.8)) / 2, front + 0.9));
+  rig.body.add(door(X(5.7), S(2.3), Y(5.0), front + 0.4, '#2a3324', BOARDS));
 });
 
 // ── trees ────────────────────────────────────────────────────────────────
@@ -571,8 +573,8 @@ defineModel('bench', (opts, rig) => {
     rig.body.add(mesh(box(4, 100, 4), leg, X(g), 0, -16, WOOD));
     rig.body.add(mesh(box(4, 4, 28), leg, X(g), seatY - 4, -4, WOOD));
   }
-  for (const [z, w] of [[10, S(10)], [1, S(9.4)], [-8, S(9.4)]]) rig.body.add(mesh(box(w, 4, 8), slat, 0, seatY, z, WOOD));
-  for (const gy of [0.8, 3.35]) rig.body.add(mesh(cbox(S(8.9), Y(0) - Y(1.6), 3), slat, X(5.05), Y(gy), -13, WOOD));
+  for (const [z, w] of [[10, S(10)], [1, S(9.4)], [-8, S(9.4)]]) rig.body.add(mesh(box(w, 4, 8), slat, 0, seatY, z, WOOD_FINE));
+  for (const gy of [0.8, 3.35]) rig.body.add(mesh(cbox(S(8.9), Y(0) - Y(1.6), 3), slat, X(5.05), Y(gy), -13, WOOD_FINE));
 });
 
 defineModel('lantern', (opts, rig) => {

@@ -8,7 +8,7 @@ import { tieredTree } from './trees.js';
 // animal townsfolk. Measured off a 10 × 10 grid over each sprite (gx across,
 // gy down); 1 unit = 1 % of the sprite's height.
 
-const { mesh, inkMesh, fold, box, cbox, beam, group, eyes, cheek, blinker, PI } = K;
+const { mesh, inkMesh, fold, foldPanel, box, cbox, beam, group, eyes, cheek, blinker, PI } = K;
 
 function grid(aspect) {
   return {
@@ -19,7 +19,8 @@ function grid(aspect) {
   };
 }
 
-const WOOD = { tex: 'wood' };
+const WOOD_FINE = { tex: 'woodFine' };
+const BOARDS = { tex: 'boards' };
 const PLASTER = { tex: 'plaster' };
 const SHINGLE = { tex: 'shingle' };
 const BRICK = { tex: 'brick' };
@@ -32,14 +33,6 @@ const BARK = { tex: 'bark' };
 const LIT = '#f3e6bf';
 const litMat = new THREE.MeshBasicMaterial({ color: LIT });
 
-// A pane on a folded front: sits on the fold plane of its half, tilted to it.
-function pane(geo, zAt, ridgeTilt, x, y, color, material) {
-  const m = material ? new THREE.Mesh(geo, material) : mesh(geo, color);
-  m.position.set(x, y, zAt(x) + 0.35);
-  m.rotation.y = x < 0 ? -ridgeTilt.l : ridgeTilt.r;
-  return m;
-}
-
 // ── faceted towers ─────────────────────────────────────────────────────────
 // outline: silhouette polygon (grid); windows: [gx0, gx1, gy0, gy1, lit];
 // door: [gx0, gx1, gy0]. The front is folded down the middle; lit windows
@@ -51,24 +44,19 @@ function tower(name, aspect, { outline, windows, door, wall, dark = '#26312e', d
     const R = aspect * ridge;
     const geo = fold(P(outline), D, R, { cx: 0 });
     rig.body.add(mesh(geo, wall, 0, 0, 0, PLASTER));
-    const zAt = geo.userData.zAt;
-    const xs = P(outline).map((p) => p[0]);
-    const tilt = { l: Math.atan(R / -Math.min(...xs)), r: Math.atan(R / Math.max(...xs)) };
     const darkMat = K.ink(dark);
     const panes = [];
     for (const [g0, g1, y0, y1, lit] of windows) {
       const w = S(g1 - g0);
       const h = Y(y0) - Y(y1);
-      const x = (X(g0) + X(g1)) / 2;
-      const p = pane(new THREE.PlaneGeometry(w, h), zAt, tilt, x, (Y(y0) + Y(y1)) / 2, null, lit ? litMat : darkMat);
+      const p = new THREE.Mesh(foldPanel(geo, X(g0), X(g0) + w, Y(y1), Y(y1) + h, 0.35), lit ? litMat : darkMat);
       p.userData.lit = !!lit;
       rig.body.add(p);
       panes.push(p);
     }
     if (door) {
       const [g0, g1, y0] = door;
-      const x = (X(g0) + X(g1)) / 2;
-      const d = pane(new THREE.PlaneGeometry(S(g1 - g0), Y(y0)).translate(0, Y(y0) / 2, 0), zAt, tilt, x, 0, null, K.ink(doorColor));
+      const d = new THREE.Mesh(foldPanel(geo, X(g0), X(g1), 0, Y(y0), 0.35), K.ink(doorColor));
       rig.body.add(d);
     }
     // windows flick on/off: every ~2.5 s one pane toggles
@@ -218,7 +206,7 @@ function townhouse(name, { window: [wg0, wg1, wy0, wy1, wcol], lower, chimney, s
     // gable window
     const win = wcol === 'lit' ? new THREE.Mesh(new THREE.PlaneGeometry(S(wg1 - wg0), Y(wy0) - Y(wy1)), litMat)
       : inkMesh(new THREE.PlaneGeometry(S(wg1 - wg0), Y(wy0) - Y(wy1)), wcol);
-    win.position.set((X(wg0) + X(wg1)) / 2, (Y(wy0) + Y(wy1)) / 2, front + 0.2);
+    win.position.set((X(wg0) + X(wg1)) / 2, (Y(wy0) + Y(wy1)) / 2, front + 0.5);
     rig.body.add(win);
     // awning: a sage slab tipping forward, dark edge (scalloped on B)
     const aw = group(X(5.0), Y(5.7), front);
@@ -236,11 +224,11 @@ function townhouse(name, { window: [wg0, wg1, wy0, wy1, wcol], lower, chimney, s
     for (const [kind, g0, g1] of lower) {
       const x = (X(g0) + X(g1)) / 2;
       if (kind === 'win') {
-        rig.body.add(inkMesh(new THREE.PlaneGeometry(S(g1 - g0), Y(7.1) - Y(8.8)), '#4a3a26', x, (Y(7.1) + Y(8.8)) / 2, front + 0.2));
+        rig.body.add(inkMesh(new THREE.PlaneGeometry(S(g1 - g0), Y(7.1) - Y(8.8)), '#4a3a26', x, (Y(7.1) + Y(8.8)) / 2, front + 0.5));
         rig.body.add(mesh(cbox(S(g1 - g0) + 2, 1.6, 2), '#d9d3c4', x, Y(8.8) - 0.8, front + 1));
       } else {
-        rig.body.add(mesh(box(S(g1 - g0), Y(7.1), 1.4), '#5a4321', x, 0, front + 0.4, WOOD));
-        rig.body.add(inkMesh(new THREE.SphereGeometry(1.3, 8, 6), '#d8c9a0', x - S((g1 - g0) * 0.3) * (kind === 'doorR' ? 1 : -1), Y(8.6), front + 1.4));
+        rig.body.add(mesh(box(S(g1 - g0), Y(7.1), 1.4), '#5a4321', x, 0, front + 0.7, WOOD_FINE));
+        rig.body.add(inkMesh(new THREE.SphereGeometry(1.3, 8, 6), '#d8c9a0', x - S((g1 - g0) * 0.3) * (kind === 'doorR' ? 1 : -1), Y(8.6), front + 1.8));
       }
     }
     const sm = K.smoke(X(chimney), Y(0) + 1, -6, { size: 2.2, rise: 22 });
@@ -264,9 +252,11 @@ defineModel('chapel', (opts, rig) => {
   const fz = wall.userData.zAt(X(4.95)) - 1.5;
   rig.body.add(mesh(cbox(S(5.0), Y(6.6) - Y(7.1), 6), '#caa9a2', X(5.05), (Y(6.6) + Y(7.1)) / 2, fz + 2));
   // the door: dark doorway that swings open now and then
-  rig.body.add(inkMesh(new THREE.PlaneGeometry(S(3.4), Y(7.1)).translate(0, Y(7.1) / 2, 0), '#1f0d08', X(5.0), 0, fz + 0.3));
-  const leaf = group(X(3.3), 0, fz + 0.6);
-  leaf.add(mesh(box(S(3.4), Y(7.1) - 1, 1.2).translate(S(1.7), 0, 0), '#5e3530', 0, 0, 0, WOOD));
+  // dark doorway laid on the fold's half-planes (a flat plane would let
+  // the wall's crease poke through it); the leaf hangs just proud of the crease
+  rig.body.add(new THREE.Mesh(foldPanel(wall, X(5.0) - S(1.7), X(5.0) + S(1.7), 0, Y(7.1), 0.35), K.ink('#1f0d08')));
+  const leaf = group(X(3.3), 0, fz + 2.4);
+  leaf.add(mesh(box(S(3.4), Y(7.1) - 1, 1.2).translate(S(1.7), 0, 0), '#5e3530', 0, 0, 0, BOARDS));
   rig.body.add(leaf);
   rig.anims.always = (t, dt, ctx) => {
     const c = (t + ctx.phase * 3) % 11;

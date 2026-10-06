@@ -473,8 +473,8 @@ defineModel('busCream', (opts, rig) => {
   const door = group(0, 0, 0);
   b.add(door);
   onSides(door, flat(rrect(2, 20, 25, 86, 3), 0.6), '#869b8b', zs, 1.3, 0.6, [1], 0, 0, false, METAL);
-  onSides(door, flat(rrect(4, 52, 12, 82, 2), 0.3), GLASS, zs, 1.9, 0.3, [1]);
-  onSides(door, flat(rrect(15, 52, 23, 82, 2), 0.3), GLASS, zs, 1.9, 0.3, [1]);
+  onSides(door, flat(rrect(4, 52, 12, 82, 2), 0.3), GLASS, zs, 2.0, 0.3, [1]);
+  onSides(door, flat(rrect(15, 52, 23, 82, 2), 0.3), GLASS, zs, 2.0, 0.3, [1]);
   onSides(door, cbox(0.7, 64, 0.3), '#5f7466', zs, 1.9, 0.3, [1], 13.5, 53);
   // front
   slab(b, 73, 55, 73, 80, D - 14, GLASS, 0, 70);
@@ -561,8 +561,8 @@ defineModel('schoolBus', (opts, rig) => {
   const door = group(0, 0, 0);
   b.add(door);
   onSides(door, flat(rrect(47, 22, 64, 88, 2), 0.6), '#d4b26e', zs, 1.3, 0.6, [1], 0, 0, false, METAL);
-  onSides(door, flat(rrect(49, 50, 62, 85, 2), 0.3), GLASS, zs, 1.9, 0.3, [1]);
-  onSides(door, flat(rrect(49, 25, 62, 46, 2), 0.3), GLASS, zs, 1.9, 0.3, [1]);
+  onSides(door, flat(rrect(49, 50, 62, 85, 2), 0.3), GLASS, zs, 2.0, 0.3, [1]);
+  onSides(door, flat(rrect(49, 25, 62, 46, 2), 0.3), GLASS, zs, 2.0, 0.3, [1]);
   // stop arm (driver side, −z), hinged at the body
   const arm = group(40, 66, -(zs + 0.4));
   b.add(arm);
@@ -1043,8 +1043,8 @@ defineModel('cementMixer', (opts, rig) => {
   b.add(mesh(beam(44, 22, 56, 16, 3, 4), tan));
   b.add(mesh(new THREE.TorusGeometry(2.6, 0.9, 6, 12), DARK, 57.5, 15, 0));
   for (const z of [-10, 10]) b.add(mesh(cbox(2.4, 50, 2.4), brown, 38, 47, z, WOOD));
-  b.add(mesh(cbox(2.4, 2.4, 22), brown, 38, 72, 0));
-  for (const z of [-10, 10]) b.add(mesh(cbox(6, 2.4, 2.4), brown, 41, 72, z));
+  b.add(mesh(cbox(2.4, 2.4, 22), brown, 38, 72, 0, WOOD));
+  for (const z of [-10, 10]) b.add(mesh(cbox(6, 2.4, 2.4), brown, 41, 72, z, WOOD));
   // drum on a yoke, spinning about its own axis
   const tilt = group(-4, 50, 0);
   tilt.rotation.z = -0.62;

@@ -42,7 +42,11 @@ function lumpy(r, detail = 1) {
 
 const WOOD = { tex: 'wood' };
 const PLASTER = { tex: 'plaster' };
-const STONE = { tex: 'stone' };
+const WOOD_FINE = { tex: 'woodFine' };
+const PLANKS = { tex: 'planks' };
+const PAVING = { tex: 'paving' };
+const ASHLAR = { tex: 'ashlar' };
+const CONCRETE = { tex: 'concrete' };
 const FABRIC = { tex: 'fabric' };
 const METAL = { tex: 'metal' };
 const FUR = { tex: 'fur' };
@@ -449,18 +453,19 @@ defineModel('shop', (opts, rig) => {
   const front = D / 2;
   rig.body.add(mesh(box(S(8.6), Y(0.4), D), '#ece5d8', 0, 0, 0, PLASTER));
   // flat roof cap behind the awning
-  rig.body.add(mesh(box(S(8.8), 3, D + 2), '#d9d1c2', 0, Y(0.4), 0));
-  rig.body.add(mesh(box(S(8.7), Y(8.8), D + 1.5), '#a6b1a4', 0, 0, 0, STONE));
+  rig.body.add(mesh(box(S(8.8), 3, D + 2), '#d9d1c2', 0, Y(0.4), 0, CONCRETE));
+  rig.body.add(mesh(box(S(8.7), Y(8.8), D + 1.5), '#a6b1a4', 0, 0, 0, PAVING));
   // door
-  const door = group(X(3.1), 0, front);
-  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(-S(0.65), 0, 0), '#3d2e1e', 0, 0, 0, WOOD));
-  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(S(0.65), 0, 0), '#4a3826', 0, 0, 0, WOOD));
+  // the base band stands 0.75 proud: the door sits well in front of it
+  const door = group(X(3.1), 0, front + 0.7);
+  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(-S(0.65), 0, 0), '#3d2e1e', 0, 0, 0, WOOD_FINE));
+  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(S(0.65), 0, 0), '#4a3826', 0, 0, 0, WOOD_FINE));
   door.add(inkMesh(new THREE.SphereGeometry(1.4, 8, 6), '#7a3a2a', S(0.9), Y(8.1), 1.4));
   rig.body.add(door);
   // window: cream frame, four dark panes
-  rig.body.add(mesh(box(S(2.6), Y(5.85) - Y(8.55), 1.2), '#ded5c4', X(6.9), Y(8.55), front));
+  rig.body.add(mesh(box(S(2.6), Y(5.85) - Y(8.55), 1.2), '#ded5c4', X(6.9), Y(8.55), front + 0.2, WOOD_FINE));
   for (const [gx, gy] of [[6.3, 7.1], [7.5, 7.1], [6.3, 8.4], [7.5, 8.4]]) {
-    rig.body.add(inkMesh(new THREE.PlaneGeometry(S(1.05), 10.5).translate(0, 5.25, 0), '#2e2620', X(gx), Y(gy), front + 0.8));
+    rig.body.add(inkMesh(new THREE.PlaneGeometry(S(1.05), 10.5).translate(0, 5.25, 0), '#2e2620', X(gx), Y(gy), front + 1.3));
   }
   // awning: eight stripes from the wall top, sloping out and down
   const n = 8;
@@ -514,13 +519,9 @@ defineModel('stall', (opts, rig) => {
     const s = gx < 5 ? 1 : -1;
     rig.body.add(mesh(beam(X(gx), Y(3.3), X(gx) + s * S(1.1), Y(2.2), 2.6, 3), wood, 0, 0, D / 2 - 3, WOOD));
   }
-  // counter: top board + stone-block body
-  rig.body.add(mesh(box(S(9.2), 5, 30), '#776652', 0, Y(7.3), D / 2 - 15, WOOD));
-  rig.body.add(mesh(box(S(8.2), Y(7.3), 26), '#a5947c', 0, 0, D / 2 - 15));
-  for (const gy of [8.3, 9.2]) rig.body.add(inkMesh(new THREE.PlaneGeometry(S(8.2), 0.7), '#8a7a63', 0, Y(gy), D / 2 - 1.8));
-  for (const [gx, gy] of [[3.0, 7.8], [6.5, 7.8], [4.6, 8.75], [7.7, 8.75], [2.2, 9.6], [5.7, 9.6]]) {
-    rig.body.add(inkMesh(new THREE.PlaneGeometry(0.7, 8.6), '#8a7a63', X(gx), Y(gy) + 4.3, D / 2 - 1.8));
-  }
+  // counter: plank top + stone-block body (the ashlar texture draws the blocks)
+  rig.body.add(mesh(box(S(9.2), 5, 30), '#776652', 0, Y(7.3), D / 2 - 15, PLANKS));
+  rig.body.add(mesh(box(S(8.2), Y(7.3), 26), '#a5947c', 0, 0, D / 2 - 15, ASHLAR));
   // basket of produce on the counter
   const bk = basket(S(1.3), S(0.95), Y(4.9) - Y(6.85), { handle: 1 });
   bk.position.set(X(3.3), Y(6.85), D / 2 - 14);
@@ -567,9 +568,9 @@ defineModel('breadShelf', (opts, rig) => {
   const { X, Y, S } = grid(90.3);
   const D = 34;
   const fr = '#ad9c86';
-  rig.body.add(mesh(box(S(9.4), Y(0.4) - 1, 2), '#3c2b1d', 0, 0, -D / 2 + 1, WOOD));
-  for (const x of [X(0.25), X(9.75)]) rig.body.add(mesh(box(S(0.5), Y(0.3), D), fr, x, 0, 0, WOOD));
-  for (const [gy, h] of [[0.3, 3], [5.0, 4], [10, 4]]) rig.body.add(mesh(box(S(10), h, D), fr, 0, Y(gy) - (gy === 10 ? 0 : h), 0, WOOD));
+  rig.body.add(mesh(box(S(9.4), Y(0.4) - 1, 2), '#3c2b1d', 0, 0, -D / 2 + 1, WOOD_FINE));
+  for (const x of [X(0.25), X(9.75)]) rig.body.add(mesh(box(S(0.5), Y(0.3), D), fr, x, 0, 0, WOOD_FINE));
+  for (const [gy, h] of [[0.3, 3], [5.0, 4], [10, 4]]) rig.body.add(mesh(box(S(10), h, D), fr, 0, Y(gy) - (gy === 10 ? 0 : h), 0, WOOD_FINE));
   for (const gx of [2.2, 4.6, 7.2]) {
     const b = baguette(Y(0.15) - Y(4.95), S(0.85));
     b.position.set(X(gx), Y(4.95) + 1, 2);
@@ -587,11 +588,11 @@ defineModel('breadCrate', (opts, rig) => {
   const { X, Y, S } = grid(96.1);
   const D = 34;
   // open-fronted bread box: frame + dark interior
-  rig.body.add(mesh(box(S(10), Y(4.3), D), '#2a1f16'));
+  rig.body.add(mesh(box(S(10) - 1, Y(4.3), D - 2), '#2a1f16', 0, 0, -1));
   for (const [x, y, w, h] of [[0, 0, S(10), Y(9.6)], [0, Y(5.2), S(10), Y(4.3) - Y(5.2)], [X(0.35), 0, S(0.7), Y(4.3)], [X(9.65), 0, S(0.7), Y(4.3)]]) {
-    rig.body.add(mesh(box(w, h, 3), '#b2a48b', x, y, D / 2 - 1.5, WOOD));
+    rig.body.add(mesh(box(w, h, 3), '#b2a48b', x, y, D / 2 - 1.5, WOOD_FINE));
   }
-  for (const s of [-1, 1]) rig.body.add(mesh(box(2, Y(4.3), D), '#a59780', s * (S(5) - 1), 0, 0, WOOD));
+  for (const s of [-1, 1]) rig.body.add(mesh(box(2, Y(4.3) - 0.6, D - 3.6), '#a59780', s * (S(5) - 0.6), 0.3, -1.8, WOOD_FINE));
   for (const gx of [3.0, 6.9]) {
     const l = loaf(S(2.0), 14);
     l.position.set(X(gx), Y(7.3), D / 2 - 8);
@@ -643,7 +644,7 @@ defineModel('produce', (opts, rig) => {
   const { X, Y, S } = grid(99.5);
   const back = crate(S(7.4), Y(2.8) - Y(8.3), 30);
   back.position.set(X(6.0), Y(8.3), -12);
-  rig.body.add(mesh(box(S(7.4) - 4, Y(8.3), 26), '#8e7c63', X(6.0), 0, -12, WOOD)); // stand under it
+  rig.body.add(mesh(box(S(7.4) - 4, Y(8.3), 26), '#8e7c63', X(6.0), 0, -12, PLANKS)); // stand under it
   rig.body.add(back);
   for (const [gx, c] of [[4.2, '#e1aa72'], [6.2, '#e3ae6c'], [8.15, '#d8996a']]) rig.body.add(fruit(S(1.0), c).translateX(X(gx)).translateY(Y(2.3)).translateZ(-12));
   const leek = greens(4, 16, Y(0.0) - Y(3.0));
@@ -753,7 +754,7 @@ defineModel('signBoard', (opts, rig) => {
   for (const s of [-1, 1]) rig.body.add(mesh(box(4, Y(1.0), 4), '#7a6a56', s * (S(5) - 3), 0, -3, WOOD));
   const board = group(0, Y(1.0), 0);
   for (const gx of [3.0, 7.6]) board.add(mesh(box(1.6, Y(1.0) - Y(4.0), 1.6).translate(0, -(Y(1.0) - Y(4.0)), 0), '#2e261d', X(gx), 0, 0));
-  board.add(mesh(box(S(8.0), Y(4.0) - Y(10), 4), '#a3917a', 0, Y(10) - Y(1.0), 0, WOOD));
+  board.add(mesh(box(S(8.0), Y(4.0) - Y(10), 4), '#a3917a', 0, Y(10) - Y(1.0), 0, WOOD_FINE));
   board.add(mesh(box(S(6.8), Y(4.6) - Y(9.4), 1), '#6c5b48', 0, Y(9.4) - Y(1.0), 2.2));
   rig.body.add(board);
   rig.anims.swing = (t, dt, ctx) => {
@@ -779,9 +780,8 @@ defineModel('hangingSign', (opts, rig) => {
   const bx = (gx) => X(gx) - X(5.2);
   const by = (gy) => Y(gy) - hookY;
   for (const gx of [1.7, 8.0]) board.add(inkMesh(beam(0, 0, bx(gx), by(5.95), 0.9, 0.9), '#231a12'));
-  board.add(mesh(box(S(9.4), Y(5.2) - Y(10), 4), '#a3917a', bx(5.0), by(10), 0, WOOD));
-  for (const gy of [6.35, 8.6]) board.add(inkMesh(new THREE.PlaneGeometry(S(9.4), 0.6), '#7e6d58', bx(5.0), by(gy), 2.1));
-  board.add(inkMesh(new THREE.PlaneGeometry(0.6, Y(6.35) - Y(8.6)), '#7e6d58', bx(2.05), by(7.5), 2.1));
+  // horizontal boards (the planks texture draws the seams)
+  board.add(mesh(box(S(9.4), Y(5.2) - Y(10), 4), '#a3917a', bx(5.0), by(10), 0, { ...PLANKS, texScale: 1.5 }));
   for (const gx of [1.7, 8.0]) board.add(inkMesh(new THREE.CircleGeometry(1.2, 8), '#231a12', bx(gx), by(5.95), 2.2));
   rig.body.add(board);
   rig.anims.swing = (t, dt, ctx) => {

@@ -12,8 +12,13 @@ import {
 // across, gy down); units are percent of the sprite's height.
 
 const WOOD = { tex: 'wood' };
+const WOOD_V = { tex: 'wood', texRotate: true }; // grain up a leg / post
+const WOOD_FINE = { tex: 'woodFine' };
+const WOOD_FINE_V = { tex: 'woodFine', texRotate: true };
 const PLASTER = { tex: 'plaster' };
-const STONE = { tex: 'stone' };
+const ASHLAR = { tex: 'ashlar' };
+const GRANITE = { tex: 'granite' };
+const CONCRETE = { tex: 'concrete' };
 const SHINGLE = { tex: 'shingle' };
 const FABRIC = { tex: 'fabric' };
 const FUR = { tex: 'fur' };
@@ -104,7 +109,7 @@ defineModel('townHall', (opts, rig) => {
   const tx = X(4.75);
   // the two wings as one long block, hipped roofs over each end
   rig.body.add(mesh(box(S(9.5), Y(5.1), D), wall, 0, 0, 0, PLASTER));
-  rig.body.add(mesh(box(S(9.7), 6, D + 2), wallDark, 0, 0, 0, STONE));
+  rig.body.add(mesh(box(S(9.7), 6, D + 2), wallDark, 0, 0, 0, ASHLAR));
   for (const wx of [X(1.9), X(7.85)]) {
     rig.body.add(mesh(hipRoof(S(4.0), Y(3.5) - Y(5.1), D + 8), roofC, wx, Y(5.1), 0, SHINGLE));
   }
@@ -126,9 +131,9 @@ defineModel('townHall', (opts, rig) => {
   }
   rig.body.add(new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 6), ink('#232420')).translateX(tx).translateY(cy).translateZ(tz + 2.9));
   // door with a little pediment above it
-  rig.body.add(mesh(box(S(1.6), Y(8.0), 1.4), '#4a3c27', tx, 0, tz + 0.6, WOOD));
-  rig.body.add(mesh(slab([[-S(1.0), 0], [S(1.0), 0], [0, Y(7.2) - Y(8.0)]], 4), '#e2dbc6', tx, Y(8.0) + 1, tz + 0.5));
-  rig.body.add(mesh(cbox(S(2.1), 2, 4.5), '#e2dbc6', tx, Y(8.0), tz + 0.5));
+  rig.body.add(mesh(box(S(1.6), Y(8.0), 1.4), '#4a3c27', tx, 0, tz + 0.6, WOOD_FINE_V));
+  rig.body.add(mesh(slab([[-S(1.0), 0], [S(1.0), 0], [0, Y(7.2) - Y(8.0)]], 4), '#e2dbc6', tx, Y(8.0) + 1, tz + 0.5, GRANITE));
+  rig.body.add(mesh(cbox(S(2.1), 2, 4.5), '#e2dbc6', tx, Y(8.0), tz + 0.5, GRANITE));
   // windows: 2 × 2 per wing, two over the door
   const ww = S(1.35);
   const wh = Y(5.9) - Y(6.9);
@@ -163,7 +168,7 @@ defineModel('vault', (opts, rig) => {
   const steel = '#b6af98';
   const steelDark = '#7d775f';
   // frame: a thick block with a round recess (dark inside), on a plinth
-  rig.body.add(mesh(box(100, 6, 34), '#8f8a75', 0, 0, -6, STONE));
+  rig.body.add(mesh(box(100, 6, 34), '#8f8a75', 0, 0, -6, CONCRETE));
   const frameShape = new THREE.Shape([[-48, 0], [48, 0], [48, 98], [-48, 98]].map(([x, y]) => new THREE.Vector2(x, y)));
   const hole = new THREE.Path();
   hole.absarc(0, cy, R + 1, 0, PI * 2, false);
@@ -373,8 +378,8 @@ defineModel('ledger', (opts, rig) => {
   const W = 112;
   const Dd = 78;
   const tilt = 1.05; // the book leans back toward us like on a lectern
-  rig.body.add(mesh(box(W + 6, 10, 30), '#4d3c22', 0, 0, -4, WOOD));
-  rig.body.add(mesh(slab([[-8, 0], [16, 0], [16, 52]], W - 10).rotateY(PI / 2), '#5b4628', 0, 10, -14, WOOD));
+  rig.body.add(mesh(box(W + 6, 10, 30), '#4d3c22', 0, 0, -4, WOOD_FINE));
+  rig.body.add(mesh(slab([[-8, 0], [16, 0], [16, 52]], W - 10).rotateY(PI / 2), '#5b4628', 0, 10, -14, WOOD_FINE));
   // the book lies open with its bottom edge at the front pivot and leans
   // back (pages face the viewer); local z runs from the front edge (0) back
   const book = group(0, 12, 12);
@@ -418,10 +423,10 @@ defineModel('umbrellaDesk', (opts, rig) => {
   const dd = 26;
   // desk: four legs and a top
   for (const x of [-dw / 2 + 3, dw / 2 - 3]) {
-    for (const z of [-dd / 2 + 3, dd / 2 - 3]) rig.body.add(mesh(box(3.6, topY, 3.6), woodDark, x, 0, z, WOOD));
+    for (const z of [-dd / 2 + 3, dd / 2 - 3]) rig.body.add(mesh(box(3.6, topY, 3.6), woodDark, x, 0, z, WOOD_V));
   }
-  rig.body.add(mesh(box(dw + 2, 3, dd + 2), wood, 0, topY - 3, 0, WOOD));
-  rig.body.add(mesh(box(dw - 4, 6, 3), woodDark, 0, topY - 9, dd / 2 - 2, WOOD));
+  rig.body.add(mesh(box(dw + 2, 3, dd + 2), wood, 0, topY - 3, 0, WOOD_FINE));
+  rig.body.add(mesh(box(dw - 4, 6, 3), woodDark, 0, topY - 9, dd / 2 - 2, WOOD_FINE));
   // register: a box with a sloped key deck facing the viewer, on the desk
   const reg = group(0, topY, 4);
   reg.add(mesh(slab([[-9, 0], [9, 0], [9, 9], [-9, 15]], S(4.4)).rotateY(-PI / 2), '#b9a77f'));

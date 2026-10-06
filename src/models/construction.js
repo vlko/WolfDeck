@@ -29,7 +29,9 @@ const C = {
 const METAL = { tex: 'metal' };
 const PLANKS = { tex: 'planks' };
 const WOOD = { tex: 'wood' };
-const STONE = { tex: 'stone' };
+const CONCRETE = { tex: 'concrete' };
+const BOARDS = { tex: 'boards' };
+const WOOD_FINE = { tex: 'woodFine' };
 const FABRIC = { tex: 'fabric' };
 const FUR = { tex: 'fur' };
 const BRICK = { tex: 'brick', texScale: 0.35 };
@@ -84,7 +86,7 @@ defineModel('crane', (opts, rig) => {
   const m = 4; // half mast width
   const jibY = Y(2.5);
   // concrete foot
-  rig.body.add(mesh(box(20, 5, 20), '#8f938a', mx, 0, 0, STONE));
+  rig.body.add(mesh(box(20, 5, 20), '#8f938a', mx, 0, 0, CONCRETE));
   // mast: four posts + braces on all four faces
   for (const [x, z] of [[-m, -m], [m, -m], [-m, m], [m, m]]) rig.body.add(mesh(box(2.2, jibY, 2.2), C.yellow, mx + x, 0, z, METAL));
   for (let y = 5, i = 0; y < jibY - 4; y += 8, i += 1) {
@@ -119,7 +121,7 @@ defineModel('crane', (opts, rig) => {
   top.add(mesh(box(8, 7, 8), C.sand, 6, -7, 5, METAL));
   top.add(mesh(box(5, 4, 0.6), C.glass, 6.5, -5, 9.5)); // proud of the cab front (no z-fight)
   // counterweight block at the right end
-  top.add(mesh(box(7, 9, 7), C.darkSoft, cjR - 4, -8, 0, STONE));
+  top.add(mesh(box(7, 9, 7), C.darkSoft, cjR - 4, -8, 0, CONCRETE));
   // trolley runs on the jib; cable + hook block hang from it
   const trolley = group(jibL + 6, 0, 0);
   top.add(trolley);
@@ -173,7 +175,7 @@ defineModel('scaffold', (opts, rig) => {
     const g = new THREE.Group();
     const len = Math.hypot(x1 - x0, y1 - y0);
     for (const s of [-w / 2, w / 2]) g.add(mesh(cbox(1.4, len, 1.4).translate(s, len / 2, 0), C.ladder, 0, 0, 0, WOOD));
-    for (let y = 4; y < len - 1; y += 5) g.add(mesh(cbox(w, 1, 1), C.ladder, 0, y, 0));
+    for (let y = 4; y < len - 1; y += 5) g.add(mesh(cbox(w, 1, 1), C.ladder, 0, y, 0, WOOD));
     g.position.set(x0, y0, z);
     g.rotation.z = -Math.atan2(x1 - x0, y1 - y0);
     return g;
@@ -185,7 +187,7 @@ defineModel('scaffold', (opts, rig) => {
   rig.body.add(mesh(box(8, 1.4, 1.4), C.steel, X(9.5) + 4, Y(2.6), D / 2));
   const rope = group(X(9.5) + 7.4, Y(2.6), D / 2);
   rope.add(mesh(cbox(0.5, 14, 0.5).translate(0, -7, 0), C.dark));
-  rope.add(mesh(new THREE.CylinderGeometry(2.6, 2, 4, 8).translate(0, -16, 0), C.frame, 0, 0, 0, WOOD));
+  rope.add(mesh(new THREE.CylinderGeometry(2.6, 2, 4, 8).translate(0, -16, 0), C.frame, 0, 0, 0, BOARDS)); // a wooden stave bucket
   rig.body.add(rope);
   rig.anims.idle = (t, dt, ctx) => { rope.rotation.z = Math.sin(t * 1.4 + ctx.phase) * 0.1; };
 });
@@ -224,7 +226,7 @@ function stripedBoard(name, aspect, { boardTop, boardBottom, legs, stripes, a, b
     for (let i = 0; i < n; i += 1) {
       // stripes butt together; every other one is a hair thicker so no two
       // faces ever share a plane (no flickering seams)
-      rig.body.add(mesh(box(bw / n, bh - (i % 2 ? 0 : 0.6), D + (i % 2 ? 0.8 : 0)), i % 2 ? a : b, X(0) + (i + 0.5) * (bw / n), Y(boardBottom) + (i % 2 ? 0 : 0.3), 0));
+      rig.body.add(mesh(box(bw / n, bh - (i % 2 ? 0 : 0.6), D + (i % 2 ? 0.8 : 0)), i % 2 ? a : b, X(0) + (i + 0.5) * (bw / n), Y(boardBottom) + (i % 2 ? 0 : 0.3), 0, WOOD_FINE));
     }
     for (const gx of legs) {
       rig.body.add(mesh(box(3, Y(boardBottom), 3), C.dark, X(gx), 0, -1));

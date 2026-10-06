@@ -11,9 +11,14 @@ import {
 // sprite (gx across, gy down); units are percent of the sprite's height.
 
 const WOOD = { tex: 'wood' };
+const WOOD_V = { tex: 'wood', texRotate: true }; // grain up a post / along a slanted leg
+const WOOD_FINE = { tex: 'woodFine' };
+const WOOD_FINE_V = { tex: 'woodFine', texRotate: true };
 const PLANKS = { tex: 'planks' };
+const BOARDS = { tex: 'boards' };
+const ASHLAR = { tex: 'ashlar' };
+const ROUGHCAST = { tex: 'roughcast' };
 const PLASTER = { tex: 'plaster' };
-const STONE = { tex: 'stone' };
 const SHINGLE = { tex: 'shingle' };
 const FABRIC = { tex: 'fabric' };
 const FUR = { tex: 'fur' };
@@ -82,7 +87,7 @@ defineModel('schoolhouse', (opts, rig) => {
   const eaveY = Y(6.8);
   // walls + base plinth
   rig.body.add(mesh(box(S(9.0), eaveY, D), cream, 0, 0, 0, PLASTER));
-  rig.body.add(mesh(box(S(9.3), 3, D + 2), '#d9d4bd', 0, 0, 0, STONE));
+  rig.body.add(mesh(box(S(9.3), 3, D + 2), '#d9d4bd', 0, 0, 0, ASHLAR));
   // big front gable (cream wall) under one continuous roof running front→back
   rig.body.add(mesh(gableWall(S(9.0), Y(2.3) - eaveY, D).translate(0, eaveY, 0), cream, 0, 0, 0, PLASTER));
   rig.body.add(mesh(roofSolid(0, Y(2.1), S(5.25), Y(6.95), 3.2, D + 6), '#ddd6bb', 0, 0, 0, SHINGLE));
@@ -104,7 +109,7 @@ defineModel('schoolhouse', (opts, rig) => {
   // door (a dark recess with a frame)
   const doorZ = pz + pd / 2;
   rig.body.add(mesh(box(S(1.15) * 2 + 3, Y(7.5) + 1.5, 1.2), trim, 0, 0, doorZ + 0.3));
-  rig.body.add(mesh(box(S(1.15) * 2, Y(7.5), 1.2), '#4a3424', 0, 0, doorZ + 0.9, WOOD));
+  rig.body.add(mesh(box(S(1.15) * 2, Y(7.5), 1.2), '#4a3424', 0, 0, doorZ + 0.9, BOARDS));
   // windows either side
   for (const [g0, g1] of [[0.95, 2.4], [6.6, 8.05]]) {
     rig.body.add(windowPane(X(g0), X(g1), Y(9.0), Y(7.5), front));
@@ -204,7 +209,7 @@ defineModel('kindergarten', (opts, rig) => {
     const isDoor = g0 === 1.2;
     if (isDoor) continue;
     const z = g0 < 4.1 ? front + 1 : front - 3;
-    rig.body.add(mesh(box(X(g1) - X(g0) - 0.3, Y(8), 2), c, (X(g0) + X(g1)) / 2, 0, z));
+    rig.body.add(mesh(box(X(g1) - X(g0) - 0.3, Y(8), 2), c, (X(g0) + X(g1)) / 2, 0, z, ROUGHCAST));
   }
 });
 
@@ -239,16 +244,16 @@ defineModel('blackboard', (opts, rig) => {
   const wood = '#6b4a30';
   // A-frame easel: two front legs splayed, one back leg, crossbar, ledge
   for (const [x0, x1] of [[X(2.6), X(1.4)], [X(7.4), X(8.6)]]) {
-    rig.body.add(mesh(beam(x0, Y(5.4), x1, 0, 2.8, 2.8), wood, 0, 0, 2, WOOD));
+    rig.body.add(mesh(beam(x0, Y(5.4), x1, 0, 2.8, 2.8), wood, 0, 0, 2, WOOD_V));
   }
   // back leg hinged at the top of the front legs, its foot planted behind
   const lean = 0.34;
   const legL = Y(5.4) / Math.cos(lean);
-  const back = group(0, Y(5.4), 1, mesh(box(2.8, legL, 2.8).translate(0, -legL, 0), wood, 0, 0, 0, WOOD));
+  const back = group(0, Y(5.4), 1, mesh(box(2.8, legL, 2.8).translate(0, -legL, 0), wood, 0, 0, 0, WOOD_V));
   back.rotation.x = lean;
   rig.body.add(back);
   rig.body.add(mesh(cbox(S(6.5), 2.4, 2.4), wood, 0, Y(7.3), 2, WOOD));
-  rig.body.add(mesh(cbox(S(7.8), 2.2, 5), '#5e4128', 0, Y(5.7), 4, WOOD));
+  rig.body.add(mesh(cbox(S(7.8), 2.2, 5), '#5e4128', 0, Y(5.7), 4, WOOD_FINE));
   // the board: a frame with the chalk face
   const bw = S(9.8);
   const bh = Y(0.05) - Y(5.5);
@@ -311,15 +316,15 @@ defineModel('schoolDesk', (opts, rig) => {
   const dark = '#6b4a26';
   const mid = '#8b6f50';
   // table behind
-  rig.body.add(mesh(box(S(8.6), 5, 34), dark, 0, Y(0.8), -10, WOOD));
-  rig.body.add(mesh(box(S(7.4), Y(1.6) - Y(2.4), 2), mid, 0, Y(2.4), 4, PLANKS));
+  rig.body.add(mesh(box(S(8.6), 5, 34), dark, 0, Y(0.8), -10, WOOD_FINE));
+  rig.body.add(mesh(box(S(7.4), Y(1.6) - Y(2.4), 2), mid, 0, Y(2.4), 4, WOOD_FINE));
   for (const gx of [1.55, 8.4]) {
-    for (const z of [4, -24]) rig.body.add(mesh(box(S(0.55), Y(0.8), 4), dark, X(gx), 0, z - 10 + 10, WOOD));
+    for (const z of [4, -24]) rig.body.add(mesh(box(S(0.55), Y(0.8), 4), dark, X(gx), 0, z - 10 + 10, WOOD_V));
   }
   // bench in front
-  rig.body.add(mesh(box(S(10), 6, 20), '#8c7154', 0, Y(6.1), 16, WOOD));
+  rig.body.add(mesh(box(S(10), 6, 20), '#8c7154', 0, Y(6.1), 16, PLANKS));
   for (const gx of [0.6, 9.3]) {
-    for (const z of [10, 22]) rig.body.add(mesh(box(S(0.5), Y(6.1), 3.5), '#6a5032', X(gx), 0, z, WOOD));
+    for (const z of [10, 22]) rig.body.add(mesh(box(S(0.5), Y(6.1), 3.5), '#6a5032', X(gx), 0, z, WOOD_V));
   }
 });
 
@@ -365,15 +370,15 @@ defineModel('canteenCounter', (opts, rig) => {
 defineModel('musicStand', (opts, rig) => {
   const { X, Y, S } = grid(48.2);
   const wood = '#6b542f';
-  rig.body.add(mesh(box(2.6, Y(2.7) - Y(8.6), 2.6), wood, 0, Y(8.6), 0, WOOD));
+  rig.body.add(mesh(box(2.6, Y(2.7) - Y(8.6), 2.6), wood, 0, Y(8.6), 0, WOOD_V));
   for (const a of [0, 2.1, 4.2]) {
-    const leg = mesh(beam(0, Y(8.6) + 1, S(4.5), 0, 2.4, 2.4), wood, 0, 0, 0, WOOD);
+    const leg = mesh(beam(0, Y(8.6) + 1, S(4.5), 0, 2.4, 2.4), wood, 0, 0, 0, WOOD_V);
     leg.rotation.y = a + PI / 2;
     rig.body.add(leg);
   }
   const plate = group(0, Y(2.7), 1);
-  plate.add(mesh(fold([[-S(4.5), 0], [S(4.5), 0], [S(4.5), Y(0) - Y(2.7)], [-S(4.5), Y(0) - Y(2.7)]], 2, 1.5), '#b4a08c', 0, 0, 0, { tex: 'wood', texScale: 0.6 }));
-  plate.add(mesh(cbox(S(9.4), 2, 5), '#957d63', 0, 0, 1.5, WOOD));
+  plate.add(mesh(fold([[-S(4.5), 0], [S(4.5), 0], [S(4.5), Y(0) - Y(2.7)], [-S(4.5), Y(0) - Y(2.7)]], 2, 1.5), '#b4a08c', 0, 0, 0, { tex: 'woodFine', texScale: 0.6 }));
+  plate.add(mesh(cbox(S(9.4), 2, 5), '#957d63', 0, 0, 1.5, WOOD_FINE));
   plate.rotation.x = -0.25;
   rig.body.add(plate);
   rig.anims.idle = (t, dt, ctx) => { plate.rotation.z = Math.sin(t * 0.8 + ctx.phase) * 0.015; };
@@ -385,17 +390,17 @@ defineModel('piano', (opts, rig) => {
   const D = 26;
   const teal = '#2e4e4d';
   // cabinet (fold front), lid, legs
-  rig.body.add(mesh(fold([[X(0.3), Y(6.0)], [X(9.7), Y(6.0)], [X(9.7), Y(0.4)], [X(0.3), Y(0.4)]], D, 2.5), teal, 0, 0, -6));
-  rig.body.add(mesh(box(S(10), 3, D + 4), '#26403f', 0, Y(0.4), -6, WOOD));
+  rig.body.add(mesh(fold([[X(0.3), Y(6.0)], [X(9.7), Y(6.0)], [X(9.7), Y(0.4)], [X(0.3), Y(0.4)]], D, 2.5), teal, 0, 0, -6, WOOD_FINE));
+  rig.body.add(mesh(box(S(10), 3, D + 4), '#26403f', 0, Y(0.4), -6, WOOD_FINE));
   // lower cabinet down to the floor (recessed under the key bed), so the
   // piano is one solid body from the side — not a top box on a thin panel
-  rig.body.add(mesh(box(S(9.6), Y(6.0) + 1, 22), '#284544', 0, 0, -8));
-  for (const gx of [0.5, 9.5]) rig.body.add(mesh(box(S(0.55), Y(6.0), 5), '#223a39', X(gx), 0, 6, WOOD));
-  rig.body.add(mesh(box(S(9.4), 3, 14), '#223a39', 0, 0, -4));
-  rig.body.add(mesh(fold([[X(0.9), 3], [X(9.1), 3], [X(9.1), Y(4.6)], [X(0.9), Y(4.6)]], 3, 1.5), '#203635', 0, 0, 4.6));
+  rig.body.add(mesh(box(S(9.6), Y(6.0) + 1, 22), '#284544', 0, 0, -8, WOOD_FINE));
+  for (const gx of [0.5, 9.5]) rig.body.add(mesh(box(S(0.55), Y(6.0), 5), '#223a39', X(gx), 0, 6, WOOD_FINE_V));
+  rig.body.add(mesh(box(S(9.4), 3, 14), '#223a39', 0, 0, -4, WOOD_FINE));
+  rig.body.add(mesh(fold([[X(0.9), 3], [X(9.1), 3], [X(9.1), Y(4.6)], [X(0.9), Y(4.6)]], 3, 1.5), '#203635', 0, 0, 4.6, WOOD_FINE_V));
   // key bed sticking out with white keys and black keys
   const keyY = Y(4.5);
-  rig.body.add(mesh(box(S(9.4), 5, 14), '#26403f', 0, keyY - 5, 10, WOOD));
+  rig.body.add(mesh(box(S(9.4), 5, 14), '#26403f', 0, keyY - 5, 10, WOOD_FINE));
   const keys = [];
   const n = 26;
   const kw = S(8.4) / n;
@@ -412,7 +417,7 @@ defineModel('piano', (opts, rig) => {
   rig.body.add(mesh(box(S(2.6), 2, 5), '#26403f', 0, Y(2.9) - 2, D / 2 - 2));
   // bench + gold pedals
   rig.body.add(mesh(box(S(4.0), 3, 14), '#46696a', 0, Y(6.5), 26, FABRIC));
-  for (const gx of [3.3, 6.7]) for (const z of [21, 31]) rig.body.add(mesh(box(2.2, Y(6.5), 2.2), '#36575a', X(gx), 0, z, WOOD));
+  for (const gx of [3.3, 6.7]) for (const z of [21, 31]) rig.body.add(mesh(box(2.2, Y(6.5), 2.2), '#36575a', X(gx), 0, z, WOOD_FINE_V));
   for (const gx of [4.6, 5.0, 5.4]) rig.body.add(mesh(box(2, 1.6, 6), '#d8c27e', X(gx), 4, 7));
   rig.anims.idle = (t, dt, ctx) => {
     keys.forEach((k, i) => {

@@ -367,7 +367,30 @@ export function fold(points, d, ridge = 0, opts = {}) {
   }
   const geo = BufferGeometryUtils.mergeGeometries(parts.map((g) => { g.clearGroups(); return g; }));
   geo.userData.zAt = (x) => d / 2 + ridge * Math.max(0, 1 - Math.abs(x - cx) / (x < cx ? hwL : hwR));
+  geo.userData.cx = cx;
   return geo;
+}
+
+// A flat panel (window, door, decal) laid ON a folded front: the rectangle
+// x0…x1 × y0…y1 is split at the fold's crease and each part lies `lift`
+// proud of its own half-plane — so a window straddling the crease bends
+// with the wall instead of the wall's ridge poking through the glass.
+// foldGeo is a fold() geometry; returns a geometry in the same space.
+export function foldPanel(foldGeo, x0, x1, y0, y1, lift = 0.3) {
+  const { zAt, cx } = foldGeo.userData;
+  const xs = x0 < cx && cx < x1 ? [x0, cx, x1] : [x0, x1];
+  const pos = [];
+  for (let i = 0; i < xs.length - 1; i += 1) {
+    const a = xs[i];
+    const b = xs[i + 1];
+    const za = zAt(a) + lift;
+    const zb = zAt(b) + lift;
+    pos.push(a, y0, za, b, y0, zb, b, y1, zb, a, y0, za, b, y1, zb, a, y1, za);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  return g;
 }
 
 // Folded faceted cone / pyramid — trees, ears, roofs. seg sides.

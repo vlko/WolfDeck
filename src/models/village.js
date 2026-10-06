@@ -8,11 +8,14 @@ import {
 // thatched hut, well — plus the picket fence. Grid helpers read the 10 × 10
 // grid laid over each sprite (gx across, gy down).
 
-const WOOD = { tex: 'wood' };
+const WOOD = { tex: 'wood' }; // beams, rails, rough timber (grain runs across)
+const WOOD_V = { tex: 'wood', texRotate: true }; // posts, poles, pickets: grain runs up
 const PLASTER = { tex: 'plaster' };
-const STONE = { tex: 'stone' };
+const RUBBLE = { tex: 'rubble' }; // fieldstone: the village chimney
+const PAVING = { tex: 'paving' };
 const BRICK = { tex: 'brick', texScale: 0.7 };
-const PLANKS = { tex: 'planks' };
+const PLANKS = { tex: 'planks' }; // horizontal boards
+const BOARDS = { tex: 'boards' }; // vertical board-and-batten: plank doors, bucket staves, haystack crib
 const STRAW = { tex: 'straw' };
 const WOOL = { tex: 'wool', texScale: 1.3 };
 
@@ -42,8 +45,8 @@ function roof(apexX, apexY, halfSpan, eaveY, t, d, color, tex = 'shingle') {
 // Plank door: two boards with a seam and a knob, standing proud of the wall.
 function door(x, w, h, z, color, knobX) {
   const g = group(x, 0, z);
-  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(-w / 4, 0, 0), color, 0, 0, 0, WOOD));
-  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(w / 4, 0, 0), new THREE.Color(color).offsetHSL(0, 0, -0.04).getStyle(), 0, 0, 0, WOOD));
+  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(-w / 4, 0, 0), color, 0, 0, 0, BOARDS));
+  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(w / 4, 0, 0), new THREE.Color(color).offsetHSL(0, 0, -0.04).getStyle(), 0, 0, 0, BOARDS));
   const knob = inkMesh(new THREE.SphereGeometry(Math.max(1, w * 0.05), 8, 6), '#4a3423', knobX ?? w * 0.32, h * 0.45, 1.3);
   g.add(knob);
   return g;
@@ -65,14 +68,14 @@ defineModel('cottageTimber', (opts, rig) => {
   // gable: dark loft behind an open truss
   rig.body.add(mesh(gable(S(8.1), Y(1.2) - Y(5.0), D - 4).translate(0, Y(5.0), 0), '#3f2f20', X(4.95), 0, -1));
   const truss = '#c9ab7b';
-  rig.body.add(mesh(beam(X(4.95), Y(5.0), X(4.95), Y(1.1), 3.4, 3), truss, 0, 0, front - 0.5, WOOD));
+  rig.body.add(mesh(beam(X(4.95), Y(5.0), X(4.95), Y(1.1), 3.4, 3), truss, 0, 0, front - 0.5, WOOD_V));
   rig.body.add(mesh(beam(X(4.95), Y(4.7), X(2.8), Y(3.25), 3.2, 3), truss, 0, 0, front - 0.5, WOOD));
   rig.body.add(mesh(beam(X(4.95), Y(4.7), X(7.15), Y(3.25), 3.2, 3), truss, 0, 0, front - 0.5, WOOD));
   rig.body.add(mesh(beam(X(1.1), Y(5.0), X(8.8), Y(5.0), 2.4, 3), truss, 0, 0, front - 0.5, WOOD));
   // roof
   rig.body.add(roof(X(5.0), Y(0.0), S(5.0), Y(5.25), 7, D + 10, '#c3a06a'));
   // chimney (toward the back)
-  rig.body.add(mesh(box(S(1.5), 30, 10), '#8f928b', X(7.85), Y(1.0) - 30 + 1, -8, STONE));
+  rig.body.add(mesh(box(S(1.5), 30, 10), '#8f928b', X(7.85), Y(1.0) - 30 + 1, -8, RUBBLE));
   rig.body.add(door(X(2.35), S(2.3), Y(6.4), front, '#9b744a', S(0.6)));
   const win = mesh(new THREE.CylinderGeometry(S(1.05), S(1.05), 2, 18).rotateX(PI / 2), '#5a3e22', X(5.8), Y(7.3), front + 0.4);
   rig.body.add(win);
@@ -139,7 +142,7 @@ defineModel('cottageGable', (opts, rig) => {
   rig.body.add(door(X(2.95), S(2.3), Y(6.0), front, '#8c7458', S(0.55)));
   // planks leaning by the door corner
   for (const [g, h, lean] of [[9.35, 25, -0.05], [9.7, 22, 0.04]]) {
-    const p = mesh(box(S(0.35), h, 2), '#c9b386', X(g), 0, front - 4, WOOD);
+    const p = mesh(box(S(0.35), h, 2), '#c9b386', X(g), 0, front - 4, { tex: 'woodFine', texRotate: true });
     p.rotation.z = lean;
     rig.body.add(p);
   }
@@ -154,7 +157,7 @@ defineModel('cottageRound', (opts, rig) => {
   const front = D / 2;
   const timber = '#7a5c3c';
   rig.body.add(mesh(box(S(7.9), Y(5.2), D), '#f0e9df', X(4.95), 0, 0, PLASTER));
-  for (const g of [1.45, 8.5]) rig.body.add(mesh(box(S(0.9), Y(5.0), 4), timber, X(g), 0, front + 0.8, WOOD));
+  for (const g of [1.45, 8.5]) rig.body.add(mesh(box(S(0.9), Y(5.0), 4), timber, X(g), 0, front + 0.8, WOOD_V));
   rig.body.add(mesh(beam(X(0.9), Y(5.0), X(9.0), Y(5.0), 6, 4), timber, 0, 0, front + 0.8, WOOD));
   rig.body.add(mesh(gable(S(7.6), Y(1.0) - Y(5.0), D).translate(0, Y(5.0), 0), '#ebe3d8', X(4.95), 0, 0, PLASTER));
   rig.body.add(mesh(beam(X(3.0), Y(3.75), X(4.45), Y(4.65), 3, 3), timber, 0, 0, front, WOOD));
@@ -192,7 +195,7 @@ defineModel('barn', (opts, rig) => {
     rig.body.add(g);
   }
   rig.body.add(door(X(2.7), S(2.6), Y(5.8), front, '#9b744e', S(0.7)));
-  rig.body.add(inkMesh(new THREE.CircleGeometry(S(1.2), 24), '#1d1a17', X(6.95), Y(6.2), front + 0.2));
+  rig.body.add(inkMesh(new THREE.CircleGeometry(S(1.2), 24), '#1d1a17', X(6.95), Y(6.2), front + 0.5));
 });
 
 // ── sheep — the round frontal sheep: wool body, wool halo round a tan face ─
@@ -348,7 +351,7 @@ defineModel('haystack', (opts, rig) => {
   const { Y, S } = grid(94.7);
   const R = S(4.55);
   // two-band hexagonal base, vertex to the front (light / dark halves)
-  rig.body.add(mesh(new THREE.CylinderGeometry(R, R, Y(7.4), 6).translate(0, Y(7.4) / 2, 0), '#9a7b73', 0, 0, 0, PLANKS));
+  rig.body.add(mesh(new THREE.CylinderGeometry(R, R, Y(7.4), 6).translate(0, Y(7.4) / 2, 0), '#9a7b73', 0, 0, 0, BOARDS));
   rig.body.add(mesh(new THREE.CylinderGeometry(R + 0.4, R + 0.4, Y(5.0) - Y(7.4), 6).translate(0, Y(7.4) + (Y(5.0) - Y(7.4)) / 2, 0), '#b49c94', 0, 0, 0, PLANKS));
   // dome in three thatch rings
   const top = Y(5.0) - 1;
@@ -426,7 +429,7 @@ defineModel('hut', (opts, rig) => {
   rig.body.add(straw(hat, '#cfb088', [1, 0.9, 0.97, 0.86]));
   // crossed poles out of the top
   for (const [x, lean] of [[-3, 0.38], [0, 0], [3, -0.38]]) {
-    const p = mesh(box(2.6, 16, 2.6), '#7b5b3a', x, apex - 6, 0, WOOD);
+    const p = mesh(box(2.6, 16, 2.6), '#7b5b3a', x, apex - 6, 0, WOOD_V);
     p.rotation.z = lean;
     rig.body.add(p);
   }
@@ -443,23 +446,23 @@ defineModel('well', (opts, rig) => {
     const h = H / courses;
     const g = new THREE.CylinderGeometry(R - (i % 2) * 0.4, R - (i % 2) * 0.4, h + 0.6, 12, 1, true).translate(0, h * i + h / 2, 0);
     g.rotateY((i % 2) * (PI / 12));
-    rig.body.add(mesh(g, i % 2 ? '#b9c5ca' : '#c5d0d5', 0, 0, 0, { side: THREE.DoubleSide, jitter: 0.08, ...STONE }));
+    rig.body.add(mesh(g, i % 2 ? '#b9c5ca' : '#c5d0d5', 0, 0, 0, { side: THREE.DoubleSide, jitter: 0.08, tex: 'ashlar', texScale: 0.6 }));
   }
   // rim and the dark water inside
-  rig.body.add(mesh(new THREE.TorusGeometry(R - 2.5, 3, 4, 12).rotateX(PI / 2).rotateY(PI / 12), '#dfe6e9', 0, H, 0, STONE));
+  rig.body.add(mesh(new THREE.TorusGeometry(R - 2.5, 3, 4, 12).rotateX(PI / 2).rotateY(PI / 12), '#dfe6e9', 0, H, 0, PAVING));
   rig.body.add(inkMesh(new THREE.CircleGeometry(R - 3, 18).rotateX(-PI / 2), '#38463f', 0, H * 0.55, 0));
   rig.body.add(new THREE.Mesh(new THREE.CylinderGeometry(R - 3, R - 3, H * 0.5, 12, 1, true).translate(0, H * 0.75, 0), new THREE.MeshBasicMaterial({ color: '#56635d', side: THREE.BackSide })));
   // timber frame
   const wood = '#8a6a48';
-  for (const g of [1.1, 8.2]) rig.body.add(mesh(box(S(0.6), Y(0.2) - 6, 5), wood, X(g), 6, 0, WOOD));
+  for (const g of [1.1, 8.2]) rig.body.add(mesh(box(S(0.6), Y(0.2) - 6, 5), wood, X(g), 6, 0, WOOD_V));
   rig.body.add(mesh(box(S(9.4), 4, 9), wood, X(4.7), Y(0.4), 0, WOOD));
   // axle + rope drum + crank: one pivot so the crank turns them all
   const axleY = Y(3.45);
   const axle = group(X(4.65), axleY, 0);
-  axle.add(mesh(new THREE.CylinderGeometry(1.4, 1.4, S(7.4), 8).rotateZ(PI / 2), wood));
+  axle.add(mesh(new THREE.CylinderGeometry(1.4, 1.4, S(7.4), 8).rotateZ(PI / 2), wood, 0, 0, 0, WOOD));
   axle.add(mesh(new THREE.CylinderGeometry(3.6, 3.6, S(1.2), 10).rotateZ(PI / 2), '#a07a4c', 0, 0, 0, WOOD));
   const crank = group(S(3.9), 0, 0);
-  crank.add(mesh(box(1.6, 8, 1.6).translate(0, -8, 0), wood));
+  crank.add(mesh(box(1.6, 8, 1.6).translate(0, -8, 0), wood, 0, 0, 0, WOOD_V));
   crank.add(mesh(new THREE.CylinderGeometry(1.1, 1.1, 6, 6).rotateZ(PI / 2).translate(3, -8, 0), wood));
   axle.add(crank);
   rig.body.add(axle);
@@ -467,7 +470,7 @@ defineModel('well', (opts, rig) => {
   const rope = mesh(cbox(0.7, 1, 0.7), '#c8b089', X(4.65), axleY, 0);
   rig.body.add(rope);
   const bucket = group(X(4.65), axleY - 20, 0);
-  bucket.add(mesh(new THREE.CylinderGeometry(3.4, 2.6, 5.5, 8).translate(0, -5.5, 0), '#8f6a45', 0, 0, 0, PLANKS));
+  bucket.add(mesh(new THREE.CylinderGeometry(3.4, 2.6, 5.5, 8).translate(0, -5.5, 0), '#8f6a45', 0, 0, 0, BOARDS));
   rig.body.add(bucket);
   // the crank: every few seconds a few turns, hauling the bucket up and back
   rig.anims.always = (t, dt, ctx) => {
@@ -497,10 +500,10 @@ defineModel('fence3d', (opts, rig) => {
     const w = 15 + r() * 3;
     const flat = r() < 0.3;
     const p = group(x, 0, 0);
-    p.add(mesh(box(w, h - (flat ? 0 : w * 0.7), 4), woods[Math.floor(r() * woods.length)], 0, 0, 0, WOOD));
+    p.add(mesh(box(w, h - (flat ? 0 : w * 0.7), 4), woods[Math.floor(r() * woods.length)], 0, 0, 0, WOOD_V));
     if (!flat) {
       const tip = new THREE.ConeGeometry(w * 0.72, w * 0.7, 4, 1).rotateY(PI / 4).scale(1, 1, 4 / w);
-      p.add(mesh(tip.translate(0, h - (w * 0.7) / 2, 0), woods[Math.floor(r() * woods.length)], 0, 0, 0, WOOD));
+      p.add(mesh(tip.translate(0, h - (w * 0.7) / 2, 0), woods[Math.floor(r() * woods.length)], 0, 0, 0, WOOD_V));
     }
     p.rotation.z = (r() - 0.5) * 0.06;
     rig.body.add(p);

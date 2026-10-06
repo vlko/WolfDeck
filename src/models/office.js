@@ -19,6 +19,7 @@ function grid(aspect) {
 }
 
 const WOOD = { tex: 'wood' };
+const WOOD_FINE = { tex: 'woodFine' };
 const FABRIC = { tex: 'fabric' };
 const METAL = { tex: 'metal' };
 const FUR = { tex: 'fur' };
@@ -35,7 +36,7 @@ function chair({ w, seatY, backH, d, color, legColor = shade(color, -0.12) }) {
   g.add(mesh(box(w, backH, 3), shade(color, 0.03), 0, seatY, -d / 2 + 1.5, FABRIC));
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
-      g.add(mesh(box(2.4, seatY - 3, 2.4), legColor, sx * (w / 2 - 1.6), 0, sz * (d / 2 - 1.6), WOOD));
+      g.add(mesh(box(2.4, seatY - 3, 2.4), legColor, sx * (w / 2 - 1.6), 0, sz * (d / 2 - 1.6), WOOD_FINE));
     }
   }
   return g;
@@ -44,10 +45,10 @@ function chair({ w, seatY, backH, d, color, legColor = shade(color, -0.12) }) {
 // Table: top slab + four legs.
 function table({ w, h, d, top, leg, thick = 5, legW = 5 }) {
   const g = new THREE.Group();
-  g.add(mesh(box(w, thick, d), top, 0, h - thick, 0, WOOD));
+  g.add(mesh(box(w, thick, d), top, 0, h - thick, 0, WOOD_FINE));
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
-      g.add(mesh(box(legW, h - thick, legW), leg, sx * (w / 2 - legW), 0, sz * (d / 2 - legW), WOOD));
+      g.add(mesh(box(legW, h - thick, legW), leg, sx * (w / 2 - legW), 0, sz * (d / 2 - legW), WOOD_FINE));
     }
   }
   return g;
@@ -121,7 +122,7 @@ defineModel('officeChair', (opts, rig) => {
   const top = group(X(4.9), Y(6.2), 0);
   top.add(mesh(new THREE.CylinderGeometry(S(4.3), S(4.3), 7, 14), cream, 0, 0, 0));
   const back = group(0, 3, -S(2.6));
-  const post = mesh(beam(0, 0, 4, Y(4.1) - Y(6.2), 4, 4), '#6a5137');
+  const post = mesh(beam(0, 0, 4, Y(4.1) - Y(6.2), 4, 4), '#6a5137', 0, 0, 0, WOOD_FINE);
   back.add(post);
   const disk = mesh(new THREE.CylinderGeometry(22, 22, 7, 16).rotateX(PI / 2), '#ddd4bf', 6, Y(2.1) - Y(6.2), 0, FABRIC);
   disk.rotation.y = 0.12;
@@ -146,15 +147,15 @@ function shelfModel(name, aspect, caseW, rows) {
     const g = group(cx, 0, 0);
     rig.body.add(g);
     const t = 3.4;
-    g.add(mesh(box(W, t, D), cream, 0, 0, 0, WOOD));
-    g.add(mesh(box(W, t, D), cream, 0, 100 - t, 0, WOOD));
-    for (const s of [-1, 1]) g.add(mesh(box(t, 100, D), cream, s * (W / 2 - t / 2), 0, 0, WOOD));
-    g.add(mesh(box(W, 100, 2), '#a99a7c', 0, 0, -D / 2 + 1, WOOD));
+    g.add(mesh(box(W, t, D), cream, 0, 0, 0, WOOD_FINE));
+    g.add(mesh(box(W, t, D), cream, 0, 100 - t, 0, WOOD_FINE));
+    for (const s of [-1, 1]) g.add(mesh(box(t, 100, D), cream, s * (W / 2 - t / 2), 0, 0, WOOD_FINE));
+    g.add(mesh(box(W, 100, 2), '#a99a7c', 0, 0, -D / 2 + 1, WOOD_FINE));
     // rows: [gyShelfTop, gyShelfBottom, books[[gx0, gx1, color, lean]]]
     const tilted = [];
     rows.forEach(([gyTop, gyBot, books]) => {
       const yb = Y(gyBot);
-      g.add(mesh(box(W, t, D), cream, 0, yb - t, 0, WOOD));
+      g.add(mesh(box(W, t, D), cream, 0, yb - t, 0, WOOD_FINE));
       for (const [g0, g1, color, lean, hk = 0.92] of books) {
         const bw = S(g1 - g0);
         const bh = (Y(gyTop) - yb) * hk;
@@ -361,11 +362,11 @@ defineModel('clock', (opts, rig) => {
   const { X, S } = grid(103.2);
   const R = 48;
   const cx = X(4.6);
-  rig.body.add(mesh(new THREE.CylinderGeometry(R, R, 14, 24).rotateX(PI / 2), '#c99a5a', cx, 50, -4, WOOD));
+  rig.body.add(mesh(new THREE.CylinderGeometry(R, R, 14, 24).rotateX(PI / 2), '#c99a5a', cx, 50, -4, WOOD_FINE));
   rig.body.add(mesh(new THREE.CylinderGeometry(R - 6, R - 6, 2, 24).rotateX(PI / 2), '#ece2c9', cx, 50, 3.2));
   // little feet so it stands
   // (tall enough to reach the ring: at x = ±22 its rim is ~7.3 up)
-  for (const s of [-1, 1]) rig.body.add(mesh(box(6, 9.5, 8), '#b0864c', cx + s * 22, 0, -4, WOOD));
+  for (const s of [-1, 1]) rig.body.add(mesh(box(6, 9.5, 8), '#b0864c', cx + s * 22, 0, -4, WOOD_FINE));
   const hourP = group(cx, 50, 5);
   hourP.add(mesh(box(4, 22, 1.2).translate(0, -2, 0), '#253331'));
   const minP = group(cx, 50, 6.2);

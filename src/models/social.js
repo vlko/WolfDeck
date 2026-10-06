@@ -11,9 +11,13 @@ import {
 // centered, y up from the ground, z toward the viewer.
 
 const WOOD = { tex: 'wood' };
-const PLANKS = { tex: 'planks' };
+const WOOD_V = { tex: 'wood', texRotate: true }; // grain up a post / leg
+const WOOD_FINE = { tex: 'woodFine' };
+const WOOD_FINE_V = { tex: 'woodFine', texRotate: true };
+const BOARDS = { tex: 'boards' };
 const PLASTER = { tex: 'plaster' };
-const STONE = { tex: 'stone' };
+const ROUGHCAST = { tex: 'roughcast' };
+const PAVING = { tex: 'paving' };
 const SHINGLE = { tex: 'shingle' };
 const FABRIC = { tex: 'fabric' };
 const FUR = { tex: 'fur' };
@@ -200,16 +204,16 @@ defineModel('seniorHome', (opts, rig) => {
   const trim = '#6f5e45';
   // walls + front gable, roof as one continuous solid
   rig.body.add(mesh(box(W, wallH, D), wall, 0, 0, 0, PLASTER));
-  rig.body.add(mesh(slab([[-W / 2, wallH], [W / 2, wallH], [0, wallH + 32]], D - 2), wall, 0, 0, 0, PLASTER));
+  rig.body.add(mesh(slab([[-W / 2, wallH], [W / 2, wallH], [0, wallH + 32]], D), wall, 0, 0, 0, PLASTER));
   rig.body.add(mesh(roofSolid(0, wallH + 36, W / 2 + 9, wallH - 4, 5, D + 10), '#6a5e48', 0, 0, 0, SHINGLE));
-  rig.body.add(mesh(box(W + 2, 3, D + 2), '#cfc8b8', 0, 0, 0, STONE)); // plinth
+  rig.body.add(mesh(box(W + 2, 3, D + 2), '#cfc8b8', 0, 0, 0, ROUGHCAST)); // plinth
   // door on a low step, under a porch roof on two posts
-  rig.body.add(mesh(box(30, 3, 12), '#b9ae9a', 0, 0, front + 6, STONE));
+  rig.body.add(mesh(box(30, 3, 12), '#b9ae9a', 0, 0, front + 6, PAVING));
   const dz = front + 0.6;
-  rig.body.add(mesh(cbox(23, 30, 1.4), '#8b8272', -5.8, 3 + 15, dz, WOOD));
-  rig.body.add(mesh(cbox(11, 30, 1.4), '#6d6555', 5.8, 3 + 15, dz + 0.1, WOOD));
+  rig.body.add(mesh(cbox(23, 30, 1.4), '#8b8272', -5.8, 3 + 15, dz, WOOD_FINE_V));
+  rig.body.add(mesh(cbox(11, 30, 1.4), '#6d6555', 5.8, 3 + 15, dz + 0.1, WOOD_FINE_V));
   for (const s of [-1, 1]) rig.body.add(mesh(new THREE.SphereGeometry(1.1, 8, 6), '#ece9e0', s * 2.2, 20, dz + 1.2));
-  for (const s of [-1, 1]) rig.body.add(mesh(box(3, 36, 3), trim, s * 17, 3, front + 9, WOOD));
+  for (const s of [-1, 1]) rig.body.add(mesh(box(3, 36, 3), trim, s * 17, 3, front + 9, WOOD_V));
   rig.body.add(mesh(cbox(42, 4, 15), trim, 0, 41, front + 6.5, WOOD)); // porch roof, resting on posts + wall
   // windows: pairs of tall panes
   for (const cx of [-34, 34]) {
@@ -221,7 +225,7 @@ defineModel('seniorHome', (opts, rig) => {
   // flower boxes on the ground under the windows, with blossoms
   const flowers = [];
   for (const cx of [-34, 34]) {
-    rig.body.add(mesh(box(26, 9, 7), '#7a5f3f', cx, 0, front + 4.5, PLANKS));
+    rig.body.add(mesh(box(26, 9, 7), '#7a5f3f', cx, 0, front + 4.5, BOARDS));
     rig.body.add(mesh(box(24.5, 2.5, 5.5), '#7d8f4a', cx, 9, front + 4.5));
     [-8, 0, 8].forEach((dx, i) => {
       const f = group(cx + dx, 11.5, front + 4.5);
@@ -234,7 +238,7 @@ defineModel('seniorHome', (opts, rig) => {
   // the ramp: a wedge on the ground, rising from the path up to the step
   const ramp = new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(34, 0), new THREE.Vector2(34, 3), new THREE.Vector2(0, 0.6)]);
   const rampGeo = new THREE.ExtrudeGeometry(ramp, { depth: 26, bevelEnabled: false }).translate(0, 0, -13).rotateY(PI / 2);
-  rig.body.add(mesh(rampGeo, '#b5a890', 0, 0, front + 46));
+  rig.body.add(mesh(rampGeo, '#b5a890', 0, 0, front + 46, PAVING));
   rig.anims.always = (t, dt, ctx) => {
     flowers.forEach((f, i) => { f.rotation.z = Math.sin(t * 1.6 + i + ctx.phase) * 0.08; });
   };
@@ -243,18 +247,18 @@ defineModel('seniorHome', (opts, rig) => {
 // ── cane & crutch ─────────────────────────────────────────────────────────
 defineModel('cane', (opts, rig) => {
   const wood = '#7a6249';
-  rig.body.add(mesh(box(7, 92, 7), wood, 0, 0, 0, WOOD));
+  rig.body.add(mesh(box(7, 92, 7), wood, 0, 0, 0, WOOD_V));
   rig.body.add(mesh(box(8.4, 6, 8.4), '#4a3b2b')); // rubber tip
   rig.body.add(mesh(new THREE.CapsuleGeometry(3.6, 26, 3, 6).rotateZ(PI / 2), wood, 0, 94, 0, WOOD)); // handle
 });
 
 defineModel('crutch', (opts, rig) => {
   const tube = '#c9b89a';
-  rig.body.add(mesh(box(5, 52, 5), '#7a6249', 0, 0, 0, WOOD));
+  rig.body.add(mesh(box(5, 52, 5), '#7a6249', 0, 0, 0, WOOD_V));
   rig.body.add(mesh(box(6.5, 5, 6.5), '#4a3b2b'));
   for (const s of [-1, 1]) rig.body.add(mesh(beam(0, 50, s * 9, 95, 3.4, 3.4), tube, 0, 0, 0, METAL));
-  rig.body.add(mesh(cbox(28, 4, 6), '#7a6249', 0, 97, 0, WOOD)); // armrest
-  rig.body.add(mesh(cbox(20, 3, 3.6), '#7a6249', 0, 70, 0, WOOD)); // hand grip
+  rig.body.add(mesh(cbox(28, 4, 6), '#7a6249', 0, 97, 0, WOOD_FINE)); // armrest
+  rig.body.add(mesh(cbox(20, 3, 3.6), '#7a6249', 0, 70, 0, WOOD_FINE)); // hand grip
 });
 
 // ── wheelchair — big rear wheels, front casters, seat facing +x ────────────
@@ -275,8 +279,8 @@ defineModel('wheelchair', (opts, rig) => {
     // side frame: seat rail, backrest post, push handle, armrest
     rig.body.add(mesh(beam(-16, R, 32, 40, 2.6, 2.6), frame, 0, 0, s * (zW - 5), METAL));
     rig.body.add(mesh(beam(-20, 40, -24, 92, 2.6, 2.6), frame, 0, 0, s * (zW - 5), METAL));
-    rig.body.add(mesh(beam(-24, 92, -36, 92, 2.6, 2.6, 1), wood, 0, 0, s * (zW - 5), WOOD));
-    rig.body.add(mesh(cbox(30, 3, 4), wood, 4, 60, s * (zW - 5), WOOD));
+    rig.body.add(mesh(beam(-24, 92, -36, 92, 2.6, 2.6, 1), wood, 0, 0, s * (zW - 5), WOOD_FINE));
+    rig.body.add(mesh(cbox(30, 3, 4), wood, 4, 60, s * (zW - 5), WOOD_FINE));
     rig.body.add(mesh(box(2.4, 18, 2.4), frame, 16, 42, s * (zW - 5), METAL));
   }
   // seat + backrest (sage), footrest
@@ -560,9 +564,9 @@ defineModel('grandparentsBench', (opts, rig) => {
   const seatD = 30;
   // bench: legs, seat planks, back posts + slats
   for (const x of [-62, 62]) {
-    rig.body.add(mesh(box(7, seatY, 6), wood, x, 0, seatD / 2 - 4, WOOD));
-    rig.body.add(mesh(box(7, seatY, 6), wood, x, 0, -seatD / 2 + 4, WOOD));
-    rig.body.add(mesh(beam(x, seatY, x - 0.1, 80, 6, 5), wood, 0, 0, -seatD / 2 + 2, WOOD));
+    rig.body.add(mesh(box(7, seatY, 6), wood, x, 0, seatD / 2 - 4, WOOD_V));
+    rig.body.add(mesh(box(7, seatY, 6), wood, x, 0, -seatD / 2 + 4, WOOD_V));
+    rig.body.add(mesh(beam(x, seatY, x - 0.1, 80, 6, 5), wood, 0, 0, -seatD / 2 + 2, WOOD_V));
   }
   for (let i = 0; i < 3; i += 1) rig.body.add(mesh(box(W, 3.6, seatD / 3 - 0.8), i % 2 ? woodLight : wood, 0, seatY, -seatD / 2 + seatD / 6 + (i * seatD) / 3, WOOD));
   for (const y of [48, 60, 72]) rig.body.add(mesh(cbox(W - 4, 7, 3), woodLight, 0, y, -seatD / 2 + 1, WOOD));
