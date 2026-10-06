@@ -63,13 +63,24 @@
                   "label": "Plnenie výdavkov",
                   "accentColor": "#7d8b74",
                   "width": 3.2
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "positive",
                   "title": "Dobrá správa",
                   "text": "Mesto nemuselo siahnuť hlboko do rezerv — investície pokryla dotácia z Environmentálneho fondu."
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "numbered",
                   "title": "Dane",

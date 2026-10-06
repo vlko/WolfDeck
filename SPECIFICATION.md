@@ -289,24 +289,29 @@ while shown, and shrink away when you step back — the exact reverse.
 
 A group with a single panel may use `{ "part": {…} }` for brevity.
 
-**Closeups.** For the few numbers the talk hinges on, a group can ask the
-camera to move in once its panels have landed:
+**Building a slide up: `keep`.** A group with `"keep": true` adds its
+panels to the ones already shown instead of clearing them, so a slide can
+bring in one element on its own and still end with the full layout. A group
+with `"subtitle": true` keeps the slide's subtitle visible (e.g. a portrait
+that goes with it).
+
+**Closeups.** An interesting element can make an entrance: put it in a group
+of its own with `"closeup"` and the camera moves in on it **as it appears**;
+the next step pulls the camera back while that step's content comes in.
 
 ```jsonc
-{ "closeup": { "part": 3 }, "parts": [ … ] }   // frame the group's 4th panel
+{ "parts": [ statPanel ] },                                  // the context
+{ "keep": true, "closeup": {}, "parts": [ keyExplainer ] },  // alone, camera in
+{ "keep": true, "parts": [ noteCallout ] }                   // camera out, note in
 ```
 
-That group's step reveals the panels and then the camera dollies slowly in
-(after the panels land) to frame the target; the **next** step only pulls
-the camera back — the panels stay — and the deck continues normally.
-Backspace reverses both exactly. Targets: `"part": i` (default 0 — the
-group's own panel), `"prop": i` (the scene's i-th prop) or
-`"at": [x, y, depth]` with an optional `"size": [w, h]`. `"zoom": 2`
-forces a distance (twice as close as the normal view) instead of fitting
-the target; `"delay"` overrides the wait before moving in. Closeups are
-skipped in the flat presentation view (P) and while the wolf walks. Use
-them sparingly — a closeup is an exclamation mark (`rozpocet-2025.json` has
-six in 33 slides).
+Backspace reverses it exactly. Target: the group's first panel by default,
+or `"part": i`, `"prop": i` (the scene's i-th prop) or `"at": [x, y, depth]`
+with an optional `"size": [w, h]`; `"zoom": 2` forces a distance (twice as
+close as the normal view) instead of fitting the target, `"delay"` the wait
+before the move. Closeups are skipped in the flat presentation view (P) and
+while the wolf walks. Keep them rare — `rozpocet-2025.json` has eight in 33
+slides (the speaker, what a municipal budget is, the 0 € debt…).
 
 ### Part types
 

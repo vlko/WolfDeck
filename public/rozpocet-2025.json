@@ -245,6 +245,7 @@
           "kicker": "O prednášajúcom",
           "groups": [
             {
+              "subtitle": true,
               "parts": [
                 {
                   "type": "image",
@@ -252,11 +253,17 @@
                   "caption": "Marián „vlko\" Vlčák",
                   "width": 4.8,
                   "position": [
-                    -4.2,
-                    4.9
+                    -4.4,
+                    3.1
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "bullets",
                   "title": "O prednášajúcom",
@@ -318,7 +325,13 @@
                     5.9
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "bullets",
                   "title": "Čo je mestský rozpočet?",
@@ -334,7 +347,12 @@
                     5.5
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -530,9 +548,6 @@
           "subtitle": "Rozpočet bol schválený ako vyrovnaný. Päť zmien počas roka ho zdvihlo o 3,1 milióna € – najmä vďaka dotácii 2,2 mil. € z Environmentálneho fondu.",
           "groups": [
             {
-              "closeup": {
-                "part": 3
-              },
               "parts": [
                 {
                   "type": "chart",
@@ -663,6 +678,7 @@
               ]
             },
             {
+              "closeup": {},
               "parts": [
                 {
                   "type": "bullets",
@@ -678,7 +694,12 @@
                     5.1
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "positive",
@@ -1275,9 +1296,6 @@
               ]
             },
             {
-              "closeup": {
-                "part": 2
-              },
               "parts": [
                 {
                   "type": "stat",
@@ -1748,9 +1766,6 @@
           "title": "Kam smerujú prostriedky na vzdelávanie",
           "groups": [
             {
-              "closeup": {
-                "part": 2
-              },
               "parts": [
                 {
                   "type": "chart",
@@ -1804,7 +1819,13 @@
                     5.7
                   ],
                   "depth": "front"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "warning",
@@ -2925,9 +2946,6 @@
           "title": "Kapitálové investície: plán vs. realita 2025",
           "groups": [
             {
-              "closeup": {
-                "part": 1
-              },
               "parts": [
                 {
                   "type": "stat",
@@ -3219,9 +3237,6 @@
           "title": "Finančné rezervy: naša záchranná sieť",
           "groups": [
             {
-              "closeup": {
-                "part": 2
-              },
               "parts": [
                 {
                   "type": "table",
@@ -3300,6 +3315,7 @@
           "subtitle": "Ústavný zákon o rozpočtovej zodpovednosti chráni verejné financie: keď dlh štátu prekročí sankčné pásma, obmedzenia dopadajú aj na obce a mestá.",
           "groups": [
             {
+              "closeup": {},
               "parts": [
                 {
                   "type": "numbered",
@@ -3325,7 +3341,12 @@
                     5.7
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "stat",
                   "value": "61,4 %",
@@ -3374,9 +3395,6 @@
           "subtitle": "Rok 2025 bol poslednou príležitosťou investovať pred aktiváciou sankcií dlhovej brzdy. Výsledok:",
           "groups": [
             {
-              "closeup": {
-                "part": 1
-              },
               "parts": [
                 {
                   "type": "numbered",
@@ -3402,7 +3420,13 @@
                     5.2
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "stat",
                   "value": "0 €",
@@ -3415,7 +3439,12 @@
                     7
                   ],
                   "depth": "front"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "stat",
                   "value": "0 %",
@@ -3682,6 +3711,7 @@
               ]
             },
             {
+              "closeup": {},
               "parts": [
                 {
                   "type": "stat",
@@ -3695,7 +3725,12 @@
                     5.4
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "callout",
                   "tone": "info",
@@ -4131,6 +4166,7 @@
               ]
             },
             {
+              "closeup": {},
               "parts": [
                 {
                   "type": "stat",
@@ -4144,7 +4180,12 @@
                     5.9
                   ],
                   "depth": "mid"
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
                 {
                   "type": "bullets",
                   "title": "Čo to znamená pre obce",

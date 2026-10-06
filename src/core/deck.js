@@ -160,7 +160,7 @@ export function buildDeck(deck, scene3) {
       slideIndex: step.slideIndex,
       slideStart: step.slideStart,
       closeup: step.closeup ?? null,
-      closeupOut: !!step.closeupOut,
+      keepSubtitle: !!step.keepSubtitle,
     }));
     for (const batch of stepParts) {
       for (const part of batch) part.userData.pos3d = part.position.clone();
@@ -186,11 +186,9 @@ export function buildDeck(deck, scene3) {
   // step or the k=0 cover) and fades once one of its groups is visible.
   function updateSubtitle(s, k) {
     const active = activeSlideIndex(s, k);
-    // a closeup's pull-back step shows no panels of its own — the closeup
-    // group's panels are still on screen
-    let j = k - 1;
-    while (j >= 0 && scenes[s].meta[j].closeupOut) j -= 1;
-    const hasPanels = j >= 0 && scenes[s].stepParts[j].length > 0;
+    // (a group marked `subtitle: true` keeps it — e.g. a portrait that
+    // illustrates the subtitle)
+    const hasPanels = k > 0 && scenes[s].stepParts[k - 1].length > 0 && !scenes[s].meta[k - 1].keepSubtitle;
     scenes[s].slideTitles[active].userData.setSubShown?.(!hasPanels);
   }
   if (scenes[0]) { showSlideTitle(0, 0); updateSubtitle(0, 0); }
@@ -376,8 +374,8 @@ export function buildDeck(deck, scene3) {
 
     // The camera closeup wanted at state (s, k), in world coordinates —
     // { x, y, z, w, h, zoom, delay } — or null. Only the closeup group's own
-    // step frames it; the following pull-back step (and anything else)
-    // returns null, so the camera eases back to the normal framing.
+    // step frames it; any other state returns null, so the next step eases
+    // the camera back while its own content comes in.
     closeupFor(i, k) {
       if (k <= 0) return null;
       const s = scenes[i];
@@ -400,9 +398,10 @@ export function buildDeck(deck, scene3) {
         const f = part.userData.footprint ?? { w: 5, h: 3 };
         c = { x: s.originX + p.x, y: p.y, z: p.z, w: f.w, h: f.h };
       }
-      // wait for the group's panels to land before moving in
-      const n = s.stepParts[k - 1].length;
-      c.delay = cu.delay ?? 0.75 + PART_STAGGER * Math.max(0, n - 1);
+      // the move is part of the element's entrance: it starts as the
+      // panel pops in (a later panel of the group waits for its turn)
+      const idx = cu.part ?? 0;
+      c.delay = cu.delay ?? 0.2 + PART_STAGGER * idx;
       c.zoom = cu.zoom;
       c.key = `${i}:${k}`;
       return c;

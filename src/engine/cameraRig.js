@@ -33,7 +33,7 @@ export function createCameraRig() {
   let cuKey = null;
   let cuHold = 0;
   let cuP = 0;
-  const CU_IN = 1.5; // seconds to move in
+  const CU_IN = 1.3; // seconds to move in
   const CU_OUT = 1.1; // seconds to pull back
   const smoother = (x) => x * x * x * (x * (x * 6 - 15) + 10);
 

@@ -228,7 +228,13 @@
                     "Backspace rewinds it exactly"
                   ],
                   "tilt": 1.5
-                },
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "closeup": {},
+              "parts": [
                 {
                   "type": "image",
                   "src": "images/demo.png",
@@ -238,9 +244,6 @@
               ]
             },
             {
-              "closeup": {
-                "part": 0
-              },
               "parts": [
                 {
                   "type": "chart",
@@ -913,6 +916,7 @@
               ]
             },
             {
+              "closeup": {},
               "parts": [
                 {
                   "type": "chart",
