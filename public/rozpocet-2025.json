@@ -530,6 +530,9 @@
           "subtitle": "Rozpočet bol schválený ako vyrovnaný. Päť zmien počas roka ho zdvihlo o 3,1 milióna € – najmä vďaka dotácii 2,2 mil. € z Environmentálneho fondu.",
           "groups": [
             {
+              "closeup": {
+                "part": 3
+              },
               "parts": [
                 {
                   "type": "chart",
@@ -1272,6 +1275,9 @@
               ]
             },
             {
+              "closeup": {
+                "part": 2
+              },
               "parts": [
                 {
                   "type": "stat",
@@ -1742,6 +1748,9 @@
           "title": "Kam smerujú prostriedky na vzdelávanie",
           "groups": [
             {
+              "closeup": {
+                "part": 2
+              },
               "parts": [
                 {
                   "type": "chart",
@@ -2916,6 +2925,9 @@
           "title": "Kapitálové investície: plán vs. realita 2025",
           "groups": [
             {
+              "closeup": {
+                "part": 1
+              },
               "parts": [
                 {
                   "type": "stat",
@@ -3207,6 +3219,9 @@
           "title": "Finančné rezervy: naša záchranná sieť",
           "groups": [
             {
+              "closeup": {
+                "part": 2
+              },
               "parts": [
                 {
                   "type": "table",
@@ -3359,6 +3374,9 @@
           "subtitle": "Rok 2025 bol poslednou príležitosťou investovať pred aktiváciou sankcií dlhovej brzdy. Výsledok:",
           "groups": [
             {
+              "closeup": {
+                "part": 1
+              },
               "parts": [
                 {
                   "type": "numbered",

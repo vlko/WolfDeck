@@ -82,6 +82,7 @@ export function buildDeck(deck, scene3) {
     scene3.add(group);
 
     const updatables = [];
+    const propObjs = []; // in deck order — closeups can aim at a prop
 
     for (const prop of sceneDef.props) {
       const obj = build(prop.type, prop.options);
@@ -104,6 +105,7 @@ export function buildDeck(deck, scene3) {
         }
       }
       group.add(obj);
+      propObjs.push(obj);
       registerObstacle(obj, prop, originX, z, sceneDef.id);
       obj.traverse((child) => {
         if (child.userData.update) updatables.push(child.userData.update);
@@ -154,12 +156,16 @@ export function buildDeck(deck, scene3) {
     });
 
     const meta = sceneDef.steps.map((step) => ({
-      clears: step.clears, slideIndex: step.slideIndex, slideStart: step.slideStart,
+      clears: step.clears,
+      slideIndex: step.slideIndex,
+      slideStart: step.slideStart,
+      closeup: step.closeup ?? null,
+      closeupOut: !!step.closeupOut,
     }));
     for (const batch of stepParts) {
       for (const part of batch) part.userData.pos3d = part.position.clone();
     }
-    return { group, originX, slideTitles, stepParts, meta, slides: sceneDef.slides, updatables };
+    return { group, originX, slideTitles, stepParts, meta, slides: sceneDef.slides, updatables, propObjs };
   });
 
   // The single title visible right now (across all scenes/slides).
@@ -180,7 +186,11 @@ export function buildDeck(deck, scene3) {
   // step or the k=0 cover) and fades once one of its groups is visible.
   function updateSubtitle(s, k) {
     const active = activeSlideIndex(s, k);
-    const hasPanels = k > 0 && scenes[s].stepParts[k - 1].length > 0;
+    // a closeup's pull-back step shows no panels of its own — the closeup
+    // group's panels are still on screen
+    let j = k - 1;
+    while (j >= 0 && scenes[s].meta[j].closeupOut) j -= 1;
+    const hasPanels = j >= 0 && scenes[s].stepParts[j].length > 0;
     scenes[s].slideTitles[active].userData.setSubShown?.(!hasPanels);
   }
   if (scenes[0]) { showSlideTitle(0, 0); updateSubtitle(0, 0); }
@@ -362,6 +372,40 @@ export function buildDeck(deck, scene3) {
       const kAfter = dir > 0 ? 0 : scenes[to].stepParts.length;
       showSlideTitle(to, activeSlideIndex(to, kAfter));
       updateSubtitle(to, kAfter);
+    },
+
+    // The camera closeup wanted at state (s, k), in world coordinates —
+    // { x, y, z, w, h, zoom, delay } — or null. Only the closeup group's own
+    // step frames it; the following pull-back step (and anything else)
+    // returns null, so the camera eases back to the normal framing.
+    closeupFor(i, k) {
+      if (k <= 0) return null;
+      const s = scenes[i];
+      const cu = s.meta[k - 1]?.closeup;
+      if (!cu) return null;
+      let c = null;
+      if (cu.at) {
+        c = { x: s.originX + cu.at[0], y: cu.at[1], z: cu.at[2], w: cu.size[0], h: cu.size[1] };
+      } else if (cu.prop != null) {
+        const obj = s.propObjs[cu.prop];
+        if (!obj) return null;
+        const box = new THREE.Box3().setFromObject(obj);
+        const ctr = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        c = { x: ctr.x, y: ctr.y, z: ctr.z, w: size.x, h: size.y };
+      } else {
+        const part = s.stepParts[k - 1][cu.part];
+        if (!part) return null;
+        const p = part.userData.pos3d;
+        const f = part.userData.footprint ?? { w: 5, h: 3 };
+        c = { x: s.originX + p.x, y: p.y, z: p.z, w: f.w, h: f.h };
+      }
+      // wait for the group's panels to land before moving in
+      const n = s.stepParts[k - 1].length;
+      c.delay = cu.delay ?? 0.75 + PART_STAGGER * Math.max(0, n - 1);
+      c.zoom = cu.zoom;
+      c.key = `${i}:${k}`;
+      return c;
     },
 
     // ── slide addressing (menu + URL) ──

@@ -88,6 +88,9 @@ async function start() {
     hero.update(t, dt);
     bubble.update(t, dt);
     cameraRig.setTarget(hero.x); // camera trails the wolf with damped easing
+    // closeups: only on a resting 3D view (not while walking, not in the flat P view)
+    const st = stepMachine.state;
+    cameraRig.setCloseup(hero.walking || focus.active ? null : deckView.closeupFor(st.scene, st.step));
     cameraRig.update(t, dt);
     deckView.update(t, dt, cameraRig.x, focus);
     focus.render(renderer, scene, cameraRig.camera);

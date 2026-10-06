@@ -96,7 +96,9 @@ function normalizeScene(s, i) {
     const groups = rawGroups
       .map((g, gi) => {
         const parts = normalizeGroup(g, `${ctx} group ${gi}`);
-        return parts ? { parts, legacyClears: g?.clears === true } : null;
+        return parts ? {
+          parts, legacyClears: g?.clears === true, closeup: normalizeCloseup(g?.closeup, parts, `${ctx} group ${gi}`),
+        } : null;
       })
       .filter(Boolean);
 
@@ -115,7 +117,11 @@ function normalizeScene(s, i) {
       // title, so groups are slideStart only for the first slide's opener.
       const clears = slide.legacy ? g.legacyClears : (steps.length > 0);
       const slideStart = slide.legacy ? gi === 0 : (isFirst && gi === 0);
-      steps.push({ parts: g.parts, clears, slideIndex: si, slideStart });
+      steps.push({ parts: g.parts, clears, slideIndex: si, slideStart, closeup: g.closeup });
+      // A closeup group: this step reveals the panels and then the camera
+      // moves in; the NEXT step only pulls the camera back (panels stay), so
+      // the audience sees the detail and then the whole picture again.
+      if (g.closeup) steps.push({ parts: [], clears: false, slideIndex: si, slideStart: false, closeupOut: true });
     });
 
     return {
@@ -163,6 +169,32 @@ function normalizePart(part, context) {
     scale: typeof part.scale === 'number' ? part.scale : 1,
     tilt: (Number(part.tilt) || 0) * (Math.PI / 180),
   };
+}
+
+// A group's optional camera closeup: { part: index } (default — the group's
+// first panel), { prop: index } (a prop of the scene), or { at: [x, y, z] }
+// (scene-local point, with optional size [w, h]); plus `zoom` (how much
+// closer than the normal framing; omitted = fit the target) and `delay`
+// (seconds after the reveal before the camera moves in).
+function normalizeCloseup(c, parts, context) {
+  if (c == null || c === false) return null;
+  const cu = c === true ? {} : (typeof c === 'object' ? c : null);
+  if (!cu) { warn(`${context}: "closeup" must be true or an object — ignored`); return null; }
+  const out = {
+    zoom: typeof cu.zoom === 'number' && cu.zoom > 1 ? cu.zoom : null,
+    delay: typeof cu.delay === 'number' ? cu.delay : null,
+  };
+  if (Array.isArray(cu.at)) {
+    out.at = [Number(cu.at[0]) || 0, Number(cu.at[1]) || 0, resolveDepth(cu.at[2], 0, context)];
+    out.size = Array.isArray(cu.size) ? [Number(cu.size[0]) || 4, Number(cu.size[1]) || 3] : [4, 3];
+  } else if (typeof cu.prop === 'number') {
+    out.prop = cu.prop;
+  } else {
+    const i = typeof cu.part === 'number' ? cu.part : 0;
+    if (i < 0 || i >= parts.length) { warn(`${context}: closeup part ${i} out of range — using 0`); }
+    out.part = i >= 0 && i < parts.length ? i : 0;
+  }
+  return out;
 }
 
 // A group reveals a batch of panels together (staggered). Accepts a single

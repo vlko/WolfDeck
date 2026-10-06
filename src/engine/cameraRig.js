@@ -25,14 +25,40 @@ export function createCameraRig() {
   let orbitPitchT = 0;
   let grabbing = false;
 
+  // Closeup: a slow dolly toward one important thing (a panel, a prop) and
+  // back. `cu` is the framing being used (it stays while easing out), `cuP`
+  // the 0…1 progress, eased with smootherstep so it starts and lands softly.
+  let cu = null;
+  let cuWant = false;
+  let cuKey = null;
+  let cuHold = 0;
+  let cuP = 0;
+  const CU_IN = 1.5; // seconds to move in
+  const CU_OUT = 1.1; // seconds to pull back
+  const smoother = (x) => x * x * x * (x * (x * 6 - 15) + 10);
+
+  // Camera distance that frames a w × h target with some air around it.
+  function closeupDist(c) {
+    const tanH = Math.tan((CAMERA_FOV * Math.PI) / 360);
+    const visH = Math.max(c.h / 0.62, c.w / (0.7 * camera.aspect));
+    const fit = visH / (2 * tanH);
+    const d = c.zoom ? dist / c.zoom : fit;
+    return Math.max(4, Math.min(d, dist * 0.8));
+  }
+
   function place() {
     const pitch = CAMERA_TILT + orbitPitch;
+    const e = cu ? smoother(cuP) : 0;
+    const lx = followX + ((cu?.x ?? followX) - followX) * e;
+    const ly = CAMERA_TARGET_Y + ((cu?.y ?? CAMERA_TARGET_Y) - CAMERA_TARGET_Y) * e;
+    const lz = (cu?.z ?? 0) * e;
+    const d = dist + ((cu ? closeupDist(cu) : dist) - dist) * e;
     camera.position.set(
-      followX + dist * Math.sin(orbitYaw) * Math.cos(pitch),
-      CAMERA_TARGET_Y + dist * Math.sin(pitch),
-      dist * Math.cos(orbitYaw) * Math.cos(pitch),
+      lx + d * Math.sin(orbitYaw) * Math.cos(pitch),
+      ly + d * Math.sin(pitch),
+      lz + d * Math.cos(orbitYaw) * Math.cos(pitch),
     );
-    camera.lookAt(followX, CAMERA_TARGET_Y, 0);
+    camera.lookAt(lx, ly, lz);
   }
 
   function resize() {
@@ -60,6 +86,17 @@ export function createCameraRig() {
     get x() {
       return followX;
     },
+    // Ask for a closeup framing (see deck closeupFor) or null to pull back.
+    // Called every frame; a new target waits its `delay` before moving in.
+    setCloseup(c) {
+      if (!c) { cuWant = false; cuKey = null; return; }
+      if (c.key === cuKey) return;
+      cuKey = c.key;
+      cuWant = true;
+      cuHold = cuP > 0 ? 0 : (c.delay ?? 0.6);
+      cu = c;
+    },
+    get closeup() { return cuP; },
     // Drag deltas in pixels (OrbitControls-style directions).
     orbitDrag(dx, dy) {
       grabbing = true;
@@ -73,6 +110,13 @@ export function createCameraRig() {
     },
     update(t, dt) {
       followX += (targetX - followX) * (1 - Math.exp(-3 * dt));
+      if (cuWant) {
+        if (cuHold > 0) cuHold -= dt;
+        else cuP = Math.min(1, cuP + dt / CU_IN);
+      } else if (cuP > 0) {
+        cuP = Math.max(0, cuP - dt / CU_OUT);
+        if (cuP === 0) cu = null;
+      }
       // Snappy while grabbing, gentle glide home after release.
       const k = 1 - Math.exp(-(grabbing ? 14 : 5) * dt);
       orbitYaw += (orbitYawT - orbitYaw) * k;

@@ -238,6 +238,9 @@
               ]
             },
             {
+              "closeup": {
+                "part": 0
+              },
               "parts": [
                 {
                   "type": "chart",
