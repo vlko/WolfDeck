@@ -1,4 +1,5 @@
 import { createRenderer } from './engine/renderer.js';
+import { showWebGLError } from './engine/webgl.js';
 import { createCameraRig } from './engine/cameraRig.js';
 import { createTicker } from './engine/ticker.js';
 import { tickTweens } from './engine/tween.js';
@@ -33,7 +34,14 @@ async function start() {
   // first frame is complete — no pop-in, no fallback-font canvases.
   const [deck] = await Promise.all([loadPresentation(deckUrl), preloadSprites(), loadFonts()]);
 
-  const { renderer, scene } = createRenderer();
+  let renderer;
+  let scene;
+  try {
+    ({ renderer, scene } = createRenderer());
+  } catch (err) {
+    showWebGLError(err);
+    throw err;
+  }
   const cameraRig = createCameraRig();
   window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);

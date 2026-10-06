@@ -2,10 +2,11 @@ import * as THREE from 'three';
 import { palette } from '../assets/palette.js';
 import { CONTENT_LAYER } from '../core/focusMode.js';
 import { addSceneLights } from './lights.js';
+import { createWebGLRenderer } from './webgl.js';
 
 // Creates the WebGL renderer, root scene and lights. Returns { renderer, scene }.
 export function createRenderer() {
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  const renderer = createWebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;

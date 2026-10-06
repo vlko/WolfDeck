@@ -12,6 +12,7 @@ import { preloadSprites } from './assets/sprites.js';
 import { buildModel, hasModel, modelNames, modelInfo, setPack } from './models/registry.js';
 import { loadFonts } from './parts/fonts.js';
 import { addSceneLights } from './engine/lights.js';
+import { createWebGLRenderer, showWebGLError } from './engine/webgl.js';
 
 const urls = import.meta.glob('./sprites/*.webp', { eager: true, query: '?url', import: 'default' });
 const url = (n) => urls[`./sprites/${n}.webp`];
@@ -84,8 +85,14 @@ document.getElementById('search').addEventListener('input', (ev) => { search = e
 const tFixed = q.has('t') ? +q.get('t') : null;
 const animName = q.get('anim');
 const rowsEl = document.getElementById('rows');
-const canvas = document.getElementById('gl');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+let renderer;
+try {
+  renderer = createWebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, alpha: true });
+} catch (err) {
+  showWebGLError(err);
+  throw err;
+}
+const canvas = renderer.domElement;
 renderer.setPixelRatio(1);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 const scene = new THREE.Scene();
