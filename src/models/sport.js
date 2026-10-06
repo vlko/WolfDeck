@@ -12,6 +12,7 @@ import {
 // (gx across, gy down); units are percent of the sprite's height.
 
 const WOOD = { tex: 'wood' };
+const DOOR = { tex: 'woodFine', texRotate: true }; // one door leaf: fine grain running up
 const WOOD_V = { tex: 'wood', texRotate: true }; // grain up a post / along a diagonal
 const WOOD_FINE = { tex: 'woodFine' };
 const WOOD_FINE_V = { tex: 'woodFine', texRotate: true };
@@ -416,7 +417,7 @@ defineModel('lighthouse', (opts, rig) => {
     rig.body.add(m);
   }
   const doorH = Y(8.9);
-  const door = mesh(box(S(1.9), doorH, 2), '#3e3127', 0, 0, zAt(0) - 0.5, BOARDS); // tilted back with the wall from its sill
+  const door = mesh(box(S(1.9), doorH, 2), '#3e3127', 0, 0, zAt(0) - 0.5, DOOR); // tilted back with the wall from its sill
   door.rotation.x = -Math.atan2(base - top, towerTop);
   rig.body.add(door);
   // gallery (sage band) with a railing ring

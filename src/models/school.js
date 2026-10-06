@@ -11,6 +11,7 @@ import {
 // sprite (gx across, gy down); units are percent of the sprite's height.
 
 const WOOD = { tex: 'wood' };
+const DOOR = { tex: 'woodFine', texRotate: true }; // one door leaf: fine grain running up
 const WOOD_V = { tex: 'wood', texRotate: true }; // grain up a post / along a slanted leg
 const WOOD_FINE = { tex: 'woodFine' };
 const WOOD_FINE_V = { tex: 'woodFine', texRotate: true };
@@ -109,7 +110,7 @@ defineModel('schoolhouse', (opts, rig) => {
   // door (a dark recess with a frame)
   const doorZ = pz + pd / 2;
   rig.body.add(mesh(box(S(1.15) * 2 + 3, Y(7.5) + 1.5, 1.2), trim, 0, 0, doorZ + 0.3));
-  rig.body.add(mesh(box(S(1.15) * 2, Y(7.5), 1.2), '#4a3424', 0, 0, doorZ + 0.9, BOARDS));
+  rig.body.add(mesh(box(S(1.15) * 2, Y(7.5), 1.2), '#4a3424', 0, 0, doorZ + 0.9, DOOR));
   // windows either side
   for (const [g0, g1] of [[0.95, 2.4], [6.6, 8.05]]) {
     rig.body.add(windowPane(X(g0), X(g1), Y(9.0), Y(7.5), front));

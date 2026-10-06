@@ -43,6 +43,7 @@ function lumpy(r, detail = 1) {
 const WOOD = { tex: 'wood' };
 const PLASTER = { tex: 'plaster' };
 const WOOD_FINE = { tex: 'woodFine' };
+const DOOR = { tex: 'woodFine', texRotate: true }; // one door leaf: fine grain running up
 const PLANKS = { tex: 'planks' };
 const PAVING = { tex: 'paving' };
 const ASHLAR = { tex: 'ashlar' };
@@ -458,8 +459,7 @@ defineModel('shop', (opts, rig) => {
   // door
   // the base band stands 0.75 proud: the door sits well in front of it
   const door = group(X(3.1), 0, front + 0.7);
-  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(-S(0.65), 0, 0), '#3d2e1e', 0, 0, 0, WOOD_FINE));
-  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(S(0.65), 0, 0), '#4a3826', 0, 0, 0, WOOD_FINE));
+  door.add(mesh(box(S(2.6), Y(6.0), 1.6), '#433322', 0, 0, 0, DOOR));
   door.add(inkMesh(new THREE.SphereGeometry(1.4, 8, 6), '#7a3a2a', S(0.9), Y(8.1), 1.4));
   rig.body.add(door);
   // window: cream frame, four dark panes

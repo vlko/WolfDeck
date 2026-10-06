@@ -21,6 +21,7 @@ const WOOD_FINE = { tex: 'woodFine' }; // planed joinery: sign boards, doors of 
 const PLANKS = { tex: 'planks' }; // horizontal boards
 const DECK = { tex: 'planks', texRotate: true }; // deck boards running front → back
 const BOARDS = { tex: 'boards' }; // vertical boards: plank doors, balcony slats
+const DOOR = { tex: 'woodFine', texRotate: true }; // one door leaf: fine grain running up
 const PLASTER = { tex: 'plaster' };
 const ASHLAR = { tex: 'ashlar' }; // dressed blocks: quoins, the roundabout drum
 const RUBBLE = { tex: 'rubble' }; // fieldstone: chalet plinth, sign base
@@ -160,7 +161,7 @@ defineModel('churchNamestovo', (opts, rig) => {
   rig.body.add(arch(tx, S(45), Y(590), Y(505), tf + 0.1, '#3f2a1b'));
   rig.body.add(mesh(cbox(S(20), S(30), 1), '#2e2620', tx - S(5), Y(735), tf + 0.6));
   rig.body.add(inkMesh(new THREE.CircleGeometry(S(9), 12), '#2e2620', tx, Y(785), tf + 0.4));
-  rig.body.add(arch(tx, S(55), Y(1060), Y(960), tf + 0.1, '#7b5634', 1.2, BOARDS));
+  rig.body.add(arch(tx, S(55), Y(1060), Y(960), tf + 0.1, '#7b5634', 1.2, DOOR));
   // onion spire: one lathed, faceted solid on the tower top
   const prof = [
     [S(85), Y(470)], [S(50), Y(400)], [S(70), Y(372)], [S(82), Y(345)], [S(62), Y(318)],
@@ -316,7 +317,7 @@ defineModel('faceHouse', (opts, rig) => {
   }
   // a round attic window, and the arched door
   rig.body.add(inkMesh(new THREE.CircleGeometry(S(9), 14), '#2a211c', X(1382), Y(130), zf(X(1382)) + 0.4));
-  const door = arch(X(1380), S(52), Y(432), Y(345), zf(X(1380)) - 0.8, '#7a5534', 2.6, BOARDS);
+  const door = arch(X(1380), S(52), Y(432), Y(345), zf(X(1380)) - 0.8, '#7a5534', 2.6, DOOR);
   rig.body.add(door);
   // the sides read as a house too: a little window on each side wall
   for (const [sx, side] of [[X(1240), -1], [X(1565), 1]]) {
@@ -352,7 +353,7 @@ defineModel('stoneCottage', (opts, rig) => {
   for (const [px, py, sw, sh] of stones) rig.body.add(mesh(cbox(S(sw), S(sh), 2), '#c9c0b2', X(px + sw / 2), Y(py + sh / 2), front + 0.6, { ...ASHLAR, texScale: 1.8 }));
   rig.body.add(inkMesh(new THREE.CircleGeometry(S(13), 14), '#2a211c', X(1755), Y(175), front + 0.4));
   rig.body.add(mesh(new THREE.TorusGeometry(S(13), 0.8, 4, 14), '#d9d1c2', X(1755), Y(175), front + 0.5));
-  rig.body.add(mesh(box(S(50), Y(232) - Y(305), 1.6), '#5c3c22', X(1755), pad, front + 0.2, BOARDS));
+  rig.body.add(mesh(box(S(50), Y(232) - Y(305), 1.6), '#5c3c22', X(1755), pad, front + 0.2, DOOR));
   // grass tufts (sway)
   const tufts = [];
   for (const [px, dz] of [[1615, 4], [1630, -6], [1880, 3], [1895, -5], [1720, 12]]) {
@@ -582,7 +583,7 @@ defineModel('chalet', (opts, rig) => {
   rig.body.add(windowPane(X(1702), X(1752), Y(778), Y(755), front - 2, { frame: '#efe8d8', glass: '#7fb3bd', sill: false }));
   for (const [a, b] of [[1660, 1692], [1750, 1782]]) rig.body.add(windowPane(X(a), X(b), Y(866), Y(830), front - 2, { frame: '#efe8d8', glass: '#7fb3bd', sill: false }));
   for (const [a, b] of [[1660, 1690], [1715, 1745], [1775, 1805]]) rig.body.add(windowPane(X(a), X(b), Y(987), Y(955), front, { frame: '#d9cfbe', glass: '#3a2416', sill: false }));
-  rig.body.add(mesh(box(S(45), Y(1015), 1.6), '#6b4a2c', X(1732), 0, front + 0.3, BOARDS));
+  rig.body.add(mesh(box(S(45), Y(1015), 1.6), '#6b4a2c', X(1732), 0, front + 0.3, DOOR));
   // side walls get windows too (ground floor + plinth vent)
   for (const [sx, side] of [[x0, -1], [x1, 1]]) {
     const hold = group(sx - side * 0.5, 0, 0);

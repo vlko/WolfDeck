@@ -16,6 +16,7 @@ const PAVING = { tex: 'paving' };
 const BRICK = { tex: 'brick', texScale: 0.7 };
 const PLANKS = { tex: 'planks' }; // horizontal boards
 const BOARDS = { tex: 'boards' }; // vertical board-and-batten: plank doors, bucket staves, haystack crib
+const DOOR = { tex: 'woodFine', texRotate: true }; // one door leaf: fine grain running up
 const STRAW = { tex: 'straw' };
 const WOOL = { tex: 'wool', texScale: 1.3 };
 
@@ -42,11 +43,10 @@ function roof(apexX, apexY, halfSpan, eaveY, t, d, color, tex = 'shingle') {
   return g;
 }
 
-// Plank door: two boards with a seam and a knob, standing proud of the wall.
+// Door: one wooden leaf with a knob, standing proud of the wall.
 function door(x, w, h, z, color, knobX) {
   const g = group(x, 0, z);
-  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(-w / 4, 0, 0), color, 0, 0, 0, BOARDS));
-  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(w / 4, 0, 0), new THREE.Color(color).offsetHSL(0, 0, -0.04).getStyle(), 0, 0, 0, BOARDS));
+  g.add(mesh(box(w, h, 1.6), color, 0, 0, 0, DOOR));
   const knob = inkMesh(new THREE.SphereGeometry(Math.max(1, w * 0.05), 8, 6), '#4a3423', knobX ?? w * 0.32, h * 0.45, 1.3);
   g.add(knob);
   return g;

@@ -28,6 +28,7 @@ const FABRIC = { tex: 'fabric' };
 const METAL = { tex: 'metal' };
 const FUR = { tex: 'fur' };
 const LEAF = { tex: 'leaf' };
+const DOOR = { tex: 'woodFine', texRotate: true }; // one door leaf: fine grain running up
 const BARK = { tex: 'bark' };
 
 const LIT = '#f3e6bf';
@@ -256,7 +257,7 @@ defineModel('chapel', (opts, rig) => {
   // the wall's crease poke through it); the leaf hangs just proud of the crease
   rig.body.add(new THREE.Mesh(foldPanel(wall, X(5.0) - S(1.7), X(5.0) + S(1.7), 0, Y(7.1), 0.35), K.ink('#1f0d08')));
   const leaf = group(X(3.3), 0, fz + 2.4);
-  leaf.add(mesh(box(S(3.4), Y(7.1) - 1, 1.2).translate(S(1.7), 0, 0), '#5e3530', 0, 0, 0, BOARDS));
+  leaf.add(mesh(box(S(3.4), Y(7.1) - 1, 1.2).translate(S(1.7), 0, 0), '#5e3530', 0, 0, 0, DOOR));
   rig.body.add(leaf);
   rig.anims.always = (t, dt, ctx) => {
     const c = (t + ctx.phase * 3) % 11;

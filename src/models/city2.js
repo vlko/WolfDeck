@@ -33,6 +33,7 @@ const METAL = { tex: 'metal' };
 const FUR = { tex: 'fur' };
 const LEAF = { tex: 'leaf' };
 const BARK = { tex: 'bark' };
+const DOOR = { tex: 'woodFine', texRotate: true }; // one door leaf: fine grain running up
 
 const GLOW = '#f3dfae';
 const DARK_PANE = '#26332d';
@@ -108,7 +109,7 @@ function roof(apexX, apexY, halfSpan, eaveY, t, d, color) {
   return mesh(roofSolid(apexX, apexY, halfSpan, eaveY, t, d), color);
 }
 
-function door(x, w, h, z, color, tex = WOOD_FINE, knob = true) {
+function door(x, w, h, z, color, tex = DOOR, knob = true) {
   const g = group(x, 0, z);
   g.add(mesh(box(w, h, 1.6), color, 0, 0, 0, tex));
   if (knob) g.add(inkMesh(new THREE.SphereGeometry(Math.max(1, w * 0.07), 8, 6), '#1c1a17', w * 0.3, h * 0.42, 1.2));
@@ -212,7 +213,7 @@ defineModel('cabin', (opts, rig) => {
   rig.body.add(mesh(roofOver(0, S(4.4), Y(4.6), Y(0.4), S(0.6), 4, D + 6), '#8e7550', 0, 0, 0, SHINGLE));
   rig.body.add(pane(X(1.9), Y(8.4), S(2.2), Y(6.2) - Y(8.4), front + 1.1, GLOW));
   rig.body.add(mullions(X(1.9), Y(8.4), S(2.2), Y(6.2) - Y(8.4), front + 1.5, '#d8c8a2'));
-  rig.body.add(door(X(5.6), S(2.3), Y(6.2), front + 0.4, '#25322b', BOARDS));
+  rig.body.add(door(X(5.6), S(2.3), Y(6.2), front + 0.4, '#25322b', DOOR));
 });
 
 // ── cottageRose — cream cottage, rose roof, folded gable ────────────────────
@@ -228,7 +229,7 @@ defineModel('cottageRose', (opts, rig) => {
   rig.body.add(mesh(box(S(1.0), 24, 6), '#846637', X(2.8), Y(2.4), -10, BRICK));
   rig.body.add(pane(X(1.9), Y(8.2), S(1.7), Y(6.3) - Y(8.2), front + 0.5, GLOW));
   rig.body.add(mullions(X(1.9), Y(8.2), S(1.7), Y(6.3) - Y(8.2), front + 0.9, '#d9c7a0'));
-  const d = door(X(6.7), S(1.7), Y(6.0) - Y(9.4), front + 0.4, '#7a4a3c', BOARDS);
+  const d = door(X(6.7), S(1.7), Y(6.0) - Y(9.4), front + 0.4, '#7a4a3c', DOOR);
   d.position.y = Y(9.4);
   rig.body.add(d);
   rig.body.add(mesh(box(S(3.3), Y(9.4), 8), '#c79a89', X(7.45), 0, front + 4, PAVING));
@@ -311,7 +312,7 @@ defineModel('shed', (opts, rig) => {
   rig.body.add(mesh(new THREE.ExtrudeGeometry(new THREE.Shape([new THREE.Vector2(-front, 0), new THREE.Vector2(front, 0), new THREE.Vector2(front, rise - 4)]), { depth: S(8.4), bevelEnabled: false }).rotateY(PI / 2).translate(-S(4.2), 0, 0), '#8a9c8e', X(4.8), Y(3.7), 0, PLANKS));
   rig.body.add(pane(X(1.8), Y(7.8), S(2.2), Y(5.0) - Y(7.8), front + 0.5, '#2c3a2c'));
   rig.body.add(mesh(cbox(1.3, Y(5.0) - Y(7.8), 0.8), '#94a698', X(2.9), (Y(5.0) + Y(7.8)) / 2, front + 0.9));
-  rig.body.add(door(X(5.7), S(2.3), Y(5.0), front + 0.4, '#2a3324', BOARDS));
+  rig.body.add(door(X(5.7), S(2.3), Y(5.0), front + 0.4, '#2a3324', DOOR));
 });
 
 // ── trees ────────────────────────────────────────────────────────────────
