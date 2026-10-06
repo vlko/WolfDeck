@@ -25,6 +25,15 @@ const C = {
   brick: '#d7b98b', brickDeep: '#c19c6c', frame: '#7b5a3a',
 };
 
+// material textures (see assets/materialTextures.js)
+const METAL = { tex: 'metal' };
+const PLANKS = { tex: 'planks' };
+const WOOD = { tex: 'wood' };
+const STONE = { tex: 'stone' };
+const FABRIC = { tex: 'fabric' };
+const FUR = { tex: 'fur' };
+const BRICK = { tex: 'brick', texScale: 0.35 };
+
 // A road wheel / drum: tyre + hub with a bolt (so turning shows), axle on z.
 function wheel(r, w, tyre = C.dark, hub = C.hub) {
   const g = new THREE.Group();
@@ -36,23 +45,23 @@ function wheel(r, w, tyre = C.dark, hub = C.hub) {
 
 // A flat decal (patch of color) lying on a folded surface: the polygon is
 // drawn in xy and pushed onto the surface with the geometry's zAt(x).
-function patch(pts, zAt, color, lift = 0.35) {
+function patch(pts, zAt, color, lift = 0.35, opts = {}) {
   const g = new THREE.ShapeGeometry(new THREE.Shape(pts.map(([x, y]) => new THREE.Vector2(x, y))));
   const p = g.attributes.position;
   for (let i = 0; i < p.count; i += 1) p.setZ(i, zAt(p.getX(i)) + lift);
-  return mesh(g, color);
+  return mesh(g, color, 0, 0, 0, opts);
 }
 
 // Lattice truss between two points in the xy plane (chords on the front and
 // back faces, zig-zag braces), thickness t, depth d. Returns a Group.
-function truss(x1, y1, x2, y2, h, d, color, braceColor = color) {
+function truss(x1, y1, x2, y2, h, d, color, braceColor = color, opts = {}) {
   const g = new THREE.Group();
   const len = Math.hypot(x2 - x1, y2 - y1);
   const n = Math.max(2, Math.round(len / h));
   const inner = new THREE.Group();
   for (const z of [-d / 2, d / 2]) {
-    inner.add(mesh(cbox(len, 2, 2).translate(len / 2, h / 2, z), color));
-    inner.add(mesh(cbox(len, 2, 2).translate(len / 2, -h / 2, z), color));
+    inner.add(mesh(cbox(len, 2, 2).translate(len / 2, h / 2, z), color, 0, 0, 0, opts));
+    inner.add(mesh(cbox(len, 2, 2).translate(len / 2, -h / 2, z), color, 0, 0, 0, opts));
     for (let i = 0; i < n; i += 1) {
       const a = (i / n) * len;
       const b = ((i + 1) / n) * len;
@@ -75,9 +84,9 @@ defineModel('crane', (opts, rig) => {
   const m = 4; // half mast width
   const jibY = Y(2.5);
   // concrete foot
-  rig.body.add(mesh(box(20, 5, 20), '#8f938a', mx, 0, 0));
+  rig.body.add(mesh(box(20, 5, 20), '#8f938a', mx, 0, 0, STONE));
   // mast: four posts + braces on all four faces
-  for (const [x, z] of [[-m, -m], [m, -m], [-m, m], [m, m]]) rig.body.add(mesh(box(2.2, jibY, 2.2), C.yellow, mx + x, 0, z));
+  for (const [x, z] of [[-m, -m], [m, -m], [-m, m], [m, m]]) rig.body.add(mesh(box(2.2, jibY, 2.2), C.yellow, mx + x, 0, z, METAL));
   for (let y = 5, i = 0; y < jibY - 4; y += 8, i += 1) {
     const y2 = Math.min(y + 8, jibY - 2);
     for (const z of [-m, m]) {
@@ -92,12 +101,12 @@ defineModel('crane', (opts, rig) => {
   // slewing top, pivot on the mast axis
   const top = group(mx, jibY, 0);
   rig.body.add(top);
-  top.add(mesh(box(11, 5, 11), C.yellowDeep, 0, -2, 0)); // slewing ring
+  top.add(mesh(box(11, 5, 11), C.yellowDeep, 0, -2, 0, METAL)); // slewing ring
   // jib to the left, counter-jib to the right (as printed)
   const jibL = X(0.1) - mx;
   const cjR = X(9.6) - mx;
-  top.add(truss(0, 3, jibL, 3, 5, 5, C.yellow, C.yellowDeep));
-  top.add(truss(0, 3, cjR, 3, 5, 5, C.yellow, C.yellowDeep));
+  top.add(truss(0, 3, jibL, 3, 5, 5, C.yellow, C.yellowDeep, METAL));
+  top.add(truss(0, 3, cjR, 3, 5, 5, C.yellow, C.yellowDeep, METAL));
   // A-frame tower head and tie cables to both ends
   const apex = Y(0) - jibY;
   for (const z of [-2.5, 2.5]) {
@@ -107,18 +116,18 @@ defineModel('crane', (opts, rig) => {
   top.add(mesh(beam(0, apex, jibL + 3, 6, 0.6, 0.6), C.dark));
   top.add(mesh(beam(0, apex, cjR - 3, 6, 0.6, 0.6), C.dark));
   // cab under the jib root
-  top.add(mesh(box(8, 7, 8), C.sand, 6, -7, 5));
+  top.add(mesh(box(8, 7, 8), C.sand, 6, -7, 5, METAL));
   top.add(mesh(box(5, 4, 0.6), C.glass, 6.5, -5, 9.5)); // proud of the cab front (no z-fight)
   // counterweight block at the right end
-  top.add(mesh(box(7, 9, 7), C.darkSoft, cjR - 4, -8, 0));
+  top.add(mesh(box(7, 9, 7), C.darkSoft, cjR - 4, -8, 0, STONE));
   // trolley runs on the jib; cable + hook block hang from it
   const trolley = group(jibL + 6, 0, 0);
   top.add(trolley);
-  trolley.add(mesh(box(5, 2.5, 7), C.dark, 0, -1.5, 0));
+  trolley.add(mesh(box(5, 2.5, 7), C.dark, 0, -1.5, 0, METAL));
   const cable = mesh(cbox(1.2, 1, 1.2), C.dark);
   trolley.add(cable);
   const hook = group(0, -20, 0);
-  hook.add(mesh(box(3.6, 5, 3), C.dark, 0, -5, 0));
+  hook.add(mesh(box(3.6, 5, 3), C.dark, 0, -5, 0, METAL));
   for (const x of [-0.9, 0.9]) hook.add(mesh(cbox(0.5, 4, 0.5), C.darkSoft, x, -7, 0));
   const hk = mesh(new THREE.TorusGeometry(1.8, 0.6, 5, 10, PI * 1.35), C.dark, 0, -10.5, 0);
   hk.rotation.z = PI * 0.95;
@@ -144,15 +153,15 @@ defineModel('scaffold', (opts, rig) => {
   const D = 34;
   const posts = [0.15, 4.6, 9.5];
   for (const gx of posts) {
-    for (const z of [-D / 2, D / 2]) rig.body.add(mesh(box(2.2, Y(0.2), 2.2), gx === 4.6 ? C.dark : C.steel, X(gx), 0, z));
+    for (const z of [-D / 2, D / 2]) rig.body.add(mesh(box(2.2, Y(0.2), 2.2), gx === 4.6 ? C.dark : C.steel, X(gx), 0, z, METAL));
   }
   // rails, decks
   for (const gy of [1.1, 4.78, 8.2]) { // (4.78: the lower deck rests on it)
-    for (const z of [-D / 2, D / 2]) rig.body.add(mesh(cbox(X(9.5) - X(0.15), 1.6, 1.6), C.steel, 0, Y(gy), z));
+    for (const z of [-D / 2, D / 2]) rig.body.add(mesh(cbox(X(9.5) - X(0.15), 1.6, 1.6), C.steel, 0, Y(gy), z, METAL));
   }
   for (const [gy, x0, x1] of [[0.9, 1.2, 8.8], [4.6, 0.8, 8.0]]) {
     for (let i = 0; i < 3; i += 1) {
-      rig.body.add(mesh(box(X(x1) - X(x0) + i * 3, 2, D / 3 - 0.6), i % 2 ? C.plank : '#86694a', (X(x0) + X(x1)) / 2, Y(gy) - 1, -D / 3 + i * (D / 3)));
+      rig.body.add(mesh(box(X(x1) - X(x0) + i * 3, 2, D / 3 - 0.6), i % 2 ? C.plank : '#86694a', (X(x0) + X(x1)) / 2, Y(gy) - 1, -D / 3 + i * (D / 3), PLANKS));
     }
   }
   // cross braces on the front face
@@ -163,7 +172,7 @@ defineModel('scaffold', (opts, rig) => {
   const ladder = (x0, y0, x1, y1, w, z) => {
     const g = new THREE.Group();
     const len = Math.hypot(x1 - x0, y1 - y0);
-    for (const s of [-w / 2, w / 2]) g.add(mesh(cbox(1.4, len, 1.4).translate(s, len / 2, 0), C.ladder));
+    for (const s of [-w / 2, w / 2]) g.add(mesh(cbox(1.4, len, 1.4).translate(s, len / 2, 0), C.ladder, 0, 0, 0, WOOD));
     for (let y = 4; y < len - 1; y += 5) g.add(mesh(cbox(w, 1, 1), C.ladder, 0, y, 0));
     g.position.set(x0, y0, z);
     g.rotation.z = -Math.atan2(x1 - x0, y1 - y0);
@@ -176,7 +185,7 @@ defineModel('scaffold', (opts, rig) => {
   rig.body.add(mesh(box(8, 1.4, 1.4), C.steel, X(9.5) + 4, Y(2.6), D / 2));
   const rope = group(X(9.5) + 7.4, Y(2.6), D / 2);
   rope.add(mesh(cbox(0.5, 14, 0.5).translate(0, -7, 0), C.dark));
-  rope.add(mesh(new THREE.CylinderGeometry(2.6, 2, 4, 8).translate(0, -16, 0), C.frame));
+  rope.add(mesh(new THREE.CylinderGeometry(2.6, 2, 4, 8).translate(0, -16, 0), C.frame, 0, 0, 0, WOOD));
   rig.body.add(rope);
   rig.anims.idle = (t, dt, ctx) => { rope.rotation.z = Math.sin(t * 1.4 + ctx.phase) * 0.1; };
 });
@@ -230,9 +239,9 @@ stripedBoard('barrierLow', 192.2, { boardTop: 0.2, boardBottom: 4.3, legs: [0.6,
 defineModel('roadBarrier', (opts, rig) => {
   const { X, Y, S } = grid(249.2);
   const D = 6;
-  rig.body.add(mesh(box(S(10), Y(0) - Y(1.7), D), C.dark, 0, Y(1.7), 0));
+  rig.body.add(mesh(box(S(10), Y(0) - Y(1.7), D), C.dark, 0, Y(1.7), 0, METAL));
   for (const [x0, x1] of [[0.1, 3.1], [6.2, 9.9]]) rig.body.add(mesh(box(S(x1 - x0), 2.4, 0.6), '#d5c07f', (X(x0) + X(x1)) / 2, Y(0.9) - 1.2, D / 2 + 0.2));
-  rig.body.add(mesh(box(S(8.6), Y(3.7) - Y(8.2), D), C.darkSoft, X(4.6), Y(8.2), 0));
+  rig.body.add(mesh(box(S(8.6), Y(3.7) - Y(8.2), D), C.darkSoft, X(4.6), Y(8.2), 0, METAL));
   for (const gx of [3.1, 8.3]) {
     rig.body.add(mesh(box(2.4, Y(1.7), 2.4), '#1f241f', X(gx), 0, -D / 2 - 1.2));
     rig.body.add(mesh(box(12, 2, 12), '#1f241f', X(gx), 0, -D / 2 - 1.2));
@@ -250,7 +259,7 @@ defineModel('bricks', (opts, rig) => {
     const x0 = -((n - 1) / 2) * bw - r * 4;
     for (let i = 0; i < n; i += 1) {
       const col = (i + r) % 3 === 0 ? C.brickDeep : (i + r) % 3 === 1 ? C.brick : '#cfae80';
-      rig.body.add(mesh(box(bw - 1.2, bh - 1, D - (r % 2) * 4), col, x0 + i * bw, r * bh, 0));
+      rig.body.add(mesh(box(bw - 1.2, bh - 1, D - (r % 2) * 4), col, x0 + i * bw, r * bh, 0, BRICK));
     }
   });
 });
@@ -259,9 +268,9 @@ defineModel('bricks', (opts, rig) => {
 // ── characters ────────────────────────────────────────────────────────────
 
 // Arm: shoulder pivot with a chunky sleeve and a round paw.
-function arm(len, w, sleeve, paw) {
+function arm(len, w, sleeve, paw, sleeveOpts = {}) {
   const g = new THREE.Group();
-  g.add(mesh(cbox(w, len, w * 0.9).translate(0, -len / 2, 0), sleeve));
+  g.add(mesh(cbox(w, len, w * 0.9).translate(0, -len / 2, 0), sleeve, 0, 0, 0, sleeveOpts));
   g.add(mesh(new THREE.SphereGeometry(w * 0.62, 10, 8), paw, 0, -len - 1, 0));
   return g;
 }
@@ -278,15 +287,15 @@ defineModel('foremanBear', (opts, rig) => {
   // body: folded slab, widest at the elbows
   const bodyPts = [[X(1.2), Y(4.6)], [X(8.8), Y(4.6)], [X(10), Y(7.6)], [X(9.0), Y(9.3)], [X(1.0), Y(9.3)], [X(0.0), Y(7.6)]];
   const bodyGeo = fold(bodyPts, 34, 5, { cx: X(5) });
-  torso.add(mesh(bodyGeo, '#b49172'));
+  torso.add(mesh(bodyGeo, '#b49172', 0, 0, 0, FUR));
   const bz = bodyGeo.userData.zAt;
-  torso.add(patch([[X(5), Y(4.6)], [X(1.2), Y(4.6)], [X(0.0), Y(7.6)], [X(1.0), Y(9.3)], [X(3.2), Y(9.3)]], bz, '#7e6161'));
-  torso.add(patch([[X(5), Y(4.6)], [X(8.8), Y(4.6)], [X(10), Y(7.6)], [X(9.0), Y(9.3)], [X(6.8), Y(9.3)]], bz, '#748575'));
-  torso.add(patch([[X(5), Y(4.6)], [X(10), Y(7.6)], [X(9.0), Y(9.3)], [X(7.6), Y(9.3)]], bz, '#4c5a50', 0.85));
+  torso.add(patch([[X(5), Y(4.6)], [X(1.2), Y(4.6)], [X(0.0), Y(7.6)], [X(1.0), Y(9.3)], [X(3.2), Y(9.3)]], bz, '#7e6161', 0.35, FUR));
+  torso.add(patch([[X(5), Y(4.6)], [X(8.8), Y(4.6)], [X(10), Y(7.6)], [X(9.0), Y(9.3)], [X(6.8), Y(9.3)]], bz, '#748575', 0.35, FUR));
+  torso.add(patch([[X(5), Y(4.6)], [X(10), Y(7.6)], [X(9.0), Y(9.3)], [X(7.6), Y(9.3)]], bz, '#4c5a50', 0.85, FUR));
   // arms at the shoulders (sides), tucked against the body
   const arms = [-1, 1].map((s) => {
     const a = group(s * (X(9.2) - 2), Y(5.3), 2);
-    a.add(arm(22, 9, s < 0 ? '#7e6161' : '#748575', s < 0 ? '#c9a77c' : '#c9a77c'));
+    a.add(arm(22, 9, s < 0 ? '#7e6161' : '#748575', s < 0 ? '#c9a77c' : '#c9a77c', FUR));
     a.rotation.z = s * 0.18;
     torso.add(a);
     return a;
@@ -297,12 +306,12 @@ defineModel('foremanBear', (opts, rig) => {
   const hy = (gy) => Y(gy) - Y(4.7);
   const headPts = [[X(0.6), hy(0.8)], [X(5), hy(0.45)], [X(9.4), hy(0.8)], [X(9.6), hy(4.7)], [X(0.4), hy(4.7)]];
   const headGeo = fold(headPts, 34, 6, { cx: X(5) });
-  head.add(mesh(headGeo, '#c9a77c'));
+  head.add(mesh(headGeo, '#c9a77c', 0, 0, 0, FUR));
   const hz = headGeo.userData.zAt;
-  head.add(patch([[X(0.6), hy(0.8)], [X(5), hy(0.45)], [X(3.3), hy(4.7)], [X(0.4), hy(4.7)]], hz, '#86696a'));
-  head.add(patch([[X(0.6), hy(0.8)], [X(3.0), hy(0.6)], [X(0.5), hy(2.8)]], hz, '#d6c6b8', 0.85));
-  head.add(patch([[X(5), hy(0.45)], [X(9.4), hy(0.8)], [X(9.6), hy(4.7)], [X(6.7), hy(4.7)]], hz, '#7e8f81'));
-  head.add(patch([[X(7.6), hy(0.65)], [X(9.4), hy(0.8)], [X(9.6), hy(2.8)]], hz, '#bfcabd', 0.85));
+  head.add(patch([[X(0.6), hy(0.8)], [X(5), hy(0.45)], [X(3.3), hy(4.7)], [X(0.4), hy(4.7)]], hz, '#86696a', 0.35, FUR));
+  head.add(patch([[X(0.6), hy(0.8)], [X(3.0), hy(0.6)], [X(0.5), hy(2.8)]], hz, '#d6c6b8', 0.85, FUR));
+  head.add(patch([[X(5), hy(0.45)], [X(9.4), hy(0.8)], [X(9.6), hy(4.7)], [X(6.7), hy(4.7)]], hz, '#7e8f81', 0.35, FUR));
+  head.add(patch([[X(7.6), hy(0.65)], [X(9.4), hy(0.8)], [X(9.6), hy(2.8)]], hz, '#bfcabd', 0.85, FUR));
   // eyes, cheeks, soft nose button on a little muzzle bump
   const ey = eyes(X(6.3) - X(5), 1.8);
   ey.group.position.set(0, hy(2.3), hz(X(6.3)) + 0.8);
@@ -358,28 +367,28 @@ defineModel('builderBear', (opts, rig) => {
   for (const [x0, x1] of [[3.0, 5.3], [5.5, 7.9]]) {
     const cx = (X(x0) + X(x1)) / 2;
     torso.add(mesh(box(X(x1) - X(x0), Y(9.6), 18), '#3c3b37', cx, 0, 1));
-    torso.add(mesh(box(X(x1) - X(x0) - 0.6, Y(7.9) - Y(9.6), 16), '#706466', cx, Y(9.6), 0));
+    torso.add(mesh(box(X(x1) - X(x0) - 0.6, Y(7.9) - Y(9.6), 16), '#706466', cx, Y(9.6), 0, FABRIC));
   }
   // shirt body + vest panels + reflective stripes
-  torso.add(mesh(box(X(8.5) - X(2.6), Y(5.0) - Y(7.9), D), '#2e3548', (X(2.6) + X(8.5)) / 2, Y(7.9), 0));
+  torso.add(mesh(box(X(8.5) - X(2.6), Y(5.0) - Y(7.9), D), '#2e3548', (X(2.6) + X(8.5)) / 2, Y(7.9), 0, FABRIC));
   const vz = D / 2 + 0.6;
   for (const [x0, x1] of [[2.9, 5.15], [5.75, 8.2]]) {
-    torso.add(mesh(box(X(x1) - X(x0), Y(5.1) - Y(7.9), 1.2), '#d5d89a', (X(x0) + X(x1)) / 2, Y(7.9), vz));
+    torso.add(mesh(box(X(x1) - X(x0), Y(5.1) - Y(7.9), 1.2), '#d5d89a', (X(x0) + X(x1)) / 2, Y(7.9), vz, FABRIC));
   }
   for (const gx of [3.6, 7.4]) torso.add(mesh(box(2.6, Y(5.1) - Y(7.9), 1.4), '#8f958c', X(gx), Y(7.9), vz + 0.2));
   torso.add(mesh(box(X(8.2) - X(2.9), 2.6, 1.4), '#8f958c', (X(2.9) + X(8.2)) / 2, Y(7.6), vz + 0.6));
   // little tail at the rump
-  torso.add(mesh(new THREE.SphereGeometry(4.2, 10, 8), '#c79c6e', X(5.6), Y(7.6), -D / 2 - 1.5));
+  torso.add(mesh(new THREE.SphereGeometry(4.2, 10, 8), '#c79c6e', X(5.6), Y(7.6), -D / 2 - 1.5, FUR));
   // arms: left raised with the hammer, right at the side
   const armL = group(X(2.6) + 1, Y(5.4), 2);
-  armL.add(arm(12, 7.5, '#2e3548', '#e0bf98'));
+  armL.add(arm(12, 7.5, '#2e3548', '#e0bf98', FABRIC));
   const hammer = group(0, -13, 8); // held a little forward, clear of the hair
-  hammer.add(mesh(box(2.2, 26, 2.2), '#8a6a44', 0, -4, 0));
+  hammer.add(mesh(box(2.2, 26, 2.2), '#8a6a44', 0, -4, 0, WOOD));
   hammer.add(mesh(cbox(10, 5, 5), '#3d3f3c', -2, 22, 0));
   armL.add(hammer);
   torso.add(armL);
   const armR = group(X(8.5) - 1, Y(5.4), 2);
-  armR.add(arm(14, 7.5, '#2e3548', '#e0bf98'));
+  armR.add(arm(14, 7.5, '#2e3548', '#e0bf98', FABRIC));
   armR.rotation.z = 0.12;
   torso.add(armR);
   // head on a neck pivot: face block, hair, hard hat, ears
@@ -402,7 +411,7 @@ defineModel('builderBear', (opts, rig) => {
   // ears peeking out above the hat brim, attached to the hat's side
   const ears = [-1, 1].map((s) => {
     const e = group(s * (hx(8.4) - 1), hy(1.3), -4);
-    e.add(mesh(new THREE.CylinderGeometry(5.5, 5.5, 5, 14).rotateX(PI / 2), '#c79c6e'));
+    e.add(mesh(new THREE.CylinderGeometry(5.5, 5.5, 5, 14).rotateX(PI / 2), '#c79c6e', 0, 0, 0, FUR));
     head.add(e);
     return e;
   });

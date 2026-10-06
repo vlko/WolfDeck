@@ -562,4 +562,10 @@ for (const n of spriteNames()) {
   register(n, (options) => buildType(n, def, options));
 }
 
+// Default world height of a sprite / model by name (the lab uses it to show
+// material textures at their real scale).
+export function spriteHeight(name) {
+  return SPRITE_HEIGHT[name]?.h ?? 2;
+}
+
 export const assetTypes = Object.keys(TYPES).concat(['fence', 'mountainBackdrop']);

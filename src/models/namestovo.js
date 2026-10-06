@@ -15,6 +15,13 @@ import {
 // and S(px)/X(px)/Y(py) convert preview pixels to sprite-percent units
 // (x centered on the rect, y up from the foot, 100 = full height).
 
+const WOOD = { tex: 'wood' };
+const PLANKS = { tex: 'planks' };
+const PLASTER = { tex: 'plaster' };
+const STONE = { tex: 'stone' };
+const SHINGLE = { tex: 'shingle' };
+const METAL = { tex: 'metal' };
+
 function sheet(x0, x1, top, foot) {
   const k = 100 / (foot - top);
   const cx = (x0 + x1) / 2;
@@ -78,7 +85,7 @@ function windowPane(x0, x1, y0, y1, z, { frame = '#f2eedf', glass = '#2c4744', c
 
 // Arched opening (door / church window): a rect with a half-round top, as a
 // thin dark slab on a wall face at z.
-function arch(cx, w, y0, y1, z, color = '#3a2716', depth = 1.2) {
+function arch(cx, w, y0, y1, z, color = '#3a2716', depth = 1.2, opts = {}) {
   const r = w / 2;
   const s = new THREE.Shape();
   s.moveTo(cx - r, y0);
@@ -87,7 +94,7 @@ function arch(cx, w, y0, y1, z, color = '#3a2716', depth = 1.2) {
   s.absarc(cx, y1 - r, r, 0, PI, false);
   s.lineTo(cx - r, y0);
   const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: false, curveSegments: 8 });
-  return mesh(g, color, 0, 0, z);
+  return mesh(g, color, 0, 0, z, opts);
 }
 
 // A little flower on a stem: sways from the ground. Returns the pivot.
@@ -115,7 +122,7 @@ function swayFlowers(rig, flowers) {
 // front of the post. Returns the group.
 function postSign(x, y0, y1, z, postW, color = '#5e4632') {
   const g = new THREE.Group();
-  g.add(mesh(box(postW, y1 - y0, postW), color, x, y0, z));
+  g.add(mesh(box(postW, y1 - y0, postW), color, x, y0, z, WOOD));
   return g;
 }
 
@@ -126,7 +133,7 @@ function arrowBoard(x0, x1, y, h, d, dir, color) {
   const pts = dir > 0
     ? [[x0, y - h / 2], [x1 - tip, y - h / 2], [x1, y], [x1 - tip, y + h / 2], [x0, y + h / 2]]
     : [[x1, y - h / 2], [x0 + tip, y - h / 2], [x0, y], [x0 + tip, y + h / 2], [x1, y + h / 2]];
-  return mesh(slab(pts, d), color);
+  return mesh(slab(pts, d), color, 0, 0, 0, WOOD);
 }
 
 // ── churchNamestovo — white tower + green onion spire, purple-roofed nave ──
@@ -139,22 +146,22 @@ defineModel('churchNamestovo', (opts, rig) => {
   const tw = S(170);
   const tx = X(215);
   const top = Y(470);
-  rig.body.add(mesh(box(tw, top, tw), white, tx, 0, 0));
+  rig.body.add(mesh(box(tw, top, tw), white, tx, 0, 0, PLASTER));
   rig.body.add(mesh(box(tw + 1.6, 2.2, tw + 1.6), whiteShade, tx, top - 2.2, 0)); // cornice
   const tf = tw / 2;
   // tower openings on the front face
   rig.body.add(arch(tx, S(45), Y(590), Y(505), tf + 0.1, '#3f2a1b'));
   rig.body.add(mesh(cbox(S(20), S(30), 1), '#2e2620', tx - S(5), Y(735), tf + 0.6));
   rig.body.add(inkMesh(new THREE.CircleGeometry(S(9), 12), '#2e2620', tx, Y(785), tf + 0.4));
-  rig.body.add(arch(tx, S(55), Y(1060), Y(960), tf + 0.1, '#7b5634'));
+  rig.body.add(arch(tx, S(55), Y(1060), Y(960), tf + 0.1, '#7b5634', 1.2, WOOD));
   // onion spire: one lathed, faceted solid on the tower top
   const prof = [
     [S(85), Y(470)], [S(50), Y(400)], [S(70), Y(372)], [S(82), Y(345)], [S(62), Y(318)],
     [S(26), Y(292)], [S(22), Y(255)], [S(9), Y(215)], [S(5), Y(175)], [0, Y(172)],
   ].map(([r, y]) => new THREE.Vector2(r, y));
   const spire = new THREE.LatheGeometry(prof, 8).rotateY(PI / 8);
-  rig.body.add(mesh(spire, green, tx, 0, 0, { jitter: 0.03 }));
-  rig.body.add(mesh(new THREE.IcosahedronGeometry(S(44), 1), green, tx, Y(130), 0));
+  rig.body.add(mesh(spire, green, tx, 0, 0, { jitter: 0.03, ...METAL }));
+  rig.body.add(mesh(new THREE.IcosahedronGeometry(S(44), 1), green, tx, Y(130), 0, METAL));
   rig.body.add(mesh(cbox(S(14), Y(40) - Y(160), S(14)).translate(0, (Y(40) - Y(160)) / 2, 0), '#6f8f82', tx, Y(160), 0));
   // nave: abuts the tower's right side, roof continuous front → back
   const nx0 = X(300);
@@ -163,13 +170,13 @@ defineModel('churchNamestovo', (opts, rig) => {
   const ncx = (nx0 + nx1) / 2;
   const nd = tw * 1.7;
   const eave = Y(905);
-  rig.body.add(mesh(box(nw, eave, nd), white, ncx, 0, -tw * 0.25));
-  rig.body.add(mesh(sideRoof(nw + 2, Y(745) - eave, nd + 4, 2.5), '#776a70', ncx, eave - 0.6, -tw * 0.25));
+  rig.body.add(mesh(box(nw, eave, nd), white, ncx, 0, -tw * 0.25, PLASTER));
+  rig.body.add(mesh(sideRoof(nw + 2, Y(745) - eave, nd + 4, 2.5), '#776a70', ncx, eave - 0.6, -tw * 0.25, SHINGLE));
   const nf = nd / 2 - tw * 0.25;
   for (const px of [345, 405, 465]) rig.body.add(arch(X(px), S(20), Y(1005), Y(930), nf + 0.1, '#3f2a1b'));
   // the bell: hidden in the belfry window, it swings now and then
   const bell = group(tx, Y(515), 0);
-  bell.add(mesh(new THREE.CylinderGeometry(S(8), S(16), S(30), 8).translate(0, -S(18), 0), '#b89a57'));
+  bell.add(mesh(new THREE.CylinderGeometry(S(8), S(16), S(30), 8).translate(0, -S(18), 0), '#b89a57', 0, 0, 0, METAL));
   rig.body.add(bell);
   rig.anims.idle = (t, dt, ctx) => {
     const c = (t + ctx.phase) % 11;
@@ -229,10 +236,10 @@ defineModel('oravaLake', (opts, rig) => {
   const cy0 = iy + S(62) * 0.75;
   const cw = S(120);
   const cd = 12;
-  rig.body.add(mesh(box(cw, S(75), cd), '#f4f2ec', ix, cy0, iz));
-  rig.body.add(mesh(gableWall(cw, S(50), cd).translate(0, cy0 + S(75), 0), '#f4f2ec', ix, 0, iz));
-  rig.body.add(mesh(roofSolid(0, cy0 + S(75) + S(52), cw / 2 + 2, cy0 + S(75) - 0.5, 1.6, cd + 3), '#5b4a47', ix, 0, iz));
-  rig.body.add(mesh(box(S(28), S(40), S(28)), '#f4f2ec', ix, cy0 + S(75) + S(30), iz));
+  rig.body.add(mesh(box(cw, S(75), cd), '#f4f2ec', ix, cy0, iz, PLASTER));
+  rig.body.add(mesh(gableWall(cw, S(50), cd).translate(0, cy0 + S(75), 0), '#f4f2ec', ix, 0, iz, PLASTER));
+  rig.body.add(mesh(roofSolid(0, cy0 + S(75) + S(52), cw / 2 + 2, cy0 + S(75) - 0.5, 1.6, cd + 3), '#5b4a47', ix, 0, iz, SHINGLE));
+  rig.body.add(mesh(box(S(28), S(40), S(28)), '#f4f2ec', ix, cy0 + S(75) + S(30), iz, PLASTER));
   rig.body.add(mesh(new THREE.ConeGeometry(S(22), S(45), 4).rotateY(PI / 4).translate(0, S(22), 0), '#5b4a47', ix, cy0 + S(75) + S(70), iz));
   rig.body.add(arch(ix, S(22), cy0, cy0 + S(45), iz + cd / 2 + 0.1, '#3a2716', 0.8));
   // the pier: plank deck on posts standing in the water, steps down at the end
@@ -240,18 +247,18 @@ defineModel('oravaLake', (opts, rig) => {
   const deckY = Y(470);
   const px0 = X(815);
   const px1 = X(1000);
-  rig.body.add(mesh(box(px1 - px0, 2.6, 13), '#a27d4f', (px0 + px1) / 2, deckY - 2.6, pz));
+  rig.body.add(mesh(box(px1 - px0, 2.6, 13), '#a27d4f', (px0 + px1) / 2, deckY - 2.6, pz, WOOD));
   for (let x = px0 + 1; x < px1; x += (px1 - px0) / 7) {
     rig.body.add(mesh(cbox(0.4, 0.4, 13), '#7f5f3b', x, deckY + 0.05, pz)); // plank seams
   }
   for (const [x, dz] of [[px0 + 2, -5], [px0 + 2, 5], [(px0 + px1) / 2, -5], [(px0 + px1) / 2, 5], [px1 - 2, -5], [px1 - 2, 5]]) {
-    rig.body.add(mesh(box(2.4, deckY - 2.6, 2.4), '#5a4024', x, 0, pz + dz));
+    rig.body.add(mesh(box(2.4, deckY - 2.6, 2.4), '#5a4024', x, 0, pz + dz, WOOD));
   }
   for (let i = 0; i < 3; i += 1) {
-    rig.body.add(mesh(box(4.4, 1.4, 11), '#a27d4f', px1 + 2.2 + i * 4.2, deckY - 2.6 - (i + 1) * ((deckY - 2.6 - surfY(pz)) / 4), pz));
+    rig.body.add(mesh(box(4.4, 1.4, 11), '#a27d4f', px1 + 2.2 + i * 4.2, deckY - 2.6 - (i + 1) * ((deckY - 2.6 - surfY(pz)) / 4), pz, WOOD));
   }
   // two mooring posts and the little pennant
-  for (const x of [X(995), X(1030)]) rig.body.add(mesh(box(2.2, Y(430) - (deckY - 2.6), 2.2), '#5a4024', x, deckY - 2.6, pz - 4));
+  for (const x of [X(995), X(1030)]) rig.body.add(mesh(box(2.2, Y(430) - (deckY - 2.6), 2.2), '#5a4024', x, deckY - 2.6, pz - 4, WOOD));
   const flagPole = group(X(1025), deckY, pz - 5);
   flagPole.add(mesh(box(0.8, S(75), 0.8), '#4e3a26'));
   const flag = group(0, S(75) - 1, 0);
@@ -263,7 +270,7 @@ defineModel('oravaLake', (opts, rig) => {
   {
     const L = S(255);
     const hull = slab([[-L / 2, 2.6], [-L / 2 + 6, -1.6], [L / 2 - 8, -1.6], [L / 2, 4.2], [L / 2 - 6, 2.6]], 11);
-    boat.add(mesh(hull, '#6d4c28'));
+    boat.add(mesh(hull, '#6d4c28', 0, 0, 0, PLANKS));
     boat.add(mesh(cbox(L - 9, 0.8, 9.5), '#3e2c18', -0.5, 2.5, 0)); // the dark inside
     boat.add(mesh(cbox(2.4, 0.8, 10.6), '#8a6a44', -L * 0.12, 2.8, 0)); // thwart
     boat.add(mesh(beam(-L * 0.25, 2.8, L * 0.32, 8, 0.8, 0.8), '#8a6a44', 0, 0, 3));
@@ -286,7 +293,7 @@ defineModel('faceHouse', (opts, rig) => {
     [1240, 432], [1240, 200], [1298, 92], [1385, 68], [1515, 98], [1565, 200], [1565, 432],
   ].map(([x, y]) => [X(x), Y(y)]);
   const body = fold(outline, D, 7, { cx: X(1385) });
-  rig.body.add(mesh(body, '#ece5d3'));
+  rig.body.add(mesh(body, '#ece5d3')); // plain: plaster mottle reads as dirt on the face
   const zf = body.userData.zAt;
   // face on the folded front
   const ey = eyes(Math.abs(X(1470) - X(1290)) / 2, S(9));
@@ -302,7 +309,7 @@ defineModel('faceHouse', (opts, rig) => {
   }
   // a round attic window, and the arched door
   rig.body.add(inkMesh(new THREE.CircleGeometry(S(9), 14), '#2a211c', X(1382), Y(130), zf(X(1382)) + 0.4));
-  const door = arch(X(1380), S(52), Y(432), Y(345), zf(X(1380)) - 0.8, '#7a5534', 2.6);
+  const door = arch(X(1380), S(52), Y(432), Y(345), zf(X(1380)) - 0.8, '#7a5534', 2.6, WOOD);
   rig.body.add(door);
   // the sides read as a house too: a little window on each side wall
   for (const [sx, side] of [[X(1240), -1], [X(1565), 1]]) {
@@ -330,15 +337,15 @@ defineModel('stoneCottage', (opts, rig) => {
   rig.body.add(mesh(new THREE.CylinderGeometry(1, 1, pad, 16).scale((X(1915) - X(1595)) / 2, 1, D * 0.95).translate(0, pad / 2, 0), '#a6af79'));
   const eave = Y(195);
   const w = X(1865) - X(1645);
-  rig.body.add(mesh(box(w, eave - pad, D), '#ece6da', X(1755), pad, 0));
-  rig.body.add(mesh(gableWall(w, Y(70) - eave, D).translate(0, eave, 0), '#ece6da', X(1755), 0, 0));
-  rig.body.add(mesh(roofSolid(X(1757), Y(58), (X(1887) - X(1627)) / 2, eave - 1, 3.4, D + 6), '#3a2c2d'));
+  rig.body.add(mesh(box(w, eave - pad, D), '#ece6da', X(1755), pad, 0, PLASTER));
+  rig.body.add(mesh(gableWall(w, Y(70) - eave, D).translate(0, eave, 0), '#ece6da', X(1755), 0, 0, PLASTER));
+  rig.body.add(mesh(roofSolid(X(1757), Y(58), (X(1887) - X(1627)) / 2, eave - 1, 3.4, D + 6), '#3a2c2d', 0, 0, 0, SHINGLE));
   // stone quoins: chunky grey blocks set into the corners
   const stones = [[1650, 210, 30, 26], [1648, 245, 22, 24], [1655, 278, 34, 26], [1838, 205, 28, 30], [1842, 250, 26, 26], [1835, 282, 32, 22], [1700, 290, 26, 18]];
-  for (const [px, py, sw, sh] of stones) rig.body.add(mesh(cbox(S(sw), S(sh), 2), '#c9c0b2', X(px + sw / 2), Y(py + sh / 2), front + 0.6));
+  for (const [px, py, sw, sh] of stones) rig.body.add(mesh(cbox(S(sw), S(sh), 2), '#c9c0b2', X(px + sw / 2), Y(py + sh / 2), front + 0.6, { tex: 'stone', texScale: 0.6 }));
   rig.body.add(inkMesh(new THREE.CircleGeometry(S(13), 14), '#2a211c', X(1755), Y(175), front + 0.4));
   rig.body.add(mesh(new THREE.TorusGeometry(S(13), 0.8, 4, 14), '#d9d1c2', X(1755), Y(175), front + 0.5));
-  rig.body.add(mesh(box(S(50), Y(232) - Y(305), 1.6), '#5c3c22', X(1755), pad, front + 0.2));
+  rig.body.add(mesh(box(S(50), Y(232) - Y(305), 1.6), '#5c3c22', X(1755), pad, front + 0.2, WOOD));
   // grass tufts (sway)
   const tufts = [];
   for (const [px, dz] of [[1615, 4], [1630, -6], [1880, 3], [1895, -5], [1720, 12]]) {
@@ -360,17 +367,17 @@ defineModel('flowerIsland', (opts, rig) => {
   const R = (X(1900) - X(1515)) / 2;
   const H = 14;
   rig.body.add(mesh(new THREE.CylinderGeometry(R, R * 1.03, H, 18).translate(0, H / 2, 0), '#8f9b5c'));
-  rig.body.add(mesh(new THREE.CylinderGeometry(R * 0.96, R * 0.96, 1.2, 18).translate(0, H + 0.6, 0), '#d9d0c6'));
+  rig.body.add(mesh(new THREE.CylinderGeometry(R * 0.96, R * 0.96, 1.2, 18).translate(0, H + 0.6, 0), '#d9d0c6', 0, 0, 0, STONE));
   const gr = R * 0.6;
   rig.body.add(mesh(new THREE.CylinderGeometry(gr, gr, 2.4, 16).translate(0, H + 1.2, 0), '#8ea25d'));
   const top = H + 2.4;
   // the signs: a square map board and a triangle, each on its own post
-  rig.body.add(mesh(box(S(12), Y(445) - top, S(12)), '#5e4632', X(1637), top, -gr * 0.4));
+  rig.body.add(mesh(box(S(12), Y(445) - top, S(12)), '#5e4632', X(1637), top, -gr * 0.4, WOOD));
   rig.body.add(mesh(cbox(S(55), S(52), 1.6), '#4f7471', X(1637), Y(418), -gr * 0.4 + S(6) + 0.9));
   for (const [dx, dy, r] of [[-8, 6, 4], [7, 7, 5], [-6, -6, 4], [8, -5, 3]]) {
     rig.body.add(mesh(new THREE.CircleGeometry(r * 0.5, 7), '#e8e4d8', X(1637) + dx * 0.5, Y(418) + dy * 0.5, -gr * 0.4 + S(6) + 1.8));
   }
-  rig.body.add(mesh(box(S(12), Y(440) - top, S(12)), '#5e4632', X(1822), top, -gr * 0.2));
+  rig.body.add(mesh(box(S(12), Y(440) - top, S(12)), '#5e4632', X(1822), top, -gr * 0.2, WOOD));
   rig.body.add(mesh(new THREE.ConeGeometry(S(26), S(38), 3).rotateZ(PI).translate(0, Y(420) - top, 0), '#355850', X(1822), top, -gr * 0.2 + S(6) + 1));
   const flowers = [];
   for (const [px, dz, c] of [[1690, 6, '#efc9b6'], [1708, -2, '#e9a8a0'], [1735, 4, '#e3b748'], [1660, -4, '#f2e6c8'], [1760, -6, '#e9a8a0']]) {
@@ -390,19 +397,19 @@ defineModel('roundabout', (opts, rig) => {
   // stone drum in two courses of blocks
   for (let c = 0; c < 2; c += 1) {
     const g = new THREE.CylinderGeometry(R, R * 1.01, H / 2 - 0.2, 20, 1).rotateY(c * (PI / 20)).translate(0, (H / 2) * c + H / 4, 0);
-    rig.body.add(mesh(g, c ? '#b9b3ab' : '#a49e96', 0, 0, 0, { jitter: 0.09 }));
+    rig.body.add(mesh(g, c ? '#b9b3ab' : '#a49e96', 0, 0, 0, { jitter: 0.09, ...STONE }));
   }
-  rig.body.add(mesh(new THREE.CylinderGeometry(R * 0.98, R * 0.98, 1.2, 20).translate(0, H + 0.6, 0), '#d6d0c7'));
+  rig.body.add(mesh(new THREE.CylinderGeometry(R * 0.98, R * 0.98, 1.2, 20).translate(0, H + 0.6, 0), '#d6d0c7', 0, 0, 0, STONE));
   const gr = R * 0.58;
   rig.body.add(mesh(new THREE.CylinderGeometry(gr, gr, 2.2, 18).translate(0, H + 1.1, 0), '#8ea25d'));
   const top = H + 2.2;
   // round blue sign (bent arrow) + white info board
-  rig.body.add(mesh(box(S(14), Y(555) - top, S(14)), '#5e4632', X(1325), top, -gr * 0.35));
+  rig.body.add(mesh(box(S(14), Y(555) - top, S(14)), '#5e4632', X(1325), top, -gr * 0.35, WOOD));
   const sz = -gr * 0.35 + S(7) + 0.8;
   rig.body.add(mesh(new THREE.CylinderGeometry(S(30), S(30), 1.4, 18).rotateX(PI / 2), '#5f8a90', X(1325), Y(525), sz));
   rig.body.add(mesh(beam(X(1305), Y(540), X(1330), Y(515), 2.4, 0.6), '#f0ede4', 0, 0, sz + 1.1));
   rig.body.add(mesh(beam(X(1328), Y(515), X(1350), Y(530), 2.4, 0.6), '#f0ede4', 0, 0, sz + 1.1));
-  rig.body.add(mesh(box(S(14), Y(575) - top, S(14)), '#5e4632', X(1425), top, -gr * 0.2));
+  rig.body.add(mesh(box(S(14), Y(575) - top, S(14)), '#5e4632', X(1425), top, -gr * 0.2, WOOD));
   const bz = -gr * 0.2 + S(7) + 0.8;
   rig.body.add(mesh(cbox(S(40), S(85), 1.4), '#ece8dd', X(1425), Y(532), bz));
   for (let i = 0; i < 4; i += 1) rig.body.add(mesh(cbox(S(26) - (i % 2) * 3, 1.1, 0.4), '#3a3530', X(1425), Y(505) - i * S(17), bz + 0.9));
@@ -420,10 +427,10 @@ defineModel('roundabout', (opts, rig) => {
 defineModel('cycleSign', (opts, rig) => {
   const { X, Y, S } = sheet(578, 750, 620, 1060);
   const px = X(668);
-  rig.body.add(mesh(box(S(55), Y(945), S(55)), '#c9c2b6', X(667), 0, 0, { jitter: 0.08 }));
+  rig.body.add(mesh(box(S(55), Y(945), S(55)), '#c9c2b6', X(667), 0, 0, { jitter: 0.08, ...STONE }));
   for (const y of [980, 1015]) rig.body.add(mesh(cbox(S(56), 0.6, S(56)), '#a8a196', X(667), Y(y), 0));
   const postTop = Y(632);
-  rig.body.add(mesh(box(S(16), postTop - Y(945), S(16)), '#4f3a26', px, Y(945), 0));
+  rig.body.add(mesh(box(S(16), postTop - Y(945), S(16)), '#4f3a26', px, Y(945), 0, WOOD));
   const fz = S(8) + 1.2;
   // blue board with a white bicycle
   rig.body.add(mesh(cbox(S(70), S(82), 1.6), '#4f8a90', X(665), Y(676), fz));
@@ -453,8 +460,8 @@ defineModel('apartmentBlock', (opts, rig) => {
   const mx1 = X(1118);
   const mcx = (mx0 + mx1) / 2;
   const mw = mx1 - mx0;
-  rig.body.add(mesh(box(mw, Y(712), D), '#d6c7b0', mcx, 0, 0));
-  rig.body.add(mesh(box(mw + 0.4, Y(995), D + 0.4), '#a7aaa3', mcx, 0, 0)); // plinth
+  rig.body.add(mesh(box(mw, Y(712), D), '#d6c7b0', mcx, 0, 0, PLASTER));
+  rig.body.add(mesh(box(mw + 0.4, Y(995), D + 0.4), '#a7aaa3', mcx, 0, 0, STONE)); // plinth
   rig.body.add(mesh(box(mw + 3, Y(677) - Y(712), D + 3), '#6b5b51', mcx, Y(712), 0)); // cornice
   const cols = [[850, 895], [935, 985], [1020, 1065]];
   for (const [y0, y1] of [[730, 762], [820, 852], [910, 942], [1000, 1032]]) {
@@ -463,15 +470,15 @@ defineModel('apartmentBlock', (opts, rig) => {
       rig.body.add(windowPane(X(x0), X(x1), Y(y1), Y(y0), front, { frame: '#f4f1ea', glass: '#5d8a87', cross: true, sill: false }));
     });
   }
-  rig.body.add(mesh(box(S(45), Y(1000), 1.4), '#55391d', X(1043), 0, front + 0.3));
+  rig.body.add(mesh(box(S(45), Y(1000), 1.4), '#55391d', X(1043), 0, front + 0.3, WOOD));
   // balconies: slatted boxes hung on the facade (they touch the wall)
   for (const [y0, y1] of [[760, 797], [850, 887], [940, 977]]) {
     for (const [x0, x1] of [[820, 917], [1003, 1088]]) {
       const bx = (X(x0) + X(x1)) / 2;
       const bw = X(x1) - X(x0);
       const bh = Y(y0) - Y(y1);
-      rig.body.add(mesh(box(bw, 1.4, 7), '#6e5a49', bx, Y(y1), front + 3.5));
-      rig.body.add(mesh(box(bw, bh, 1), '#8a6a4c', bx, Y(y1), front + 6.6));
+      rig.body.add(mesh(box(bw, 1.4, 7), '#6e5a49', bx, Y(y1), front + 3.5, WOOD));
+      rig.body.add(mesh(box(bw, bh, 1), '#8a6a4c', bx, Y(y1), front + 6.6, WOOD));
       for (const s of [-1, 1]) rig.body.add(mesh(box(1, bh, 7), '#7a5e44', bx + s * (bw / 2 - 0.5), Y(y1), front + 3.5));
       for (let i = 1; i < 6; i += 1) rig.body.add(mesh(cbox(0.4, bh, 0.4), '#5e4836', X(x0) + (bw * i) / 6, Y(y1) + bh / 2, front + 7.2));
     }
@@ -483,9 +490,9 @@ defineModel('apartmentBlock', (opts, rig) => {
   const aw = ax1 - ax0;
   const ad = D * 0.8;
   const az = -D * 0.1;
-  rig.body.add(mesh(box(aw, Y(900), ad), '#d9ccb6', acx, 0, az));
-  rig.body.add(mesh(box(aw + 0.4, Y(1040), ad + 0.4), '#a7aaa3', acx, 0, az));
-  rig.body.add(mesh(sideRoof(aw + 2, Y(850) - Y(900), ad + 4, 2.2), '#6a5a55', acx, Y(900) - 0.5, az));
+  rig.body.add(mesh(box(aw, Y(900), ad), '#d9ccb6', acx, 0, az, PLASTER));
+  rig.body.add(mesh(box(aw + 0.4, Y(1040), ad + 0.4), '#a7aaa3', acx, 0, az, STONE));
+  rig.body.add(mesh(sideRoof(aw + 2, Y(850) - Y(900), ad + 4, 2.2), '#6a5a55', acx, Y(900) - 0.5, az, SHINGLE));
   rig.body.add(mesh(box(S(12), Y(815) - Y(880), S(12)), '#c8c0b6', X(1175), Y(880), az - 4));
   const af = az + ad / 2;
   for (const [y0, y1] of [[940, 970], [1005, 1035]]) {
@@ -500,7 +507,7 @@ defineModel('apartmentBlock', (opts, rig) => {
 defineModel('signTangle', (opts, rig) => {
   const { X, Y, S } = sheet(1320, 1536, 798, 1060);
   const px = X(1428);
-  rig.body.add(mesh(box(S(16), 100, S(16)), '#5a3f26', px, 0, 0));
+  rig.body.add(mesh(box(S(16), 100, S(16)), '#5a3f26', px, 0, 0, WOOD));
   const fz = S(8) + 1.3;
   const boards = [
     arrowBoard(X(1322), X(1505), Y(852), S(47), 2.6, -1, '#dcc29a'),
@@ -548,8 +555,8 @@ defineModel('chalet', (opts, rig) => {
   const x1 = X(1900);
   const cx = (x0 + x1) / 2;
   const w = x1 - x0;
-  rig.body.add(mesh(box(w, Y(1000), D), '#bdb6aa', cx, 0, 0, { jitter: 0.08 })); // stone plinth
-  rig.body.add(mesh(box(w, Y(895) - Y(1000), D), '#f2f0e6', cx, Y(1000), 0));
+  rig.body.add(mesh(box(w, Y(1000), D), '#bdb6aa', cx, 0, 0, { jitter: 0.08, ...STONE })); // stone plinth
+  rig.body.add(mesh(box(w, Y(895) - Y(1000), D), '#f2f0e6', cx, Y(1000), 0, PLASTER));
   const eave = Y(895);
   // the A roof: one continuous, thick solid running back with a deep front
   // overhang; the timber gable fills exactly the space under it
@@ -557,10 +564,10 @@ defineModel('chalet', (opts, rig) => {
   const half = (X(1936) - X(1576)) / 2;
   const t = S(34);
   const drop = t / Math.cos(Math.atan2(apexY - Y(893), half));
-  rig.body.add(mesh(roofSolid(X(1722), apexY, half, Y(893), t, D + 10), '#9e8b6f'));
+  rig.body.add(mesh(roofSolid(X(1722), apexY, half, Y(893), t, D + 10), '#9e8b6f', 0, 0, 0, SHINGLE));
   const gH = apexY - drop - eave;
   const gHalf = half * (gH / (apexY - Y(893)));
-  rig.body.add(mesh(gableWall(gHalf * 2, gH, D - 4).translate(0, eave, 0), '#84613f', X(1722), 0, -2));
+  rig.body.add(mesh(gableWall(gHalf * 2, gH, D - 4).translate(0, eave, 0), '#84613f', X(1722), 0, -2, PLANKS));
   for (let i = 1; i < 6; i += 1) {
     const h = (gH * i) / 6;
     rig.body.add(mesh(cbox(gHalf * 2 * (1 - h / gH) * 0.92, 0.5, 0.5), '#6a4c31', X(1722), eave + h, front - 1.7));
@@ -568,7 +575,7 @@ defineModel('chalet', (opts, rig) => {
   rig.body.add(windowPane(X(1702), X(1752), Y(778), Y(755), front - 2, { frame: '#efe8d8', glass: '#7fb3bd', sill: false }));
   for (const [a, b] of [[1660, 1692], [1750, 1782]]) rig.body.add(windowPane(X(a), X(b), Y(866), Y(830), front - 2, { frame: '#efe8d8', glass: '#7fb3bd', sill: false }));
   for (const [a, b] of [[1660, 1690], [1715, 1745], [1775, 1805]]) rig.body.add(windowPane(X(a), X(b), Y(987), Y(955), front, { frame: '#d9cfbe', glass: '#3a2416', sill: false }));
-  rig.body.add(mesh(box(S(45), Y(1015), 1.6), '#6b4a2c', X(1732), 0, front + 0.3));
+  rig.body.add(mesh(box(S(45), Y(1015), 1.6), '#6b4a2c', X(1732), 0, front + 0.3, WOOD));
   // side walls get windows too (ground floor + plinth vent)
   for (const [sx, side] of [[x0, -1], [x1, 1]]) {
     const hold = group(sx - side * 0.5, 0, 0);

@@ -11,6 +11,14 @@ import {
 // the bear accountant. Measured off a 10 × 10 grid over each sprite (gx
 // across, gy down); units are percent of the sprite's height.
 
+const WOOD = { tex: 'wood' };
+const PLASTER = { tex: 'plaster' };
+const STONE = { tex: 'stone' };
+const SHINGLE = { tex: 'shingle' };
+const FABRIC = { tex: 'fabric' };
+const FUR = { tex: 'fur' };
+const METAL = { tex: 'metal' };
+
 function grid(aspect) {
   return {
     X: (gx) => (gx / 10 - 0.5) * aspect,
@@ -95,15 +103,15 @@ defineModel('townHall', (opts, rig) => {
   const towerW = S(2.8);
   const tx = X(4.75);
   // the two wings as one long block, hipped roofs over each end
-  rig.body.add(mesh(box(S(9.5), Y(5.1), D), wall, 0, 0, 0));
-  rig.body.add(mesh(box(S(9.7), 6, D + 2), wallDark, 0, 0, 0));
+  rig.body.add(mesh(box(S(9.5), Y(5.1), D), wall, 0, 0, 0, PLASTER));
+  rig.body.add(mesh(box(S(9.7), 6, D + 2), wallDark, 0, 0, 0, STONE));
   for (const wx of [X(1.9), X(7.85)]) {
-    rig.body.add(mesh(hipRoof(S(4.0), Y(3.5) - Y(5.1), D + 8), roofC, wx, Y(5.1), 0));
+    rig.body.add(mesh(hipRoof(S(4.0), Y(3.5) - Y(5.1), D + 8), roofC, wx, Y(5.1), 0, SHINGLE));
   }
   // tower: taller block standing proud of the front, its own hipped roof
-  rig.body.add(mesh(box(towerW, Y(2.1), D * 0.7), '#cdc2a6', tx, 0, front - D * 0.35 + 3));
+  rig.body.add(mesh(box(towerW, Y(2.1), D * 0.7), '#cdc2a6', tx, 0, front - D * 0.35 + 3, PLASTER));
   const tz = front + 3;
-  rig.body.add(mesh(hipRoof(towerW + 6, Y(0.9) - Y(2.1), D * 0.7 + 6), roofC, tx, Y(2.1), front - D * 0.35 + 3));
+  rig.body.add(mesh(hipRoof(towerW + 6, Y(0.9) - Y(2.1), D * 0.7 + 6), roofC, tx, Y(2.1), front - D * 0.35 + 3, SHINGLE));
   // clock: rim + face + two turning hands
   const cy = Y(3.6);
   const clockR = S(0.85);
@@ -118,7 +126,7 @@ defineModel('townHall', (opts, rig) => {
   }
   rig.body.add(new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 6), ink('#232420')).translateX(tx).translateY(cy).translateZ(tz + 2.9));
   // door with a little pediment above it
-  rig.body.add(mesh(box(S(1.6), Y(8.0), 1.4), '#4a3c27', tx, 0, tz + 0.6));
+  rig.body.add(mesh(box(S(1.6), Y(8.0), 1.4), '#4a3c27', tx, 0, tz + 0.6, WOOD));
   rig.body.add(mesh(slab([[-S(1.0), 0], [S(1.0), 0], [0, Y(7.2) - Y(8.0)]], 4), '#e2dbc6', tx, Y(8.0) + 1, tz + 0.5));
   rig.body.add(mesh(cbox(S(2.1), 2, 4.5), '#e2dbc6', tx, Y(8.0), tz + 0.5));
   // windows: 2 × 2 per wing, two over the door
@@ -155,19 +163,19 @@ defineModel('vault', (opts, rig) => {
   const steel = '#b6af98';
   const steelDark = '#7d775f';
   // frame: a thick block with a round recess (dark inside), on a plinth
-  rig.body.add(mesh(box(100, 6, 34), '#8f8a75', 0, 0, -6));
+  rig.body.add(mesh(box(100, 6, 34), '#8f8a75', 0, 0, -6, STONE));
   const frameShape = new THREE.Shape([[-48, 0], [48, 0], [48, 98], [-48, 98]].map(([x, y]) => new THREE.Vector2(x, y)));
   const hole = new THREE.Path();
   hole.absarc(0, cy, R + 1, 0, PI * 2, false);
   frameShape.holes.push(hole);
-  rig.body.add(mesh(new THREE.ExtrudeGeometry(frameShape, { depth: 14, bevelEnabled: false, curveSegments: 24 }).translate(0, 0, -20), steelDark));
+  rig.body.add(mesh(new THREE.ExtrudeGeometry(frameShape, { depth: 14, bevelEnabled: false, curveSegments: 24 }).translate(0, 0, -20), steelDark, 0, 0, 0, METAL));
   rig.body.add(new THREE.Mesh(new THREE.CircleGeometry(R + 1, 28), ink('#1f1d17')).translateY(cy).translateZ(-19.5));
   // the door, hinged on the right edge
   const hinge = group(R + 1, cy, -3);
   rig.body.add(hinge);
   const door = group(-(R + 1), 0, 0);
   hinge.add(door);
-  door.add(mesh(new THREE.CylinderGeometry(R, R, 9, 28).rotateX(PI / 2), steel));
+  door.add(mesh(new THREE.CylinderGeometry(R, R, 9, 28).rotateX(PI / 2), steel, 0, 0, 0, METAL));
   door.add(mesh(new THREE.TorusGeometry(R - 7, 2, 4, 28), '#cdc7b2', 0, 0, 4.8));
   // raised X spokes (folded wedges) and bolts round the rim
   for (let i = 0; i < 4; i += 1) {
@@ -190,7 +198,7 @@ defineModel('vault', (opts, rig) => {
     wheel.add(s);
   }
   // hinge blocks on the frame's right side
-  rig.body.add(mesh(cbox(16, 46, 12), '#6f6a55', R + 2, cy, -2));
+  rig.body.add(mesh(cbox(16, 46, 12), '#6f6a55', R + 2, cy, -2, METAL));
   rig.body.add(mesh(cbox(8, 22, 14), '#8c8670', R + 2, cy, 0));
   rig.anims.idle = (t, dt, ctx) => {
     const c = (t + ctx.phase) % 10;
@@ -365,8 +373,8 @@ defineModel('ledger', (opts, rig) => {
   const W = 112;
   const Dd = 78;
   const tilt = 1.05; // the book leans back toward us like on a lectern
-  rig.body.add(mesh(box(W + 6, 10, 30), '#4d3c22', 0, 0, -4));
-  rig.body.add(mesh(slab([[-8, 0], [16, 0], [16, 52]], W - 10).rotateY(PI / 2), '#5b4628', 0, 10, -14));
+  rig.body.add(mesh(box(W + 6, 10, 30), '#4d3c22', 0, 0, -4, WOOD));
+  rig.body.add(mesh(slab([[-8, 0], [16, 0], [16, 52]], W - 10).rotateY(PI / 2), '#5b4628', 0, 10, -14, WOOD));
   // the book lies open with its bottom edge at the front pivot and leans
   // back (pages face the viewer); local z runs from the front edge (0) back
   const book = group(0, 12, 12);
@@ -410,10 +418,10 @@ defineModel('umbrellaDesk', (opts, rig) => {
   const dd = 26;
   // desk: four legs and a top
   for (const x of [-dw / 2 + 3, dw / 2 - 3]) {
-    for (const z of [-dd / 2 + 3, dd / 2 - 3]) rig.body.add(mesh(box(3.6, topY, 3.6), woodDark, x, 0, z));
+    for (const z of [-dd / 2 + 3, dd / 2 - 3]) rig.body.add(mesh(box(3.6, topY, 3.6), woodDark, x, 0, z, WOOD));
   }
-  rig.body.add(mesh(box(dw + 2, 3, dd + 2), wood, 0, topY - 3, 0));
-  rig.body.add(mesh(box(dw - 4, 6, 3), woodDark, 0, topY - 9, dd / 2 - 2));
+  rig.body.add(mesh(box(dw + 2, 3, dd + 2), wood, 0, topY - 3, 0, WOOD));
+  rig.body.add(mesh(box(dw - 4, 6, 3), woodDark, 0, topY - 9, dd / 2 - 2, WOOD));
   // register: a box with a sloped key deck facing the viewer, on the desk
   const reg = group(0, topY, 4);
   reg.add(mesh(slab([[-9, 0], [9, 0], [9, 9], [-9, 15]], S(4.4)).rotateY(-PI / 2), '#b9a77f'));
@@ -433,7 +441,7 @@ defineModel('umbrellaDesk', (opts, rig) => {
   }
   // umbrella pole stands IN the desk (through the top, foot on a stand below)
   const poleX = 0;
-  rig.body.add(mesh(new THREE.CylinderGeometry(4.5, 5.5, 3, 10), woodDark, poleX, 0, -9));
+  rig.body.add(mesh(new THREE.CylinderGeometry(4.5, 5.5, 3, 10), woodDark, poleX, 0, -9, WOOD));
   rig.body.add(mesh(new THREE.CylinderGeometry(1.1, 1.1, Y(0.4), 8).translate(0, Y(0.4) / 2, 0), '#3f3527', poleX, 0, -9));
   // canopy: a faceted dome, two-tone panels, hinged at the pole top so it sways
   const canopy = group(poleX, Y(0.9), -9);
@@ -441,7 +449,7 @@ defineModel('umbrellaDesk', (opts, rig) => {
   const panels = 8;
   for (let i = 0; i < panels; i += 1) {
     const g = new THREE.SphereGeometry(1, 2, 4, (i / panels) * PI * 2, (PI * 2) / panels, 0, PI / 2).scale(S(5.1), Y(0.9) - Y(4.0), S(5.1));
-    canopy.add(mesh(g, i % 2 ? '#57786a' : '#6f8e80', 0, -(Y(0.9) - Y(4.0)), 0, { side: THREE.DoubleSide }));
+    canopy.add(mesh(g, i % 2 ? '#57786a' : '#6f8e80', 0, -(Y(0.9) - Y(4.0)), 0, { side: THREE.DoubleSide, ...FABRIC }));
   }
   canopy.add(mesh(new THREE.ConeGeometry(1.6, 4, 6).translate(0, 2, 0), '#3f3527'));
   rig.anims.idle = (t, dt, ctx) => {
@@ -486,11 +494,11 @@ defineModel('safetyNet', (opts, rig) => {
   rig.body.add(root);
   const sway = group(0, 0, 0);
   root.add(sway);
-  sway.add(mesh(new THREE.SphereGeometry(1, 16, 12).scale(rx, ry, rz), '#bda57d', 0, cy, 0));
+  sway.add(mesh(new THREE.SphereGeometry(1, 16, 12).scale(rx, ry, rz), '#bda57d', 0, cy, 0, FABRIC));
   // tied neck of the sack poking out of the top
   // the sack's gathered, tied neck: a squashed knot with a folded flap
-  sway.add(mesh(new THREE.SphereGeometry(1, 10, 8).scale(10, 6, 8), '#cbb68f', -18, cy + ry - 3, 0));
-  const flap = mesh(slab([[0, 0], [16, 4], [6, 14]], 2), '#d6c39c', -24, cy + ry + 1, 2);
+  sway.add(mesh(new THREE.SphereGeometry(1, 10, 8).scale(10, 6, 8), '#cbb68f', -18, cy + ry - 3, 0, FABRIC));
+  const flap = mesh(slab([[0, 0], [16, 4], [6, 14]], 2), '#d6c39c', -24, cy + ry + 1, 2, FABRIC);
   flap.rotation.z = 0.5;
   sway.add(flap);
   // cords: two families of slanted rings wrapping the sack just outside it
@@ -565,15 +573,15 @@ defineModel('brakeLever', (opts, rig) => {
   const woodC = '#8c6f4a';
   // a steel base plate on the ground ties the bottom pad and the wheel
   // together, so the linkage stands as one machine
-  rig.body.add(mesh(box(wheelC.x + 13 - (X(2.0) - S(2.0) - 2), BASE, D + 16), '#4c5c50', (wheelC.x + 13 + X(2.0) - S(2.0) - 2) / 2, 0, 0));
+  rig.body.add(mesh(box(wheelC.x + 13 - (X(2.0) - S(2.0) - 2), BASE, D + 16), '#4c5c50', (wheelC.x + 13 + X(2.0) - S(2.0) - 2) / 2, 0, 0, METAL));
   // bottom pad rests on the base; its arm runs up to the hub
-  rig.body.add(mesh(box(S(4.0), Y(7.9) - Y(9.5), D + 10), woodC, X(2.0), BASE - 0.5, 0));
-  rig.body.add(mesh(beam(X(2.6), Y(7.9) - Y(9.5) - 2, hub.x, hub.y, 6, D), green, 0, 0, 0));
+  rig.body.add(mesh(box(S(4.0), Y(7.9) - Y(9.5), D + 10), woodC, X(2.0), BASE - 0.5, 0, WOOD));
+  rig.body.add(mesh(beam(X(2.6), Y(7.9) - Y(9.5) - 2, hub.x, hub.y, 6, D), green, 0, 0, 0, METAL));
   // top pad + its arm swing about the hub (they clamp down)
   const jaw = group(hub.x, hub.y, 0);
   rig.body.add(jaw);
-  jaw.add(mesh(cbox(S(4.0), Y(0) - Y(1.7), D + 10), woodC, X(2.0) - hub.x, (Y(0) + Y(1.7)) / 2 - 4 - hub.y, 0));
-  jaw.add(mesh(beam(X(2.6) - hub.x, Y(1.4) - 4 - hub.y, 0, 0, 6, D), greenDark));
+  jaw.add(mesh(cbox(S(4.0), Y(0) - Y(1.7), D + 10), woodC, X(2.0) - hub.x, (Y(0) + Y(1.7)) / 2 - 4 - hub.y, 0, WOOD));
+  jaw.add(mesh(beam(X(2.6) - hub.x, Y(1.4) - 4 - hub.y, 0, 0, 6, D), greenDark, 0, 0, 0, METAL));
   // hub disc
   rig.body.add(mesh(new THREE.CylinderGeometry(S(0.8), S(0.8), D + 4, 10).rotateX(PI / 2), '#647a6c', hub.x, hub.y, 0));
   rig.body.add(new THREE.Mesh(new THREE.CylinderGeometry(S(0.3), S(0.3), D + 4.6, 8).rotateX(PI / 2), ink('#1c201c')).translateX(hub.x).translateY(hub.y));
@@ -583,10 +591,10 @@ defineModel('brakeLever', (opts, rig) => {
   const lever = group(wheelC.x, wheelC.y, -D / 2 - 3);
   rig.body.add(lever);
   const postTop = Y(0.4) - wheelC.y;
-  lever.add(mesh(box(6, postTop, 6), greenDark, 0, 0, 0));
+  lever.add(mesh(box(6, postTop, 6), greenDark, 0, 0, 0, METAL));
   lever.add(mesh(cbox(8, 7, 8), '#3a463c', 0, postTop, 0));
   // link from the hub up to the lever's top
-  const link = mesh(beam(0, 0, wheelC.x - hub.x, postTop + wheelC.y - hub.y - 4, 5, 6), green, hub.x, hub.y, -D / 2 - 3);
+  const link = mesh(beam(0, 0, wheelC.x - hub.x, postTop + wheelC.y - hub.y - 4, 5, 6), green, hub.x, hub.y, -D / 2 - 3, METAL);
   rig.body.add(link);
   rig.anims.idle = (t, dt, ctx) => {
     const c = (t + ctx.phase) % 5;
@@ -610,7 +618,7 @@ defineModel('umbrellaClosed', (opts, rig) => {
     const k = Math.floor(tri / 2) % 2 ? 0.86 : 1;
     for (let j = 0; j < 3; j += 1) col.setXYZ(tri * 3 + j, k, k, k);
   }
-  const canopy = new THREE.Mesh(g, mat('#6d8a74', { side: THREE.DoubleSide }));
+  const canopy = new THREE.Mesh(g, mat('#6d8a74', { side: THREE.DoubleSide, ...FABRIC }));
   canopy.position.y = 16;
   rig.body.add(canopy);
   // scalloped hem points + a strap round the middle
@@ -619,7 +627,7 @@ defineModel('umbrellaClosed', (opts, rig) => {
     const p = mesh(new THREE.ConeGeometry(2, 5, 3).rotateX(PI), '#5f7c66', Math.sin(a) * S(4.6), 14, Math.cos(a) * S(4.6));
     rig.body.add(p);
   }
-  rig.body.add(mesh(new THREE.CylinderGeometry(S(2.5), S(2.5), 3, 8), '#4a6150', 0, 54, 0));
+  rig.body.add(mesh(new THREE.CylinderGeometry(S(2.5), S(2.5), 3, 8), '#4a6150', 0, 54, 0, FABRIC));
   // hook handle on top
   rig.body.add(mesh(new THREE.TorusGeometry(5, 1.5, 5, 10, PI), rod, -5, 94, 0));
   rig.body.add(mesh(new THREE.CylinderGeometry(1.5, 1.5, 6, 6).translate(0, -3, 0), rod, -10, 94, 0));
@@ -637,23 +645,23 @@ defineModel('accountantBear', (opts, rig) => {
   const root = group(0, 0, 0);
   rig.body.add(root);
   // legs + feet sunk into the hem
-  for (const s of [-1, 1]) root.add(mesh(new THREE.SphereGeometry(1, 10, 8).scale(S(0.55), 7, 9).translate(0, 5, 3), furDark, s * S(1.15), 0, 0));
-  for (const s of [-1, 1]) root.add(mesh(box(S(0.9), 12, 10), furDark, s * S(1.15), 0, 0));
+  for (const s of [-1, 1]) root.add(mesh(new THREE.SphereGeometry(1, 10, 8).scale(S(0.55), 7, 9).translate(0, 5, 3), furDark, s * S(1.15), 0, 0, FUR));
+  for (const s of [-1, 1]) root.add(mesh(box(S(0.9), 12, 10), furDark, s * S(1.15), 0, 0, FUR));
   // suit body: folded jacket, white shirt V, dark tie
   const torso = group(0, 0, 0);
   root.add(torso);
   const bodyBot = Y(9.2);
   const bodyTop = Y(5.9);
   const bodyGeo = fold([[-S(3.7), bodyBot], [S(3.7), bodyBot], [S(3.0), bodyTop], [-S(3.0), bodyTop]], 30, 3.5);
-  torso.add(mesh(bodyGeo, suit));
+  torso.add(mesh(bodyGeo, suit, 0, 0, 0, FABRIC));
   const bz = bodyGeo.userData.zAt;
   torso.add(mesh(slab([[-S(0.8), bodyTop - 1], [S(0.8), bodyTop - 1], [0, bodyTop - 13]], 1), '#ece6d6', 0, 0, bz(0) + 0.7));
   torso.add(mesh(slab([[-1.6, bodyTop - 3], [1.6, bodyTop - 3], [2.2, bodyTop - 14], [0, bodyTop - 17], [-2.2, bodyTop - 14]], 1), '#2b3530', 0, 0, bz(0) + 1.4));
   // arms on shoulder pivots, out and down; paws in fur
   const arms = [-1, 1].map((s) => {
     const sh = group(s * S(3.2), bodyTop - 6, 2);
-    sh.add(mesh(new THREE.CapsuleGeometry(4.2, 12, 3, 6).translate(0, -9, 0), suit));
-    sh.add(mesh(new THREE.SphereGeometry(5, 8, 6), fur, 0, -17, 0));
+    sh.add(mesh(new THREE.CapsuleGeometry(4.2, 12, 3, 6).translate(0, -9, 0), suit, 0, 0, 0, FABRIC));
+    sh.add(mesh(new THREE.SphereGeometry(5, 8, 6), fur, 0, -17, 0, FUR));
     sh.rotation.z = s * 0.55;
     torso.add(sh);
     return sh;
@@ -663,7 +671,7 @@ defineModel('accountantBear', (opts, rig) => {
   root.add(head);
   const R = { x: S(3.4), y: 31, z: S(3.4) * 0.84 };
   const hy0 = R.y - 2;
-  const headM = mesh(new THREE.SphereGeometry(1, 16, 12).scale(R.x, R.y, R.z), fur, 0, hy0, 0);
+  const headM = mesh(new THREE.SphereGeometry(1, 16, 12).scale(R.x, R.y, R.z), fur, 0, hy0, 0, FUR);
   head.add(headM);
   const { place } = surfacer([headM], head);
   // soft muzzle with nose button and a little smile
@@ -687,7 +695,7 @@ defineModel('accountantBear', (opts, rig) => {
   // ears: round, on pivots, sunk into the crown
   const ears = [-1, 1].map((s) => {
     const e = group(s * R.x * 0.72, hy0 + R.y * 0.72, -3);
-    e.add(mesh(new THREE.CylinderGeometry(S(0.95), S(0.95), 8, 14).rotateX(PI / 2), furDark));
+    e.add(mesh(new THREE.CylinderGeometry(S(0.95), S(0.95), 8, 14).rotateX(PI / 2), furDark, 0, 0, 0, FUR));
     e.add(new THREE.Mesh(new THREE.CircleGeometry(S(0.5), 12), ink('#3e3428')).translateZ(4.3));
     head.add(e);
     return e;

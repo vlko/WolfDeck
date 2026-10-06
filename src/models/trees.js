@@ -9,6 +9,9 @@ import { mesh, box, group } from './kit.js';
 // Rig: each tier hangs on the one below at its base, so a tiny rotation per
 // joint adds up into a soft bend: the tree sways from the trunk up.
 
+const BARK = { tex: 'bark' };
+const LEAF = { tex: 'leaf' };
+
 // tiers: [gyTop, hwTop, gyBase, hwBase, color, seg?] in 10-grid units (gx of
 // half-width, gy from the top); trunk: [gx0, gx1, color]; aspect: w/h × 100.
 function tieredTree(name, { aspect, tiers, trunk, seg = 4, depth = 1 }) {
@@ -19,7 +22,7 @@ function tieredTree(name, { aspect, tiers, trunk, seg = 4, depth = 1 }) {
     const trunkTop = Y(tiers[tiers.length - 1][2]) + 2;
     const tw = gx(trunk[1] - trunk[0]);
     const tcx = (gx(trunk[0]) + gx(trunk[1])) / 2 - W / 2;
-    rig.body.add(mesh(box(tw, trunkTop, tw * 0.9), trunk[2] ?? '#8b6d4f', tcx, 0, 0));
+    rig.body.add(mesh(box(tw, trunkTop, tw * 0.9), trunk[2] ?? '#8b6d4f', tcx, 0, 0, BARK));
 
     // Build bottom-up: each tier group sits at the previous tier's base.
     const joints = [];
@@ -38,7 +41,7 @@ function tieredTree(name, { aspect, tiers, trunk, seg = 4, depth = 1 }) {
         : new THREE.ConeGeometry(rb, yt - yb, s, 1);
       geo.translate(0, (yt - yb) / 2, 0);
       geo.scale(1, 1, depth);
-      j.add(mesh(geo, color));
+      j.add(mesh(geo, color, 0, 0, 0, LEAF));
       parent.add(j);
       joints.push(j);
       parent = j;

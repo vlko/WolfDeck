@@ -11,6 +11,15 @@ import {
 // runner and a fox violinist. Measured off a 10 × 10 grid over each sprite
 // (gx across, gy down); units are percent of the sprite's height.
 
+const WOOD = { tex: 'wood' };
+const PLANKS = { tex: 'planks' };
+const PLASTER = { tex: 'plaster' };
+const STONE = { tex: 'stone' };
+const STEPS = { tex: 'stone', texScale: 0.7 };
+const SHINGLE = { tex: 'shingle' };
+const FABRIC = { tex: 'fabric' };
+const FUR = { tex: 'fur' };
+
 function grid(aspect) {
   return {
     X: (gx) => (gx / 10 - 0.5) * aspect,
@@ -82,7 +91,7 @@ defineModel('runningTrack', (opts, rig) => {
   const x0 = -(lanes * laneW) / 2;
   const tones = ['#9fb1a2', '#a8b8aa', '#9fb1a2', '#a8b8aa'];
   for (let i = 0; i < lanes; i += 1) {
-    rig.body.add(mesh(box(laneW, 1.2, D - 4), tones[i], x0 + laneW * (i + 0.5), T, 0));
+    rig.body.add(mesh(box(laneW, 1.2, D - 4), tones[i], x0 + laneW * (i + 0.5), T, 0, { tex: 'asphalt' }));
   }
   for (let i = 0; i <= lanes; i += 1) {
     rig.body.add(mesh(box(2.4, 1.6, D - 4), '#f0f1ea', x0 + laneW * i, T, 0));
@@ -110,8 +119,8 @@ defineModel('stadiumStand', (opts, rig) => {
   // stepped concrete core: two low tiers rising toward the back, so both
   // bench rows are seen over the one in front (as on the sheet)
   const tierC = '#6b7573';
-  rig.body.add(mesh(box(W - 10, 14, D), tierC, 0, 26, 0)); // lower tier
-  rig.body.add(mesh(box(W - 10, 22, D * 0.5), '#626c6a', 0, 40, -D * 0.25)); // upper tier
+  rig.body.add(mesh(box(W - 10, 14, D), tierC, 0, 26, 0, STEPS)); // lower tier
+  rig.body.add(mesh(box(W - 10, 22, D * 0.5), '#626c6a', 0, 40, -D * 0.25, STEPS)); // upper tier
   // legs under the stand
   for (const x of [-W / 2 + 6, -14, 14, W / 2 - 6]) rig.body.add(mesh(box(8, 26, 8), frame, x, 0, D / 2 - 8));
   for (const x of [-W / 2 + 6, W / 2 - 6]) rig.body.add(mesh(box(8, 26, 8), frame, x, 0, -D / 2 + 8));
@@ -122,12 +131,12 @@ defineModel('stadiumStand', (opts, rig) => {
   rig.body.add(mesh(box(W, 74, 6), frame, 0, 26, -D / 2 + 3));
   rig.body.add(mesh(box(W, 4, 8), frameLight, 0, 98, -D / 2 + 3)); // coping
   // steps up the middle: lower-tier front → upper tier
-  for (let i = 0; i < 4; i += 1) rig.body.add(mesh(box(22, 6 + i * 5.5, 8.75), '#7d8784', 0, 40, D / 2 - 4.4 - i * 8.75 - (i ? 0 : 0)));
+  for (let i = 0; i < 4; i += 1) rig.body.add(mesh(box(22, 6 + i * 5.5, 8.75), '#7d8784', 0, 40, D / 2 - 4.4 - i * 8.75 - (i ? 0 : 0), STEPS));
   // cream benches: one pair per tier, each side of the steps
   const bench = (x, y, z) => {
     const g = group(x, y, z);
-    g.add(mesh(box(W * 0.3, 4, 12), '#f3eddb', 0, 10, 0));
-    for (const s of [-1, 1]) g.add(mesh(box(4, 10, 8), '#8f6a52', s * (W * 0.15 - 4), 0, 0));
+    g.add(mesh(box(W * 0.3, 4, 12), '#f3eddb', 0, 10, 0, PLANKS));
+    for (const s of [-1, 1]) g.add(mesh(box(4, 10, 8), '#8f6a52', s * (W * 0.15 - 4), 0, 0, WOOD));
     rig.body.add(g);
   };
   for (const s of [-1, 1]) {
@@ -237,19 +246,19 @@ defineModel('cinema', (opts, rig) => {
   const eave = under(W / 2) - 0.6;
   const split = Y(5.45); // cream upper wall / sage ground floor
   // walls: brown plinth, sage ground floor, cream upper floor
-  rig.body.add(mesh(box(W, 7, D), '#6f5440', 0, 0, 0));
-  rig.body.add(mesh(box(W - 0.6, split - 7, D - 0.6), '#9eae9d', 0, 7, 0));
-  rig.body.add(mesh(box(W, eave - split, D), '#e8decd', 0, split, 0));
+  rig.body.add(mesh(box(W, 7, D), '#6f5440', 0, 0, 0, STONE));
+  rig.body.add(mesh(box(W - 0.6, split - 7, D - 0.6), '#9eae9d', 0, 7, 0, PLASTER));
+  rig.body.add(mesh(box(W, eave - split, D), '#e8decd', 0, split, 0, PLASTER));
   // cream gable under ONE continuous slate roof
-  rig.body.add(mesh(slab([[-W / 2, 0], [W / 2, 0], [0, under(0) - 0.6 - eave]], D), '#e2dabe', 0, eave, 0));
-  rig.body.add(mesh(roofSolid(0, apex, half, eaveLow, rT, D + 10), '#3e4148'));
+  rig.body.add(mesh(slab([[-W / 2, 0], [W / 2, 0], [0, under(0) - 0.6 - eave]], D), '#e2dabe', 0, eave, 0, PLASTER));
+  rig.body.add(mesh(roofSolid(0, apex, half, eaveLow, rT, D + 10), '#3e4148', 0, 0, 0, SHINGLE));
   // dark round window in the gable
   rig.body.add(mesh(new THREE.CylinderGeometry(S(0.42), S(0.42), 2, 18).rotateX(PI / 2), '#16130e', 0, Y(1.9), front + 0.8));
   rig.body.add(mesh(new THREE.TorusGeometry(S(0.42), 1.1, 4, 18), '#f2eadb', 0, Y(1.9), front + 1.4));
   // chimney: stands on the left roof slope, rises above it
   const chimX = X(1.3);
   const chimBase = under(chimX + S(0.21)) - 1; // sunk into the roof on its low side
-  rig.body.add(mesh(box(S(0.42), Y(0.9) - chimBase, 8), '#6f4e37', chimX, chimBase, -12));
+  rig.body.add(mesh(box(S(0.42), Y(0.9) - chimBase, 8), '#6f4e37', chimX, chimBase, -12, { tex: 'brick', texScale: 0.7 }));
   // CINEMA marquee across the floor line, a little flower box on top
   const signW = S(4.5);
   const sTop = Y(4.55);
@@ -275,7 +284,7 @@ defineModel('cinema', (opts, rig) => {
     rig.body.add(mesh(box(S(1.0), S(1.0), 1.6), '#7e9180', X(g), Y(8.1), front + 0.5));
     rig.body.add(mesh(box(S(0.8), S(0.8), 1.4), '#5f6f62', X(g), Y(8.1) + S(0.1), front + 1.3));
   }
-  rig.body.add(mesh(box(S(1.6), Y(6.6) - 7, 2), '#2d2720', 0, 7, front + 0.8));
+  rig.body.add(mesh(box(S(1.6), Y(6.6) - 7, 2), '#2d2720', 0, 7, front + 0.8, WOOD));
   rig.body.add(mesh(box(0.8, Y(6.6) - 9, 1), '#4a3e31', 0, 8, front + 2));
   for (const s2 of [-1, 1]) rig.body.add(mesh(box(1.2, 5, 1), '#d9cfb8', s2 * 2.4, Y(8.0), front + 2.2));
   // marquee bulbs under the board blink in turn
@@ -332,7 +341,7 @@ defineModel('bowlStadium', (opts, rig) => {
       const f = height((a + b) / 2);
       // footprint CCW seen from above (y up): inner a → inner b → outer b → outer a
       const geo = quadPrism([pt(a, k0), pt(b, k0), pt(b, k1), pt(a, k1)], 0, h * f);
-      rig.body.add(mesh(geo, color, 0, 0, 0, { side: THREE.DoubleSide }));
+      rig.body.add(mesh(geo, color, 0, 0, 0, { side: THREE.DoubleSide, ...(k1 === 1.0 ? STONE : {}) }));
       if (k1 === 1.0) {
         // cream coping along the top of the outer wall
         const cap = quadPrism([pt(a, k0 - 0.005), pt(b, k0 - 0.005), pt(b, 1.005), pt(a, 1.005)], h * f, h * f + 2.2);
@@ -355,18 +364,18 @@ defineModel('climbFrame', (opts, rig) => {
   const woodDark = '#6a4428';
   const D = 34;
   for (const z of [-D / 2, D / 2]) {
-    for (const g of [1.5, 4.9]) rig.body.add(mesh(box(S(0.55), Y(0.8), S(0.55)), wood, X(g), 0, z));
+    for (const g of [1.5, 4.9]) rig.body.add(mesh(box(S(0.55), Y(0.8), S(0.55)), wood, X(g), 0, z, WOOD));
     // top beam and a lower rail on this side
-    rig.body.add(mesh(box(S(9.4), S(0.32), S(0.45)), '#c79c63', 0, Y(1.5), z));
-    rig.body.add(mesh(box(S(4.0), S(0.35), S(0.45)), woodDark, X(3.2), Y(6.5), z));
+    rig.body.add(mesh(box(S(9.4), S(0.32), S(0.45)), '#c79c63', 0, Y(1.5), z, WOOD));
+    rig.body.add(mesh(box(S(4.0), S(0.35), S(0.45)), woodDark, X(3.2), Y(6.5), z, WOOD));
     // crossed diagonals (the big X)
-    rig.body.add(mesh(beam(X(2.6), Y(0.6), X(7.5), Y(9.7), S(0.45), S(0.4)), woodDark, 0, 0, z + (z > 0 ? 3 : -3)));
-    rig.body.add(mesh(beam(X(9.4), Y(0.8), X(1.0), Y(8.4), S(0.45), S(0.4)), wood, 0, 0, z + (z > 0 ? 6 : -6)));
+    rig.body.add(mesh(beam(X(2.6), Y(0.6), X(7.5), Y(9.7), S(0.45), S(0.4)), woodDark, 0, 0, z + (z > 0 ? 3 : -3), WOOD));
+    rig.body.add(mesh(beam(X(9.4), Y(0.8), X(1.0), Y(8.4), S(0.45), S(0.4)), wood, 0, 0, z + (z > 0 ? 6 : -6), WOOD));
   }
   // cross-ties between the two frames (front ↔ back), so it is one piece
   for (const g of [1.5, 4.9]) {
-    rig.body.add(mesh(box(S(0.4), S(0.4), D + 6), wood, X(g), Y(1.5) - 2, 0));
-    rig.body.add(mesh(box(S(0.4), S(0.4), D + 6), woodDark, X(g), Y(6.5), 0));
+    rig.body.add(mesh(box(S(0.4), S(0.4), D + 6), wood, X(g), Y(1.5) - 2, 0, WOOD));
+    rig.body.add(mesh(box(S(0.4), S(0.4), D + 6), woodDark, X(g), Y(6.5), 0, WOOD));
   }
   // bolts, only where two members actually cross (front frame)
   const zf = D / 2;
@@ -387,7 +396,7 @@ defineModel('lighthouse', (opts, rig) => {
   const top = S(4.6) / 2;
   const towerTop = Y(2.5);
   // tower: an 8-sided tapered shaft, light/shaded faces
-  rig.body.add(mesh(new THREE.CylinderGeometry(top, base, towerTop, 8).rotateY(PI / 8).translate(0, towerTop / 2, 0), '#d6c99b'));
+  rig.body.add(mesh(new THREE.CylinderGeometry(top, base, towerTop, 8).rotateY(PI / 8).translate(0, towerTop / 2, 0), '#d6c99b', 0, 0, 0, PLASTER));
   // little dark windows and the door on the front faces
   const zAt = (y) => {
     const r = base + (top - base) * (y / towerTop);
@@ -400,7 +409,7 @@ defineModel('lighthouse', (opts, rig) => {
     rig.body.add(m);
   }
   const doorH = Y(8.9);
-  const door = mesh(box(S(1.9), doorH, 2), '#3e3127', 0, 0, zAt(0) - 0.5); // tilted back with the wall from its sill
+  const door = mesh(box(S(1.9), doorH, 2), '#3e3127', 0, 0, zAt(0) - 0.5, WOOD); // tilted back with the wall from its sill
   door.rotation.x = -Math.atan2(base - top, towerTop);
   rig.body.add(door);
   // gallery (sage band) with a railing ring
@@ -427,7 +436,7 @@ defineModel('lighthouse', (opts, rig) => {
   rig.body.add(beamG);
   // roof: sage 8-sided pyramid with a cap ring, ONE solid
   rig.body.add(mesh(new THREE.CylinderGeometry(top + 6, top + 6, 2.5, 8).rotateY(PI / 8).translate(0, Y(1.3) + 1.25, 0), '#7f908a'));
-  rig.body.add(mesh(new THREE.ConeGeometry(top + 6, Y(0) - Y(1.3) - 2.5, 8).rotateY(PI / 8).translate(0, Y(1.3) + 2.5 + (Y(0) - Y(1.3) - 2.5) / 2, 0), '#92a39a'));
+  rig.body.add(mesh(new THREE.ConeGeometry(top + 6, Y(0) - Y(1.3) - 2.5, 8).rotateY(PI / 8).translate(0, Y(1.3) + 2.5 + (Y(0) - Y(1.3) - 2.5) / 2, 0), '#92a39a', 0, 0, 0, SHINGLE));
   rig.anims.idle = (t, dt, ctx) => {
     beamG.rotation.y = t * 1.2 + ctx.phase;
     lamp.rotation.y = t * 1.2;
@@ -442,30 +451,30 @@ defineModel('stage', (opts, rig) => {
   const D = 64;
   const front = D / 2;
   // floor platform
-  rig.body.add(mesh(box(W, Y(8.9), D), '#6a4f39', 0, 0, 0));
-  rig.body.add(mesh(box(W - 4, 2, D - 4), '#8a6a4d', 0, Y(8.9), 0));
+  rig.body.add(mesh(box(W, Y(8.9), D), '#6a4f39', 0, 0, 0, PLANKS));
+  rig.body.add(mesh(box(W - 4, 2, D - 4), '#8a6a4d', 0, Y(8.9), 0, PLANKS));
   // side walls (cream with a brown band near the top) and the back wall
   for (const s of [-1, 1]) {
-    rig.body.add(mesh(box(S(1.05), Y(1.8) - Y(8.9), D), '#cad0c5', s * (W / 2 - S(0.53)), Y(8.9), 0));
-    rig.body.add(mesh(box(S(1.07), 8, D + 0.4), '#7a573f', s * (W / 2 - S(0.53)), Y(2.6), 0));
+    rig.body.add(mesh(box(S(1.05), Y(1.8) - Y(8.9), D), '#cad0c5', s * (W / 2 - S(0.53)), Y(8.9), 0, PLASTER));
+    rig.body.add(mesh(box(S(1.07), 8, D + 0.4), '#7a573f', s * (W / 2 - S(0.53)), Y(2.6), 0, WOOD));
   }
-  rig.body.add(mesh(box(W - S(2.1), Y(1.8) - Y(8.9), 4), '#3f4b48', 0, Y(8.9), -front + 2));
-  rig.body.add(mesh(box(W - S(2.1), 6, D), '#7a573f', 0, Y(1.8) - 6, 0)); // lintel
+  rig.body.add(mesh(box(W - S(2.1), Y(1.8) - Y(8.9), 4), '#3f4b48', 0, Y(8.9), -front + 2, FABRIC));
+  rig.body.add(mesh(box(W - S(2.1), 6, D), '#7a573f', 0, Y(1.8) - 6, 0, WOOD)); // lintel
   // ONE continuous low-pitched roof
-  rig.body.add(mesh(roofSolid(0, Y(0), W / 2 + 6, Y(1.8), 5, D + 10), '#3e4148'));
+  rig.body.add(mesh(roofSolid(0, Y(0), W / 2 + 6, Y(1.8), 5, D + 10), '#3e4148', 0, 0, 0, SHINGLE));
   // curtains: pale drapes swept to each side, hung on pivots at the top so
   // they can sway
   const curtains = [];
   for (const s of [-1, 1]) {
     const c = group(s * (W / 2 - S(1.05)), Y(2.0), front - 6);
     const pts = [[0, 0], [-s * S(1.9), 0], [-s * S(1.2), -S(2.5)], [-s * S(0.15), -(Y(2.0) - Y(8.8))], [0, -(Y(2.0) - Y(8.8))]];
-    c.add(mesh(slab(pts, 3), '#d9d6c7'));
+    c.add(mesh(slab(pts, 3), '#d9d6c7', 0, 0, 0, FABRIC));
     c.add(mesh(box(3, 3, 4), '#b89a5f', -s * S(0.7), -S(2.5), 1.5)); // tie-back
     rig.body.add(c);
     curtains.push(c);
   }
   // a dark curtain valance across the top
-  rig.body.add(mesh(box(W - S(2.1), 6, 3), '#3a4542', 0, Y(2.0) - 6, front - 4));
+  rig.body.add(mesh(box(W - S(2.1), 6, 3), '#3a4542', 0, Y(2.0) - 6, front - 4, FABRIC));
   rig.anims.idle = (t, dt, ctx) => {
     curtains.forEach((c, i) => { c.rotation.z = Math.sin(t * 0.9 + ctx.phase + i * 1.3) * 0.02; });
   };
@@ -477,7 +486,7 @@ defineModel('filmCamera', (opts, rig) => {
   const { X, Y, S } = grid(134.9);
   const D = 34;
   // body
-  rig.body.add(mesh(box(S(6.4), Y(4.1), D), '#3e4a48', X(5.9), 0, 0));
+  rig.body.add(mesh(box(S(6.4), Y(4.1), D), '#3e4a48', X(5.9), 0, 0, { tex: 'metal' }));
   rig.body.add(mesh(box(S(6.0), 2, D - 6), '#556360', X(5.9), Y(4.1) - 1, 0));
   // side panel inset + knobs/levers on the front
   rig.body.add(mesh(box(S(4.6), Y(5.1) - Y(9.5), 1.2), '#4f5c5a', X(6.3), Y(9.5), D / 2 + 0.6));
@@ -521,7 +530,7 @@ defineModel('pandaRunner', (opts, rig) => {
   const hipY = Y(8.1);
   const legs = [-1, 1].map((s) => {
     const hip = group(s * S(1.3), hipY, 0);
-    hip.add(mesh(box(S(1.5), hipY - 3, S(1.4)).translate(0, -(hipY - 3), 0), '#4c4d55'));
+    hip.add(mesh(box(S(1.5), hipY - 3, S(1.4)).translate(0, -(hipY - 3), 0), '#4c4d55', 0, 0, 0, FABRIC));
     hip.add(mesh(box(S(1.7), 4, S(1.9)).translate(0, -(hipY - 1), 1.5), '#353436'));
     root.add(hip);
     return hip;
@@ -531,19 +540,19 @@ defineModel('pandaRunner', (opts, rig) => {
   root.add(torso);
   const bTop = Y(5.5);
   const bodyGeo = fold([[-S(2.6), hipY - 2], [S(2.6), hipY - 2], [S(2.3), bTop], [-S(2.3), bTop]], 28, 4);
-  torso.add(mesh(bodyGeo, '#9cb0a6'));
+  torso.add(mesh(bodyGeo, '#9cb0a6', 0, 0, 0, FABRIC));
   const bz = bodyGeo.userData.zAt;
   for (const gy of [6.2, 7.2]) {
     // stripes: thin bands just proud of the folded front
     const y = Y(gy);
     const hw = S(2.6) - (S(0.3) * (y - (hipY - 2))) / (bTop - hipY + 2) + 0.3; // follows the taper
     const band = fold([[-hw, y - 1.6], [hw, y - 1.6], [hw, y + 1.6], [-hw, y + 1.6]], 28.8, 4);
-    torso.add(mesh(band, '#e8e3d2'));
+    torso.add(mesh(band, '#e8e3d2', 0, 0, 0, FABRIC));
   }
   // arms: dark, on shoulder pivots, swinging opposite to the legs
   const arms = [-1, 1].map((s) => {
     const sh = group(s * S(2.4), bTop - 4, 0);
-    sh.add(mesh(new THREE.CapsuleGeometry(4.2, 14, 3, 6).translate(0, -10, 0), dark));
+    sh.add(mesh(new THREE.CapsuleGeometry(4.2, 14, 3, 6).translate(0, -10, 0), dark, 0, 0, 0, FUR));
     sh.rotation.z = s * 0.55;
     torso.add(sh);
     return sh;
@@ -553,7 +562,7 @@ defineModel('pandaRunner', (opts, rig) => {
   root.add(head);
   const R = { x: S(4.6), y: 24, z: S(3.5) };
   const hyc = R.y - 2; // rests on the shoulders, sunk 2 into the shirt
-  const headMesh = mesh(new THREE.SphereGeometry(1, 10, 7).scale(R.x, R.y, R.z), '#efe6d2', 0, hyc, 0);
+  const headMesh = mesh(new THREE.SphereGeometry(1, 10, 7).scale(R.x, R.y, R.z), '#efe6d2', 0, hyc, 0, FUR);
   head.add(headMesh);
   const { place } = surfacePlacer(head, [headMesh]);
   // eye patches (gray, tilted ovals), eyes inside them, cheeks, smile
@@ -577,7 +586,7 @@ defineModel('pandaRunner', (opts, rig) => {
   // ears: dark faceted balls, sunk into the top of the head
   const ears = [-1, 1].map((s) => {
     const e = group(s * S(3.1), hyc + R.y * 0.7, -3);
-    e.add(mesh(new THREE.IcosahedronGeometry(S(1.3), 1), dark));
+    e.add(mesh(new THREE.IcosahedronGeometry(S(1.3), 1), dark, 0, 0, 0, FUR));
     head.add(e);
     return e;
   });
@@ -610,7 +619,7 @@ defineModel('foxViolinist', (opts, rig) => {
   rig.body.add(root);
   // legs: dark, tapering to the ground
   for (const s of [-1, 1]) {
-    root.add(mesh(new THREE.CylinderGeometry(S(0.7), S(0.45), Y(8.6), 4).rotateY(PI / 4).translate(0, Y(8.6) / 2, 0), '#4e4c57', s * S(0.75), 0, 0));
+    root.add(mesh(new THREE.CylinderGeometry(S(0.7), S(0.45), Y(8.6), 4).rotateY(PI / 4).translate(0, Y(8.6) / 2, 0), '#4e4c57', s * S(0.75), 0, 0, FABRIC));
   }
   // body: sage coat, folded, cream collar
   const torso = group(0, 0, 0);
@@ -618,25 +627,25 @@ defineModel('foxViolinist', (opts, rig) => {
   const bTop = Y(6.3);
   const bBot = Y(8.9);
   const coat = fold([[-S(2.0), bBot], [S(2.0), bBot], [S(1.6), bTop], [-S(1.6), bTop]], 24, 3);
-  torso.add(mesh(coat, '#7e8d7d'));
+  torso.add(mesh(coat, '#7e8d7d', 0, 0, 0, FABRIC));
   const cz = coat.userData.zAt;
-  torso.add(mesh(fold([[-S(1.0), bTop - 7], [0, bTop - 12], [S(1.0), bTop - 7], [S(1.0), bTop], [-S(1.0), bTop]], 25, 3), '#e6dcc4'));
+  torso.add(mesh(fold([[-S(1.0), bTop - 7], [0, bTop - 12], [S(1.0), bTop - 7], [S(1.0), bTop], [-S(1.0), bTop]], 25, 3), '#e6dcc4', 0, 0, 0, FABRIC));
   // tail from the rump, sweeping round to her right side
   // tail: a bushy rust plume out of the rump, sweeping back and up behind
   // her (cream tip) — hidden from the front, as on the sheet
   const tail = group(0, bBot + 18, -10);
   const plume = new THREE.Group();
-  plume.add(mesh(new THREE.SphereGeometry(1, 8, 6).scale(S(0.75), S(0.75), S(1.5)).translate(0, S(0.2), -S(1.2)), '#a6684a'));
-  plume.add(mesh(new THREE.SphereGeometry(1, 8, 6).scale(S(0.55), S(0.55), S(0.7)).translate(0, S(0.45), -S(2.6)), '#efe4cf'));
+  plume.add(mesh(new THREE.SphereGeometry(1, 8, 6).scale(S(0.75), S(0.75), S(1.5)).translate(0, S(0.2), -S(1.2)), '#a6684a', 0, 0, 0, FUR));
+  plume.add(mesh(new THREE.SphereGeometry(1, 8, 6).scale(S(0.55), S(0.55), S(0.7)).translate(0, S(0.45), -S(2.6)), '#efe4cf', 0, 0, 0, FUR));
   plume.rotation.x = -0.5;
   tail.add(plume);
   torso.add(tail);
   // arms: the left (viewer's left) draws the bow, the right holds the violin
   const bowArm = group(-S(1.5), bTop - 4, 2);
-  bowArm.add(mesh(new THREE.CapsuleGeometry(3, 12, 3, 6).rotateZ(PI / 2).translate(-2, -6, 6), '#dbc9a5'));
+  bowArm.add(mesh(new THREE.CapsuleGeometry(3, 12, 3, 6).rotateZ(PI / 2).translate(-2, -6, 6), '#dbc9a5', 0, 0, 0, FUR));
   torso.add(bowArm);
   const fidArm = group(S(1.5), bTop - 4, 2);
-  fidArm.add(mesh(new THREE.CapsuleGeometry(3, 12, 3, 6).rotateZ(-0.9).translate(5, -4, 6), '#dbc9a5'));
+  fidArm.add(mesh(new THREE.CapsuleGeometry(3, 12, 3, 6).rotateZ(-0.9).translate(5, -4, 6), '#dbc9a5', 0, 0, 0, FUR));
   torso.add(fidArm);
   // violin under the chin, tilted, resting on her right shoulder
   const violin = group(S(1.9), bTop - 2, cz(S(1.6)) + 6);
@@ -647,7 +656,7 @@ defineModel('foxViolinist', (opts, rig) => {
   body.bezierCurveTo(6.5, 2, 6.5, 8, 0, 8);
   body.bezierCurveTo(-6.5, 8, -6.5, 2, -4, 0);
   body.bezierCurveTo(-6.5, -2, -6.5, -9, 0, -9);
-  violin.add(mesh(new THREE.ExtrudeGeometry(body, { depth: 4, bevelEnabled: false, curveSegments: 6 }).translate(0, 0, -2).rotateZ(PI / 2), '#945f45'));
+  violin.add(mesh(new THREE.ExtrudeGeometry(body, { depth: 4, bevelEnabled: false, curveSegments: 6 }).translate(0, 0, -2).rotateZ(PI / 2), '#945f45', 0, 0, 0, { tex: 'wood', texScale: 0.5 }));
   violin.add(mesh(box(13, 2, 2), '#4b2e1d', -13, -1, 1.5));
   violin.add(mesh(box(4, 3, 2.4), '#4b2e1d', -21, -1.5, 1.5));
   for (const y of [-1.5, 1.5]) violin.add(mesh(box(1, 1.2, 1.2), '#2c1b11', y * 1.6, -1.5, 2.6));
@@ -683,8 +692,8 @@ defineModel('foxViolinist', (opts, rig) => {
     }
     lower.computeVertexNormals();
   }
-  const upperM = mesh(upper, '#a46448');
-  const lowerM = mesh(lower, '#ebe2c8');
+  const upperM = mesh(upper, '#a46448', 0, 0, 0, FUR);
+  const lowerM = mesh(lower, '#ebe2c8', 0, 0, 0, FUR);
   head.add(upperM, lowerM);
   const { place } = surfacePlacer(head, [upperM, lowerM]);
   const eyes = [];
@@ -700,7 +709,7 @@ defineModel('foxViolinist', (opts, rig) => {
   // ears: tall pointed folds with dark inners, sunk into the top edge
   const ears = [-1, 1].map((s) => {
     const e = group(hx(5) + s * S(2.6), hy(1.4), -4);
-    e.add(mesh(fold([[-S(1.3), 0], [S(1.3), 0], [s * S(1.2), S(1.9)]], 8, 2), '#a46448'));
+    e.add(mesh(fold([[-S(1.3), 0], [S(1.3), 0], [s * S(1.2), S(1.9)]], 8, 2), '#a46448', 0, 0, 0, FUR));
     e.add(mesh(fold([[-S(0.7), 1.5], [S(0.7), 1.5], [s * S(0.8), S(1.45)]], 2, 1.2), '#5a2f15', 0, 0, 4.6));
     head.add(e);
     return e;

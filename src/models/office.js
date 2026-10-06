@@ -18,6 +18,12 @@ function grid(aspect) {
   };
 }
 
+const WOOD = { tex: 'wood' };
+const FABRIC = { tex: 'fabric' };
+const METAL = { tex: 'metal' };
+const FUR = { tex: 'fur' };
+const LEAF = { tex: 'leaf', texScale: 0.6 };
+
 const shade = (c, l) => new THREE.Color(c).offsetHSL(0, 0, l).getStyle();
 
 // ── shared furniture parts ────────────────────────────────────────────────
@@ -25,11 +31,11 @@ const shade = (c, l) => new THREE.Color(c).offsetHSL(0, 0, l).getStyle();
 // Simple office chair facing +z: seat, back at −z, four legs.
 function chair({ w, seatY, backH, d, color, legColor = shade(color, -0.12) }) {
   const g = new THREE.Group();
-  g.add(mesh(box(w, 3, d), color, 0, seatY - 3, 0));
-  g.add(mesh(box(w, backH, 3), shade(color, 0.03), 0, seatY, -d / 2 + 1.5));
+  g.add(mesh(box(w, 3, d), color, 0, seatY - 3, 0, FABRIC));
+  g.add(mesh(box(w, backH, 3), shade(color, 0.03), 0, seatY, -d / 2 + 1.5, FABRIC));
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
-      g.add(mesh(box(2.4, seatY - 3, 2.4), legColor, sx * (w / 2 - 1.6), 0, sz * (d / 2 - 1.6)));
+      g.add(mesh(box(2.4, seatY - 3, 2.4), legColor, sx * (w / 2 - 1.6), 0, sz * (d / 2 - 1.6), WOOD));
     }
   }
   return g;
@@ -38,10 +44,10 @@ function chair({ w, seatY, backH, d, color, legColor = shade(color, -0.12) }) {
 // Table: top slab + four legs.
 function table({ w, h, d, top, leg, thick = 5, legW = 5 }) {
   const g = new THREE.Group();
-  g.add(mesh(box(w, thick, d), top, 0, h - thick, 0));
+  g.add(mesh(box(w, thick, d), top, 0, h - thick, 0, WOOD));
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
-      g.add(mesh(box(legW, h - thick, legW), leg, sx * (w / 2 - legW), 0, sz * (d / 2 - legW)));
+      g.add(mesh(box(legW, h - thick, legW), leg, sx * (w / 2 - legW), 0, sz * (d / 2 - legW), WOOD));
     }
   }
   return g;
@@ -59,7 +65,7 @@ function pottedPlant(parent, { x, y, z, potR, potH, potColor, leaves, leafLen, l
     p.rotation.x = (i % 3 - 1) * 0.25;
     const L = leafLen * (1 - Math.abs(a) * 0.25);
     const leaf = fold([[0, 0], [leafW / 2, L * 0.45], [0, L], [-leafW / 2, L * 0.45]], 1.2, 1.5, { cx: 0 });
-    p.add(mesh(leaf, leafColors[i % leafColors.length]));
+    p.add(mesh(leaf, leafColors[i % leafColors.length], 0, 0, 0, LEAF));
     parent.add(p);
     pivots.push(p);
   }
@@ -117,7 +123,7 @@ defineModel('officeChair', (opts, rig) => {
   const back = group(0, 3, -S(2.6));
   const post = mesh(beam(0, 0, 4, Y(4.1) - Y(6.2), 4, 4), '#6a5137');
   back.add(post);
-  const disk = mesh(new THREE.CylinderGeometry(22, 22, 7, 16).rotateX(PI / 2), '#ddd4bf', 6, Y(2.1) - Y(6.2), 0);
+  const disk = mesh(new THREE.CylinderGeometry(22, 22, 7, 16).rotateX(PI / 2), '#ddd4bf', 6, Y(2.1) - Y(6.2), 0, FABRIC);
   disk.rotation.y = 0.12;
   back.add(disk);
   top.add(back);
@@ -140,15 +146,15 @@ function shelfModel(name, aspect, caseW, rows) {
     const g = group(cx, 0, 0);
     rig.body.add(g);
     const t = 3.4;
-    g.add(mesh(box(W, t, D), cream, 0, 0, 0));
-    g.add(mesh(box(W, t, D), cream, 0, 100 - t, 0));
-    for (const s of [-1, 1]) g.add(mesh(box(t, 100, D), cream, s * (W / 2 - t / 2), 0, 0));
-    g.add(mesh(box(W, 100, 2), '#a99a7c', 0, 0, -D / 2 + 1));
+    g.add(mesh(box(W, t, D), cream, 0, 0, 0, WOOD));
+    g.add(mesh(box(W, t, D), cream, 0, 100 - t, 0, WOOD));
+    for (const s of [-1, 1]) g.add(mesh(box(t, 100, D), cream, s * (W / 2 - t / 2), 0, 0, WOOD));
+    g.add(mesh(box(W, 100, 2), '#a99a7c', 0, 0, -D / 2 + 1, WOOD));
     // rows: [gyShelfTop, gyShelfBottom, books[[gx0, gx1, color, lean]]]
     const tilted = [];
     rows.forEach(([gyTop, gyBot, books]) => {
       const yb = Y(gyBot);
-      g.add(mesh(box(W, t, D), cream, 0, yb - t, 0));
+      g.add(mesh(box(W, t, D), cream, 0, yb - t, 0, WOOD));
       for (const [g0, g1, color, lean, hk = 0.92] of books) {
         const bw = S(g1 - g0);
         const bh = (Y(gyTop) - yb) * hk;
@@ -217,16 +223,16 @@ defineModel('flipchart', (opts, rig) => {
   const wood = '#5a4632';
   // easel: two front legs splayed, one back leg
   for (const [x0, x1] of [[2.4, 1.2], [6.8, 8.6]]) {
-    rig.body.add(mesh(beam(X(x0), boardBot, X(x1), 0, 3, 3), wood, 0, 0, 3));
+    rig.body.add(mesh(beam(X(x0), boardBot, X(x1), 0, 3, 3), wood, 0, 0, 3, WOOD));
   }
   const backLeg = group(X(5.6), boardBot, -1);
-  backLeg.add(mesh(box(3.4, boardBot / Math.cos(0.35), 3.4).translate(0, -boardBot / Math.cos(0.35), 0), '#7a5e3e'));
+  backLeg.add(mesh(box(3.4, boardBot / Math.cos(0.35), 3.4).translate(0, -boardBot / Math.cos(0.35), 0), '#7a5e3e', 0, 0, 0, WOOD));
   backLeg.rotation.x = 0.35;
   rig.body.add(backLeg);
   // board + tray + top clamp
   rig.body.add(mesh(box(W, boardTop - boardBot, 2), '#dad4c4', cx, boardBot, 0));
-  rig.body.add(mesh(box(W + 2, 3.5, 7), '#5c5a57', cx, boardBot - 3, 2));
-  rig.body.add(mesh(box(W + 3, 4, 6), '#4d4b49', cx, boardTop - 1, 0.5));
+  rig.body.add(mesh(box(W + 2, 3.5, 7), '#5c5a57', cx, boardBot - 3, 2, METAL));
+  rig.body.add(mesh(box(W + 3, 4, 6), '#4d4b49', cx, boardTop - 1, 0.5, METAL));
   // pages: the visible one carries scribbles; one more hangs ready to flip
   const pageGeo = new THREE.PlaneGeometry(W - 2, boardTop - boardBot - 4).translate(0, -(boardTop - boardBot - 4) / 2, 0);
   const page = new THREE.Mesh(pageGeo, new THREE.MeshLambertMaterial({ map: scribbleTexture(rig.seed + 1), side: THREE.DoubleSide }));
@@ -253,15 +259,15 @@ defineModel('filingCabinet', (opts, rig) => {
   const D = 46;
   const cx = X(4.2);
   const body = '#b7c5be';
-  rig.body.add(mesh(box(W, 100, D), body, cx, 0, -1));
+  rig.body.add(mesh(box(W, 100, D), body, cx, 0, -1, METAL));
   const drawers = [];
   for (const [g0, g1] of [[0.6, 3.6], [3.8, 6.7], [6.9, 9.8]]) {
     const h = Y(g0) - Y(g1);
     const dr = group(cx, Y(g1), D / 2 - 1);
     // a real drawer: front panel + a box running back into the cabinet, so a
     // pulled drawer shows its sides instead of a floating plate
-    dr.add(mesh(box(W - 6, h - 2, 6), '#a9b9b2', 0, 1, -2));
-    dr.add(mesh(box(W - 9, h - 6, D - 10), '#9fafa8', 0, 2, -5 - (D - 10) / 2));
+    dr.add(mesh(box(W - 6, h - 2, 6), '#a9b9b2', 0, 1, -2, METAL));
+    dr.add(mesh(box(W - 9, h - 6, D - 10), '#9fafa8', 0, 2, -5 - (D - 10) / 2, METAL));
     dr.add(mesh(box(S(3.0), 3.4, 1), '#e2e8e4', 0, h * 0.62, 1.4));
     dr.add(mesh(box(S(3.4), 2.4, 3), '#3f4d48', 0, h * 0.3, 2));
     rig.body.add(dr);
@@ -355,11 +361,11 @@ defineModel('clock', (opts, rig) => {
   const { X, S } = grid(103.2);
   const R = 48;
   const cx = X(4.6);
-  rig.body.add(mesh(new THREE.CylinderGeometry(R, R, 14, 24).rotateX(PI / 2), '#c99a5a', cx, 50, -4));
+  rig.body.add(mesh(new THREE.CylinderGeometry(R, R, 14, 24).rotateX(PI / 2), '#c99a5a', cx, 50, -4, WOOD));
   rig.body.add(mesh(new THREE.CylinderGeometry(R - 6, R - 6, 2, 24).rotateX(PI / 2), '#ece2c9', cx, 50, 3.2));
   // little feet so it stands
   // (tall enough to reach the ring: at x = ±22 its rim is ~7.3 up)
-  for (const s of [-1, 1]) rig.body.add(mesh(box(6, 9.5, 8), '#b0864c', cx + s * 22, 0, -4));
+  for (const s of [-1, 1]) rig.body.add(mesh(box(6, 9.5, 8), '#b0864c', cx + s * 22, 0, -4, WOOD));
   const hourP = group(cx, 50, 5);
   hourP.add(mesh(box(4, 22, 1.2).translate(0, -2, 0), '#253331'));
   const minP = group(cx, 50, 6.2);
@@ -377,7 +383,7 @@ defineModel('wasteBasket', (opts, rig) => {
   const { X, S } = grid(94.6);
   const R = S(4.3);
   const r = S(3.4);
-  rig.body.add(mesh(new THREE.CylinderGeometry(R, r, 96, 14, 1, true).translate(0, 48, 0), '#aca189', X(5), 0, 0, { side: THREE.DoubleSide }));
+  rig.body.add(mesh(new THREE.CylinderGeometry(R, r, 96, 14, 1, true).translate(0, 48, 0), '#aca189', X(5), 0, 0, { ...METAL, side: THREE.DoubleSide }));
   rig.body.add(new THREE.Mesh(new THREE.CircleGeometry(r, 14).rotateX(-PI / 2).translate(X(5), 1, 0), mat('#5a5040')));
   rig.body.add(mesh(new THREE.TorusGeometry(R, 2, 4, 14).rotateX(PI / 2), '#9a8f78', X(5), 96, 0));
   const tilt = Math.atan2(R - r, 96);
@@ -455,11 +461,11 @@ defineModel('longTable', (opts, rig) => {
   }
   // desk lamp on the right end
   const lx = X(8.6);
-  rig.body.add(mesh(new THREE.CylinderGeometry(7, 8, 3, 12).translate(0, 1.5, 0), '#4a3a2c', lx, topY, -8));
-  rig.body.add(mesh(beam(0, 0, 0, Y(1.8) - topY, 2.4, 2.4), '#4a3a2c', lx + 4, topY, -8));
-  rig.body.add(mesh(beam(4, Y(1.8) - topY, -9, Y(1.0) - topY, 2.4, 2.4), '#4a3a2c', lx, topY, -8));
+  rig.body.add(mesh(new THREE.CylinderGeometry(7, 8, 3, 12).translate(0, 1.5, 0), '#4a3a2c', lx, topY, -8, METAL));
+  rig.body.add(mesh(beam(0, 0, 0, Y(1.8) - topY, 2.4, 2.4), '#4a3a2c', lx + 4, topY, -8, METAL));
+  rig.body.add(mesh(beam(4, Y(1.8) - topY, -9, Y(1.0) - topY, 2.4, 2.4), '#4a3a2c', lx, topY, -8, METAL));
   const shadeG = group(lx - 12, Y(1.2), -8);
-  shadeG.add(mesh(new THREE.ConeGeometry(11, 13, 8, 1, true).translate(0, -6, 0), '#c8743a', 0, 0, 0, { side: THREE.DoubleSide }));
+  shadeG.add(mesh(new THREE.ConeGeometry(11, 13, 8, 1, true).translate(0, -6, 0), '#c8743a', 0, 0, 0, { ...FABRIC, side: THREE.DoubleSide }));
   shadeG.rotation.z = 0.5;
   const bulbMat = new THREE.MeshBasicMaterial({ color: '#ffe3a0' });
   const bulb = new THREE.Mesh(new THREE.SphereGeometry(3.6, 10, 8), bulbMat);
@@ -516,9 +522,9 @@ function colleague(rig, spec) {
   const midY = shY * 0.62;
   const mid = new THREE.CylinderGeometry(rSh, rSh * 0.94, shY - midY, 6).translate(0, midY + (shY - midY) / 2, 0);
   const lower = new THREE.CylinderGeometry(rSh * 0.94, rSh * 0.12, midY, 6).translate(0, midY / 2, 0);
-  bodyG.add(mesh(upper, spec.suitLight));
-  bodyG.add(mesh(mid, spec.suit));
-  bodyG.add(mesh(lower, shade(spec.suit, -0.03)));
+  bodyG.add(mesh(upper, spec.suitLight, 0, 0, 0, FABRIC));
+  bodyG.add(mesh(mid, spec.suit, 0, 0, 0, FABRIC));
+  bodyG.add(mesh(lower, shade(spec.suit, -0.03), 0, 0, 0, FABRIC));
   // lapels + tie lie ON the chest. The body is a hexagonal solid with a
   // vertex at the front, so its front surface is exactly
   //   z(x, y) = R(y) − tan30°·|x|
@@ -585,7 +591,7 @@ function colleague(rig, spec) {
   for (const s of [-1, 1]) {
     const a = group(s * rSh * 0.8, shY + 3, 0);
     const sleeve = new THREE.CylinderGeometry(6.2, 4.4, 15, 5).translate(0, -7.5, 0);
-    a.add(mesh(sleeve, spec.suit));
+    a.add(mesh(sleeve, spec.suit, 0, 0, 0, FABRIC));
     a.add(mesh(new THREE.SphereGeometry(3.8, 8, 6).translate(0, -16, 0), spec.paw));
     a.rotation.z = s * 0.8;
     bodyG.add(a);
@@ -599,7 +605,7 @@ function colleague(rig, spec) {
   const rx = S(spec.headHw);
   const ry = spec.headRy;
   const rz = rx * 0.78;
-  head.add(mesh(new THREE.SphereGeometry(1, 16, 12).scale(rx, ry, rz), spec.fur, 0, hcY, 0));
+  head.add(mesh(new THREE.SphereGeometry(1, 16, 12).scale(rx, ry, rz), spec.fur, 0, hcY, 0, FUR));
   const surfZ = (x, y) => rz * Math.sqrt(Math.max(0.02, 1 - (x / rx) ** 2 - ((y - hcY) / ry) ** 2));
   const hx = (gx) => X(gx) - cx;
   const hy = (gy) => Y(gy) - (neckY - 2);
@@ -610,13 +616,13 @@ function colleague(rig, spec) {
     const e = spec.ears;
     const ear = group(s * S(e.dx), hy(e.gy), -rz * 0.2);
     if (e.kind === 'round') {
-      ear.add(mesh(new THREE.CylinderGeometry(S(e.r), S(e.r), 6, 14).rotateX(PI / 2), e.colors[i]));
+      ear.add(mesh(new THREE.CylinderGeometry(S(e.r), S(e.r), 6, 14).rotateX(PI / 2), e.colors[i], 0, 0, 0, FUR));
       ear.add(mesh(new THREE.CylinderGeometry(S(e.r) * 0.55, S(e.r) * 0.55, 1, 12).rotateX(PI / 2), shade(e.colors[i], -0.06), 0, -1, 3.2));
     } else if (e.kind === 'point') {
-      ear.add(mesh(new THREE.ConeGeometry(S(e.r), S(e.h), 4).translate(0, S(e.h) / 2, 0).scale(1, 1, 0.45), e.colors[i]));
+      ear.add(mesh(new THREE.ConeGeometry(S(e.r), S(e.h), 4).translate(0, S(e.h) / 2, 0).scale(1, 1, 0.45), e.colors[i], 0, 0, 0, FUR));
       ear.rotation.z = -s * 0.35;
     } else {
-      ear.add(mesh(box(S(e.r) * 2, S(e.r) * 1.8, 5), e.colors[i]));
+      ear.add(mesh(box(S(e.r) * 2, S(e.r) * 1.8, 5), e.colors[i], 0, 0, 0, FUR));
       ear.rotation.z = -s * 0.2;
     }
     head.add(ear);

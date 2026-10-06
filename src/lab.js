@@ -13,6 +13,9 @@ import { buildModel, hasModel, modelNames, modelInfo, setPack } from './models/r
 import { loadFonts } from './parts/fonts.js';
 import { addSceneLights } from './engine/lights.js';
 import { createWebGLRenderer, showWebGLError } from './engine/webgl.js';
+import { TEX_WORLD } from './models/kit.js';
+import { spriteHeight } from './assets/catalog.js';
+import { texturesEnabled } from './assets/materialTextures.js';
 
 const urls = import.meta.glob('./sprites/*.webp', { eager: true, query: '?url', import: 'default' });
 const url = (n) => urls[`./sprites/${n}.webp`];
@@ -70,10 +73,19 @@ const counts = Object.fromEntries(ENVS.map(([e]) => [e, modelNames().filter((n) 
 let env = q.get('env') ?? (q.has('m') ? null : 'village');
 let search = '';
 bar.innerHTML = ENVS.map(([e, label]) => `<button data-env="${e}">${label} <span>${counts[e]}</span></button>`).join('')
-  + `<button data-env="all">Všetko <span>${modelNames().length}</span></button><input id="search" placeholder="hľadať…">`;
+  + `<button data-env="all">Všetko <span>${modelNames().length}</span></button><input id="search" placeholder="hľadať…">`
+  + `<button data-tex class="${texturesEnabled ? 'on' : ''}">Textúry ${texturesEnabled ? 'zap.' : 'vyp.'}</button>`;
 bar.addEventListener('click', (ev) => {
   const b = ev.target.closest('button');
   if (!b) return;
+  if (b.hasAttribute('data-tex')) {
+    // textures are fixed when materials compile — reload with the flag flipped
+    const u = new URL(window.location.href);
+    if (texturesEnabled) u.searchParams.set('tex', '0'); else u.searchParams.delete('tex');
+    if (env) u.searchParams.set('env', env);
+    window.location.href = u.href;
+    return;
+  }
   env = b.dataset.env;
   search = '';
   document.getElementById('search').value = '';
@@ -106,7 +118,7 @@ function selected() {
 function rebuild() {
   for (const it of items) if (it.group) scene.remove(it.group);
   rowsEl.innerHTML = '';
-  for (const b of bar.querySelectorAll('button')) b.classList.toggle('on', !search && b.dataset.env === env);
+  for (const b of bar.querySelectorAll('button[data-env]')) b.classList.toggle('on', !search && b.dataset.env === env);
   items = selected().map((name) => {
     const row = document.createElement('div');
     row.className = 'row';
@@ -137,6 +149,7 @@ function frame(t) {
     const r = it.row.getBoundingClientRect();
     if (r.bottom < top || r.top > innerHeight) continue; // off screen
     for (const o of items) if (o.group) o.group.visible = o === it;
+    TEX_WORLD.value = spriteHeight(it.name) / 100;
     if (it.anims) {
       const fn = it.anims[animName] ?? it.anims[Object.keys(it.anims).find((k) => k !== 'always')];
       it.anims.always?.(t, 1 / 60, it.ctx);

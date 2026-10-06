@@ -40,6 +40,16 @@ function lumpy(r, detail = 1) {
   return new THREE.IcosahedronGeometry(r, detail);
 }
 
+const WOOD = { tex: 'wood' };
+const PLASTER = { tex: 'plaster' };
+const STONE = { tex: 'stone' };
+const FABRIC = { tex: 'fabric' };
+const METAL = { tex: 'metal' };
+const FUR = { tex: 'fur' };
+const LEAF = { tex: 'leaf' };
+const BARK = { tex: 'bark' };
+const STRAW = { tex: 'straw', texScale: 0.6 };
+
 const shade = (c, l) => new THREE.Color(c).offsetHSL(0, 0, l).getStyle();
 
 // ── characters ───────────────────────────────────────────────────────────
@@ -56,7 +66,7 @@ function shopkeeper(rig, spec) {
   const D = spec.depth ?? 0.8;
   const [gyTop, gyWide, gyBot] = spec.dress;
   const [hwTop, hwWide, hwBot] = spec.dressW.map(S);
-  torso.add(mesh(gem([[0, Y(gyBot)], [hwBot, Y(gyBot)], [hwWide, Y(gyWide)], [hwTop, Y(gyTop)], [0, Y(gyTop)]], 6, D), spec.dressColor));
+  torso.add(mesh(gem([[0, Y(gyBot)], [hwBot, Y(gyBot)], [hwWide, Y(gyWide)], [hwTop, Y(gyTop)], [0, Y(gyTop)]], 6, D), spec.dressColor, 0, 0, 0, FABRIC));
   if (spec.dressDetail) spec.dressDetail(torso, { X, Y, S });
   // legs
   const legs = [];
@@ -75,7 +85,7 @@ function shopkeeper(rig, spec) {
   for (const s of [-1, 1]) {
     const len = spec.armLen ?? 16;
     const arm = group(s * (sideX(S(spec.dressW[0])) + 2.2), Y(gyTop) - 3.5, 0);
-    arm.add(mesh(new THREE.CylinderGeometry(3.4, 2.7, len, 6).translate(0, -len / 2, 0), spec.dressColor));
+    arm.add(mesh(new THREE.CylinderGeometry(3.4, 2.7, len, 6).translate(0, -len / 2, 0), spec.dressColor, 0, 0, 0, FABRIC));
     arm.add(mesh(new THREE.IcosahedronGeometry(3.0, 0).translate(0, -len - 1.2, 0), spec.armColor ?? shade(spec.dressColor, -0.1)));
     arm.rotation.z = s * REST;
     torso.add(arm);
@@ -140,7 +150,7 @@ defineModel('wolfShopkeeper', (opts, rig) => shopkeeper(rig, {
   head(head, { X, Y, S, neckY }) {
     const hp = (pts) => pts.map(([gx, gy]) => [X(gx), Y(gy) - neckY]);
     const faceGeo = fold(hp([[1.0, 2.35], [9.0, 2.35], [9.9, 5.6], [5.0, 7.05], [0.1, 5.6]]), 22, 9, { cx: 0 });
-    head.add(mesh(faceGeo, '#b8afa5'));
+    head.add(mesh(faceGeo, '#b8afa5', 0, 0, 0, FUR));
     const fz = faceGeo.userData.zAt;
     // cream mask on the lower face sides, the ridge stays taupe
     head.add(decal(hp([[0.15, 5.6], [0.9, 3.3], [3.9, 4.2], [4.85, 6.95]]), fz, '#e6dfd3'));
@@ -155,7 +165,7 @@ defineModel('wolfShopkeeper', (opts, rig) => shopkeeper(rig, {
     for (const [gx, s] of [[1.6, -1], [8.4, 1]]) {
       const ear = group(X(gx), Y(2.4) - neckY, -2);
       const outer = fold([[-S(0.8), 0], [S(0.8), 0], [s * S(0.4), Y(0.0) - Y(2.4)]], 4, 1.5);
-      ear.add(mesh(outer, '#a2958c'));
+      ear.add(mesh(outer, '#a2958c', 0, 0, 0, FUR));
       ear.add(mesh(fold([[-S(0.45), 1], [S(0.45), 1], [s * S(0.3), Y(0.5) - Y(2.4)]], 1, 0.5), '#6b5547', 0, 0, 2.6));
       head.add(ear);
       ears.push(ear);
@@ -166,7 +176,7 @@ defineModel('wolfShopkeeper', (opts, rig) => shopkeeper(rig, {
     y: 14, z: 10, x: -4,
     build(t) {
       const g = new THREE.ConeGeometry(4.5, 20, 4).translate(0, 10, 0).rotateX(-PI / 2 - 0.5);
-      t.add(mesh(g, '#5e4c3c'));
+      t.add(mesh(g, '#5e4c3c', 0, 0, 0, FUR));
       t.rotation.y = 0.9;
     },
   },
@@ -185,7 +195,7 @@ defineModel('boar', (opts, rig) => shopkeeper(rig, {
   head(head, { X, Y, S, neckY }) {
     const hp = (pts) => pts.map(([gx, gy]) => [X(gx), Y(gy) - neckY]);
     const faceGeo = fold(hp([[1.0, 1.3], [5.0, 0.4], [8.6, 1.0], [9.3, 4.4], [8.2, 6.4], [5.0, 6.9], [1.8, 6.4], [0.6, 4.4]]), 34, 7, { cx: 0 });
-    head.add(mesh(faceGeo, '#adbaae'));
+    head.add(mesh(faceGeo, '#adbaae', 0, 0, 0, FUR));
     const fz = faceGeo.userData.zAt;
     // the snout: a short, soft pig snout — a low faceted dome with a round
     // dark nose disc and two nostrils, not a block
@@ -200,7 +210,7 @@ defineModel('boar', (opts, rig) => shopkeeper(rig, {
     const ears = [];
     for (const [gx, gy, s] of [[1.0, 1.4, -1], [9.0, 1.2, 1]]) {
       const ear = group(X(gx), Y(gy) - neckY, -4);
-      const e = mesh(new THREE.ConeGeometry(S(1.1), 13, 4).rotateZ(s * -1.1), s < 0 ? '#6c7a6b' : '#3f4d40', s * 5, 2, 0);
+      const e = mesh(new THREE.ConeGeometry(S(1.1), 13, 4).rotateZ(s * -1.1), s < 0 ? '#6c7a6b' : '#3f4d40', s * 5, 2, 0, FUR);
       ear.add(e);
       head.add(ear);
       ears.push(ear);
@@ -218,13 +228,13 @@ defineModel('boar', (opts, rig) => shopkeeper(rig, {
 
 // Round panda head with ears, cheek patches, dot eyes + dot nose.
 function pandaHead(head, { X, Y, S, neckY }, { cy, rx, ry, ears, earR, cheekX, cheekR, eyeX }) {
-  const h = mesh(new THREE.SphereGeometry(1, 14, 10).scale(rx, ry, ry * 0.62), '#f0ebde', 0, Y(cy) - neckY, 0);
+  const h = mesh(new THREE.SphereGeometry(1, 14, 10).scale(rx, ry, ry * 0.62), '#f0ebde', 0, Y(cy) - neckY, 0, FUR);
   head.add(h);
   const front = ry * 0.62;
   const out = [];
   for (const [gx, gy] of ears) {
     const e = group(X(gx), Y(gy) - neckY, -4);
-    e.add(mesh(new THREE.CylinderGeometry(S(earR), S(earR), 5, 14).rotateX(PI / 2), '#9a7676'));
+    e.add(mesh(new THREE.CylinderGeometry(S(earR), S(earR), 5, 14).rotateX(PI / 2), '#9a7676', 0, 0, 0, FUR));
     head.add(e);
     out.push(e);
   }
@@ -296,9 +306,9 @@ tieredTree('slimTree2', { aspect: 45.3, trunk: [4.3, 5.6, '#6f5d49'], tiers: [[0
 // gemTree — a faceted gem of a crown on a short trunk; the crown sways
 defineModel('gemTree', (opts, rig) => {
   const { Y, S } = grid(70.1);
-  rig.body.add(mesh(box(S(1.2), Y(8.3), S(1.0)), '#7a6853', 0, 0, 0));
+  rig.body.add(mesh(box(S(1.2), Y(8.3), S(1.0)), '#7a6853', 0, 0, 0, BARK));
   const crown = group(0, Y(8.6), 0);
-  crown.add(mesh(gem([[0, 0], [S(3.8), Y(8.2) - Y(8.6)], [S(4.95), Y(5.4) - Y(8.6)], [0, Y(0) - Y(8.6)]], 6, 0.95), '#a6b1a5'));
+  crown.add(mesh(gem([[0, 0], [S(3.8), Y(8.2) - Y(8.6)], [S(4.95), Y(5.4) - Y(8.6)], [0, Y(0) - Y(8.6)]], 6, 0.95), '#a6b1a5', 0, 0, 0, LEAF));
   rig.body.add(crown);
   rig.anims.sway = (t, dt, ctx) => {
     crown.rotation.z = Math.sin(t * 0.9 + ctx.phase) * 0.025;
@@ -329,7 +339,7 @@ defineModel('flowerPot', (opts, rig) => {
   }
   // leaves
   for (const [x, y, rz, s] of [[-12, 50, 0.9, 1], [10, 58, -0.8, 1], [2, 68, 0.2, 0.8], [18, 82, -0.3, 0.9]]) {
-    const leaf = mesh(new THREE.ConeGeometry(6 * s, 22 * s, 3).scale(1, 1, 0.3), '#5d6e60', x, y, 2);
+    const leaf = mesh(new THREE.ConeGeometry(6 * s, 22 * s, 3).scale(1, 1, 0.3), '#5d6e60', x, y, 2, { tex: 'leaf', texScale: 0.6 });
     leaf.rotation.z = rz;
     rig.body.add(leaf);
   }
@@ -344,7 +354,7 @@ function sack(rig, aspect, { top, neck, belly, bottom, color, tie }) {
   const { Y, S } = grid(aspect);
   const body = group();
   rig.body.add(body);
-  body.add(mesh(gem([[0, 0], [S(bottom), 0.1], [S(belly), Y(7.0)], [S(belly * 0.82), Y(4.3)], [S(neck), Y(2.15)], [S(neck * 0.8), Y(2.0)], [S(top), Y(0.05)], [0, Y(0.0)]], 8, 0.85), color));
+  body.add(mesh(gem([[0, 0], [S(bottom), 0.1], [S(belly), Y(7.0)], [S(belly * 0.82), Y(4.3)], [S(neck), Y(2.15)], [S(neck * 0.8), Y(2.0)], [S(top), Y(0.05)], [0, Y(0.0)]], 8, 0.85), color, 0, 0, 0, FABRIC));
   if (tie) body.add(mesh(new THREE.CylinderGeometry(S(neck) + 1.4, S(neck) + 1.4, 3.2, 8).translate(0, Y(2.15), 0).scale(1, 1, 0.85), tie));
   rig.anims.idle = (t, dt, ctx) => {
     const c = (t + ctx.phase * 2) % 6;
@@ -358,7 +368,7 @@ defineModel('flourSack', (opts, rig) => sack(rig, 85.1, { top: 3.9, neck: 1.25, 
 defineModel('scale', (opts, rig) => {
   const { Y, S } = grid(71.2);
   const D = 30;
-  rig.body.add(mesh(box(S(9.9), Y(8.7), D + 4), '#859685'));
+  rig.body.add(mesh(box(S(9.9), Y(8.7), D + 4), '#859685', 0, 0, 0, METAL));
   const arch = new THREE.Shape();
   const hw = S(4.3);
   arch.moveTo(-hw, Y(8.7));
@@ -366,7 +376,7 @@ defineModel('scale', (opts, rig) => {
   arch.lineTo(hw, Y(5.6));
   arch.absellipse(0, Y(5.6), hw, Y(3.2) - Y(5.6), 0, PI, false);
   arch.lineTo(-hw, Y(8.7));
-  rig.body.add(mesh(new THREE.ExtrudeGeometry(arch, { depth: D, bevelEnabled: false, curveSegments: 6 }).translate(0, 0, -D / 2), '#7f907f'));
+  rig.body.add(mesh(new THREE.ExtrudeGeometry(arch, { depth: D, bevelEnabled: false, curveSegments: 6 }).translate(0, 0, -D / 2), '#7f907f', 0, 0, 0, METAL));
   // dial + needle + hub
   const dz = D / 2 + 0.6;
   rig.body.add(mesh(new THREE.CylinderGeometry(S(2.65), S(2.65), 1.2, 20).rotateX(PI / 2), '#f2ece1', 0, Y(5.9), dz));
@@ -377,7 +387,7 @@ defineModel('scale', (opts, rig) => {
   // stem + pan
   rig.body.add(mesh(box(S(0.9), Y(2.2) - Y(3.3), 6), '#4a3c2a', 0, Y(3.3), 0));
   const pan = group(0, Y(2.2), 0);
-  pan.add(mesh(new THREE.CylinderGeometry(S(5.0), S(2.4), Y(0.0) - Y(2.2), 8).translate(0, (Y(0.0) - Y(2.2)) / 2, 0).scale(1, 1, 0.7), '#9b8670'));
+  pan.add(mesh(new THREE.CylinderGeometry(S(5.0), S(2.4), Y(0.0) - Y(2.2), 8).translate(0, (Y(0.0) - Y(2.2)) / 2, 0).scale(1, 1, 0.7), '#9b8670', 0, 0, 0, METAL));
   rig.body.add(pan);
   // idle: the needle hunts and settles; now and then the pan dips (weighing)
   rig.anims.idle = (t, dt, ctx) => {
@@ -397,19 +407,19 @@ function crate(w, h, d, color = '#a8957d', slats = 3) {
   g.add(mesh(box(w, h * 0.96, d), '#3e3328'));
   const sh = h / slats;
   for (let i = 0; i < slats; i += 1) {
-    for (const z of [d / 2, -d / 2]) g.add(mesh(box(w + 1, sh * 0.78, 1.4), color, 0, i * sh + sh * 0.05, z));
-    for (const x of [w / 2, -w / 2]) g.add(mesh(box(1.4, sh * 0.78, d), new THREE.Color(color).offsetHSL(0, 0, -0.05).getStyle(), x, i * sh + sh * 0.05, 0));
+    for (const z of [d / 2, -d / 2]) g.add(mesh(box(w + 1, sh * 0.78, 1.4), color, 0, i * sh + sh * 0.05, z, WOOD));
+    for (const x of [w / 2, -w / 2]) g.add(mesh(box(1.4, sh * 0.78, d), new THREE.Color(color).offsetHSL(0, 0, -0.05).getStyle(), x, i * sh + sh * 0.05, 0, WOOD));
   }
-  for (const x of [-w / 2 + 2, w / 2 - 2]) g.add(mesh(box(3.2, h, 3.2), new THREE.Color(color).offsetHSL(0, 0, -0.08).getStyle(), x, 0, d / 2));
+  for (const x of [-w / 2 + 2, w / 2 - 2]) g.add(mesh(box(3.2, h, 3.2), new THREE.Color(color).offsetHSL(0, 0, -0.08).getStyle(), x, 0, d / 2, WOOD));
   return g;
 }
 
 // Woven basket: faceted bowl with a rim band; optional arched handle.
 function basket(rTop, rBot, h, { color = '#b9a585', handle = 0, seg = 8 } = {}) {
   const g = new THREE.Group();
-  g.add(mesh(new THREE.CylinderGeometry(rTop, rBot, h, seg, 1, true).translate(0, h / 2, 0).scale(1, 1, 0.8), color, 0, 0, 0, { side: THREE.DoubleSide }));
+  g.add(mesh(new THREE.CylinderGeometry(rTop, rBot, h, seg, 1, true).translate(0, h / 2, 0).scale(1, 1, 0.8), color, 0, 0, 0, { ...STRAW, side: THREE.DoubleSide }));
   g.add(mesh(new THREE.CylinderGeometry(rBot, rBot, 1, seg).translate(0, 0.5, 0).scale(1, 1, 0.8), color));
-  g.add(mesh(new THREE.CylinderGeometry(rTop + 1, rTop + 0.6, h * 0.28, seg, 1, true).translate(0, h * 0.86, 0).scale(1, 1, 0.8), new THREE.Color(color).offsetHSL(0, 0, 0.04).getStyle(), 0, 0, 0, { side: THREE.DoubleSide }));
+  g.add(mesh(new THREE.CylinderGeometry(rTop + 1, rTop + 0.6, h * 0.28, seg, 1, true).translate(0, h * 0.86, 0).scale(1, 1, 0.8), new THREE.Color(color).offsetHSL(0, 0, 0.04).getStyle(), 0, 0, 0, { ...STRAW, side: THREE.DoubleSide }));
   g.add(mesh(new THREE.CylinderGeometry(rTop * 0.97, rTop * 0.97, 1, seg).translate(0, h * 0.62, 0).scale(1, 1, 0.8), '#5a4a35'));
   if (handle) g.add(mesh(new THREE.TorusGeometry(rTop * 0.92, 1.3, 4, 12, PI).translate(0, h, 0), '#7a5a35'));
   return g;
@@ -437,14 +447,14 @@ defineModel('shop', (opts, rig) => {
   const { X, Y, S } = grid(111.4);
   const D = 64;
   const front = D / 2;
-  rig.body.add(mesh(box(S(8.6), Y(0.4), D), '#ece5d8', 0, 0, 0));
+  rig.body.add(mesh(box(S(8.6), Y(0.4), D), '#ece5d8', 0, 0, 0, PLASTER));
   // flat roof cap behind the awning
   rig.body.add(mesh(box(S(8.8), 3, D + 2), '#d9d1c2', 0, Y(0.4), 0));
-  rig.body.add(mesh(box(S(8.7), Y(8.8), D + 1.5), '#a6b1a4', 0, 0, 0));
+  rig.body.add(mesh(box(S(8.7), Y(8.8), D + 1.5), '#a6b1a4', 0, 0, 0, STONE));
   // door
   const door = group(X(3.1), 0, front);
-  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(-S(0.65), 0, 0), '#3d2e1e'));
-  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(S(0.65), 0, 0), '#4a3826'));
+  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(-S(0.65), 0, 0), '#3d2e1e', 0, 0, 0, WOOD));
+  door.add(mesh(box(S(1.3), Y(6.0), 1.6).translate(S(0.65), 0, 0), '#4a3826', 0, 0, 0, WOOD));
   door.add(inkMesh(new THREE.SphereGeometry(1.4, 8, 6), '#7a3a2a', S(0.9), Y(8.1), 1.4));
   rig.body.add(door);
   // window: cream frame, four dark panes
@@ -469,10 +479,10 @@ defineModel('shop', (opts, rig) => {
     const v = [xt0, topY, front - 6, xt1, topY, front - 6, xb1, botY, front + out, xt0, topY, front - 6, xb1, botY, front + out, xb0, botY, front + out];
     geo.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
     const color = i % 2 ? '#7f948a' : '#efe9de';
-    rig.body.add(mesh(geo, color, 0, 0, 0, { side: THREE.DoubleSide }));
+    rig.body.add(mesh(geo, color, 0, 0, 0, { ...FABRIC, side: THREE.DoubleSide }));
     // scallop hanging from the stripe's lower edge
     const sc = group((xb0 + xb1) / 2, botY, front + out);
-    sc.add(mesh(new THREE.CircleGeometry((xb1 - xb0) / 2, 8, PI, PI), color, 0, 0, 0, { side: THREE.DoubleSide }));
+    sc.add(mesh(new THREE.CircleGeometry((xb1 - xb0) / 2, 8, PI, PI), color, 0, 0, 0, { ...FABRIC, side: THREE.DoubleSide }));
     rig.body.add(sc);
     stripes.push(sc);
   }
@@ -482,7 +492,7 @@ defineModel('shop', (opts, rig) => {
     const x = s < 0 ? X(0.0) : X(10);
     const xt = s < 0 ? X(0.8) : X(9.2);
     tri.setAttribute('position', new THREE.Float32BufferAttribute([xt, topY, front - 6, x, botY, front + out, xt, botY, front - 6], 3));
-    rig.body.add(mesh(tri, '#d9d1c2', 0, 0, 0, { side: THREE.DoubleSide }));
+    rig.body.add(mesh(tri, '#d9d1c2', 0, 0, 0, { ...FABRIC, side: THREE.DoubleSide }));
   }
   rig.anims.always = (t, dt, ctx) => {
     stripes.forEach((sc, i) => { sc.rotation.x = -Math.max(0, Math.sin(t * 1.8 + i * 0.7 + ctx.phase)) * 0.25; });
@@ -495,17 +505,17 @@ defineModel('stall', (opts, rig) => {
   const D = 46;
   const wood = '#74634e';
   // canopy
-  rig.body.add(mesh(box(S(9.4), Y(0.75) - Y(2.2), D + 8), '#cbbda6', 0, Y(2.2), 0));
-  rig.body.add(mesh(box(S(10), 3, D + 12).translate(0, 0, 0), '#ddd2c2', 0, Y(0.75), 0));
+  rig.body.add(mesh(box(S(9.4), Y(0.75) - Y(2.2), D + 8), '#cbbda6', 0, Y(2.2), 0, FABRIC));
+  rig.body.add(mesh(box(S(10), 3, D + 12).translate(0, 0, 0), '#ddd2c2', 0, Y(0.75), 0, FABRIC));
   // posts + braces
   for (const gx of [1.2, 8.8]) {
     // posts stand on the ground (the front pair runs down behind the counter)
-    for (const z of [D / 2 - 3, -D / 2 + 3]) rig.body.add(mesh(box(S(0.6), Y(2.2), 4), wood, X(gx), 0, z));
+    for (const z of [D / 2 - 3, -D / 2 + 3]) rig.body.add(mesh(box(S(0.6), Y(2.2), 4), wood, X(gx), 0, z, WOOD));
     const s = gx < 5 ? 1 : -1;
-    rig.body.add(mesh(beam(X(gx), Y(3.3), X(gx) + s * S(1.1), Y(2.2), 2.6, 3), wood, 0, 0, D / 2 - 3));
+    rig.body.add(mesh(beam(X(gx), Y(3.3), X(gx) + s * S(1.1), Y(2.2), 2.6, 3), wood, 0, 0, D / 2 - 3, WOOD));
   }
   // counter: top board + stone-block body
-  rig.body.add(mesh(box(S(9.2), 5, 30), '#776652', 0, Y(7.3), D / 2 - 15));
+  rig.body.add(mesh(box(S(9.2), 5, 30), '#776652', 0, Y(7.3), D / 2 - 15, WOOD));
   rig.body.add(mesh(box(S(8.2), Y(7.3), 26), '#a5947c', 0, 0, D / 2 - 15));
   for (const gy of [8.3, 9.2]) rig.body.add(inkMesh(new THREE.PlaneGeometry(S(8.2), 0.7), '#8a7a63', 0, Y(gy), D / 2 - 1.8));
   for (const [gx, gy] of [[3.0, 7.8], [6.5, 7.8], [4.6, 8.75], [7.7, 8.75], [2.2, 9.6], [5.7, 9.6]]) {
@@ -518,7 +528,7 @@ defineModel('stall', (opts, rig) => {
   rig.body.add(bk);
   // cash register with a drawer that pops out now and then
   const reg = group(X(6.85), Y(6.85), D / 2 - 14);
-  reg.add(mesh(box(S(2.7), Y(6.0) - Y(6.85), 18), '#738172'));
+  reg.add(mesh(box(S(2.7), Y(6.0) - Y(6.85), 18), '#738172', 0, 0, 0, METAL));
   reg.add(mesh(box(S(2.2), Y(5.0) - Y(6.0), 14), '#ddd9c8', 0, Y(6.0) - Y(6.85), -1));
   reg.add(mesh(box(S(0.8), Y(4.2) - Y(5.0), 6), '#e3dfcf', S(0.4), Y(5.0) - Y(6.85), -1));
   reg.add(inkMesh(new THREE.PlaneGeometry(S(0.6), 2.4), '#2a2a26', S(0.4), Y(4.45) - Y(6.85) + 0.5, 2.1));
@@ -557,9 +567,9 @@ defineModel('breadShelf', (opts, rig) => {
   const { X, Y, S } = grid(90.3);
   const D = 34;
   const fr = '#ad9c86';
-  rig.body.add(mesh(box(S(9.4), Y(0.4) - 1, 2), '#3c2b1d', 0, 0, -D / 2 + 1));
-  for (const x of [X(0.25), X(9.75)]) rig.body.add(mesh(box(S(0.5), Y(0.3), D), fr, x, 0, 0));
-  for (const [gy, h] of [[0.3, 3], [5.0, 4], [10, 4]]) rig.body.add(mesh(box(S(10), h, D), fr, 0, Y(gy) - (gy === 10 ? 0 : h), 0));
+  rig.body.add(mesh(box(S(9.4), Y(0.4) - 1, 2), '#3c2b1d', 0, 0, -D / 2 + 1, WOOD));
+  for (const x of [X(0.25), X(9.75)]) rig.body.add(mesh(box(S(0.5), Y(0.3), D), fr, x, 0, 0, WOOD));
+  for (const [gy, h] of [[0.3, 3], [5.0, 4], [10, 4]]) rig.body.add(mesh(box(S(10), h, D), fr, 0, Y(gy) - (gy === 10 ? 0 : h), 0, WOOD));
   for (const gx of [2.2, 4.6, 7.2]) {
     const b = baguette(Y(0.15) - Y(4.95), S(0.85));
     b.position.set(X(gx), Y(4.95) + 1, 2);
@@ -579,9 +589,9 @@ defineModel('breadCrate', (opts, rig) => {
   // open-fronted bread box: frame + dark interior
   rig.body.add(mesh(box(S(10), Y(4.3), D), '#2a1f16'));
   for (const [x, y, w, h] of [[0, 0, S(10), Y(9.6)], [0, Y(5.2), S(10), Y(4.3) - Y(5.2)], [X(0.35), 0, S(0.7), Y(4.3)], [X(9.65), 0, S(0.7), Y(4.3)]]) {
-    rig.body.add(mesh(box(w, h, 3), '#b2a48b', x, y, D / 2 - 1.5));
+    rig.body.add(mesh(box(w, h, 3), '#b2a48b', x, y, D / 2 - 1.5, WOOD));
   }
-  for (const s of [-1, 1]) rig.body.add(mesh(box(2, Y(4.3), D), '#a59780', s * (S(5) - 1), 0, 0));
+  for (const s of [-1, 1]) rig.body.add(mesh(box(2, Y(4.3), D), '#a59780', s * (S(5) - 1), 0, 0, WOOD));
   for (const gx of [3.0, 6.9]) {
     const l = loaf(S(2.0), 14);
     l.position.set(X(gx), Y(7.3), D / 2 - 8);
@@ -633,7 +643,7 @@ defineModel('produce', (opts, rig) => {
   const { X, Y, S } = grid(99.5);
   const back = crate(S(7.4), Y(2.8) - Y(8.3), 30);
   back.position.set(X(6.0), Y(8.3), -12);
-  rig.body.add(mesh(box(S(7.4) - 4, Y(8.3), 26), '#8e7c63', X(6.0), 0, -12)); // stand under it
+  rig.body.add(mesh(box(S(7.4) - 4, Y(8.3), 26), '#8e7c63', X(6.0), 0, -12, WOOD)); // stand under it
   rig.body.add(back);
   for (const [gx, c] of [[4.2, '#e1aa72'], [6.2, '#e3ae6c'], [8.15, '#d8996a']]) rig.body.add(fruit(S(1.0), c).translateX(X(gx)).translateY(Y(2.3)).translateZ(-12));
   const leek = greens(4, 16, Y(0.0) - Y(3.0));
@@ -738,12 +748,12 @@ defineModel('cart2', (opts, rig) => wireCart(rig, {
 // ── signs — boards that swing on their hangers ─────────────────────────────
 defineModel('signBoard', (opts, rig) => {
   const { X, Y, S } = grid(128.1);
-  rig.body.add(mesh(box(S(10), Y(0.0) - Y(1.0), 8), '#8d7c66', 0, Y(1.0), 0));
+  rig.body.add(mesh(box(S(10), Y(0.0) - Y(1.0), 8), '#8d7c66', 0, Y(1.0), 0, WOOD));
   // two posts carry the beam (it must not hang in thin air)
-  for (const s of [-1, 1]) rig.body.add(mesh(box(4, Y(1.0), 4), '#7a6a56', s * (S(5) - 3), 0, -3));
+  for (const s of [-1, 1]) rig.body.add(mesh(box(4, Y(1.0), 4), '#7a6a56', s * (S(5) - 3), 0, -3, WOOD));
   const board = group(0, Y(1.0), 0);
   for (const gx of [3.0, 7.6]) board.add(mesh(box(1.6, Y(1.0) - Y(4.0), 1.6).translate(0, -(Y(1.0) - Y(4.0)), 0), '#2e261d', X(gx), 0, 0));
-  board.add(mesh(box(S(8.0), Y(4.0) - Y(10), 4), '#a3917a', 0, Y(10) - Y(1.0), 0));
+  board.add(mesh(box(S(8.0), Y(4.0) - Y(10), 4), '#a3917a', 0, Y(10) - Y(1.0), 0, WOOD));
   board.add(mesh(box(S(6.8), Y(4.6) - Y(9.4), 1), '#6c5b48', 0, Y(9.4) - Y(1.0), 2.2));
   rig.body.add(board);
   rig.anims.swing = (t, dt, ctx) => {
@@ -758,10 +768,10 @@ defineModel('hangingSign', (opts, rig) => {
   // one continuous L: a post from the ground up, and the arm running out
   // from it (dark end cap where the arm meets the post) — no gaps
   const postW = S(0.5);
-  rig.body.add(mesh(box(postW, Y(0.4), 6), '#c0ab90', X(0.25), 0, 0));
+  rig.body.add(mesh(box(postW, Y(0.4), 6), '#c0ab90', X(0.25), 0, 0, WOOD));
   rig.body.add(mesh(box(postW + 0.2, 4, 6.4), '#8c7a63', X(0.25), 0, 0)); // foot
   rig.body.add(mesh(box(S(2.0), Y(0.4) - Y(1.2), 6.2), '#4a3722', X(0.0) + S(1.0), Y(1.2), 0));
-  rig.body.add(mesh(box(S(8.0) + 0.2, Y(0.4) - Y(1.2), 6), '#a28c74', X(2.0) + S(4.0) - 0.1, Y(1.2), 0));
+  rig.body.add(mesh(box(S(8.0) + 0.2, Y(0.4) - Y(1.2), 6), '#a28c74', X(2.0) + S(4.0) - 0.1, Y(1.2), 0, WOOD));
   // the ring the chains hang from, sitting on the arm
   rig.body.add(mesh(new THREE.TorusGeometry(1.6, 0.5, 4, 10), '#231a12', X(5.2), Y(0.4) + 1.2, 0));
   const hookY = Y(0.4) + 0.4;
@@ -769,7 +779,7 @@ defineModel('hangingSign', (opts, rig) => {
   const bx = (gx) => X(gx) - X(5.2);
   const by = (gy) => Y(gy) - hookY;
   for (const gx of [1.7, 8.0]) board.add(inkMesh(beam(0, 0, bx(gx), by(5.95), 0.9, 0.9), '#231a12'));
-  board.add(mesh(box(S(9.4), Y(5.2) - Y(10), 4), '#a3917a', bx(5.0), by(10), 0));
+  board.add(mesh(box(S(9.4), Y(5.2) - Y(10), 4), '#a3917a', bx(5.0), by(10), 0, WOOD));
   for (const gy of [6.35, 8.6]) board.add(inkMesh(new THREE.PlaneGeometry(S(9.4), 0.6), '#7e6d58', bx(5.0), by(gy), 2.1));
   board.add(inkMesh(new THREE.PlaneGeometry(0.6, Y(6.35) - Y(8.6)), '#7e6d58', bx(2.05), by(7.5), 2.1));
   for (const gx of [1.7, 8.0]) board.add(inkMesh(new THREE.CircleGeometry(1.2, 8), '#231a12', bx(gx), by(5.95), 2.2));

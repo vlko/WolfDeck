@@ -20,6 +20,8 @@ const grid = (w) => ({
 // Rig: body ▸ head (ears, eyes) · legs ×4 · tail. Exposes rig.pose for the
 // hero (walk / sit / hop / look) and idle anims (breathe, wag, ear flick).
 
+const FUR = { tex: 'fur', texScale: 0.7 };
+
 const WOLF = {
   cream: '#f1ebe3', creamShade: '#ddd2c4', gray: '#b9bab4', grayDark: '#8f918a',
   earInner: '#5d5242', leg: '#a3a6a0', tailGray: '#8d8e84', tailTip: '#d9cfbf',
@@ -47,7 +49,7 @@ defineModel('wolf', (opts, rig) => {
   const chestW = X(8.0) - X(2.9);
   const chestH = Y(5.6);
   const chestGeo = fold([[-chestW / 2, 0], [chestW / 2, 0], [chestW / 2, chestH], [-chestW / 2, chestH]], 24, 3.5);
-  const chestMesh = mesh(chestGeo, C.cream, 0, 0, 0);
+  const chestMesh = mesh(chestGeo, C.cream, 0, 0, 0, FUR);
   chest.add(chestMesh);
   const frontZ = chestGeo.userData.zAt;
 
@@ -58,7 +60,7 @@ defineModel('wolf', (opts, rig) => {
   for (const [g0, g1] of [[3.6, 4.4], [6.5, 7.3]]) {
     const cx = (X(g0) + X(g1)) / 2 - X(5.45);
     const leg = group(cx, LEG, frontZ(cx) - 2.5);
-    leg.add(mesh(box(X(g1) - X(g0), LEG, 6).translate(0, -LEG, 0), C.leg));
+    leg.add(mesh(box(X(g1) - X(g0), LEG, 6).translate(0, -LEG, 0), C.leg, 0, 0, 0, FUR));
     root.add(leg);
     legs.push(leg);
   }
@@ -66,11 +68,11 @@ defineModel('wolf', (opts, rig) => {
   // hindquarters: pivot at the rump's front-bottom
   const rump = group(0, 0, 0);
   root.add(rump);
-  rump.add(mesh(cbox(chestW * 0.86, 24, 30).translate(0, 12, -15), C.creamShade));
+  rump.add(mesh(cbox(chestW * 0.86, 24, 30).translate(0, 12, -15), C.creamShade, 0, 0, 0, FUR));
   const hind = [];
   for (const s of [-1, 1]) {
     const h = group(s * chestW * 0.3, 2, -24);
-    h.add(mesh(box(7, LEG, 7).translate(0, -LEG, 0), C.leg));
+    h.add(mesh(box(7, LEG, 7).translate(0, -LEG, 0), C.leg, 0, 0, 0, FUR));
     rump.add(h);
     hind.push(h);
   }
@@ -82,8 +84,8 @@ defineModel('wolf', (opts, rig) => {
     const along = (g, from) => g.translate(0, from + g.parameters.height / 2, 0).rotateX(-PI / 2);
     const base = along(new THREE.CylinderGeometry(6.4, 4.2, 26, 4), 0);
     const tip = along(new THREE.ConeGeometry(6.4, 19, 4), 26);
-    const tb = mesh(base, C.tailGray);
-    const tt = mesh(tip, C.tailTip);
+    const tb = mesh(base, C.tailGray, 0, 0, 0, FUR);
+    const tt = mesh(tip, C.tailTip, 0, 0, 0, FUR);
     for (const m of [tb, tt]) { m.scale.set(0.75, 1, 1); tail.add(m); }
   }
   rump.add(tail);
@@ -129,11 +131,11 @@ defineModel('wolf', (opts, rig) => {
     [2.43, 2.0], [5.45, 1.52], [8.47, 2.0], [8.97, 3.05], [9.85, 3.7], [9.8, 5.0],
     [5.45, 6.4], [1.1, 5.3], [0.95, 3.75], [1.93, 3.05],
   ]), 18, 4.5, { cx: 0 });
-  head.add(mesh(faceGeo, C.cream));
+  head.add(mesh(faceGeo, C.cream, 0, 0, 0, FUR));
   const fz = faceGeo.userData.zAt;
   // gray crown: the same fold a hair deeper, over the top, sides and back of
   // the head (its front hides under the mask below, so no ledge shows)
-  head.add(mesh(fold(HP([[2.35, 1.95], [5.45, 1.45], [8.55, 1.95], [9.05, 3.0], [1.85, 3.0]]), 18.7, 4.5, { cx: 0 }), '#9fa199'));
+  head.add(mesh(fold(HP([[2.35, 1.95], [5.45, 1.45], [8.55, 1.95], [9.05, 3.0], [1.85, 3.0]]), 18.7, 4.5, { cx: 0 }), '#9fa199', 0, 0, 0, FUR));
   // the gray mask, left half (gx), mirrored for the right half
   const maskL = [
     [5.45, 1.45], [2.35, 1.95], [1.85, 3.0], [2.6, 3.12], [3.4, 3.22], [4.1, 3.45],
@@ -175,7 +177,7 @@ defineModel('wolf', (opts, rig) => {
   for (const s2 of [-1, 1]) {
     const ear = group(s2 * 15.2, hy(1.95), 0);
     const m = (pts) => pts.map(([px, py]) => [px * -s2, py]);
-    ear.add(mesh(fold(m(earOuter), 7, 1.6), C.gray));
+    ear.add(mesh(fold(m(earOuter), 7, 1.6), C.gray, 0, 0, 0, FUR));
     ear.add(mesh(fold(m(earInner), 1, 1.0), C.earInner, 0, 0, 4.4));
     ear.rotation.z = s2 * -0.12;
     head.add(ear);

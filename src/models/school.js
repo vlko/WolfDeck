@@ -10,6 +10,14 @@ import {
 // with backpacks and their fox teacher. Measured off a 10 × 10 grid over each
 // sprite (gx across, gy down); units are percent of the sprite's height.
 
+const WOOD = { tex: 'wood' };
+const PLANKS = { tex: 'planks' };
+const PLASTER = { tex: 'plaster' };
+const STONE = { tex: 'stone' };
+const SHINGLE = { tex: 'shingle' };
+const FABRIC = { tex: 'fabric' };
+const FUR = { tex: 'fur' };
+
 function grid(aspect) {
   return {
     X: (gx) => (gx / 10 - 0.5) * aspect,
@@ -73,11 +81,11 @@ defineModel('schoolhouse', (opts, rig) => {
   const trim = '#f4f1e4';
   const eaveY = Y(6.8);
   // walls + base plinth
-  rig.body.add(mesh(box(S(9.0), eaveY, D), cream, 0, 0, 0));
-  rig.body.add(mesh(box(S(9.3), 3, D + 2), '#d9d4bd', 0, 0, 0));
+  rig.body.add(mesh(box(S(9.0), eaveY, D), cream, 0, 0, 0, PLASTER));
+  rig.body.add(mesh(box(S(9.3), 3, D + 2), '#d9d4bd', 0, 0, 0, STONE));
   // big front gable (cream wall) under one continuous roof running front→back
-  rig.body.add(mesh(gableWall(S(9.0), Y(2.3) - eaveY, D).translate(0, eaveY, 0), cream));
-  rig.body.add(mesh(roofSolid(0, Y(2.1), S(5.25), Y(6.95), 3.2, D + 6), '#ddd6bb'));
+  rig.body.add(mesh(gableWall(S(9.0), Y(2.3) - eaveY, D).translate(0, eaveY, 0), cream, 0, 0, 0, PLASTER));
+  rig.body.add(mesh(roofSolid(0, Y(2.1), S(5.25), Y(6.95), 3.2, D + 6), '#ddd6bb', 0, 0, 0, SHINGLE));
   // round clock window in the gable
   const clockZ = front + 0.6;
   rig.body.add(mesh(new THREE.CylinderGeometry(S(0.85), S(0.85), 1.6, 24).rotateX(PI / 2), trim, 0, Y(3.4), clockZ));
@@ -90,13 +98,13 @@ defineModel('schoolhouse', (opts, rig) => {
   // porch: a small gabled entrance standing proud of the front
   const pd = 12;
   const pz = front + pd / 2 - 1;
-  rig.body.add(mesh(box(S(4.2), Y(7.0), pd), cream, 0, 0, pz));
-  rig.body.add(mesh(gableWall(S(4.2), Y(5.05) - Y(7.0), pd).translate(0, Y(7.0), 0), cream, 0, 0, pz));
-  rig.body.add(mesh(roofSolid(0, Y(4.85), S(2.45), Y(7.15), 2.6, pd + 3), trim, 0, 0, pz + 1));
+  rig.body.add(mesh(box(S(4.2), Y(7.0), pd), cream, 0, 0, pz, PLASTER));
+  rig.body.add(mesh(gableWall(S(4.2), Y(5.05) - Y(7.0), pd).translate(0, Y(7.0), 0), cream, 0, 0, pz, PLASTER));
+  rig.body.add(mesh(roofSolid(0, Y(4.85), S(2.45), Y(7.15), 2.6, pd + 3), trim, 0, 0, pz + 1, SHINGLE));
   // door (a dark recess with a frame)
   const doorZ = pz + pd / 2;
   rig.body.add(mesh(box(S(1.15) * 2 + 3, Y(7.5) + 1.5, 1.2), trim, 0, 0, doorZ + 0.3));
-  rig.body.add(mesh(box(S(1.15) * 2, Y(7.5), 1.2), '#4a3424', 0, 0, doorZ + 0.9));
+  rig.body.add(mesh(box(S(1.15) * 2, Y(7.5), 1.2), '#4a3424', 0, 0, doorZ + 0.9, WOOD));
   // windows either side
   for (const [g0, g1] of [[0.95, 2.4], [6.6, 8.05]]) {
     rig.body.add(windowPane(X(g0), X(g1), Y(9.0), Y(7.5), front));
@@ -111,7 +119,7 @@ defineModel('schoolhouse', (opts, rig) => {
     }
   }
   rig.body.add(mesh(box(S(2.3), 3, 15), '#e4dec7', 0, Y(1.05) - 1.5, tz));
-  rig.body.add(mesh(new THREE.ConeGeometry(S(1.85), Y(0) - Y(1.05), 4).rotateY(PI / 4).translate(0, (Y(0) - Y(1.05)) / 2, 0), '#dcd5b8', 0, Y(1.05) + 1.5, tz));
+  rig.body.add(mesh(new THREE.ConeGeometry(S(1.85), Y(0) - Y(1.05), 4).rotateY(PI / 4).translate(0, (Y(0) - Y(1.05)) / 2, 0), '#dcd5b8', 0, Y(1.05) + 1.5, tz, SHINGLE));
   const bell = group(0, Y(1.1), tz);
   bell.add(mesh(cbox(0.8, 3, 0.8).translate(0, -1.5, 0), '#5d4228'));
   bell.add(mesh(new THREE.CylinderGeometry(2.2, 4.6, 6.5, 8).translate(0, -6.2, 0), '#6b4a2a'));
@@ -134,7 +142,7 @@ defineModel('kindergarten', (opts, rig) => {
   const lx0 = X(0);
   const lx1 = X(4.1);
   const lcx = (lx0 + lx1) / 2;
-  rig.body.add(mesh(box(lx1 - lx0, 100, D), '#ece6d6', lcx, 0, 0));
+  rig.body.add(mesh(box(lx1 - lx0, 100, D), '#ece6d6', lcx, 0, 0, PLASTER));
   rig.body.add(mesh(box(lx1 - lx0 + 2, 2.5, D + 2), '#e2dbc6', lcx, 99, 0));
   for (const [g0, g1] of [[0.55, 1.35], [1.65, 2.45], [2.75, 3.55]]) {
     rig.body.add(windowPane(X(g0), X(g1), Y(3.6), Y(1.5), front, '#f3efe3', '#0f2b28', false));
@@ -146,7 +154,7 @@ defineModel('kindergarten', (opts, rig) => {
   const rx1 = X(10);
   const rcx = (rx0 + rx1) / 2;
   const wallTop = Y(4.3);
-  rig.body.add(mesh(box(rx1 - rx0, wallTop, D - 4), '#f0eadc', rcx, 0, -2));
+  rig.body.add(mesh(box(rx1 - rx0, wallTop, D - 4), '#f0eadc', rcx, 0, -2, PLASTER));
   const over = 3;
   const ry = Y(1.7);
   const bx0 = rx0 - over;
@@ -181,9 +189,9 @@ defineModel('kindergarten', (opts, rig) => {
   hip.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   hip.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
   hip.computeVertexNormals();
-  rig.body.add(new THREE.Mesh(hip, mat('#ffffff', { side: THREE.DoubleSide })));
+  rig.body.add(new THREE.Mesh(hip, mat('#ffffff', { side: THREE.DoubleSide, tex: 'shingle' })));
   // chimney through the roof, rising from inside the house
-  rig.body.add(mesh(box(S(0.75), Y(0.35) - 30, 9), '#d8ccad', X(5.55), 30, -8));
+  rig.body.add(mesh(box(S(0.75), Y(0.35) - 30, 9), '#d8ccad', X(5.55), 30, -8, { tex: 'brick', texScale: 0.7 }));
   rig.body.add(mesh(box(S(0.95), 2.5, 11), '#e6dcc1', X(5.55), Y(0.35) - 2.5, -8));
   // windows
   for (const [g0, g1] of [[4.75, 5.5], [5.65, 6.4], [7.6, 8.3], [8.5, 9.25]]) {
@@ -231,16 +239,16 @@ defineModel('blackboard', (opts, rig) => {
   const wood = '#6b4a30';
   // A-frame easel: two front legs splayed, one back leg, crossbar, ledge
   for (const [x0, x1] of [[X(2.6), X(1.4)], [X(7.4), X(8.6)]]) {
-    rig.body.add(mesh(beam(x0, Y(5.4), x1, 0, 2.8, 2.8), wood, 0, 0, 2));
+    rig.body.add(mesh(beam(x0, Y(5.4), x1, 0, 2.8, 2.8), wood, 0, 0, 2, WOOD));
   }
   // back leg hinged at the top of the front legs, its foot planted behind
   const lean = 0.34;
   const legL = Y(5.4) / Math.cos(lean);
-  const back = group(0, Y(5.4), 1, mesh(box(2.8, legL, 2.8).translate(0, -legL, 0), wood));
+  const back = group(0, Y(5.4), 1, mesh(box(2.8, legL, 2.8).translate(0, -legL, 0), wood, 0, 0, 0, WOOD));
   back.rotation.x = lean;
   rig.body.add(back);
-  rig.body.add(mesh(cbox(S(6.5), 2.4, 2.4), wood, 0, Y(7.3), 2));
-  rig.body.add(mesh(cbox(S(7.8), 2.2, 5), '#5e4128', 0, Y(5.7), 4));
+  rig.body.add(mesh(cbox(S(6.5), 2.4, 2.4), wood, 0, Y(7.3), 2, WOOD));
+  rig.body.add(mesh(cbox(S(7.8), 2.2, 5), '#5e4128', 0, Y(5.7), 4, WOOD));
   // the board: a frame with the chalk face
   const bw = S(9.8);
   const bh = Y(0.05) - Y(5.5);
@@ -303,15 +311,15 @@ defineModel('schoolDesk', (opts, rig) => {
   const dark = '#6b4a26';
   const mid = '#8b6f50';
   // table behind
-  rig.body.add(mesh(box(S(8.6), 5, 34), dark, 0, Y(0.8), -10));
-  rig.body.add(mesh(box(S(7.4), Y(1.6) - Y(2.4), 2), mid, 0, Y(2.4), 4));
+  rig.body.add(mesh(box(S(8.6), 5, 34), dark, 0, Y(0.8), -10, WOOD));
+  rig.body.add(mesh(box(S(7.4), Y(1.6) - Y(2.4), 2), mid, 0, Y(2.4), 4, PLANKS));
   for (const gx of [1.55, 8.4]) {
-    for (const z of [4, -24]) rig.body.add(mesh(box(S(0.55), Y(0.8), 4), dark, X(gx), 0, z - 10 + 10));
+    for (const z of [4, -24]) rig.body.add(mesh(box(S(0.55), Y(0.8), 4), dark, X(gx), 0, z - 10 + 10, WOOD));
   }
   // bench in front
-  rig.body.add(mesh(box(S(10), 6, 20), '#8c7154', 0, Y(6.1), 16));
+  rig.body.add(mesh(box(S(10), 6, 20), '#8c7154', 0, Y(6.1), 16, WOOD));
   for (const gx of [0.6, 9.3]) {
-    for (const z of [10, 22]) rig.body.add(mesh(box(S(0.5), Y(6.1), 3.5), '#6a5032', X(gx), 0, z));
+    for (const z of [10, 22]) rig.body.add(mesh(box(S(0.5), Y(6.1), 3.5), '#6a5032', X(gx), 0, z, WOOD));
   }
 });
 
@@ -357,15 +365,15 @@ defineModel('canteenCounter', (opts, rig) => {
 defineModel('musicStand', (opts, rig) => {
   const { X, Y, S } = grid(48.2);
   const wood = '#6b542f';
-  rig.body.add(mesh(box(2.6, Y(2.7) - Y(8.6), 2.6), wood, 0, Y(8.6), 0));
+  rig.body.add(mesh(box(2.6, Y(2.7) - Y(8.6), 2.6), wood, 0, Y(8.6), 0, WOOD));
   for (const a of [0, 2.1, 4.2]) {
-    const leg = mesh(beam(0, Y(8.6) + 1, S(4.5), 0, 2.4, 2.4), wood);
+    const leg = mesh(beam(0, Y(8.6) + 1, S(4.5), 0, 2.4, 2.4), wood, 0, 0, 0, WOOD);
     leg.rotation.y = a + PI / 2;
     rig.body.add(leg);
   }
   const plate = group(0, Y(2.7), 1);
-  plate.add(mesh(fold([[-S(4.5), 0], [S(4.5), 0], [S(4.5), Y(0) - Y(2.7)], [-S(4.5), Y(0) - Y(2.7)]], 2, 1.5), '#b4a08c'));
-  plate.add(mesh(cbox(S(9.4), 2, 5), '#957d63', 0, 0, 1.5));
+  plate.add(mesh(fold([[-S(4.5), 0], [S(4.5), 0], [S(4.5), Y(0) - Y(2.7)], [-S(4.5), Y(0) - Y(2.7)]], 2, 1.5), '#b4a08c', 0, 0, 0, { tex: 'wood', texScale: 0.6 }));
+  plate.add(mesh(cbox(S(9.4), 2, 5), '#957d63', 0, 0, 1.5, WOOD));
   plate.rotation.x = -0.25;
   rig.body.add(plate);
   rig.anims.idle = (t, dt, ctx) => { plate.rotation.z = Math.sin(t * 0.8 + ctx.phase) * 0.015; };
@@ -378,16 +386,16 @@ defineModel('piano', (opts, rig) => {
   const teal = '#2e4e4d';
   // cabinet (fold front), lid, legs
   rig.body.add(mesh(fold([[X(0.3), Y(6.0)], [X(9.7), Y(6.0)], [X(9.7), Y(0.4)], [X(0.3), Y(0.4)]], D, 2.5), teal, 0, 0, -6));
-  rig.body.add(mesh(box(S(10), 3, D + 4), '#26403f', 0, Y(0.4), -6));
+  rig.body.add(mesh(box(S(10), 3, D + 4), '#26403f', 0, Y(0.4), -6, WOOD));
   // lower cabinet down to the floor (recessed under the key bed), so the
   // piano is one solid body from the side — not a top box on a thin panel
   rig.body.add(mesh(box(S(9.6), Y(6.0) + 1, 22), '#284544', 0, 0, -8));
-  for (const gx of [0.5, 9.5]) rig.body.add(mesh(box(S(0.55), Y(6.0), 5), '#223a39', X(gx), 0, 6));
+  for (const gx of [0.5, 9.5]) rig.body.add(mesh(box(S(0.55), Y(6.0), 5), '#223a39', X(gx), 0, 6, WOOD));
   rig.body.add(mesh(box(S(9.4), 3, 14), '#223a39', 0, 0, -4));
   rig.body.add(mesh(fold([[X(0.9), 3], [X(9.1), 3], [X(9.1), Y(4.6)], [X(0.9), Y(4.6)]], 3, 1.5), '#203635', 0, 0, 4.6));
   // key bed sticking out with white keys and black keys
   const keyY = Y(4.5);
-  rig.body.add(mesh(box(S(9.4), 5, 14), '#26403f', 0, keyY - 5, 10));
+  rig.body.add(mesh(box(S(9.4), 5, 14), '#26403f', 0, keyY - 5, 10, WOOD));
   const keys = [];
   const n = 26;
   const kw = S(8.4) / n;
@@ -403,8 +411,8 @@ defineModel('piano', (opts, rig) => {
   rig.body.add(mesh(cbox(S(2.2), Y(1.0) - Y(2.9), 1), '#ebe3cc', 0, (Y(1.0) + Y(2.9)) / 2, D / 2 - 6 + 4).rotateX(-0.12));
   rig.body.add(mesh(box(S(2.6), 2, 5), '#26403f', 0, Y(2.9) - 2, D / 2 - 2));
   // bench + gold pedals
-  rig.body.add(mesh(box(S(4.0), 3, 14), '#46696a', 0, Y(6.5), 26));
-  for (const gx of [3.3, 6.7]) for (const z of [21, 31]) rig.body.add(mesh(box(2.2, Y(6.5), 2.2), '#36575a', X(gx), 0, z));
+  rig.body.add(mesh(box(S(4.0), 3, 14), '#46696a', 0, Y(6.5), 26, FABRIC));
+  for (const gx of [3.3, 6.7]) for (const z of [21, 31]) rig.body.add(mesh(box(2.2, Y(6.5), 2.2), '#36575a', X(gx), 0, z, WOOD));
   for (const gx of [4.6, 5.0, 5.4]) rig.body.add(mesh(box(2, 1.6, 6), '#d8c27e', X(gx), 4, 7));
   rig.anims.idle = (t, dt, ctx) => {
     keys.forEach((k, i) => {
@@ -427,7 +435,7 @@ function classmate(name, aspect, o) {
 
     // legs
     const legTop = Y(o.hem) + 3;
-    for (const gx of o.legs) root.add(mesh(box(S(0.62), legTop, 6), o.legColor, X(gx), 0, 0));
+    for (const gx of o.legs) root.add(mesh(box(S(0.62), legTop, 6), o.legColor, X(gx), 0, 0, o.legTex ?? FABRIC));
     if (o.shoes) for (const gx of o.legs) root.add(mesh(box(S(0.75), 3, 8), o.shoes, X(gx), 0, 1));
 
     // body: folded trapezoid, two-toned halves
@@ -435,18 +443,18 @@ function classmate(name, aspect, o) {
     const bodyBot = Y(o.hem);
     const bd = o.bodyDepth ?? 22;
     const bodyGeo = fold([[-S(o.hemW / 2), bodyBot], [S(o.hemW / 2), bodyBot], [S(o.neckW / 2), bodyTop], [-S(o.neckW / 2), bodyTop]], bd, 3);
-    const torso = group(0, 0, 0, mesh(bodyGeo, o.body));
+    const torso = group(0, 0, 0, mesh(bodyGeo, o.body, 0, 0, 0, FABRIC));
     root.add(torso);
     const bz = bodyGeo.userData.zAt;
-    if (o.collar) torso.add(mesh(fold([[-S(o.neckW / 2), bodyTop - 7], [S(o.neckW / 2), bodyTop - 7], [S(o.neckW / 2), bodyTop], [-S(o.neckW / 2), bodyTop]], bd + 1, 3.4), o.collar));
+    if (o.collar) torso.add(mesh(fold([[-S(o.neckW / 2), bodyTop - 7], [S(o.neckW / 2), bodyTop - 7], [S(o.neckW / 2), bodyTop], [-S(o.neckW / 2), bodyTop]], bd + 1, 3.4), o.collar, 0, 0, 0, FABRIC));
 
     // backpack + straps
     if (o.pack) {
       const ph = (bodyTop - bodyBot) * 0.95;
       // wider than the body, so its sides peek out from the front like the sheet
-      const pack = mesh(new THREE.BoxGeometry(S(o.hemW * 1.18), ph, 12, 2, 2, 2), o.pack, 0, bodyBot + ph / 2 + 1, -bd / 2 - 4);
+      const pack = mesh(new THREE.BoxGeometry(S(o.hemW * 1.18), ph, 12, 2, 2, 2), o.pack, 0, bodyBot + ph / 2 + 1, -bd / 2 - 4, FABRIC);
       torso.add(pack);
-      torso.add(mesh(cbox(S(o.hemW * 0.7), ph * 0.35, 3), new THREE.Color(o.pack).offsetHSL(0, 0, 0.05).getStyle(), 0, bodyBot + ph * 0.3, -bd / 2 - 11.5));
+      torso.add(mesh(cbox(S(o.hemW * 0.7), ph * 0.35, 3), new THREE.Color(o.pack).offsetHSL(0, 0, 0.05).getStyle(), 0, bodyBot + ph * 0.3, -bd / 2 - 11.5, FABRIC));
       for (const s of [-1, 1]) {
         const x = s * S(o.neckW * 0.32);
         torso.add(mesh(cbox(2.6, bodyTop - bodyBot - 4, 1.2), o.pack, x, (bodyTop + bodyBot) / 2 + 2, bz(x) + 0.7));
@@ -457,7 +465,7 @@ function classmate(name, aspect, o) {
     const arms = [-1, 1].map((s) => {
       const sh = group(s * S(o.neckW / 2) * 0.92, bodyTop - 5, 1);
       const len = o.armLen ?? 22;
-      const arm = mesh(new THREE.CapsuleGeometry(3.4, len - 6, 3, 6).translate(0, -len / 2, 0), o.arm);
+      const arm = mesh(new THREE.CapsuleGeometry(3.4, len - 6, 3, 6).translate(0, -len / 2, 0), o.arm, 0, 0, 0, o.armTex ?? FABRIC);
       sh.add(arm);
       sh.rotation.z = s * (o.armOut ?? 0.9);
       torso.add(sh);
@@ -479,11 +487,11 @@ function classmate(name, aspect, o) {
       // two-tone head (the cat): two half-shells of ONE ellipsoid, left and
       // right — no overlapping mask shell that could flicker
       for (const [phi, col] of [[-PI / 2, o.headColor], [PI / 2, o.headRight]]) {
-        headMeshes.push(mesh(new THREE.SphereGeometry(1, 14, 10, phi, PI).scale(R.x, R.y, R.z), col, 0, hy0, hc.z));
+        headMeshes.push(mesh(new THREE.SphereGeometry(1, 14, 10, phi, PI).scale(R.x, R.y, R.z), col, 0, hy0, hc.z, FUR));
       }
     } else {
       const headGeo = o.headGeo ? o.headGeo(R) : new THREE.SphereGeometry(1, 14, 10).scale(R.x, R.y, R.z);
-      headMeshes.push(mesh(headGeo, o.headColor, 0, hy0, hc.z));
+      headMeshes.push(mesh(headGeo, o.headColor, 0, hy0, hc.z, FUR));
     }
     for (const m of headMeshes) { head.add(m); m.updateMatrix(); m.matrixWorld.copy(m.matrix); }
     // surface point + normal ON the real (faceted) head — a ray from the
@@ -582,7 +590,7 @@ function bunnyEars({ head, surf, S }) {
   return [-1, 1].map((s) => {
     const { p } = surf(s * S(1.6), S(2.9), -3);
     const e = group(p.x, p.y, p.z - 2);
-    e.add(mesh(new THREE.CapsuleGeometry(S(0.75), S(2.2), 3, 6).scale(1, 1, 0.45).translate(0, S(1.6), 0), '#d8bfa2'));
+    e.add(mesh(new THREE.CapsuleGeometry(S(0.75), S(2.2), 3, 6).scale(1, 1, 0.45).translate(0, S(1.6), 0), '#d8bfa2', 0, 0, 0, FUR));
     e.add(mesh(new THREE.CapsuleGeometry(S(0.38), S(1.8), 3, 6).scale(1, 1, 0.3).translate(0, S(1.6), 1.6), '#e6c4b4'));
     e.userData.rest = s * -0.12;
     e.userData.flick = 0.35;
@@ -595,7 +603,7 @@ function roundEars(color, inner, size = 1.0) {
   return ({ head, surf, S }) => [-1, 1].map((s) => {
     const { p } = surf(s * S(2.8), S(2.6), -3.5);
     const e = group(p.x, p.y, p.z - 1);
-    e.add(mesh(new THREE.CylinderGeometry(S(0.9 * size), S(0.9 * size), 6, 14).rotateX(PI / 2), color));
+    e.add(mesh(new THREE.CylinderGeometry(S(0.9 * size), S(0.9 * size), 6, 14).rotateX(PI / 2), color, 0, 0, 0, FUR));
     e.add(mesh(new THREE.CylinderGeometry(S(0.5 * size), S(0.5 * size), 1, 12).rotateX(PI / 2), inner, 0, 0, 3.2));
     e.userData.rest = 0;
     e.userData.flick = 0.25;
@@ -608,7 +616,7 @@ function foxEars({ head, surf, S }) {
   return [-1, 1].map((s) => {
     const { p } = surf(s * S(2.6), S(2.5), -4);
     const e = group(p.x, p.y, p.z - 1);
-    e.add(mesh(fold([[-S(1.2), 0], [S(1.2), 0], [s * S(0.5), S(2.4)]], 6, 1.8), '#7c6a5c'));
+    e.add(mesh(fold([[-S(1.2), 0], [S(1.2), 0], [s * S(0.5), S(2.4)]], 6, 1.8), '#7c6a5c', 0, 0, 0, FUR));
     e.add(mesh(fold([[-S(0.6), 1], [S(0.6), 1], [s * S(0.3), S(1.7)]], 1, 1), '#4d3c31', 0, 0, 3.6));
     e.userData.rest = s * -0.18;
     head.add(e);
@@ -618,11 +626,11 @@ function foxEars({ head, surf, S }) {
 
 classmate('bunnyPupil', 62.7, {
   headColor: '#d8c1a5', head: [5, 4.3, 3.4, 3.2], neck: 6.6, neckW: 3.6, hem: 9.0, hemW: 5.0, bodyDepth: 20,
-  body: '#9fbdb5', collar: '#b9d2cc', pack: '#3f6458', arm: '#d4b998', armLen: 17,
-  legs: [3.5, 6.1], legColor: '#b38f68',
+  body: '#9fbdb5', collar: '#b9d2cc', pack: '#3f6458', arm: '#d4b998', armTex: FUR, armLen: 17,
+  legs: [3.5, 6.1], legColor: '#b38f68', legTex: FUR,
   eye: [1.3, 0.24, 0.3], cheek: [0.75, 2.0, 0.8], nose: [0.22, 0.65],
   ears: bunnyEars,
-  tail: (S) => mesh(new THREE.IcosahedronGeometry(S(0.75), 1), '#efe6da'),
+  tail: (S) => mesh(new THREE.IcosahedronGeometry(S(0.75), 1), '#efe6da', 0, 0, 0, FUR),
 });
 
 classmate('bearPupil', 71.2, {
@@ -632,12 +640,12 @@ classmate('bearPupil', 71.2, {
   eye: [1.6, 0.22, 0.4], cheek: [0.8, 2.3, 0.9], nose: [0.36, 0.75],
   muzzle: [1.05, 0.85, 0.9], muzzleColor: '#d4c3aa',
   ears: roundEars('#7a6656', '#5c4636'),
-  tail: (S) => mesh(new THREE.IcosahedronGeometry(S(0.55), 1), '#7a6555'),
+  tail: (S) => mesh(new THREE.IcosahedronGeometry(S(0.55), 1), '#7a6555', 0, 0, 0, FUR),
 });
 
 classmate('catPupil', 73.7, {
   headColor: '#e2ddd0', head: [5, 3.8, 3.7, 3.4], neck: 6.4, neckW: 3.6, hem: 8.7, hemW: 5.0, bodyDepth: 20,
-  body: '#9ab6ad', collar: '#cfddd8', pack: '#4b7065', arm: '#d9d4c5', armLen: 17,
+  body: '#9ab6ad', collar: '#cfddd8', pack: '#4b7065', arm: '#d9d4c5', armTex: FUR, armLen: 17,
   legs: [3.7, 6.2], legColor: '#4f7272', shoes: '#e3d9c6',
   eye: [1.55, 0.22, 0.4], cheek: [0.8, 2.25, 0.8], nose: [0.22, 0.65],
   // the right half of the face is teal, like the sheet
@@ -645,7 +653,7 @@ classmate('catPupil', 73.7, {
   ears: roundEars('#7fa39a', '#cfe0dc', 0.8),
   tail: (S) => {
     const t = new THREE.Group();
-    t.add(mesh(new THREE.CapsuleGeometry(S(0.28), S(1.6), 3, 6).rotateX(-1.1).translate(0, S(0.6), -S(0.8)), '#d9d4c5'));
+    t.add(mesh(new THREE.CapsuleGeometry(S(0.28), S(1.6), 3, 6).rotateX(-1.1).translate(0, S(0.6), -S(0.8)), '#d9d4c5', 0, 0, 0, FUR));
     return t;
   },
 });
@@ -665,8 +673,8 @@ classmate('foxTeacher', 78.8, {
     // a big bushy tail out of the rump: it sweeps back and up behind the
     // coat and curls toward her right side (as printed), cream tip last
     const bush = new THREE.Group();
-    bush.add(mesh(new THREE.SphereGeometry(1, 8, 6).scale(S(0.85), S(0.75), S(1.5)).translate(0, 0, -S(1.3)), '#7c6a5c'));
-    bush.add(mesh(new THREE.SphereGeometry(1, 8, 6).scale(S(0.5), S(0.45), S(0.7)).translate(0, 0, -S(2.65)), '#efe5d4'));
+    bush.add(mesh(new THREE.SphereGeometry(1, 8, 6).scale(S(0.85), S(0.75), S(1.5)).translate(0, 0, -S(1.3)), '#7c6a5c', 0, 0, 0, FUR));
+    bush.add(mesh(new THREE.SphereGeometry(1, 8, 6).scale(S(0.5), S(0.45), S(0.7)).translate(0, 0, -S(2.65)), '#efe5d4', 0, 0, 0, FUR));
     bush.rotation.set(-0.55, 0.65, 0);
     t.add(bush);
     return t;

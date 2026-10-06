@@ -8,6 +8,14 @@ import {
 // thatched hut, well — plus the picket fence. Grid helpers read the 10 × 10
 // grid laid over each sprite (gx across, gy down).
 
+const WOOD = { tex: 'wood' };
+const PLASTER = { tex: 'plaster' };
+const STONE = { tex: 'stone' };
+const BRICK = { tex: 'brick', texScale: 0.7 };
+const PLANKS = { tex: 'planks' };
+const STRAW = { tex: 'straw' };
+const WOOL = { tex: 'wool', texScale: 1.3 };
+
 function grid(aspect) {
   return {
     X: (gx) => (gx / 10 - 0.5) * aspect,
@@ -19,7 +27,7 @@ function grid(aspect) {
 // Gabled roof seen end-on, as ONE continuous solid: the ⋀ cross-section
 // (outer edge apex → eaves, slab thickness t measured square to the slope)
 // extruded through depth d — a clean ridge, no seam between two slabs.
-function roof(apexX, apexY, halfSpan, eaveY, t, d, color) {
+function roof(apexX, apexY, halfSpan, eaveY, t, d, color, tex = 'shingle') {
   const drop = t / Math.cos(Math.atan2(apexY - eaveY, halfSpan)); // vertical thickness
   const pts = [
     [apexX - halfSpan, eaveY], [apexX, apexY], [apexX + halfSpan, eaveY],
@@ -27,15 +35,15 @@ function roof(apexX, apexY, halfSpan, eaveY, t, d, color) {
   ];
   const g = new THREE.Group();
   const shape = new THREE.Shape(pts.map(([x, y]) => new THREE.Vector2(x, y)));
-  g.add(mesh(new THREE.ExtrudeGeometry(shape, { depth: d, bevelEnabled: false }).translate(0, 0, -d / 2), color));
+  g.add(mesh(new THREE.ExtrudeGeometry(shape, { depth: d, bevelEnabled: false }).translate(0, 0, -d / 2), color, 0, 0, 0, { tex }));
   return g;
 }
 
 // Plank door: two boards with a seam and a knob, standing proud of the wall.
 function door(x, w, h, z, color, knobX) {
   const g = group(x, 0, z);
-  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(-w / 4, 0, 0), color));
-  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(w / 4, 0, 0), new THREE.Color(color).offsetHSL(0, 0, -0.04).getStyle()));
+  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(-w / 4, 0, 0), color, 0, 0, 0, WOOD));
+  g.add(mesh(box(w / 2 - 0.3, h, 1.6).translate(w / 4, 0, 0), new THREE.Color(color).offsetHSL(0, 0, -0.04).getStyle(), 0, 0, 0, WOOD));
   const knob = inkMesh(new THREE.SphereGeometry(Math.max(1, w * 0.05), 8, 6), '#4a3423', knobX ?? w * 0.32, h * 0.45, 1.3);
   g.add(knob);
   return g;
@@ -53,18 +61,18 @@ defineModel('cottageTimber', (opts, rig) => {
   const { X, Y, S } = grid(101.8);
   const D = 56;
   const front = D / 2;
-  rig.body.add(mesh(box(S(8.1), Y(5.0), D), '#efe8de', X(4.95), 0, 0));
+  rig.body.add(mesh(box(S(8.1), Y(5.0), D), '#efe8de', X(4.95), 0, 0, PLASTER));
   // gable: dark loft behind an open truss
   rig.body.add(mesh(gable(S(8.1), Y(1.2) - Y(5.0), D - 4).translate(0, Y(5.0), 0), '#3f2f20', X(4.95), 0, -1));
   const truss = '#c9ab7b';
-  rig.body.add(mesh(beam(X(4.95), Y(5.0), X(4.95), Y(1.1), 3.4, 3), truss, 0, 0, front - 0.5));
-  rig.body.add(mesh(beam(X(4.95), Y(4.7), X(2.8), Y(3.25), 3.2, 3), truss, 0, 0, front - 0.5));
-  rig.body.add(mesh(beam(X(4.95), Y(4.7), X(7.15), Y(3.25), 3.2, 3), truss, 0, 0, front - 0.5));
-  rig.body.add(mesh(beam(X(1.1), Y(5.0), X(8.8), Y(5.0), 2.4, 3), truss, 0, 0, front - 0.5));
+  rig.body.add(mesh(beam(X(4.95), Y(5.0), X(4.95), Y(1.1), 3.4, 3), truss, 0, 0, front - 0.5, WOOD));
+  rig.body.add(mesh(beam(X(4.95), Y(4.7), X(2.8), Y(3.25), 3.2, 3), truss, 0, 0, front - 0.5, WOOD));
+  rig.body.add(mesh(beam(X(4.95), Y(4.7), X(7.15), Y(3.25), 3.2, 3), truss, 0, 0, front - 0.5, WOOD));
+  rig.body.add(mesh(beam(X(1.1), Y(5.0), X(8.8), Y(5.0), 2.4, 3), truss, 0, 0, front - 0.5, WOOD));
   // roof
   rig.body.add(roof(X(5.0), Y(0.0), S(5.0), Y(5.25), 7, D + 10, '#c3a06a'));
   // chimney (toward the back)
-  rig.body.add(mesh(box(S(1.5), 30, 10), '#8f928b', X(7.85), Y(1.0) - 30 + 1, -8));
+  rig.body.add(mesh(box(S(1.5), 30, 10), '#8f928b', X(7.85), Y(1.0) - 30 + 1, -8, STONE));
   rig.body.add(door(X(2.35), S(2.3), Y(6.4), front, '#9b744a', S(0.6)));
   const win = mesh(new THREE.CylinderGeometry(S(1.05), S(1.05), 2, 18).rotateX(PI / 2), '#5a3e22', X(5.8), Y(7.3), front + 0.4);
   rig.body.add(win);
@@ -77,7 +85,7 @@ defineModel('cottageGable', (opts, rig) => {
   const { X, Y, S } = grid(89.7);
   const D = 52;
   const front = D / 2;
-  rig.body.add(mesh(box(S(9.2), Y(4.75), D), '#91b3a6', X(4.6), 0, 0));
+  rig.body.add(mesh(box(S(9.2), Y(4.75), D), '#91b3a6', X(4.6), 0, 0, PLASTER));
   // ONE roof: the printed "M" roofline (two side gables and the tall middle
   // peak) as a single solid running front to back — three ridges with
   // valleys between, so it reads as one piece of folded card. The scene
@@ -126,12 +134,12 @@ defineModel('cottageGable', (opts, rig) => {
   folded.setAttribute('position', new THREE.Float32BufferAttribute(keep, 3));
   folded.computeVertexNormals();
   const roofGeo2 = folded;
-  rig.body.add(mesh(roofGeo2, '#cdb38c', 0, 0, 0, { side: THREE.DoubleSide }));
-  rig.body.add(mesh(box(S(1.3), 34, 10), '#a58b7b', X(1.65), Y(3.7), -6));
+  rig.body.add(mesh(roofGeo2, '#cdb38c', 0, 0, 0, { side: THREE.DoubleSide, tex: 'shingle' }));
+  rig.body.add(mesh(box(S(1.3), 34, 10), '#a58b7b', X(1.65), Y(3.7), -6, BRICK));
   rig.body.add(door(X(2.95), S(2.3), Y(6.0), front, '#8c7458', S(0.55)));
   // planks leaning by the door corner
   for (const [g, h, lean] of [[9.35, 25, -0.05], [9.7, 22, 0.04]]) {
-    const p = mesh(box(S(0.35), h, 2), '#c9b386', X(g), 0, front - 4);
+    const p = mesh(box(S(0.35), h, 2), '#c9b386', X(g), 0, front - 4, WOOD);
     p.rotation.z = lean;
     rig.body.add(p);
   }
@@ -145,15 +153,15 @@ defineModel('cottageRound', (opts, rig) => {
   const D = 56;
   const front = D / 2;
   const timber = '#7a5c3c';
-  rig.body.add(mesh(box(S(7.9), Y(5.2), D), '#f0e9df', X(4.95), 0, 0));
-  for (const g of [1.45, 8.5]) rig.body.add(mesh(box(S(0.9), Y(5.0), 4), timber, X(g), 0, front + 0.8));
-  rig.body.add(mesh(beam(X(0.9), Y(5.0), X(9.0), Y(5.0), 6, 4), timber, 0, 0, front + 0.8));
-  rig.body.add(mesh(gable(S(7.6), Y(1.0) - Y(5.0), D).translate(0, Y(5.0), 0), '#ebe3d8', X(4.95), 0, 0));
-  rig.body.add(mesh(beam(X(3.0), Y(3.75), X(4.45), Y(4.65), 3, 3), timber, 0, 0, front));
-  rig.body.add(mesh(beam(X(7.0), Y(3.75), X(5.55), Y(4.65), 3, 3), timber, 0, 0, front));
+  rig.body.add(mesh(box(S(7.9), Y(5.2), D), '#f0e9df', X(4.95), 0, 0, PLASTER));
+  for (const g of [1.45, 8.5]) rig.body.add(mesh(box(S(0.9), Y(5.0), 4), timber, X(g), 0, front + 0.8, WOOD));
+  rig.body.add(mesh(beam(X(0.9), Y(5.0), X(9.0), Y(5.0), 6, 4), timber, 0, 0, front + 0.8, WOOD));
+  rig.body.add(mesh(gable(S(7.6), Y(1.0) - Y(5.0), D).translate(0, Y(5.0), 0), '#ebe3d8', X(4.95), 0, 0, PLASTER));
+  rig.body.add(mesh(beam(X(3.0), Y(3.75), X(4.45), Y(4.65), 3, 3), timber, 0, 0, front, WOOD));
+  rig.body.add(mesh(beam(X(7.0), Y(3.75), X(5.55), Y(4.65), 3, 3), timber, 0, 0, front, WOOD));
   rig.body.add(mesh(new THREE.CylinderGeometry(S(0.9), S(0.9), 2, 18).rotateX(PI / 2), '#5b4224', X(5.0), Y(3.05), front + 0.4));
   rig.body.add(roof(X(5.0), Y(0.0), S(5.0), Y(5.35), 8, D + 10, timber));
-  rig.body.add(mesh(box(S(1.4), 26, 10), '#a3867a', X(7.9), Y(2.8), -8));
+  rig.body.add(mesh(box(S(1.4), 26, 10), '#a3867a', X(7.9), Y(2.8), -8, BRICK));
   rig.body.add(door(X(4.95), S(2.7), Y(6.5), front, '#8a7050', S(0.9)));
   const sm = chimneySmoke(rig, X(7.9), Y(0.9) + 2, -8);
   rig.anims.always = (t) => sm.update(t);
@@ -164,7 +172,7 @@ defineModel('barn', (opts, rig) => {
   const { X, Y, S } = grid(101.8);
   const D = 60;
   const front = D / 2;
-  rig.body.add(mesh(box(S(9.9), Y(4.0), D), '#9dbab1', X(5.0), 0, 0));
+  rig.body.add(mesh(box(S(9.9), Y(4.0), D), '#9dbab1', X(5.0), 0, 0, PLANKS));
   // roof: ridge along x, the front slope faces the viewer — built as a run
   // of plank prisms in alternating mauves
   const rise = Y(0.0) - Y(4.0);
@@ -175,12 +183,12 @@ defineModel('barn', (opts, rig) => {
   for (let i = 0; i < n; i += 1) {
     const shape = new THREE.Shape([new THREE.Vector2(-run, 0), new THREE.Vector2(run, 0), new THREE.Vector2(0, rise)]);
     const g = new THREE.ExtrudeGeometry(shape, { depth: pw, bevelEnabled: false }).rotateY(PI / 2);
-    rig.body.add(mesh(g, planks[i], X(0.0) - 1 + pw * i, Y(4.0), 0));
+    rig.body.add(mesh(g, planks[i], X(0.0) - 1 + pw * i, Y(4.0), 0, { tex: 'wood', texRotate: true }));
   }
   // gable ends under the roof
   const tri = new THREE.Shape([new THREE.Vector2(-run + 6, 0), new THREE.Vector2(run - 6, 0), new THREE.Vector2(0, rise - 2)]);
   for (const side of [-1, 1]) {
-    const g = mesh(new THREE.ExtrudeGeometry(tri, { depth: 2, bevelEnabled: false }).rotateY(PI / 2), '#93b1a7', X(5.0) + side * S(4.9), Y(4.0), 0);
+    const g = mesh(new THREE.ExtrudeGeometry(tri, { depth: 2, bevelEnabled: false }).rotateY(PI / 2), '#93b1a7', X(5.0) + side * S(4.9), Y(4.0), 0, PLANKS);
     rig.body.add(g);
   }
   rig.body.add(door(X(2.7), S(2.6), Y(5.8), front, '#9b744e', S(0.7)));
@@ -194,7 +202,7 @@ function sheepModel(rig, { lamb = false } = {}) {
   // smooth-shaded and barely jittered — fluffy, but as calm as the rest
   const wool = '#e6e2d8';
   const woolShade = '#dcd6c9';
-  const woolMat = (c) => mat(c, { flat: false, soft: true });
+  const woolMat = (c) => mat(c, { flat: false, soft: true, ...WOOL });
   const tan = '#dcbfa2';
   const muzzleC = '#e8d2b8';
   const legC = '#a9815d';
@@ -340,8 +348,8 @@ defineModel('haystack', (opts, rig) => {
   const { Y, S } = grid(94.7);
   const R = S(4.55);
   // two-band hexagonal base, vertex to the front (light / dark halves)
-  rig.body.add(mesh(new THREE.CylinderGeometry(R, R, Y(7.4), 6).translate(0, Y(7.4) / 2, 0), '#9a7b73'));
-  rig.body.add(mesh(new THREE.CylinderGeometry(R + 0.4, R + 0.4, Y(5.0) - Y(7.4), 6).translate(0, Y(7.4) + (Y(5.0) - Y(7.4)) / 2, 0), '#b49c94'));
+  rig.body.add(mesh(new THREE.CylinderGeometry(R, R, Y(7.4), 6).translate(0, Y(7.4) / 2, 0), '#9a7b73', 0, 0, 0, PLANKS));
+  rig.body.add(mesh(new THREE.CylinderGeometry(R + 0.4, R + 0.4, Y(5.0) - Y(7.4), 6).translate(0, Y(7.4) + (Y(5.0) - Y(7.4)) / 2, 0), '#b49c94', 0, 0, 0, PLANKS));
   // dome in three thatch rings
   const top = Y(5.0) - 1;
   // rounded dome in thatch rings (a quarter ellipse, ring by ring)
@@ -356,7 +364,7 @@ defineModel('haystack', (opts, rig) => {
     const y0 = top + domeH * Math.sin(a0);
     const y1 = top + domeH * Math.sin(a1);
     const g = r1 > 0.5 ? new THREE.CylinderGeometry(r1, r0, y1 - y0, 14) : new THREE.ConeGeometry(r0, y1 - y0, 14);
-    rig.body.add(mesh(g.translate(0, (y0 + y1) / 2, 0), tones[i]));
+    rig.body.add(mesh(g.translate(0, (y0 + y1) / 2, 0), tones[i], 0, 0, 0, STRAW));
   }
   // fringe: straw flaps hanging around the dome's rim
   const flaps = [];
@@ -367,7 +375,7 @@ defineModel('haystack', (opts, rig) => {
     f.rotation.y = a;
     const len = 18 + (i % 3) * 4;
     const shape = new THREE.Shape([new THREE.Vector2(-9, 0), new THREE.Vector2(9, 0), new THREE.Vector2(0, -len)]);
-    f.add(mesh(new THREE.ExtrudeGeometry(shape, { depth: 1, bevelEnabled: false }), i % 2 ? '#cdb07a' : '#c4a46d'));
+    f.add(mesh(new THREE.ExtrudeGeometry(shape, { depth: 1, bevelEnabled: false }), i % 2 ? '#cdb07a' : '#c4a46d', 0, 0, 0, STRAW));
     f.children[0].rotation.x = -0.25;
     rig.body.add(f);
     flaps.push(f);
@@ -392,7 +400,7 @@ defineModel('hut', (opts, rig) => {
       const k = tones[Math.floor(tri / 2) % tones.length];
       for (let j = 0; j < 3; j += 1) col.setXYZ(tri * 3 + j, k, k, k);
     }
-    return new THREE.Mesh(g, mat(base, { side: THREE.DoubleSide }));
+    return new THREE.Mesh(g, mat(base, { side: THREE.DoubleSide, ...STRAW }));
   }
   const skirt = new THREE.CylinderGeometry(S(2.4), R, collarY, 20, 1, true).translate(0, collarY / 2, 0);
   const sp = skirt.attributes.position;
@@ -400,7 +408,7 @@ defineModel('hut', (opts, rig) => {
     if (sp.getY(i) < 1) sp.setY(i, sp.getY(i) - ((i * 7) % 5) * 1.2); // ragged hem
   }
   rig.body.add(straw(skirt, '#c9a679', [1, 0.82, 0.94, 0.76, 0.9]));
-  rig.body.add(mesh(new THREE.CylinderGeometry(S(2.5), S(2.6), 4, 20).translate(0, collarY - 1, 0), '#7f5f38'));
+  rig.body.add(mesh(new THREE.CylinderGeometry(S(2.5), S(2.6), 4, 20).translate(0, collarY - 1, 0), '#7f5f38', 0, 0, 0, WOOD));
   // dark straw bundles fanning down the skirt
   const slope = Math.atan2(R - S(2.4), collarY);
   for (let i = 0; i < 10; i += 1) {
@@ -408,7 +416,7 @@ defineModel('hut', (opts, rig) => {
     const len = Math.hypot(collarY, R - S(2.4)) * (0.75 + (i % 3) * 0.12);
     const st = group(Math.sin(a) * S(2.45), collarY - 2, Math.cos(a) * S(2.45));
     st.rotation.y = a;
-    const strip = mesh(box(5.5, len, 0.6).translate(0, -len, 0), i % 2 ? '#a3804f' : '#b08b58');
+    const strip = mesh(box(5.5, len, 0.6).translate(0, -len, 0), i % 2 ? '#a3804f' : '#b08b58', 0, 0, 0, STRAW);
     strip.rotation.x = -slope;
     strip.position.z = 0.8;
     st.add(strip);
@@ -418,7 +426,7 @@ defineModel('hut', (opts, rig) => {
   rig.body.add(straw(hat, '#cfb088', [1, 0.9, 0.97, 0.86]));
   // crossed poles out of the top
   for (const [x, lean] of [[-3, 0.38], [0, 0], [3, -0.38]]) {
-    const p = mesh(box(2.6, 16, 2.6), '#7b5b3a', x, apex - 6, 0);
+    const p = mesh(box(2.6, 16, 2.6), '#7b5b3a', x, apex - 6, 0, WOOD);
     p.rotation.z = lean;
     rig.body.add(p);
   }
@@ -435,21 +443,21 @@ defineModel('well', (opts, rig) => {
     const h = H / courses;
     const g = new THREE.CylinderGeometry(R - (i % 2) * 0.4, R - (i % 2) * 0.4, h + 0.6, 12, 1, true).translate(0, h * i + h / 2, 0);
     g.rotateY((i % 2) * (PI / 12));
-    rig.body.add(mesh(g, i % 2 ? '#b9c5ca' : '#c5d0d5', 0, 0, 0, { side: THREE.DoubleSide, jitter: 0.08 }));
+    rig.body.add(mesh(g, i % 2 ? '#b9c5ca' : '#c5d0d5', 0, 0, 0, { side: THREE.DoubleSide, jitter: 0.08, ...STONE }));
   }
   // rim and the dark water inside
-  rig.body.add(mesh(new THREE.TorusGeometry(R - 2.5, 3, 4, 12).rotateX(PI / 2).rotateY(PI / 12), '#dfe6e9', 0, H, 0));
+  rig.body.add(mesh(new THREE.TorusGeometry(R - 2.5, 3, 4, 12).rotateX(PI / 2).rotateY(PI / 12), '#dfe6e9', 0, H, 0, STONE));
   rig.body.add(inkMesh(new THREE.CircleGeometry(R - 3, 18).rotateX(-PI / 2), '#38463f', 0, H * 0.55, 0));
   rig.body.add(new THREE.Mesh(new THREE.CylinderGeometry(R - 3, R - 3, H * 0.5, 12, 1, true).translate(0, H * 0.75, 0), new THREE.MeshBasicMaterial({ color: '#56635d', side: THREE.BackSide })));
   // timber frame
   const wood = '#8a6a48';
-  for (const g of [1.1, 8.2]) rig.body.add(mesh(box(S(0.6), Y(0.2) - 6, 5), wood, X(g), 6, 0));
-  rig.body.add(mesh(box(S(9.4), 4, 9), wood, X(4.7), Y(0.4), 0));
+  for (const g of [1.1, 8.2]) rig.body.add(mesh(box(S(0.6), Y(0.2) - 6, 5), wood, X(g), 6, 0, WOOD));
+  rig.body.add(mesh(box(S(9.4), 4, 9), wood, X(4.7), Y(0.4), 0, WOOD));
   // axle + rope drum + crank: one pivot so the crank turns them all
   const axleY = Y(3.45);
   const axle = group(X(4.65), axleY, 0);
   axle.add(mesh(new THREE.CylinderGeometry(1.4, 1.4, S(7.4), 8).rotateZ(PI / 2), wood));
-  axle.add(mesh(new THREE.CylinderGeometry(3.6, 3.6, S(1.2), 10).rotateZ(PI / 2), '#a07a4c'));
+  axle.add(mesh(new THREE.CylinderGeometry(3.6, 3.6, S(1.2), 10).rotateZ(PI / 2), '#a07a4c', 0, 0, 0, WOOD));
   const crank = group(S(3.9), 0, 0);
   crank.add(mesh(box(1.6, 8, 1.6).translate(0, -8, 0), wood));
   crank.add(mesh(new THREE.CylinderGeometry(1.1, 1.1, 6, 6).rotateZ(PI / 2).translate(3, -8, 0), wood));
@@ -459,7 +467,7 @@ defineModel('well', (opts, rig) => {
   const rope = mesh(cbox(0.7, 1, 0.7), '#c8b089', X(4.65), axleY, 0);
   rig.body.add(rope);
   const bucket = group(X(4.65), axleY - 20, 0);
-  bucket.add(mesh(new THREE.CylinderGeometry(3.4, 2.6, 5.5, 8).translate(0, -5.5, 0), '#8f6a45'));
+  bucket.add(mesh(new THREE.CylinderGeometry(3.4, 2.6, 5.5, 8).translate(0, -5.5, 0), '#8f6a45', 0, 0, 0, PLANKS));
   rig.body.add(bucket);
   // the crank: every few seconds a few turns, hauling the bucket up and back
   rig.anims.always = (t, dt, ctx) => {
@@ -481,7 +489,7 @@ defineModel('fence3d', (opts, rig) => {
   const woods = ['#7a5f45', '#8f7256', '#a88a66', '#c2a37a', '#6c5440', '#9a8170'];
   let s = (opts.seed ?? 0) * 9301 + 49297;
   const r = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
-  for (const y of [42, 70]) rig.body.add(mesh(box(len, 7, 3.5), '#6c5440', 0, 100 - y - 3.5, -2.5));
+  for (const y of [42, 70]) rig.body.add(mesh(box(len, 7, 3.5), '#6c5440', 0, 100 - y - 3.5, -2.5, WOOD));
   const step = 25;
   const pickets = [];
   for (let x = -len / 2 + step * 0.4; x < len / 2 - step * 0.3; x += step) {
@@ -489,10 +497,10 @@ defineModel('fence3d', (opts, rig) => {
     const w = 15 + r() * 3;
     const flat = r() < 0.3;
     const p = group(x, 0, 0);
-    p.add(mesh(box(w, h - (flat ? 0 : w * 0.7), 4), woods[Math.floor(r() * woods.length)]));
+    p.add(mesh(box(w, h - (flat ? 0 : w * 0.7), 4), woods[Math.floor(r() * woods.length)], 0, 0, 0, WOOD));
     if (!flat) {
       const tip = new THREE.ConeGeometry(w * 0.72, w * 0.7, 4, 1).rotateY(PI / 4).scale(1, 1, 4 / w);
-      p.add(mesh(tip.translate(0, h - (w * 0.7) / 2, 0), woods[Math.floor(r() * woods.length)]));
+      p.add(mesh(tip.translate(0, h - (w * 0.7) / 2, 0), woods[Math.floor(r() * woods.length)], 0, 0, 0, WOOD));
     }
     p.rotation.z = (r() - 0.5) * 0.06;
     rig.body.add(p);

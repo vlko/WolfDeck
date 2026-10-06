@@ -21,6 +21,14 @@ function grid(aspect) {
   };
 }
 
+// material textures (see assets/materialTextures.js)
+const METAL = { tex: 'metal' };
+const WOOD = { tex: 'wood' };
+const STONE = { tex: 'stone' };
+const PLASTER = { tex: 'plaster' };
+const LEAF = { tex: 'leaf' };
+const FUR = { tex: 'fur' };
+
 // A shape (xy points) extruded through depth d, centered in z.
 function slab(points, d) {
   const s = new THREE.Shape(points.map(([x, y]) => new THREE.Vector2(x, y)));
@@ -148,14 +156,14 @@ function skipModel(name, aspect, { color, rim, straps, lugs, feet }) {
     for (const s of [-1, 1]) {
       const wall = slab([[-wBot / 2, bot], [wBot / 2, bot], [wTop / 2, top], [-wTop / 2, top]], T);
       const z = s * ((dTop + dBot) / 4);
-      const m = mesh(wall, color, 0, 0, z);
+      const m = mesh(wall, color, 0, 0, z, METAL);
       m.rotation.x = -s * Math.atan2((dTop - dBot) / 2, top - bot);
       m.position.y = 0;
       g.add(m);
     }
     for (const s of [-1, 1]) {
       const e = slab([[-dBot / 2, bot], [dBot / 2, bot], [dTop / 2, top], [-dTop / 2, top]], T);
-      const m = mesh(e, new THREE.Color(color).offsetHSL(0, 0, -0.06).getStyle(), s * ((wTop + wBot) / 4), 0, 0);
+      const m = mesh(e, new THREE.Color(color).offsetHSL(0, 0, -0.06).getStyle(), s * ((wTop + wBot) / 4), 0, 0, METAL);
       m.rotation.y = PI / 2;
       m.rotation.x = 0;
       m.rotation.z = 0;
@@ -166,11 +174,11 @@ function skipModel(name, aspect, { color, rim, straps, lugs, feet }) {
       pivotG.rotation.z = -s * Math.atan2((wTop - wBot) / 2, top - bot);
       g.add(pivotG);
     }
-    g.add(mesh(box(wBot, 2, dBot), new THREE.Color(color).offsetHSL(0, 0, -0.12).getStyle(), 0, bot, 0)); // floor
+    g.add(mesh(box(wBot, 2, dBot), new THREE.Color(color).offsetHSL(0, 0, -0.12).getStyle(), 0, bot, 0, METAL)); // floor
     // rim around the top
-    g.add(mesh(cbox(wTop + 3, 2.6, 3), rim, 0, top, dTop / 2 + 0.5));
-    g.add(mesh(cbox(wTop + 3, 2.6, 3), rim, 0, top, -dTop / 2 - 0.5));
-    for (const s of [-1, 1]) g.add(mesh(cbox(3, 2.6, dTop + 4), rim, s * (wTop / 2 + 0.5), top, 0));
+    g.add(mesh(cbox(wTop + 3, 2.6, 3), rim, 0, top, dTop / 2 + 0.5, METAL));
+    g.add(mesh(cbox(wTop + 3, 2.6, 3), rim, 0, top, -dTop / 2 - 0.5, METAL));
+    for (const s of [-1, 1]) g.add(mesh(cbox(3, 2.6, dTop + 4), rim, s * (wTop / 2 + 0.5), top, 0, METAL));
     if (straps) {
       for (const gx of straps) {
         const x = X(gx);
@@ -178,7 +186,7 @@ function skipModel(name, aspect, { color, rim, straps, lugs, feet }) {
         g.add(mesh(beam(xb, bot + 1, x, top - 2, 2.4, 1.2), '#d6c48c', 0, 0, (dTop + dBot) / 4 + 2.2));
       }
     }
-    if (lugs) for (const s of [-1, 1]) g.add(mesh(cbox(6, 6, 6), rim, s * (wTop / 2 + 2), top - 8, 0));
+    if (lugs) for (const s of [-1, 1]) g.add(mesh(cbox(6, 6, 6), rim, s * (wTop / 2 + 2), top - 8, 0, METAL));
     if (feet) for (const s of [-1, 1]) for (const zs of [-1, 1]) g.add(mesh(box(4, bot, 4), '#4e4232', s * (wBot / 2 - 4), 0, zs * (dBot / 2 - 4)));
     void lift;
   });
@@ -193,14 +201,14 @@ function recycleBin(name, color) {
     const D = 50;
     const H = 72;
     const g = rig.body;
-    g.add(mesh(new THREE.CylinderGeometry(W / Math.SQRT2, (W - 6) / Math.SQRT2, H, 4).rotateY(PI / 4).scale(1, 1, D / W).translate(0, H / 2, 0), color));
+    g.add(mesh(new THREE.CylinderGeometry(W / Math.SQRT2, (W - 6) / Math.SQRT2, H, 4).rotateY(PI / 4).scale(1, 1, D / W).translate(0, H / 2, 0), color, 0, 0, 0, METAL));
     // lid: hinged at the back top edge, a shallow gabled cap
     const lid = group(0, H, -D / 2);
     // a shallow hipped cap (four folds meeting at a short ridge), like the sheet
     const cap = new THREE.CylinderGeometry(4 / Math.SQRT2, (W + 8) / Math.SQRT2, 18, 4, 1).rotateY(PI / 4)
       .scale(1, 1, (D + 6) / (W + 8)).translate(0, 9, D / 2);
-    lid.add(mesh(cap, new THREE.Color(color).offsetHSL(0, 0, -0.04).getStyle()));
-    lid.add(mesh(cbox(W + 8, 2, D + 6).translate(0, 1, D / 2), new THREE.Color(color).offsetHSL(0, 0, -0.08).getStyle()));
+    lid.add(mesh(cap, new THREE.Color(color).offsetHSL(0, 0, -0.04).getStyle(), 0, 0, 0, METAL));
+    lid.add(mesh(cbox(W + 8, 2, D + 6).translate(0, 1, D / 2), new THREE.Color(color).offsetHSL(0, 0, -0.08).getStyle(), 0, 0, 0, METAL));
     g.add(lid);
     // recycle mark: three raised arrows in a triangle on the front
     const mark = group(0, H * 0.48, D / 2 + 0.3);
@@ -242,12 +250,12 @@ defineModel('landfill', (opts, rig) => {
   g.add(mesh(heap.translate(0, 25, 0), '#7d6a58', 0, 0, 0, { jitter: 0.08 }));
   // pines standing on the ground at the flanks
   for (const [gx, h, z] of [[0.6, 48, 8], [8.6, 42, -4], [9.4, 36, 10]]) {
-    g.add(mesh(new THREE.ConeGeometry(h * 0.32, h, 4).rotateY(PI / 4).translate(0, h / 2 + 3, 0), '#43554c', X(gx), 0, z));
+    g.add(mesh(new THREE.ConeGeometry(h * 0.32, h, 4).rotateY(PI / 4).translate(0, h / 2 + 3, 0), '#43554c', X(gx), 0, z, LEAF));
     g.add(mesh(box(4, 5, 4), '#5b4532', X(gx), 0, z));
   }
   // crates half-buried in the slope
-  g.add(mesh(cbox(10, 10, 10), '#d8b98a', X(3.2), 14, 38));
-  g.add(mesh(cbox(9, 12, 9), '#d2b07c', X(6.4), 18, 34));
+  g.add(mesh(cbox(10, 10, 10), '#d8b98a', X(3.2), 14, 38, WOOD));
+  g.add(mesh(cbox(9, 12, 9), '#d2b07c', X(6.4), 18, 34, WOOD));
   // bulldozer: tracks, body, cab, blade — crawls back and forth on top
   const doz = group(0, 50, 0);
   g.add(doz);
@@ -255,11 +263,11 @@ defineModel('landfill', (opts, rig) => {
     doz.add(mesh(box(32, 9, 6), '#2a2b2a', 0, 0, s * 9));
     for (const x of [-11, 0, 11]) doz.add(mesh(new THREE.CylinderGeometry(3, 3, 6.6, 8).rotateX(PI / 2), '#cfc6a5', x, 4.5, s * 9));
   }
-  doz.add(mesh(box(26, 10, 18), '#d6b46a', -2, 8, 0));
-  doz.add(mesh(box(14, 14, 16), '#e2c47f', -6, 18, 0));
+  doz.add(mesh(box(26, 10, 18), '#d6b46a', -2, 8, 0, METAL));
+  doz.add(mesh(box(14, 14, 16), '#e2c47f', -6, 18, 0, METAL));
   sideGlass(doz, -11, -1, 22, 30, 8, '#33403d');
   doz.add(mesh(cbox(0.8, 8, 12), '#33403d', 1.4, 26, 0));
-  doz.add(mesh(beam(19, 1, 22, 15, 3, 24), '#d0aa5a'));
+  doz.add(mesh(beam(19, 1, 22, 15, 3, 24), '#d0aa5a', 0, 0, 0, METAL));
   for (const s of [-1, 1]) doz.add(mesh(beam(10, 10, 20, 7, 2, 2), '#3b3a36', 0, 0, s * 9));
   rig.anims.idle = (t, dt, ctx) => {
     const u = Math.sin(t * 0.35 + ctx.phase);
@@ -287,7 +295,7 @@ defineModel('wasteBear', (opts, rig) => {
     }
     return 0;
   };
-  const bodyMesh = mesh(new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), 24).scale(1, 1, ZS), slate);
+  const bodyMesh = mesh(new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), 24).scale(1, 1, ZS), slate, 0, 0, 0, FUR);
   torso.add(bodyMesh);
   // the faceted lathe never pokes out of its analytic surface (chords lie
   // inside the circle), so decals placed on the analytic surface + a lift
@@ -326,7 +334,7 @@ defineModel('wasteBear', (opts, rig) => {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     geo.setIndex(idx);
-    return mesh(geo, color, 0, 0, 0, { side: THREE.DoubleSide });
+    return mesh(geo, color, 0, 0, 0, { side: THREE.DoubleSide, ...FUR });
   }
   torso.add(drape(X(4.3), X(0.4), Y(7.3), Y(2.9), '#efe7d6', 0.6));
   torso.add(drape(X(5.7), X(9.6), Y(7.3), Y(2.9), '#efe7d6', 0.6));
@@ -351,7 +359,7 @@ defineModel('wasteBear', (opts, rig) => {
   const ears = [];
   for (const s of [-1, 1]) {
     const e = group(X(5 + s * 3.25), Y(0.9), -2);
-    e.add(mesh(new THREE.SphereGeometry(S(0.95), 12, 8).scale(1, 1, 0.55), slate));
+    e.add(mesh(new THREE.SphereGeometry(S(0.95), 12, 8).scale(1, 1, 0.55), slate, 0, 0, 0, FUR));
     torso.add(e);
     ears.push(e);
   }
@@ -376,8 +384,8 @@ defineModel('zevoChimney', (opts, rig) => {
   const g = rig.body;
   const H = 95;
   const shaft = new THREE.CylinderGeometry(5.4 / Math.SQRT2 * 2, 10.4 / Math.SQRT2 * 2, H, 4).rotateY(PI / 4).translate(0, H / 2, 0);
-  g.add(mesh(shaft, '#ece6d6'));
-  g.add(mesh(new THREE.ConeGeometry(6.6 / Math.SQRT2 * 2 * 0.9, 5, 4).rotateY(PI / 4).translate(0, H + 2.5, 0), '#3a4342'));
+  g.add(mesh(shaft, '#ece6d6', 0, 0, 0, PLASTER));
+  g.add(mesh(new THREE.ConeGeometry(6.6 / Math.SQRT2 * 2 * 0.9, 5, 4).rotateY(PI / 4).translate(0, H + 2.5, 0), '#3a4342', 0, 0, 0, METAL));
   // narrow dark slit windows on the front face (proud of the taper)
   for (const y of [22, 40]) {
     const half = 10.4 - (10.4 - 5.4) * (y / H);
@@ -402,8 +410,8 @@ defineModel('cemetery', (opts, rig) => {
   const hx0 = X(4.4);
   const hx1 = X(6.4);
   const hz = -8;
-  g.add(mesh(box(hx1 - hx0, Y(0.4) - 2, 26), '#e7e1d1', (hx0 + hx1) / 2, 2, hz));
-  g.add(mesh(box(hx1 - hx0 + 6, 3, 30), '#c9d3c7', (hx0 + hx1) / 2, Y(0.4), hz));
+  g.add(mesh(box(hx1 - hx0, Y(0.4) - 2, 26), '#e7e1d1', (hx0 + hx1) / 2, 2, hz, PLASTER));
+  g.add(mesh(box(hx1 - hx0 + 6, 3, 30), '#c9d3c7', (hx0 + hx1) / 2, Y(0.4), hz, STONE));
   g.add(mesh(cbox(5, 8, 1), '#3e5a50', X(4.85), Y(2.2), hz + 13.4));
   g.add(mesh(cbox(5, 8, 1), '#e2bf62', X(5.95), Y(2.2), hz + 13.4));
   g.add(mesh(box(8, 22, 1), '#1d2522', X(5.4), 2, hz + 13.4));
@@ -411,8 +419,8 @@ defineModel('cemetery', (opts, rig) => {
   const flames = [];
   for (const gx of [0.3, 9.7]) {
     const px = X(gx);
-    g.add(mesh(box(10, Y(5.9) - 2, 10), '#ddd5c2', px, 2, front - 4));
-    g.add(mesh(box(12, 2.2, 12), '#3b3a36', px, Y(5.9), front - 4));
+    g.add(mesh(box(10, Y(5.9) - 2, 10), '#ddd5c2', px, 2, front - 4, STONE));
+    g.add(mesh(box(12, 2.2, 12), '#3b3a36', px, Y(5.9), front - 4, STONE));
     g.add(mesh(new THREE.CylinderGeometry(2.6, 2.6, 8, 10), '#efe7d2', px, Y(5.9) + 6.2, front - 4));
     const f = new THREE.Mesh(new THREE.ConeGeometry(1.3, 4, 8), new THREE.MeshBasicMaterial({ color: '#f5c35a' }));
     f.position.set(px, Y(5.9) + 12.4, front - 4);
@@ -420,7 +428,7 @@ defineModel('cemetery', (opts, rig) => {
     flames.push(f);
   }
   // gate posts in the middle
-  for (const gx of [3.9, 6.1]) g.add(mesh(box(5, Y(6.4) - 2, 5), '#ddd5c2', X(gx), 2, front - 2));
+  for (const gx of [3.9, 6.1]) g.add(mesh(box(5, Y(6.4) - 2, 5), '#ddd5c2', X(gx), 2, front - 2, STONE));
   // iron fence: rails + bars, with a gate (arched top) between the posts
   const iron = '#22282a';
   const bars = (xa, xb, y0, y1) => {
@@ -433,12 +441,12 @@ defineModel('cemetery', (opts, rig) => {
   bars(X(4.0), X(6.0), 2, Y(7.6));
   g.add(mesh(new THREE.TorusGeometry((X(6.0) - X(4.0)) / 2, 0.8, 4, 14, PI), iron, X(5.0), Y(7.6), front - 2));
   // cypress tree behind the left fence + a rounded shrub on the right
-  g.add(mesh(new THREE.SphereGeometry(1, 8, 10).scale(13, 34, 11).translate(0, 36, 0), '#3d5148', X(2.15), 0, front - 12));
+  g.add(mesh(new THREE.SphereGeometry(1, 8, 10).scale(13, 34, 11).translate(0, 36, 0), '#3d5148', X(2.15), 0, front - 12, LEAF));
   g.add(mesh(box(3, 6, 3), '#4b3c2c', X(2.15), 0, front - 12));
-  g.add(mesh(new THREE.SphereGeometry(1, 8, 8).scale(9, 13, 8).translate(0, 14, 0), '#43554c', X(8.3), 0, front - 10));
+  g.add(mesh(new THREE.SphereGeometry(1, 8, 8).scale(9, 13, 8).translate(0, 14, 0), '#43554c', X(8.3), 0, front - 10, LEAF));
   // a small stone urn on a post behind the left gate post
-  g.add(mesh(box(5, 26, 5), '#cfc7b4', X(3.55), 2, front - 9));
-  g.add(mesh(new THREE.ConeGeometry(4, 6, 6).translate(0, 31, 0), '#a7a597', X(3.55), 0, front - 9));
+  g.add(mesh(box(5, 26, 5), '#cfc7b4', X(3.55), 2, front - 9, STONE));
+  g.add(mesh(new THREE.ConeGeometry(4, 6, 6).translate(0, 31, 0), '#a7a597', X(3.55), 0, front - 9, STONE));
   rig.anims.always = (t) => {
     flames.forEach((f, i) => {
       const k = 1 + Math.sin(t * 13 + i * 2) * 0.15 + Math.sin(t * 29 + i) * 0.08;

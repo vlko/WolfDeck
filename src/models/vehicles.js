@@ -28,6 +28,12 @@ const HEAD = '#f6e8bd';
 const TAIL = '#b4565a';
 const AMBER = '#e8a64f';
 
+// material textures (see assets/materialTextures.js)
+const METAL = { tex: 'metal' };
+const FABRIC = { tex: 'fabric' };
+const FUR = { tex: 'fur' };
+const WOOD = { tex: 'wood' };
+
 const shade = (hex, dl) => `#${new THREE.Color(hex).offsetHSL(0, 0, dl).getHexString()}`;
 
 // ── geometry helpers ───────────────────────────────────────────────────────
@@ -81,10 +87,10 @@ const arch = (x, yb, r) => ({ arc: [x, yb, r, PI, 0, true] });
 
 // The same geometry on both sides of a body whose side surfaces are at
 // z = ±zs, `off` proud of the surface, t thick.
-function onSides(parent, geo, color, zs, off, t, sides = [1, -1], x = 0, y = 0, unlit = false) {
+function onSides(parent, geo, color, zs, off, t, sides = [1, -1], x = 0, y = 0, unlit = false, opts = {}) {
   const out = [];
   for (const s of sides) {
-    const m = unlit ? inkMesh(geo, color) : mesh(geo, color);
+    const m = unlit ? inkMesh(geo, color) : mesh(geo, color, 0, 0, 0, opts);
     m.position.set(x, y, s * (zs + off + t / 2));
     parent.add(m);
     out.push(m);
@@ -234,19 +240,20 @@ function figure({
 } = {}) {
   const root = new THREE.Group();
   const body = bear ? fur : top;
-  root.add(mesh(new THREE.SphereGeometry(1, 12, 8).scale(7.5, 5, 6.5), bear ? fur : pants, 0, 1, 0));
-  root.add(mesh(new THREE.SphereGeometry(1, 14, 10).scale(bear ? 9.5 : 8.5, 11, bear ? 8 : 7), body, 0, 10, 0));
+  const cloth = bear ? FUR : FABRIC; // the bear wears only his fur
+  root.add(mesh(new THREE.SphereGeometry(1, 12, 8).scale(7.5, 5, 6.5), bear ? fur : pants, 0, 1, 0, cloth));
+  root.add(mesh(new THREE.SphereGeometry(1, 14, 10).scale(bear ? 9.5 : 8.5, 11, bear ? 8 : 7), body, 0, 10, 0, cloth));
   if (vest) {
-    root.add(mesh(new THREE.SphereGeometry(1, 14, 10).scale(8.9, 8.2, 7.4), '#d6d36a', 0, 9, 0));
+    root.add(mesh(new THREE.SphereGeometry(1, 14, 10).scale(8.9, 8.2, 7.4), '#d6d36a', 0, 9, 0, FABRIC));
     root.add(mesh(new THREE.CylinderGeometry(9.1, 9.1, 1.6, 16).scale(1, 1, 0.84), '#eeeadb', 0, 7, 0));
   }
   const R = bear ? 11.5 : 9;
   const head = group(0, bear ? 25 : 23, 0);
   root.add(head);
-  head.add(mesh(new THREE.SphereGeometry(R, 18, 12), bear ? fur : skin));
+  head.add(mesh(new THREE.SphereGeometry(R, 18, 12), bear ? fur : skin, 0, 0, 0, bear ? FUR : {}));
   if (bear) {
     for (const s of [-1, 1]) {
-      head.add(mesh(new THREE.SphereGeometry(4.2, 10, 8), fur, s * 8.4, 7.8, -1));
+      head.add(mesh(new THREE.SphereGeometry(4.2, 10, 8), fur, s * 8.4, 7.8, -1, FUR));
       head.add(mesh(new THREE.SphereGeometry(2.4, 8, 6).scale(1, 1, 0.5), '#6e5040', s * 8.6, 8.0, 2.6));
     }
     head.add(mesh(new THREE.SphereGeometry(1, 12, 8).scale(5.4, 4.2, 3.6), muzzle, 0, -3.6, R - 1.6));
@@ -275,7 +282,7 @@ function figure({
   }
   const arms = [-1, 1].map((s) => {
     const a = group(s * (bear ? 9.6 : 8.6), 17, 0);
-    a.add(mesh(new THREE.CylinderGeometry(2.6, 2.2, 13.5, 8).translate(0, -6.75, 0), body));
+    a.add(mesh(new THREE.CylinderGeometry(2.6, 2.2, 13.5, 8).translate(0, -6.75, 0), body, 0, 0, 0, cloth));
     a.add(mesh(new THREE.SphereGeometry(2.6, 10, 8), bear ? fur : skin, 0, -13.8, 0));
     root.add(a);
     return a;
@@ -284,13 +291,13 @@ function figure({
     const thigh = group(s * 4, 0, 0);
     root.add(thigh);
     if (seated) {
-      thigh.add(mesh(cbox(5.6, 5.6, 13).translate(0, 0, 6.5), bear ? fur : pants));
+      thigh.add(mesh(cbox(5.6, 5.6, 13).translate(0, 0, 6.5), bear ? fur : pants, 0, 0, 0, cloth));
       const knee = group(0, 0, 13);
       thigh.add(knee);
-      knee.add(mesh(cbox(5, legLen, 5).translate(0, -legLen / 2, 0), bear ? fur : pants));
+      knee.add(mesh(cbox(5, legLen, 5).translate(0, -legLen / 2, 0), bear ? fur : pants, 0, 0, 0, cloth));
       knee.add(mesh(cbox(5.8, 3, 8).translate(0, -legLen, 1.5), bear ? shade(fur, -0.15) : '#2b2622'));
     } else {
-      thigh.add(mesh(cbox(5.4, legLen, 5.4).translate(0, -legLen / 2, 0), pants));
+      thigh.add(mesh(cbox(5.4, legLen, 5.4).translate(0, -legLen / 2, 0), pants, 0, 0, 0, FABRIC));
       thigh.add(mesh(cbox(5.8, 3, 8).translate(0, -legLen, 1.2), '#2b2622'));
     }
   }
@@ -352,9 +359,9 @@ function sageCar(name, C) {
       [-75, yb], arch(xr, yb, aR), arch(xf, yb, aR), [75, yb],
       { arc: [75, yb + 10, 10, -PI / 2, 0, false] }, [85, 46], { arc: [61, 46, 24, 0, PI / 2, false] },
       [-61, 70], { arc: [-61, 46, 24, PI / 2, PI, false] }, [-85, yb + 10], { arc: [-75, yb + 10, 10, PI, 1.5 * PI, false] },
-    ], D), C.body));
+    ], D), C.body, 0, 0, 0, METAL));
     const cabD = 68;
-    b.add(mesh(extrudeGeo([[-57, 66], [7, 66], [-8, 100], [-45, 100], { arc: [-45, 88, 12, PI / 2, PI, false] }], cabD, 1.5), C.cab));
+    b.add(mesh(extrudeGeo([[-57, 66], [7, 66], [-8, 100], [-45, 100], { arc: [-45, 88, 12, PI / 2, PI, false] }], cabD, 1.5), C.cab, 0, 0, 0, METAL));
     windowRect(b, -52, 74, -33, 93, cabD / 2, { r: 4, frame: C.trim });
     windowPoly(b, [[-28, 74], [-0.6, 74], [-5.8, 93], [-28, 93]], cabD / 2);
     slab(b, 3.9, 73, -5.8, 95, cabD - 12, GLASS, -25, 80, 1.9);
@@ -395,13 +402,13 @@ function beetle(name, L, C) {
       { arc: [L - 8, yb + 8, 8, -PI / 2, 0, false] }, [L, 42], { arc: [L - 12, 42, 12, 0, PI / 2, false] },
       [26, 63], [-30, 63], [-L + 16, 58], { arc: [-L + 16, 42, 16, PI / 2, PI, false] },
       [-L, yb + 8], { arc: [-L + 8, yb + 8, 8, PI, 1.5 * PI, false] },
-    ], D), C.body));
+    ], D), C.body, 0, 0, 0, METAL));
     const domeD = 64;
     const cx = -4;
     const cy = 60;
     const a = 32;
     const bb = 37;
-    b.add(mesh(extrudeGeo([[cx + a, cy], { ell: [cx, cy, a, bb, 0, PI, false] }], domeD, 1.5, 16), C.dome));
+    b.add(mesh(extrudeGeo([[cx + a, cy], { ell: [cx, cy, a, bb, 0, PI, false] }], domeD, 1.5, 16), C.dome, 0, 0, 0, METAL));
     // arched side windows follow the dome, inset 4.5
     const win = (xa, xc) => {
       const pts = [[xa, 65], [xc, 65]];
@@ -450,11 +457,11 @@ defineModel('busCream', (opts, rig) => {
     [-90, yb], arch(xr, yb, aR), arch(xf, yb, aR), [86, yb], { arc: [86, yb + 6, 6, -PI / 2, 0, false] },
     [92, 44], { arc: [86, 44, 6, 0, PI / 2, false] }, [73, 50], [73, 44.4], [-96, 44.4], [-96, yb + 6],
     { arc: [-90, yb + 6, 6, PI, 1.5 * PI, false] },
-  ], D), sage));
+  ], D), sage, 0, 0, 0, METAL));
   b.add(mesh(extrudeGeo([
     [-96, 47.6], [73, 47.6], [73, 82], { arc: [55, 82, 18, 0, PI / 2, false] }, [-82, 100],
     { arc: [-82, 86, 14, PI / 2, PI, false] },
-  ], D), cream));
+  ], D), cream, 0, 0, 0, METAL));
   for (const [x0, x1] of [[-90, -66], [-60, -36], [-30, -6], [31, 64]]) windowRect(b, x0, 62, x1, 82, zs, { frame: '#d8ceb6' });
   windowRect(b, 3, 62, 24, 82, zs, { sides: [-1], frame: '#d8ceb6' });
   // rub strip (skips the doorway on the kerb side)
@@ -465,7 +472,7 @@ defineModel('busCream', (opts, rig) => {
   onSides(b, flat(rrect(2, 20, 25, 86, 3), 0.3), '#232a28', zs, 0.05, 0.3, [1]);
   const door = group(0, 0, 0);
   b.add(door);
-  onSides(door, flat(rrect(2, 20, 25, 86, 3), 0.6), '#869b8b', zs, 1.3, 0.6, [1]);
+  onSides(door, flat(rrect(2, 20, 25, 86, 3), 0.6), '#869b8b', zs, 1.3, 0.6, [1], 0, 0, false, METAL);
   onSides(door, flat(rrect(4, 52, 12, 82, 2), 0.3), GLASS, zs, 1.9, 0.3, [1]);
   onSides(door, flat(rrect(15, 52, 23, 82, 2), 0.3), GLASS, zs, 1.9, 0.3, [1]);
   onSides(door, cbox(0.7, 64, 0.3), '#5f7466', zs, 1.9, 0.3, [1], 13.5, 53);
@@ -480,7 +487,7 @@ defineModel('busCream', (opts, rig) => {
   b.add(mesh(cbox(10, 6, D - 4), '#2c3330', -97, 19, 0));
   for (const z of [-28, 28]) b.add(mesh(cbox(1.2, 8, 7), TAIL, -97.8, 40, z));
   mirrors(b, 76, 78, zs, '#3a3f3d', 6);
-  b.add(mesh(cbox(18, 3, 26), '#d9cfb6', -30, 101.5, 0)); // roof hatch
+  b.add(mesh(cbox(18, 3, 26), '#d9cfb6', -30, 101.5, 0, METAL)); // roof hatch
   b.add(mesh(cbox(60, 6, 40), DARK, 3.5, 14, 0));
   addWheels(rig, pairs([xr, xf], r, 28, 14, { hub: '#8f9893', cap: '#5d6662' }), r);
   rig.anims.always = (t) => {
@@ -501,11 +508,11 @@ defineModel('busGray', (opts, rig) => {
   b.add(mesh(extrudeGeo([
     [-73, yb], arch(-37, yb, aR), arch(40, yb, aR), [73, yb], { arc: [73, yb + 6, 6, -PI / 2, 0, false] },
     [79, 44.4], [-79, 44.4], [-79, yb + 6], { arc: [-73, yb + 6, 6, PI, 1.5 * PI, false] },
-  ], D), '#8d939a'));
+  ], D), '#8d939a', 0, 0, 0, METAL));
   b.add(mesh(extrudeGeo([
     [-79, 47.6], [79, 47.6], [79, 75], { arc: [57, 75, 22, 0, PI / 2, false] }, [-69, 97],
     { arc: [-69, 87, 10, PI / 2, PI, false] },
-  ], D), '#a9adb3'));
+  ], D), '#a9adb3', 0, 0, 0, METAL));
   onSides(b, cbox(150, 4, 0.4), '#7f858c', zs, 0.05, 0.4, [1, -1], -2, 52);
   for (const [x0, x1] of [[-72.6, -50.4], [-46, -23.8], [-17.5, 3.2], [9.5, 31.8], [38, 56]]) windowRect(b, x0, 62, x1, 88, zs, { frame: '#c9ccd0' });
   slab(b, 79, 52, 79, 75, D - 14, GLASS, 0, 60);
@@ -538,8 +545,8 @@ defineModel('schoolBus', (opts, rig) => {
     [111, 48], { arc: [103, 48, 8, 0, PI / 2, false] }, [86, 56], [80.5, 96], { arc: [76.5, 96, 4, 0, PI / 2, false] },
     [-101.5, 100], { arc: [-101.5, 88, 12, PI / 2, PI, false] }, [-113.5, yb + 6],
     { arc: [-107.5, yb + 6, 6, PI, 1.5 * PI, false] },
-  ], D), yel));
-  b.add(mesh(cbox(178, 2.4, D - 14), '#ecd69f', -12, 101.2, 0));
+  ], D), yel, 0, 0, 0, METAL));
+  b.add(mesh(cbox(178, 2.4, D - 14), '#ecd69f', -12, 101.2, 0, METAL));
   for (const [x0, x1] of [[22, 44], [-11, 11], [-44, -22], [-77, -55], [-99, -81]]) windowRect(b, x0, 62, x1, 84, zs, { frame: '#f0dcae' });
   windowPoly(b, [[66, 62], [81, 62], [78, 84], [66, 84]], zs);
   windowRect(b, 48, 62, 63, 84, zs, { sides: [-1], frame: '#f0dcae' });
@@ -553,7 +560,7 @@ defineModel('schoolBus', (opts, rig) => {
   onSides(b, flat(rrect(47, 22, 64, 88, 2), 0.3), '#232a28', zs, 0.05, 0.3, [1]);
   const door = group(0, 0, 0);
   b.add(door);
-  onSides(door, flat(rrect(47, 22, 64, 88, 2), 0.6), '#d4b26e', zs, 1.3, 0.6, [1]);
+  onSides(door, flat(rrect(47, 22, 64, 88, 2), 0.6), '#d4b26e', zs, 1.3, 0.6, [1], 0, 0, false, METAL);
   onSides(door, flat(rrect(49, 50, 62, 85, 2), 0.3), GLASS, zs, 1.9, 0.3, [1]);
   onSides(door, flat(rrect(49, 25, 62, 46, 2), 0.3), GLASS, zs, 1.9, 0.3, [1]);
   // stop arm (driver side, −z), hinged at the body
@@ -597,7 +604,7 @@ defineModel('pickup', (opts, rig) => {
     [-57, yb], arch(-39, yb, aR), arch(38, yb, aR), [57, yb], { arc: [57, yb + 6, 6, -PI / 2, 0, false] },
     [63, 40], { arc: [59, 40, 4, 0, PI / 2, false] }, [-59, 44], { arc: [-59, 40, 4, PI / 2, PI, false] },
     [-63, yb + 6], { arc: [-57, yb + 6, 6, PI, 1.5 * PI, false] },
-  ], D), sage));
+  ], D), sage, 0, 0, 0, METAL));
   // arch lips
   for (const x of [-39, 38]) {
     const pts = [];
@@ -605,15 +612,15 @@ defineModel('pickup', (opts, rig) => {
     for (let i = 10; i >= 0; i -= 1) pts.push([x + (aR - B) * Math.cos((PI * i) / 10), yb + (aR - B) * Math.sin((PI * i) / 10)]);
     onSides(b, flat(pts, 0.6), '#6e8073', zs, 0.05, 0.6);
   }
-  b.add(mesh(extrudeGeo([[30, 43], [62, 43], [61, 50], [54, 54], [30, 54]], D - 8, 1.2), '#a6b8aa'));
+  b.add(mesh(extrudeGeo([[30, 43], [62, 43], [61, 50], [54, 54], [30, 54]], D - 8, 1.2), '#a6b8aa', 0, 0, 0, METAL));
   // bed: walls, tailgate, bulkhead, rims
   for (const s of [1, -1]) {
-    b.add(mesh(cbox(75, 12, 3), sage, -25.5, 50, s * (zs - 1.5)));
+    b.add(mesh(cbox(75, 12, 3), sage, -25.5, 50, s * (zs - 1.5), METAL));
     b.add(mesh(cbox(75, 2, 4), '#7d8f82', -25.5, 57, s * (zs - 1.5)));
   }
-  b.add(mesh(cbox(3, 12, D), sage, -61.5, 50, 0));
+  b.add(mesh(cbox(3, 12, D), sage, -61.5, 50, 0, METAL));
   b.add(mesh(cbox(4, 2, D + 1), '#7d8f82', -61.5, 57, 0));
-  b.add(mesh(cbox(3, 12, D), sage, 11.5, 50, 0));
+  b.add(mesh(cbox(3, 12, D), sage, 11.5, 50, 0, METAL));
   const spare = wheel(10, 6, { hub: '#d4d6d2' });
   spare.rotation.y = PI / 2;
   spare.position.set(-66, 50, 0);
@@ -628,7 +635,7 @@ defineModel('pickup', (opts, rig) => {
   b.add(mesh(beam(46.4, 54, 42.4, 78.4, 1, D - 10), GLASS));
   b.add(mesh(cbox(4, 6, D - 10), DARK, 43, 50, 0));
   // seat cushions (the bulkhead is the backrest)
-  for (const z of [12, -12]) b.add(mesh(cbox(16, 4, 20), '#4a4f4c', 21, 46, z));
+  for (const z of [12, -12]) b.add(mesh(cbox(16, 4, 20), '#4a4f4c', 21, 46, z, FABRIC));
   rod(b, [42, 50, 12], [36.5, 60, 12], 1, DARK);
   steeringWheel(b, 36, 61, 12, 5, 0.5);
   // nose
@@ -670,7 +677,7 @@ defineModel('garbageTruck', (opts, rig) => {
   b.add(mesh(extrudeGeo([
     [39, yb], arch(56.5, yb, aR), [74, yb], { arc: [74, yb + 5, 5, -PI / 2, 0, false] },
     [79, 68], { arc: [67, 68, 12, 0, PI / 2, false] }, [39, 80],
-  ], D), cab));
+  ], D), cab, 0, 0, 0, METAL));
   windowRect(b, 50, 57, 71, 72, zs, { frame: '#d6dfd8' });
   seam(b, 47, 20, 78, zs, shade(cab, -0.12));
   handle(b, 51, 52, zs);
@@ -685,10 +692,10 @@ defineModel('garbageTruck', (opts, rig) => {
   b.add(mesh(cbox(108, 10, 30), DARK, -10, 25, 0)); // chassis
   b.add(mesh(cbox(4, 4, 10), DARK, -8, 26, zs - 8)); // fuel step
   // container with ribs that rise above the roof
-  b.add(mesh(extrudeGeo(rrect(-22, 30, 37, 90, 4), D - 2), '#a3a7a9'));
-  for (const x of [-18, -4, 10, 24, 34]) b.add(mesh(cbox(3, 66, D + 0.6), '#8f9496', x, 63, 0));
+  b.add(mesh(extrudeGeo(rrect(-22, 30, 37, 90, 4), D - 2), '#a3a7a9', 0, 0, 0, METAL));
+  for (const x of [-18, -4, 10, 24, 34]) b.add(mesh(cbox(3, 66, D + 0.6), '#8f9496', x, 63, 0, METAL));
   // hopper
-  b.add(mesh(extrudeGeo([[-22, 30], [-22, 90], [-56, 82], [-71, 60], [-69, 42], [-58, 30]], D - 6), '#55595c'));
+  b.add(mesh(extrudeGeo([[-22, 30], [-22, 90], [-56, 82], [-71, 60], [-69, 42], [-58, 30]], D - 6), '#55595c', 0, 0, 0, METAL));
   onSides(b, flat([[-26, 80], [-54, 74], [-64, 58], [-26, 58]], 0.4), '#6a6f72', (D - 6) / 2, 0.05, 0.4);
   for (const z of [-26, 26]) b.add(mesh(cbox(1.2, 7, 6), TAIL, -72.2, 50, z));
   // rails for the bin lift on the hopper's back
@@ -705,7 +712,7 @@ defineModel('garbageTruck', (opts, rig) => {
   // wheelie bin on the lift (pivot at its front-top edge)
   const bin = group(-74, 22, 0);
   b.add(bin);
-  bin.add(mesh(cbox(14, 22, 22), '#8fa592', -8, -11, 0));
+  bin.add(mesh(cbox(14, 22, 22), '#8fa592', -8, -11, 0, METAL));
   bin.add(mesh(cbox(16, 2, 24), '#6f8673', -8, 0.8, 0));
   for (const z of [-8, 8]) bin.add(mesh(new THREE.CylinderGeometry(2, 2, 2, 8).rotateX(PI / 2), TYRE, -13, -20, z));
   bin.add(mesh(cbox(2, 6, 18), '#c9a64b', -0.5, -3, 0)); // the clamp on the rails
@@ -734,7 +741,7 @@ defineModel('snowPlough', (opts, rig) => {
     [-79, yb], arch(-56, yb, aR), arch(38, yb, aR), [64, yb], { arc: [64, yb + 6, 6, -PI / 2, 0, false] },
     [70, 48], { arc: [66, 48, 4, 0, PI / 2, false] }, [46, 56], [40, 94], { arc: [37, 94, 3, 0, PI / 2, false] },
     [2, 97], [0, 94], [0, 62], [-85, 62], [-85, yb + 6], { arc: [-79, yb + 6, 6, PI, 1.5 * PI, false] },
-  ], D), body));
+  ], D), body, 0, 0, 0, METAL));
   windowRect(b, 6, 66, 32, 90, zs, { frame: '#e3ebe4' });
   seam(b, 4, 22, 60, zs, shade(body, -0.12));
   handle(b, 10, 58, zs);
@@ -749,7 +756,7 @@ defineModel('snowPlough', (opts, rig) => {
   // blade: concave mouldboard on a push frame bolted to the chassis
   const front = [[86, 2], [83, 12], [82, 22], [84, 32], [89, 40], [95, 45]];
   const back = [[82.5, 2], [79.5, 12], [78.5, 22], [80.5, 32], [85.5, 40], [92, 46.5]];
-  b.add(mesh(flat([...front, ...back.reverse()], D + 34), '#4d5560'));
+  b.add(mesh(flat([...front, ...back.reverse()], D + 34), '#4d5560', 0, 0, 0, METAL));
   b.add(mesh(cbox(4, 3, D + 34), '#8a9296', 84.5, 2.5, 0));
   for (const z of [-18, 18]) b.add(mesh(beam(66, 26, 81, 18, 4, 4), DARK, 0, 0, z));
   b.add(mesh(beam(66, 44, 82, 33, 2.4, 2.4), '#b8bdb9'));
@@ -773,11 +780,11 @@ defineModel('lawnMower', (opts, rig) => {
   const b = rig.body;
   const green = '#5d8a68';
   const light = '#6b9a77';
-  b.add(mesh(extrudeGeo([[-55, 12], [50, 12], [64, 20], [60, 28], [15, 34], [-35, 32], [-55, 30]], 36, 1.4), green));
-  b.add(mesh(extrudeGeo(rrect(-8, 3, 28, 10, 3), 60, 1.2), '#4a7055')); // cutting deck
+  b.add(mesh(extrudeGeo([[-55, 12], [50, 12], [64, 20], [60, 28], [15, 34], [-35, 32], [-55, 30]], 36, 1.4), green, 0, 0, 0, METAL));
+  b.add(mesh(extrudeGeo(rrect(-8, 3, 28, 10, 3), 60, 1.2), '#4a7055', 0, 0, 0, METAL)); // cutting deck
   for (const [x, z] of [[2, 10], [2, -10], [22, 10], [22, -10]]) b.add(mesh(cbox(3, 4, 3), DARK, x, 11, z));
   b.add(mesh(cbox(8, 5, 6), '#4a7055', 10, 6, 31)); // side chute
-  b.add(mesh(extrudeGeo([[18, 32], [58, 30], [61, 36], [52, 46], [18, 46]], 30, 1.4), light)); // hood
+  b.add(mesh(extrudeGeo([[18, 32], [58, 30], [61, 36], [52, 46], [18, 46]], 30, 1.4), light, 0, 0, 0, METAL)); // hood
   slab(b, 58.5, 31, 60.8, 35.5, 20, DARK, 40, 38, 1.6);
   for (const z of [-11, 11]) lamp(b, 61.6, 34, z, 2.2, HEAD);
   for (const s of [1, -1]) onSides(b, flat(rrect(26, 36, 44, 42, 2), 0.3), '#3f4a3e', 15, 0.05, 0.3, [s]);
@@ -786,22 +793,22 @@ defineModel('lawnMower', (opts, rig) => {
     const pts = [];
     for (let i = 0; i <= 12; i += 1) pts.push([-40 + 21.4 * Math.cos(0.15 + (2.84 * i) / 12), 17 + 21.4 * Math.sin(0.15 + (2.84 * i) / 12)]);
     for (let i = 12; i >= 0; i -= 1) pts.push([-40 + 19 * Math.cos(0.15 + (2.84 * i) / 12), 17 + 19 * Math.sin(0.15 + (2.84 * i) / 12)]);
-    const g = mesh(flat(pts, 16), light);
+    const g = mesh(flat(pts, 16), light, 0, 0, 0, METAL);
     g.position.z = s * 26;
     b.add(g);
   }
   // seat on a post
   b.add(mesh(cbox(8, 8, 8), DARK, -18, 37, 0));
-  b.add(mesh(cbox(18, 4, 22), '#4e5148', -18, 42, 0));
-  b.add(mesh(cbox(4, 24, 22), '#4e5148', -28, 56, 0));
+  b.add(mesh(cbox(18, 4, 22), '#4e5148', -18, 42, 0, FABRIC));
+  b.add(mesh(cbox(4, 24, 22), '#4e5148', -28, 56, 0, FABRIC));
   // steering
   rod(b, [20, 46, 0], [-1, 60, 0], 1.3, DARK);
   steeringWheel(b, -2, 61, 0, 6.5, 0.55);
   // sunshade
   for (const z of [-14, 14]) rod(b, [10, 45, z], [10, 98, z], 1.3, DARK);
   for (const z of [-16, 16]) rod(b, [-42, 30, z], [-42, 98, z], 1.3, DARK);
-  b.add(mesh(cbox(60, 3, 40), light, -16, 99.5, 0));
-  b.add(mesh(cbox(30, 1.4, 24), '#d6c58e', -16, 101.6, 0));
+  b.add(mesh(cbox(60, 3, 40), light, -16, 99.5, 0, FABRIC));
+  b.add(mesh(cbox(30, 1.4, 24), '#d6c58e', -16, 101.6, 0, FABRIC));
   rod(b, [40, 44, 10], [40, 54, 10], 1.6, DARK); // exhaust
   // driver
   const driver = figure({ legLen: 9, seed: 5 });
@@ -826,8 +833,8 @@ defineModel('bucketTruck', (opts, rig) => {
     [-60, yb], arch(-44, yb, aR), arch(11, yb, aR), [27, yb], { arc: [27, yb + 6, 6, -PI / 2, 0, false] },
     [33, 36], { arc: [29, 36, 4, 0, PI / 2, false] }, [14, 40], [14, 30], [-14, 30], [-14, 34], [-66, 34],
     [-66, yb + 6], { arc: [-60, yb + 6, 6, PI, 1.5 * PI, false] },
-  ], D), cream));
-  b.add(mesh(extrudeGeo([[-14, 29], [14, 29], [14, 52], { arc: [4, 52, 10, 0, PI / 2, false] }, [-14, 62]], D - 2), cabC));
+  ], D), cream, 0, 0, 0, METAL));
+  b.add(mesh(extrudeGeo([[-14, 29], [14, 29], [14, 52], { arc: [4, 52, 10, 0, PI / 2, false] }, [-14, 62]], D - 2), cabC, 0, 0, 0, METAL));
   windowRect(b, -10, 42, 6, 58, (D - 2) / 2, { r: 2, frame: '#c3c9d4' });
   seam(b, -12, 32, 60, (D - 2) / 2, shade(cabC, -0.1));
   handle(b, -6, 39, (D - 2) / 2);
@@ -850,23 +857,23 @@ defineModel('bucketTruck', (opts, rig) => {
   const P0 = [-30, 42];
   const L1 = 36;
   const L2 = 40;
-  b.add(mesh(new THREE.CylinderGeometry(9, 10, 6, 12), '#c9a35a', P0[0], 37, 0));
-  b.add(mesh(cbox(8, 6, 10), '#c9a35a', P0[0], 41, 0));
+  b.add(mesh(new THREE.CylinderGeometry(9, 10, 6, 12), '#c9a35a', P0[0], 37, 0, METAL));
+  b.add(mesh(cbox(8, 6, 10), '#c9a35a', P0[0], 41, 0, METAL));
   const tan = '#d9b25e';
   const link1 = group(P0[0], P0[1], 0);
   b.add(link1);
-  link1.add(mesh(cbox(L1, 5, 6).translate(L1 / 2, 0, 0), tan));
+  link1.add(mesh(cbox(L1, 5, 6).translate(L1 / 2, 0, 0), tan, 0, 0, 0, METAL));
   link1.add(mesh(cbox(L1 * 0.6, 2.4, 3).translate(L1 * 0.35, -3.6, 0), '#e9e3d4'));
   link1.add(mesh(new THREE.CylinderGeometry(3.4, 3.4, 8, 10).rotateX(PI / 2), DARK));
   const link2 = group(L1, 0, 0);
   link1.add(link2);
-  link2.add(mesh(cbox(L2, 4, 5).translate(L2 / 2, 0, 0), tan));
+  link2.add(mesh(cbox(L2, 4, 5).translate(L2 / 2, 0, 0), tan, 0, 0, 0, METAL));
   link2.add(mesh(new THREE.CylinderGeometry(3, 3, 7, 10).rotateX(PI / 2), DARK));
   const basket = group(L2, 0, 0);
   link2.add(basket);
   basket.add(mesh(cbox(4, 6, 4), DARK, 0, -1, 0));
   // the basket hangs on the lamp side (rear) of the boom tip
-  basket.add(mesh(cbox(18, 12, 18), '#d2a85a', -8, -8, 0));
+  basket.add(mesh(cbox(18, 12, 18), '#d2a85a', -8, -8, 0, METAL));
   basket.add(mesh(cbox(19, 1.6, 19), '#b38a40', -8, -1.6, 0));
   const worker = figure({ seated: false, legLen: 12, vest: true, seed: 7 });
   worker.root.scale.setScalar(0.8);
@@ -877,7 +884,7 @@ defineModel('bucketTruck', (opts, rig) => {
   // up from the turret over the rear and out to the lamp — never over the cab
   const lampX = -96;
   b.add(mesh(new THREE.CylinderGeometry(4, 5, 3, 10), '#2e3330', lampX, 1.5, 0));
-  b.add(mesh(new THREE.CylinderGeometry(1.6, 1.9, 84, 8), '#2e3330', lampX, 42, 0));
+  b.add(mesh(new THREE.CylinderGeometry(1.6, 1.9, 84, 8), '#2e3330', lampX, 42, 0, METAL));
   b.add(mesh(new THREE.CylinderGeometry(2, 6.5, 4, 10), '#2e3330', lampX, 88, 0));
   const glowMat = new THREE.MeshBasicMaterial({ color: '#fbe3a0' });
   const globe = new THREE.Mesh(new THREE.SphereGeometry(5, 12, 10), glowMat);
@@ -939,21 +946,21 @@ defineModel('roadRoller', (opts, rig) => {
   const b = rig.body;
   const D = 78;
   const yel = '#d6b56c';
-  b.add(mesh(extrudeGeo(rrect(-78, 26, 76, 44, 5), D), '#d2b062')); // side frame band
-  b.add(mesh(extrudeGeo([[-72, 44], [66, 44], [64, 52], [40, 70], [-66, 70], { arc: [-66, 64, 6, PI / 2, PI, false] }], D - 14), yel));
+  b.add(mesh(extrudeGeo(rrect(-78, 26, 76, 44, 5), D), '#d2b062', 0, 0, 0, METAL)); // side frame band
+  b.add(mesh(extrudeGeo([[-72, 44], [66, 44], [64, 52], [40, 70], [-66, 70], { arc: [-66, 64, 6, PI / 2, PI, false] }], D - 14), yel, 0, 0, 0, METAL));
   for (const x of [-48, 40]) sideDisc(b, x, 32, D / 2, 4.5, '#3a3832', 1);
   for (const x of [-66, -32, -26, 6, 56, 66]) sideDisc(b, x, 32, D / 2, 1.8, '#5a4a2f', 0.8);
-  b.add(mesh(cbox(16, 22, D + 2), '#c9a85c', -6, 30, 0)); // ballast box
+  b.add(mesh(cbox(16, 22, D + 2), '#c9a85c', -6, 30, 0, METAL)); // ballast box
   for (const s of [1, -1]) {
     onSides(b, flat(rrect(-50, 52, -30, 58, 2), 0.4), '#3a3d39', (D - 14) / 2, 0.05, 0.4, [s]);
     onSides(b, flat(rrect(18, 52, 32, 60, 2), 0.4), '#3a3d39', (D - 14) / 2, 0.05, 0.4, [s]);
   }
-  b.add(mesh(cbox(44, 5, 52), '#3a3d39', -6, 72, 0)); // operator deck
+  b.add(mesh(cbox(44, 5, 52), '#3a3d39', -6, 72, 0, METAL)); // operator deck
   b.add(mesh(cbox(14, 3, 22), '#3a3d39', 6, 76, 0));
   b.add(mesh(cbox(4, 14, 22), '#3a3d39', 14, 81, 0));
   steeringWheel(b, -2, 82, 0, 5, -0.5);
   rod(b, [-4, 74, 0], [-2, 81, 0], 1, DARK);
-  b.add(mesh(cbox(10, 3, 10), '#efe6cf', -18, 76, 0));
+  b.add(mesh(cbox(10, 3, 10), '#efe6cf', -18, 76, 0, METAL));
   const flash = beacon(b, -18, 77.5, 0, 5);
   rod(b, [-56, 70, -18], [-56, 96, -18], 2.2, '#2f322f');
   rod(b, [-56, 96, -18], [-62, 99, -18], 2.2, '#2f322f');
@@ -988,13 +995,13 @@ defineModel('drumRoller', (opts, rig) => {
   rig.parts.wheelRadius = 36; // rear drum turns a little fast — not noticeable
   // body: rounded capsule profile, lower sage band + dark top as one solid
   // each, the band slightly proud so the seam reads as a fold
-  b.add(mesh(extrudeGeo([[-84, 22], [2, 22], [2, 44], [-84, 44]], D - 2), sage));
-  b.add(mesh(extrudeGeo([[-84, 44], [2, 44], { arc: [-12, 44, 14, 0, PI / 2, false] }, [-74, 58], { arc: [-74, 48, 10, PI / 2, PI, false] }], D - 2), dark));
+  b.add(mesh(extrudeGeo([[-84, 22], [2, 22], [2, 44], [-84, 44]], D - 2), sage, 0, 0, 0, METAL));
+  b.add(mesh(extrudeGeo([[-84, 44], [2, 44], { arc: [-12, 44, 14, 0, PI / 2, false] }, [-74, 58], { arc: [-74, 48, 10, PI / 2, PI, false] }], D - 2), dark, 0, 0, 0, METAL));
   onSides(b, cbox(84, 2.2, 0.4), cream, (D - 2) / 2, 0.05, 0.4, [1, -1], -41, 44);
   for (const x of [-72, -56, -40, -24, -8]) sideDisc(b, x, 35, (D - 2) / 2, 1.8, AMBER, 0.6);
   // the yoke: a steel frame from the body round the big drum's axle
   for (const s2 of [1, -1]) {
-    const p = mesh(flat([[0, 26], [0, 52], [46, 44], [52, 36], [46, 28]], 3), '#5b5f5a');
+    const p = mesh(flat([[0, 26], [0, 52], [46, 44], [52, 36], [46, 28]], 3), '#5b5f5a', 0, 0, 0, METAL);
     p.position.z = s2 * (D / 2 + 2.2);
     b.add(p);
     b.add(mesh(new THREE.CylinderGeometry(7, 7, 3, 12).rotateX(PI / 2), '#43474a', 46, 36, s2 * (D / 2 + 3.8)));
@@ -1003,16 +1010,16 @@ defineModel('drumRoller', (opts, rig) => {
   rod(b, [84, 25, 30], [70, 42, 30], 1.2, '#5b5f5a');
   rod(b, [84, 25, -30], [70, 42, -30], 1.2, '#5b5f5a');
   // operator platform + cream cage on top of the body
-  b.add(mesh(cbox(40, 3, D - 6), '#4a4e49', -40, 59.5, 0));
-  b.add(mesh(cbox(12, 10, 18), cream, -48, 66, 0)); // seat
-  b.add(mesh(cbox(4, 14, 18), cream, -55, 73, 0));
+  b.add(mesh(cbox(40, 3, D - 6), '#4a4e49', -40, 59.5, 0, METAL));
+  b.add(mesh(cbox(12, 10, 18), cream, -48, 66, 0, FABRIC)); // seat
+  b.add(mesh(cbox(4, 14, 18), cream, -55, 73, 0, FABRIC));
   b.add(mesh(cbox(6, 14, 8), '#4a4e49', -26, 68, 0)); // steering column
   steeringWheel(b, -27, 77, 0, 5, -0.4);
   for (const z of [-24, 24]) {
     rod(b, [-60, 61, z], [-60, 92, z], 1.6, cream);
     rod(b, [-22, 61, z], [-22, 92, z], 1.6, cream);
   }
-  b.add(mesh(cbox(42, 2.5, 52), cream, -41, 93, 0)); // canopy
+  b.add(mesh(cbox(42, 2.5, 52), cream, -41, 93, 0, METAL)); // canopy
   rod(b, [-8, 58, 18], [-8, 80, 18], 2.6, DARK); // exhaust
   const flash = beacon(b, -41, 95.5, 0);
   lamp(b, 2 + B, 50, 22, 3.2, HEAD);
@@ -1027,15 +1034,15 @@ defineModel('cementMixer', (opts, rig) => {
   const b = rig.body;
   const tan = '#cfc19b';
   const brown = '#7a5b3e';
-  for (const z of [-14, 14]) b.add(mesh(cbox(86, 5, 4), tan, 3, 22, z));
-  for (const x of [-36, 40]) b.add(mesh(cbox(4, 5, 32), tan, x, 22, 0));
+  for (const z of [-14, 14]) b.add(mesh(cbox(86, 5, 4), tan, 3, 22, z, METAL));
+  for (const x of [-36, 40]) b.add(mesh(cbox(4, 5, 32), tan, x, 22, 0, METAL));
   for (const x of [-26, 22]) {
     for (const z of [-14, 14]) b.add(mesh(cbox(4, 9, 4), tan, x, 16.5, z));
     b.add(mesh(new THREE.CylinderGeometry(1.8, 1.8, 52, 8).rotateX(PI / 2), DARK, x, 13, 0));
   }
   b.add(mesh(beam(44, 22, 56, 16, 3, 4), tan));
   b.add(mesh(new THREE.TorusGeometry(2.6, 0.9, 6, 12), DARK, 57.5, 15, 0));
-  for (const z of [-10, 10]) b.add(mesh(cbox(2.4, 50, 2.4), brown, 38, 47, z));
+  for (const z of [-10, 10]) b.add(mesh(cbox(2.4, 50, 2.4), brown, 38, 47, z, WOOD));
   b.add(mesh(cbox(2.4, 2.4, 22), brown, 38, 72, 0));
   for (const z of [-10, 10]) b.add(mesh(cbox(6, 2.4, 2.4), brown, 41, 72, z));
   // drum on a yoke, spinning about its own axis
@@ -1058,9 +1065,9 @@ defineModel('cementMixer', (opts, rig) => {
   const spin = group(0, 0, 0);
   tilt.add(spin);
   const prof = [[0, -36], [16, -34], [27, -22], [30, -8], [30, 6], [25, 18], [16, 28], [13, 33], [15, 36]];
-  spin.add(mesh(new THREE.LatheGeometry(prof.map(([a, c]) => new THREE.Vector2(a, c)), 8), '#e4dfcc', 0, 0, 0, { side: THREE.DoubleSide }));
+  spin.add(mesh(new THREE.LatheGeometry(prof.map(([a, c]) => new THREE.Vector2(a, c)), 8), '#e4dfcc', 0, 0, 0, { side: THREE.DoubleSide, ...METAL }));
   spin.add(inkMesh(new THREE.CircleGeometry(13, 8).rotateX(-PI / 2), '#3b3833', 0, 33, 0));
-  spin.add(mesh(new THREE.CylinderGeometry(30.7, 30.7, 6, 8), '#b8b19a', 0, -1, 0));
+  spin.add(mesh(new THREE.CylinderGeometry(30.7, 30.7, 6, 8), '#b8b19a', 0, -1, 0, METAL));
   for (let i = 0; i < 4; i += 1) {
     const f = group(0, -6, 0);
     f.rotation.y = (i / 4) * PI * 2;
@@ -1091,11 +1098,11 @@ defineModel('excavator', (opts, rig) => {
   b.add(mesh(new THREE.CylinderGeometry(14, 14, 4, 16), DARK, 0, 17, 0));
   const house = group(0, 19, 0);
   b.add(house);
-  house.add(mesh(cbox(48, 6, 40), tan, -4, 3, 0));
-  house.add(mesh(extrudeGeo(rrect(-32, 6, -10, 26, 6), 36), '#cfae6c'));
-  house.add(mesh(cbox(14, 12, 30), tan, -4, 12, -4));
+  house.add(mesh(cbox(48, 6, 40), tan, -4, 3, 0, METAL));
+  house.add(mesh(extrudeGeo(rrect(-32, 6, -10, 26, 6), 36), '#cfae6c', 0, 0, 0, METAL));
+  house.add(mesh(cbox(14, 12, 30), tan, -4, 12, -4, METAL));
   house.add(mesh(cbox(4, 3, 4), DARK, -6, 19, -12));
-  const cab = mesh(extrudeGeo(rrect(-2, 6, 20, 52, 3), 22), '#d9bd82');
+  const cab = mesh(extrudeGeo(rrect(-2, 6, 20, 52, 3), 22), '#d9bd82', 0, 0, 0, METAL);
   cab.position.z = 8;
   house.add(cab);
   const cabSide = mesh(flat(rrect(1, 20, 17, 48, 2), 0.4), GLASS);
@@ -1104,22 +1111,22 @@ defineModel('excavator', (opts, rig) => {
   house.add(mesh(beam(3, 24, 9, 46, 1.6, 0.2), GLINT, 0, 0, 8 + 11 + 0.95));
   const ws = mesh(cbox(0.45, 26, 16), GLASS, 20 + 1.6 + 0.6, 34, 8);
   house.add(ws);
-  house.add(mesh(cbox(24, 2, 24), tan, 9, 53.5, 8));
-  house.add(mesh(cbox(6, 8, 8), tan, 14, 12, -10)); // boom foot
+  house.add(mesh(cbox(24, 2, 24), tan, 9, 53.5, 8, METAL));
+  house.add(mesh(cbox(6, 8, 8), tan, 14, 12, -10, METAL)); // boom foot
   const boom = group(14, 16, -10);
   house.add(boom);
   const L1 = 56;
   const L2 = 36;
-  boom.add(mesh(cbox(L1, 7, 7).translate(L1 / 2, 0, 0), dark));
+  boom.add(mesh(cbox(L1, 7, 7).translate(L1 / 2, 0, 0), dark, 0, 0, 0, METAL));
   boom.add(mesh(cbox(24, 2.6, 3).translate(16, -5, 0), '#e9e3d4'));
   boom.add(mesh(new THREE.CylinderGeometry(3.6, 3.6, 10, 10).rotateX(PI / 2), DARK));
   const arm = group(L1, 0, 0);
   boom.add(arm);
-  arm.add(mesh(cbox(L2, 6, 6).translate(L2 / 2, 0, 0), '#d9b363'));
+  arm.add(mesh(cbox(L2, 6, 6).translate(L2 / 2, 0, 0), '#d9b363', 0, 0, 0, METAL));
   arm.add(mesh(new THREE.CylinderGeometry(3.2, 3.2, 9, 10).rotateX(PI / 2), DARK));
   const bucket = group(L2, 0, 0);
   arm.add(bucket);
-  bucket.add(mesh(extrudeGeo([[0, 3], [12, 2], [15, -10], [6, -16], [-2, -8]], 14, 1), dark));
+  bucket.add(mesh(extrudeGeo([[0, 3], [12, 2], [15, -10], [6, -16], [-2, -8]], 14, 1), dark, 0, 0, 0, METAL));
   for (const z of [-5, 0, 5]) bucket.add(mesh(cbox(2, 4, 2), '#8a8f8a', 6.5, -17.5, z));
   const pose = (k, slew) => {
     boom.rotation.z = 1.15 - 0.6 * k;

@@ -9,6 +9,10 @@ import {
 // the sheet models: faceted paper solids, folded fronts, the nine-swatch
 // palette, rigged so they can move.
 
+const METAL = { tex: 'metal' };
+const FABRIC = { tex: 'fabric' };
+const PLASTER = { tex: 'plaster' };
+
 const C = {
   ochre: '#c49a5c', sand: '#d9bb8c', cream: '#ece4d6', ivory: '#f2ede2', sage: '#8fa592', sageDeep: '#6d7e6e',
   slate: '#56625f', slateSoft: '#7c8784', mauve: '#b08884', brown: '#7b6548', wood: '#9a774f', ink: '#24221e',
@@ -85,23 +89,23 @@ defineModel('pram', (opts, rig) => {
     wheels.push(w);
   }
   // axles + chassis bar + two springs up to the tub
-  for (const x of [-24, 24]) rig.body.add(mesh(new THREE.CylinderGeometry(1.6, 1.6, 38, 6).rotateX(PI / 2), C.slate, x, 13, 0));
-  rig.body.add(mesh(cbox(52, 3, 3), C.slate, 0, 18, 0));
+  for (const x of [-24, 24]) rig.body.add(mesh(new THREE.CylinderGeometry(1.6, 1.6, 38, 6).rotateX(PI / 2), C.slate, x, 13, 0, METAL));
+  rig.body.add(mesh(cbox(52, 3, 3), C.slate, 0, 18, 0, METAL));
   for (const x of [-12, 12]) rig.body.add(mesh(cbox(3, 12, 3), C.slate, x, 24, 0));
   // cradle pivots at the spring tops
   const cradle = group(0, 30, 0);
   rig.body.add(cradle);
   // tub: the bottom half of a squashed sphere, open at the top
   const tub = new THREE.SphereGeometry(1, 16, 8, 0, PI * 2, PI / 2, PI / 2).scale(36, 24, 22);
-  cradle.add(mesh(tub, C.sage, 0, 22, 0, { side: THREE.DoubleSide }));
+  cradle.add(mesh(tub, C.sage, 0, 22, 0, { side: THREE.DoubleSide, ...FABRIC }));
   cradle.add(inkMesh(new THREE.CircleGeometry(1, 20).rotateX(-PI / 2).scale(34, 1, 20), '#e8e1d2', 0, 20, 0)); // blanket
   cradle.add(mesh(new THREE.TorusGeometry(1, 0.08, 4, 24).rotateX(PI / 2).scale(36, 24, 22), C.ivory, 0, 22, 0)); // rim
   // hood: a quarter sphere over the back half, sitting on the rim
   const hood = new THREE.SphereGeometry(1, 14, 8, -PI / 2, PI, 0, PI / 2).scale(36, 26, 22); // the x < 0 half
-  cradle.add(mesh(hood, C.mauve, 0, 22, 0, { side: THREE.DoubleSide }));
+  cradle.add(mesh(hood, C.mauve, 0, 22, 0, { side: THREE.DoubleSide, ...FABRIC }));
   // handle: from the tub's rim up and back
-  cradle.add(mesh(beam(32, 22, 50, 54, 3, 3), C.slate, 0, 0, 12));
-  cradle.add(mesh(beam(32, 22, 50, 54, 3, 3), C.slate, 0, 0, -12));
+  cradle.add(mesh(beam(32, 22, 50, 54, 3, 3), C.slate, 0, 0, 12, METAL));
+  cradle.add(mesh(beam(32, 22, 50, 54, 3, 3), C.slate, 0, 0, -12, METAL));
   cradle.add(mesh(new THREE.CylinderGeometry(2.4, 2.4, 30, 8).rotateX(PI / 2), C.ivory, 50, 54, 0));
   rig.parts.wheels = wheels;
   rig.anims.idle = (t, dt, ctx) => {
@@ -112,11 +116,11 @@ defineModel('pram', (opts, rig) => {
 
 // ── zevoPlant — waste-to-energy plant: hall, tall chimney, paper smoke ────
 defineModel('zevoPlant', (opts, rig) => {
-  rig.body.add(mesh(box(120, 40, 60), C.cream, -10, 0, 0));
+  rig.body.add(mesh(box(120, 40, 60), C.cream, -10, 0, 0, PLASTER));
   const r = new THREE.Shape([new THREE.Vector2(-30, 0), new THREE.Vector2(30, 0), new THREE.Vector2(30, 6), new THREE.Vector2(-30, 18)]);
-  rig.body.add(mesh(new THREE.ExtrudeGeometry(r, { depth: 120, bevelEnabled: false }).rotateY(PI / 2).translate(-70, 40, 0), C.sage));
+  rig.body.add(mesh(new THREE.ExtrudeGeometry(r, { depth: 120, bevelEnabled: false }).rotateY(PI / 2).translate(-70, 40, 0), C.sage, 0, 0, 0, METAL));
   for (let x = -60; x <= 40; x += 20) rig.body.add(mesh(box(10, 12, 2), C.glass, x, 18, 31));
-  rig.body.add(mesh(new THREE.CylinderGeometry(7, 10, 100, 8).translate(0, 50, 0), '#cfc8b8', 40, 0, -6));
+  rig.body.add(mesh(new THREE.CylinderGeometry(7, 10, 100, 8).translate(0, 50, 0), '#cfc8b8', 40, 0, -6, PLASTER));
   rig.body.add(mesh(new THREE.CylinderGeometry(7.6, 7.6, 7, 8), C.mauve, 40, 86, -6));
   const sm = smoke(40, 102, -6, { size: 6, rise: 50, count: 5, drift: 16 });
   rig.body.add(sm.group);
@@ -126,12 +130,12 @@ defineModel('zevoPlant', (opts, rig) => {
 
 // ── deskLamp — arm, shade, warm bulb (the catalog adds the glow) ──────────
 defineModel('deskLamp', (opts, rig) => {
-  rig.body.add(mesh(new THREE.CylinderGeometry(20, 24, 8, 10).translate(0, 4, 0), C.slate, 0, 0, 0));
+  rig.body.add(mesh(new THREE.CylinderGeometry(20, 24, 8, 10).translate(0, 4, 0), C.slate, 0, 0, 0, METAL));
   rig.body.add(mesh(new THREE.SphereGeometry(4, 8, 6), C.slate, 0, 8, 0)); // joint
   const arm = group(0, 8, 0);
-  arm.add(mesh(beam(0, 0, 18, 58, 4, 4), C.slate));
+  arm.add(mesh(beam(0, 0, 18, 58, 4, 4), C.slate, 0, 0, 0, METAL));
   const head = group(18, 58, 0);
-  head.add(mesh(new THREE.ConeGeometry(18, 18, 8, 1, true).translate(0, -9, 0), C.ochre, 0, 0, 0, { side: THREE.DoubleSide }));
+  head.add(mesh(new THREE.ConeGeometry(18, 18, 8, 1, true).translate(0, -9, 0), C.ochre, 0, 0, 0, { side: THREE.DoubleSide, ...METAL }));
   head.add(inkMesh(new THREE.SphereGeometry(6, 8, 6), '#ffe9b0', 0, -14, 0));
   head.add(mesh(new THREE.SphereGeometry(4, 8, 6), C.slate));
   head.rotation.z = 0.35;

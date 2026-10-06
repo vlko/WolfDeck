@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { getGrainTexture } from '../assets/materials.js';
+import { getMaterialTexture, TEXTURE_KINDS, texturesEnabled } from '../assets/materialTextures.js';
 
 // Modeling kit for the hand-built 3D versions of the sheet sprites.
 //
@@ -15,8 +16,80 @@ import { getGrainTexture } from '../assets/materials.js';
 
 const cache = new Map();
 
+// Material textures (wood, brick, roof tiles…, see assets/materialTextures.js)
+// are mapped per FACE: every paper facet is planar (facet() gives flat
+// normals), so the texture is projected straight onto the facet's own plane
+// — u runs horizontally along it, v up its slope — in object space scaled to
+// world units. Nothing swims when a part animates, slopes don't stretch,
+// and brick courses / tile rows stay level around a whole building.
+// Organic, directionless materials (fur, cloth, leaves…) blend three
+// projections instead (kind.tri), so the pattern runs on uninterrupted
+// across the facets of a round head or a crown.
+// opts.texRotate turns the pattern 90° on the facet (wood grain running down
+// a roof's slope boards, vertical siding).
+const TEX_VERT_PARS = `
+uniform float uTexWorld;
+varying vec3 vTexPos;
+varying vec3 vTexNrm;
+`;
+const TEX_VERT = `
+vTexPos = position * length(modelMatrix[0].xyz) * uTexWorld;
+vTexNrm = normal;
+`;
+const TEX_FRAG_PARS = `
+uniform sampler2D uTexMap;
+uniform float uTexTile;
+uniform float uTexBump;
+uniform float uTexRot;
+uniform float uTexTri;
+varying vec3 vTexPos;
+varying vec3 vTexNrm;
+`;
+const TEX_FRAG_MAP = `
+  vec3 tN = normalize(vTexNrm);
+  vec3 texC;
+  if (uTexTri > 0.5) {
+    // organic materials: soft triplanar blend — continuous across facets
+    vec3 w = pow(abs(tN), vec3(3.0));
+    w /= (w.x + w.y + w.z);
+    vec3 p = vTexPos / uTexTile;
+    texC = texture2D(uTexMap, p.zy).rgb * w.x + texture2D(uTexMap, p.xz).rgb * w.y + texture2D(uTexMap, p.xy).rgb * w.z;
+  } else {
+    vec3 tT = abs(tN.y) > 0.92 ? vec3(1.0, 0.0, 0.0) : normalize(cross(vec3(0.0, 1.0, 0.0), tN));
+    vec3 tB = cross(tN, tT);
+    if (tB.y < 0.0 || (abs(tN.y) > 0.92 && tB.z < 0.0)) tB = -tB;
+    vec2 texUv = vec2(dot(vTexPos, tT), dot(vTexPos, tB));
+    texUv = mix(texUv, vec2(texUv.y, -texUv.x), uTexRot);
+    texC = texture2D(uTexMap, texUv / uTexTile).rgb;
+  }
+  diffuseColor.rgb *= texC;
+  float texH = dot(texC, vec3(0.3333));
+`;
+// relief: perturb the normal by the screen-space slope of the texture
+const TEX_FRAG_BUMP = `
+  {
+    vec3 sx = dFdx(-vViewPosition);
+    vec3 sy = dFdy(-vViewPosition);
+    vec3 r1 = cross(sy, normal);
+    vec3 r2 = cross(normal, sx);
+    float det = dot(sx, r1);
+    // fade the relief out once a texture tile covers few pixels — far away
+    // the finite differences turn into speckle
+    float tilePx = uTexTile / max(length(dFdx(vTexPos)) + length(dFdy(vTexPos)), 1e-5);
+    float fade = smoothstep(60.0, 220.0, tilePx);
+    vec3 grad = sign(det) * (dFdx(texH) * r1 + dFdy(texH) * r2);
+    normal = normalize(abs(det) * normal - grad * uTexBump * fade);
+  }
+`;
+
+// Extra world-scale factor for the texture projection. 1 in the deck; the
+// lab shows every model 100 units tall and sets it to (real height / 100)
+// so textures read at their true size there too.
+export const TEX_WORLD = { value: 1 };
+
 export function mat(color, opts = {}) {
-  const key = `${color}|${opts.side ?? 0}|${opts.emissive ?? ''}|${opts.flat ?? 1}|${opts.soft ?? 0}`;
+  const tex = texturesEnabled && opts.tex ? opts.tex : '';
+  const key = `${color}|${opts.side ?? 0}|${opts.emissive ?? ''}|${opts.flat ?? 1}|${opts.soft ?? 0}|${tex}|${opts.texScale ?? 1}|${opts.texRotate ? 1 : 0}`;
   if (cache.has(key)) return cache.get(key);
   const m = new THREE.MeshLambertMaterial({
     color,
@@ -30,17 +103,32 @@ export function mat(color, opts = {}) {
   // gently folded surface reads with the strong light/dark halves of the
   // sheets without making the geometry spiky. `soft` skips it — for
   // naturally bumpy surfaces (wool) that would otherwise get noisy.
-  if (opts.soft) {
-    cache.set(key, m);
-    return m;
+  const fold = !opts.soft;
+  const kind = tex && TEXTURE_KINDS[tex];
+  if (tex && !kind) throw new Error(`unknown texture "${tex}"`);
+  if (fold || kind) {
+    m.onBeforeCompile = (shader) => {
+      let normalChunk = '#include <normal_fragment_begin>';
+      if (fold) normalChunk += '\n  normal = normalize(vec3(normal.x * 3.6, normal.y * 1.3, normal.z));';
+      if (kind) {
+        shader.uniforms.uTexMap = { value: getMaterialTexture(tex) };
+        shader.uniforms.uTexWorld = TEX_WORLD;
+        shader.uniforms.uTexTile = { value: kind.tile * (opts.texScale ?? 1) };
+        shader.uniforms.uTexBump = { value: kind.bump * 0.6 };
+        shader.uniforms.uTexRot = { value: opts.texRotate ? 1 : 0 };
+        shader.uniforms.uTexTri = { value: kind.tri ? 1 : 0 };
+        shader.vertexShader = shader.vertexShader
+          .replace('#include <common>', `#include <common>\n${TEX_VERT_PARS}`)
+          .replace('#include <begin_vertex>', `#include <begin_vertex>\n${TEX_VERT}`);
+        shader.fragmentShader = shader.fragmentShader
+          .replace('#include <common>', `#include <common>\n${TEX_FRAG_PARS}`)
+          .replace('#include <map_fragment>', `#include <map_fragment>\n${TEX_FRAG_MAP}`);
+        normalChunk += TEX_FRAG_BUMP;
+      }
+      shader.fragmentShader = shader.fragmentShader.replace('#include <normal_fragment_begin>', normalChunk);
+    };
+    m.customProgramCacheKey = () => `wolfdeck-${fold ? 'fold' : 'soft'}-${tex}`;
   }
-  m.onBeforeCompile = (shader) => {
-    shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <normal_fragment_begin>',
-      '#include <normal_fragment_begin>\n  normal = normalize(vec3(normal.x * 3.6, normal.y * 1.3, normal.z));',
-    );
-  };
-  m.customProgramCacheKey = () => 'wolfdeck-fold';
   cache.set(key, m);
   return m;
 }

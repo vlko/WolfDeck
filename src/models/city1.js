@@ -19,6 +19,16 @@ function grid(aspect) {
   };
 }
 
+const WOOD = { tex: 'wood' };
+const PLASTER = { tex: 'plaster' };
+const SHINGLE = { tex: 'shingle' };
+const BRICK = { tex: 'brick' };
+const FABRIC = { tex: 'fabric' };
+const METAL = { tex: 'metal' };
+const FUR = { tex: 'fur' };
+const LEAF = { tex: 'leaf' };
+const BARK = { tex: 'bark' };
+
 const LIT = '#f3e6bf';
 const litMat = new THREE.MeshBasicMaterial({ color: LIT });
 
@@ -40,7 +50,7 @@ function tower(name, aspect, { outline, windows, door, wall, dark = '#26312e', d
     const D = aspect * depth;
     const R = aspect * ridge;
     const geo = fold(P(outline), D, R, { cx: 0 });
-    rig.body.add(mesh(geo, wall));
+    rig.body.add(mesh(geo, wall, 0, 0, 0, PLASTER));
     const zAt = geo.userData.zAt;
     const xs = P(outline).map((p) => p[0]);
     const tilt = { l: Math.atan(R / -Math.min(...xs)), r: Math.atan(R / Math.max(...xs)) };
@@ -199,11 +209,11 @@ function townhouse(name, { window: [wg0, wg1, wy0, wy1, wcol], lower, chimney, s
     const D = 46;
     const front = D / 2;
     const cream = '#efece2';
-    rig.body.add(mesh(box(S(8.8), Y(4.3), D), cream, X(5.0), 0, 0));
-    rig.body.add(mesh(K.gable(S(8.8), Y(0.7) - Y(4.3), D).translate(0, Y(4.3), 0), cream, X(5.0), 0, 0));
+    rig.body.add(mesh(box(S(8.8), Y(4.3), D), cream, X(5.0), 0, 0, PLASTER));
+    rig.body.add(mesh(K.gable(S(8.8), Y(0.7) - Y(4.3), D).translate(0, Y(4.3), 0), cream, X(5.0), 0, 0, PLASTER));
     // slate roof: one continuous ⋀ from the apex down to the eaves
-    rig.body.add(mesh(roofOver(X(5.0), S(4.4), Y(4.3), Y(0.7), S(0.7), 6, D + 8), '#53635e'));
-    rig.body.add(mesh(box(S(1.0), 19, 9), '#3a2c1b', X(chimney), Y(2.2), -6));
+    rig.body.add(mesh(roofOver(X(5.0), S(4.4), Y(4.3), Y(0.7), S(0.7), 6, D + 8), '#53635e', 0, 0, 0, SHINGLE));
+    rig.body.add(mesh(box(S(1.0), 19, 9), '#3a2c1b', X(chimney), Y(2.2), -6, BRICK));
     rig.body.add(mesh(box(S(1.5), 2.4, 11), '#5a4a35', X(chimney), Y(2.2) + 19, -6));
     // gable window
     const win = wcol === 'lit' ? new THREE.Mesh(new THREE.PlaneGeometry(S(wg1 - wg0), Y(wy0) - Y(wy1)), litMat)
@@ -212,9 +222,9 @@ function townhouse(name, { window: [wg0, wg1, wy0, wy1, wcol], lower, chimney, s
     rig.body.add(win);
     // awning: a sage slab tipping forward, dark edge (scalloped on B)
     const aw = group(X(5.0), Y(5.7), front);
-    aw.add(mesh(box(S(9.4), 1, 1).scale(1, 7, 10).translate(0, -7, 5), '#a3b2a5'));
+    aw.add(mesh(box(S(9.4), 1, 1).scale(1, 7, 10).translate(0, -7, 5), '#a3b2a5', 0, 0, 0, FABRIC));
     aw.children[0].rotation.x = 0.35;
-    aw.add(mesh(cbox(S(9.4), 3.2, 2), '#4f695e', 0, -7.2, 8.6));
+    aw.add(mesh(cbox(S(9.4), 3.2, 2), '#4f695e', 0, -7.2, 8.6, FABRIC));
     if (scallop) {
       for (let i = 0; i < 9; i += 1) {
         const sc = mesh(new THREE.CylinderGeometry(S(0.52), S(0.52), 1.6, 10, 1, false, 0, PI).rotateX(PI / 2).rotateZ(PI), '#4f695e', -S(4.7) + S(9.4) * (i + 0.5) / 9, -8.6, 8.8);
@@ -229,7 +239,7 @@ function townhouse(name, { window: [wg0, wg1, wy0, wy1, wcol], lower, chimney, s
         rig.body.add(inkMesh(new THREE.PlaneGeometry(S(g1 - g0), Y(7.1) - Y(8.8)), '#4a3a26', x, (Y(7.1) + Y(8.8)) / 2, front + 0.2));
         rig.body.add(mesh(cbox(S(g1 - g0) + 2, 1.6, 2), '#d9d3c4', x, Y(8.8) - 0.8, front + 1));
       } else {
-        rig.body.add(mesh(box(S(g1 - g0), Y(7.1), 1.4), '#5a4321', x, 0, front + 0.4));
+        rig.body.add(mesh(box(S(g1 - g0), Y(7.1), 1.4), '#5a4321', x, 0, front + 0.4, WOOD));
         rig.body.add(inkMesh(new THREE.SphereGeometry(1.3, 8, 6), '#d8c9a0', x - S((g1 - g0) * 0.3) * (kind === 'doorR' ? 1 : -1), Y(8.6), front + 1.4));
       }
     }
@@ -247,16 +257,16 @@ defineModel('chapel', (opts, rig) => {
   const D = 50;
   const front = D / 2;
   const wall = fold(P([[0.8, 10], [0.8, 6.0], [4.9, 0.6], [9.2, 6.0], [9.2, 10]]), D, 3.5, { cx: X(4.95) });
-  rig.body.add(mesh(wall, '#9b7a72'));
+  rig.body.add(mesh(wall, '#9b7a72', 0, 0, 0, PLASTER));
   // mauve roof as one continuous ⋀, a cream bargeboard ⋀ trimming its front
-  rig.body.add(mesh(roofOver(X(4.9), S(4.2), Y(6.0), Y(0.6), S(0.45), 5, D + 6), '#8c6a64'));
+  rig.body.add(mesh(roofOver(X(4.9), S(4.2), Y(6.0), Y(0.6), S(0.45), 5, D + 6), '#8c6a64', 0, 0, 0, SHINGLE));
   rig.body.add(mesh(roofOver(X(4.9), S(4.2), Y(6.0), Y(0.6), S(0.55), 6.5, 3, 1.2), '#f1e9da', 0, 0, D / 2 + 4.5));
   const fz = wall.userData.zAt(X(4.95)) - 1.5;
   rig.body.add(mesh(cbox(S(5.0), Y(6.6) - Y(7.1), 6), '#caa9a2', X(5.05), (Y(6.6) + Y(7.1)) / 2, fz + 2));
   // the door: dark doorway that swings open now and then
   rig.body.add(inkMesh(new THREE.PlaneGeometry(S(3.4), Y(7.1)).translate(0, Y(7.1) / 2, 0), '#1f0d08', X(5.0), 0, fz + 0.3));
   const leaf = group(X(3.3), 0, fz + 0.6);
-  leaf.add(mesh(box(S(3.4), Y(7.1) - 1, 1.2).translate(S(1.7), 0, 0), '#5e3530'));
+  leaf.add(mesh(box(S(3.4), Y(7.1) - 1, 1.2).translate(S(1.7), 0, 0), '#5e3530', 0, 0, 0, WOOD));
   rig.body.add(leaf);
   rig.anims.always = (t, dt, ctx) => {
     const c = (t + ctx.phase * 3) % 11;
@@ -271,8 +281,8 @@ tieredTree('coneTreeSlate', { aspect: 50.0, trunk: [4.4, 5.4, '#3b311c'], tiers:
 // ── streetlamp — slim dark post, globe lamp ───────────────────────────────
 defineModel('streetlamp', (opts, rig) => {
   const { Y, S } = grid(19.7);
-  rig.body.add(mesh(K.cyl(S(2.4), S(2.6), Y(7.2), 6), '#3f3526'));
-  rig.body.add(mesh(K.cyl(S(0.7), S(0.7), Y(2.0) - Y(7.2), 6).translate(0, Y(7.2), 0), '#5a4a2a'));
+  rig.body.add(mesh(K.cyl(S(2.4), S(2.6), Y(7.2), 6), '#3f3526', 0, 0, 0, METAL));
+  rig.body.add(mesh(K.cyl(S(0.7), S(0.7), Y(2.0) - Y(7.2), 6).translate(0, Y(7.2), 0), '#5a4a2a', 0, 0, 0, METAL));
   const globe = new THREE.Mesh(new THREE.IcosahedronGeometry(S(4.6), 2), new THREE.MeshBasicMaterial({ color: '#fff3c6' }));
   globe.position.y = Y(1.3);
   rig.body.add(globe);
@@ -286,9 +296,9 @@ defineModel('streetlamp', (opts, rig) => {
 // ── busStop — post with a framed sign showing a little bus ────────────────
 defineModel('busStop', (opts, rig) => {
   const { X, Y, S } = grid(32.0);
-  rig.body.add(mesh(box(S(0.9), Y(2.3), S(0.9)), '#2f3a36', X(4.9), 0, 0));
+  rig.body.add(mesh(box(S(0.9), Y(2.3), S(0.9)), '#2f3a36', X(4.9), 0, 0, METAL));
   const sign = group(X(5.0), Y(1.15), 0);
-  sign.add(mesh(cbox(S(9.6), Y(0) - Y(2.3), 3), '#506c64'));
+  sign.add(mesh(cbox(S(9.6), Y(0) - Y(2.3), 3), '#506c64', 0, 0, 0, METAL));
   sign.add(mesh(cbox(S(8.0), Y(0.3) - Y(2.0), 1), '#f2ecdc', 0, 0, 1.6));
   const bus = group(0, 0.5, 2.3);
   bus.add(inkMesh(new THREE.PlaneGeometry(S(6), 7), '#33433f'));
@@ -304,10 +314,10 @@ defineModel('hydrant', (opts, rig) => {
   const { Y, S } = grid(57.3);
   const body = '#87595c';
   const light = '#b18c8a';
-  rig.body.add(mesh(K.cyl(S(3.5), S(3.5), Y(9.2), 8), '#7b4d50'));
-  rig.body.add(mesh(K.cyl(S(2.4), S(2.4), Y(3.4) - Y(9.2), 8).translate(0, Y(9.2), 0), body));
-  rig.body.add(mesh(K.cyl(S(3.4), S(3.4), Y(2.6) - Y(3.4), 8).translate(0, Y(3.4), 0), light));
-  rig.body.add(mesh(new THREE.SphereGeometry(S(2.6), 8, 5, 0, PI * 2, 0, PI / 2).scale(1, 0.75, 1).translate(0, Y(2.6), 0), light));
+  rig.body.add(mesh(K.cyl(S(3.5), S(3.5), Y(9.2), 8), '#7b4d50', 0, 0, 0, METAL));
+  rig.body.add(mesh(K.cyl(S(2.4), S(2.4), Y(3.4) - Y(9.2), 8).translate(0, Y(9.2), 0), body, 0, 0, 0, METAL));
+  rig.body.add(mesh(K.cyl(S(3.4), S(3.4), Y(2.6) - Y(3.4), 8).translate(0, Y(3.4), 0), light, 0, 0, 0, METAL));
+  rig.body.add(mesh(new THREE.SphereGeometry(S(2.6), 8, 5, 0, PI * 2, 0, PI / 2).scale(1, 0.75, 1).translate(0, Y(2.6), 0), light, 0, 0, 0, METAL));
   rig.body.add(mesh(K.cyl(S(0.4), S(0.45), 6, 6).translate(0, Y(2.6) + S(2.6) * 0.75 - 1, 0), light));
   for (const s of [-1, 1]) {
     rig.body.add(mesh(new THREE.CylinderGeometry(S(0.6), S(0.6), S(2.2), 8).rotateZ(PI / 2), '#6e3f43', s * S(3.4), Y(5.2), 0));
@@ -363,7 +373,7 @@ function bean(name, aspect, o) {
       return 0;
     };
     const ZS = 0.72;
-    const bodyMesh = mesh(K.lathe(prof, 24).scale(1, 1, ZS), o.body);
+    const bodyMesh = mesh(K.lathe(prof, 24).scale(1, 1, ZS), o.body, 0, 0, 0, FUR);
     torso.add(bodyMesh);
     // exact front surface: cast a ray onto the faceted body, so face decals
     // (stripe, cheeks, nose, eyes) sit ON it — never sunk into a facet
@@ -430,7 +440,7 @@ function bean(name, aspect, o) {
       const e = group(X(g), Y(gy), 0);
       if (kind === 'round') {
         // half-sunk disc ear with a dark inner fold
-        e.add(mesh(new THREE.CylinderGeometry(S(1.0), S(1.0), 7, 14).rotateX(PI / 2), o.earColor));
+        e.add(mesh(new THREE.CylinderGeometry(S(1.0), S(1.0), 7, 14).rotateX(PI / 2), o.earColor, 0, 0, 0, FUR));
         const inner = inkMesh(new THREE.CircleGeometry(S(0.62), 3), '#3f5249', 0, S(0.18), 3.6);
         inner.rotation.z = PI / 2;
         e.add(inner);
@@ -438,7 +448,7 @@ function bean(name, aspect, o) {
         // right-triangle ear, outer edge upright (as printed)
         const s = i ? 1 : -1;
         const tri = fold([[-S(1.0), 0], [S(1.0), 0], [s * S(1.0), Y(0) - Y(o.earTop ?? 2.0)]], 6, 1.8);
-        e.add(mesh(tri, o.earColor));
+        e.add(mesh(tri, o.earColor, 0, 0, 0, FUR));
       }
       torso.add(e);
       return e;
@@ -448,7 +458,7 @@ function bean(name, aspect, o) {
       const r0 = rAt(Y(o.pawGy));
       // shoulder sunk into the body's side, a little forward of center
       const p = group(s * r0 * 0.86, Y(o.pawGy), zf(r0 * 0.86, Y(o.pawGy)) * 0.55);
-      p.add(mesh(new THREE.SphereGeometry(1, 10, 8).scale(S(0.62), S(0.95), S(0.6)).translate(s * S(0.15), -S(0.7), 0), o.pawColor));
+      p.add(mesh(new THREE.SphereGeometry(1, 10, 8).scale(S(0.62), S(0.95), S(0.6)).translate(s * S(0.15), -S(0.7), 0), o.pawColor, 0, 0, 0, FUR));
       p.userData.side = s;
       torso.add(p);
       return p;
@@ -483,23 +493,23 @@ function blockFolk(name, aspect, o) {
     rig.body.add(torso);
     const cx = X((o.x0 + o.x1) / 2);
     const bodyGeo = fold(P([[o.x0, o.neck], [o.x1, o.neck], [o.x1, o.bottom], [o.x0, o.bottom]]), D, 3, { cx });
-    torso.add(mesh(bodyGeo, o.color));
+    torso.add(mesh(bodyGeo, o.color, 0, 0, 0, FUR));
     // the paler folded bib on the lower body
     const bib = fold(P(o.bib), 2, 2.4, { cx: X(o.bib[1][0]) });
-    torso.add(mesh(bib, o.bibColor, 0, 0, bodyGeo.userData.zAt(X(o.bib[1][0])) - 1.2));
+    torso.add(mesh(bib, o.bibColor, 0, 0, bodyGeo.userData.zAt(X(o.bib[1][0])) - 1.2, FUR));
     const head = group(cx, Y(o.neck), 0);
     torso.add(head);
     const HP = (pts) => P(pts).map(([x, y]) => [x - cx, y - Y(o.neck)]);
     const headGeo = fold(HP([[o.x0, o.top], [o.x1, o.top], [o.x1, o.neck], [o.x0, o.neck]]), D, 3, { cx: 0 });
-    head.add(mesh(headGeo, o.color));
+    head.add(mesh(headGeo, o.color, 0, 0, 0, FUR));
     const hz = headGeo.userData.zAt;
     const hx = (g) => X(g) - cx;
     const hy = (gy) => Y(gy) - Y(o.neck);
     // ears
     const ears = o.ears.map(([g, kind]) => {
       const e = group(hx(g), hy(o.top), -D * 0.1);
-      if (kind === 'round') e.add(mesh(new THREE.CylinderGeometry(S(0.75), S(0.75), 6, 12).rotateX(PI / 2).translate(0, S(0.3), 0), o.earColor));
-      else e.add(mesh(fold([[-S(0.9), 0], [S(0.9), 0], [0, S(1.4)]], 5, 1.5), o.earColor));
+      if (kind === 'round') e.add(mesh(new THREE.CylinderGeometry(S(0.75), S(0.75), 6, 12).rotateX(PI / 2).translate(0, S(0.3), 0), o.earColor, 0, 0, 0, FUR));
+      else e.add(mesh(fold([[-S(0.9), 0], [S(0.9), 0], [0, S(1.4)]], 5, 1.5), o.earColor, 0, 0, 0, FUR));
       head.add(e);
       return e;
     });
@@ -541,7 +551,7 @@ function blockFolk(name, aspect, o) {
       // rounded forepaws hanging from shoulders sunk into the chest's corners
       const ex = s < 0 ? X(o.x0) : X(o.x1); // the body's side edge
       const p = group(ex - s * S(0.15), Y(o.pawGy), D * 0.12);
-      p.add(mesh(new THREE.CapsuleGeometry(S(0.5), S(1.0), 3, 8).translate(s * S(0.25), -S(0.95), 0), o.pawColor));
+      p.add(mesh(new THREE.CapsuleGeometry(S(0.5), S(1.0), 3, 8).translate(s * S(0.25), -S(0.95), 0), o.pawColor, 0, 0, 0, FUR));
       p.userData.side = s;
       torso.add(p);
       return p;
@@ -551,8 +561,8 @@ function blockFolk(name, aspect, o) {
     tail.rotation.order = 'YXZ';
     tail.rotation.x = o.tail.pitch;
     const along = (g, from) => g.translate(0, from + g.parameters.height / 2, 0).rotateX(-PI / 2);
-    tail.add(mesh(along(new THREE.CylinderGeometry(S(1.1), S(0.6), S(1.8), 4), 0).scale(0.8, 1, 1), o.tail.color));
-    tail.add(mesh(along(new THREE.ConeGeometry(S(1.1), S(1.6), 4), S(1.8)).scale(0.8, 1, 1), o.tail.tip));
+    tail.add(mesh(along(new THREE.CylinderGeometry(S(1.1), S(0.6), S(1.8), 4), 0).scale(0.8, 1, 1), o.tail.color, 0, 0, 0, FUR));
+    tail.add(mesh(along(new THREE.ConeGeometry(S(1.1), S(1.6), 4), S(1.8)).scale(0.8, 1, 1), o.tail.tip, 0, 0, 0, FUR));
     torso.add(tail);
     townsfolkIdle(rig, { torso, head, ears, paws, ey, tail }, { tailYaw: o.tail.yaw, wagAmp: 0.22 });
   });
@@ -595,7 +605,7 @@ function potted(name, aspect, { pot, potColor = '#6e5a3e', rimColor = '#8c7559',
     // trunk joint: the crown sways from the pot up
     const [t0, t1, ttop] = trunk;
     const joint = group(X((t0 + t1) / 2), Y(rt), 0);
-    joint.add(mesh(box(S(t1 - t0), Y(ttop) - Y(rt), S(t1 - t0)), '#4a3a24'));
+    joint.add(mesh(box(S(t1 - t0), Y(ttop) - Y(rt), S(t1 - t0)), '#4a3a24', 0, 0, 0, BARK));
     rig.body.add(joint);
     const top = group(0, Y(ttop) - Y(rt), 0);
     joint.add(top);
@@ -609,14 +619,14 @@ function potted(name, aspect, { pot, potColor = '#6e5a3e', rimColor = '#8c7559',
 }
 
 // A crooked branch from (x0,y0) to (x1,y1) in the crown's local frame.
-const branch = (x0, y0, x1, y1, w) => mesh(beam(x0, y0, x1, y1, w, w), '#4a3a24');
+const branch = (x0, y0, x1, y1, w) => mesh(beam(x0, y0, x1, y1, w, w), '#4a3a24', 0, 0, 0, BARK);
 
 potted('potConeSlate', 30.7, {
   pot: [1.6, 8.3, 8.0, 8.7, 2.0, 7.8, 0.6], trunk: [4.0, 5.6, 7.4],
   crown: ({ Y, S }, top, joint, ty) => {
     const lower = new THREE.CylinderGeometry(S(2.4), S(4.5), Y(5.0) - Y(7.4), 4).translate(0, (Y(5.0) - Y(7.4)) / 2, 0);
-    top.add(mesh(lower, '#576872'));
-    top.add(mesh(new THREE.ConeGeometry(S(2.4), Y(0) - Y(5.0), 4).translate(0, Y(5.0) - Y(7.4) + (Y(0) - Y(5.0)) / 2, 0), '#6b7a84'));
+    top.add(mesh(lower, '#576872', 0, 0, 0, LEAF));
+    top.add(mesh(new THREE.ConeGeometry(S(2.4), Y(0) - Y(5.0), 4).translate(0, Y(5.0) - Y(7.4) + (Y(0) - Y(5.0)) / 2, 0), '#6b7a84', 0, 0, 0, LEAF));
   },
 });
 potted('potTreeHex', 44.6, {
@@ -626,8 +636,8 @@ potted('potTreeHex', 44.6, {
     const lx = (gx) => X(gx) - tx;
     top.add(branch(0, 0, lx(1.3), ly(4.7), 2.6), branch(lx(1.3), ly(4.7), lx(1.0), ly(4.4), 2.6));
     top.add(branch(0, 0, lx(8.7), ly(4.7), 2.6), branch(lx(8.7), ly(4.7), lx(8.9), ly(4.4), 2.6));
-    top.add(mesh(box(S(0.8), ly(4.4), S(0.8)), '#4a3a24'));
-    const c = mesh(new THREE.DodecahedronGeometry(1, 0).scale(S(4.9), (Y(0.2) - Y(4.6)) / 2, S(3.6)), '#aabaab', 0, (ly(0.2) + ly(4.6)) / 2, 0);
+    top.add(mesh(box(S(0.8), ly(4.4), S(0.8)), '#4a3a24', 0, 0, 0, BARK));
+    const c = mesh(new THREE.DodecahedronGeometry(1, 0).scale(S(4.9), (Y(0.2) - Y(4.6)) / 2, S(3.6)), '#aabaab', 0, (ly(0.2) + ly(4.6)) / 2, 0, LEAF);
     top.add(c);
   },
 });
@@ -636,20 +646,20 @@ potted('potTreeTrio', 75.7, {
   crown: ({ X, Y, S }, top, joint, ty, tx) => {
     const ly = (gy) => Y(gy) - ty;
     const lx = (gx) => X(gx) - tx;
-    top.add(mesh(box(S(0.6), ly(2.8), S(0.6)), '#4a3a24'));
+    top.add(mesh(box(S(0.6), ly(2.8), S(0.6)), '#4a3a24', 0, 0, 0, BARK));
     top.add(branch(0, 0, lx(2.6), ly(4.6), 2.4), branch(lx(2.6), ly(4.6), lx(1.6), ly(3.8), 2.4));
     top.add(branch(0, 0, lx(7.6), ly(4.6), 2.4), branch(lx(7.6), ly(4.6), lx(8.3), ly(3.8), 2.4));
-    top.add(mesh(new THREE.IcosahedronGeometry(1, 1).scale(S(1.9), 17, S(1.9)), '#a7b8aa', lx(5.0), ly(1.6), 0));
-    top.add(mesh(new THREE.OctahedronGeometry(1, 0).scale(S(1.45), 14, S(1.2)).rotateZ(0.1), '#8a9f84', lx(1.35), ly(3.1), 0));
-    top.add(mesh(new THREE.OctahedronGeometry(1, 0).scale(S(1.45), 14, S(1.2)).rotateZ(-0.1), '#56706f', lx(8.25), ly(3.1), 0));
+    top.add(mesh(new THREE.IcosahedronGeometry(1, 1).scale(S(1.9), 17, S(1.9)), '#a7b8aa', lx(5.0), ly(1.6), 0, LEAF));
+    top.add(mesh(new THREE.OctahedronGeometry(1, 0).scale(S(1.45), 14, S(1.2)).rotateZ(0.1), '#8a9f84', lx(1.35), ly(3.1), 0, LEAF));
+    top.add(mesh(new THREE.OctahedronGeometry(1, 0).scale(S(1.45), 14, S(1.2)).rotateZ(-0.1), '#56706f', lx(8.25), ly(3.1), 0, LEAF));
   },
 });
 potted('potGemTree', 56.9, {
   pot: [2.6, 7.6, 7.4, 8.3, 3.0, 7.2, 0.4], trunk: [4.4, 5.4, 6.0], potColor: '#6a5841', rimColor: '#8e7a5f',
   crown: ({ Y, S }, top) => {
     const mid = Y(3.5) - Y(6.0);
-    top.add(mesh(new THREE.ConeGeometry(S(5.0), Y(3.5) - Y(6.0), 6).rotateX(PI).translate(0, mid / 2, 0), '#5f6f76'));
-    top.add(mesh(new THREE.ConeGeometry(S(5.0), Y(0) - Y(3.5), 6).translate(0, mid + (Y(0) - Y(3.5)) / 2, 0), '#7d8d97'));
+    top.add(mesh(new THREE.ConeGeometry(S(5.0), Y(3.5) - Y(6.0), 6).rotateX(PI).translate(0, mid / 2, 0), '#5f6f76', 0, 0, 0, LEAF));
+    top.add(mesh(new THREE.ConeGeometry(S(5.0), Y(0) - Y(3.5), 6).translate(0, mid + (Y(0) - Y(3.5)) / 2, 0), '#7d8d97', 0, 0, 0, LEAF));
   },
 });
 

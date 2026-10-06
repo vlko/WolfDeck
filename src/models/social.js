@@ -10,6 +10,16 @@ import {
 // balloon, and a stair-lift. Units are percent of the sprite's height; x is
 // centered, y up from the ground, z toward the viewer.
 
+const WOOD = { tex: 'wood' };
+const PLANKS = { tex: 'planks' };
+const PLASTER = { tex: 'plaster' };
+const STONE = { tex: 'stone' };
+const SHINGLE = { tex: 'shingle' };
+const FABRIC = { tex: 'fabric' };
+const FUR = { tex: 'fur' };
+const WOOL = { tex: 'wool' };
+const METAL = { tex: 'metal' };
+
 // A shape (xy points) extruded through depth d, centered in z.
 function slab(points, d) {
   const s = new THREE.Shape(points.map(([x, y]) => new THREE.Vector2(x, y)));
@@ -27,11 +37,11 @@ function roofSolid(apexX, apexY, halfSpan, eaveY, t, d) {
 }
 
 // A rounded limb (capsule) running from point a to point b.
-function limb(a, b, r, color) {
+function limb(a, b, r, color, opts) {
   const A = new THREE.Vector3(...a);
   const B = new THREE.Vector3(...b);
   const len = A.distanceTo(B);
-  const m = mesh(new THREE.CapsuleGeometry(r, Math.max(len - r * 2, 0.1), 3, 7), color);
+  const m = mesh(new THREE.CapsuleGeometry(r, Math.max(len - r * 2, 0.1), 3, 7), color, 0, 0, 0, opts);
   m.position.copy(A).lerp(B, 0.5);
   m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), B.clone().sub(A).normalize());
   return m;
@@ -59,13 +69,14 @@ function cuteHead(o) {
   const head = new THREE.Group();
   const R = o.R;
   const parts = [];
+  const T = o.tex === undefined ? FUR : o.tex; // head surface texture
   if (o.cap) {
     // cap color over the top, face color below: two bands of ONE ellipsoid
     const k = o.cap.split; // fraction of π from the top
-    parts.push(mesh(new THREE.SphereGeometry(1, 16, 12, 0, PI * 2, 0, PI * k).scale(R.x, R.y, R.z), o.cap.color));
-    parts.push(mesh(new THREE.SphereGeometry(1, 16, 12, 0, PI * 2, PI * k, PI * (1 - k)).scale(R.x, R.y, R.z), o.color));
+    parts.push(mesh(new THREE.SphereGeometry(1, 16, 12, 0, PI * 2, 0, PI * k).scale(R.x, R.y, R.z), o.cap.color, 0, 0, 0, o.cap.tex ?? T));
+    parts.push(mesh(new THREE.SphereGeometry(1, 16, 12, 0, PI * 2, PI * k, PI * (1 - k)).scale(R.x, R.y, R.z), o.color, 0, 0, 0, T));
   } else {
-    parts.push(mesh((o.geo ? o.geo(R) : new THREE.SphereGeometry(1, 16, 12)).scale(R.x, R.y, R.z), o.color));
+    parts.push(mesh((o.geo ? o.geo(R) : new THREE.SphereGeometry(1, 16, 12)).scale(R.x, R.y, R.z), o.color, 0, 0, 0, T));
   }
   for (const m of parts) { head.add(m); m.updateMatrix(); m.matrixWorld.copy(m.matrix); }
   const ray = new THREE.Raycaster();
@@ -120,7 +131,7 @@ function cuteHead(o) {
 const roundEars = (color, inner, r, dx, dy) => ({ head, surf }) => [-1, 1].map((s) => {
   const { p } = surf(s * dx, dy, -r * 0.5);
   const e = group(p.x, p.y, p.z - 1);
-  e.add(mesh(new THREE.CylinderGeometry(r, r, 5, 14).rotateX(PI / 2), color));
+  e.add(mesh(new THREE.CylinderGeometry(r, r, 5, 14).rotateX(PI / 2), color, 0, 0, 0, FUR));
   if (inner) e.add(mesh(new THREE.CylinderGeometry(r * 0.55, r * 0.55, 1, 12).rotateX(PI / 2), inner, 0, 0, 2.7));
   e.userData.rest = 0;
   e.userData.flick = 0.25;
@@ -130,7 +141,7 @@ const roundEars = (color, inner, r, dx, dy) => ({ head, surf }) => [-1, 1].map((
 const pointyEars = (color, inner, w, h, dx, dy) => ({ head, surf }) => [-1, 1].map((s) => {
   const { p } = surf(s * dx, dy, -3);
   const e = group(p.x, p.y, p.z - 1);
-  e.add(mesh(fold([[-w / 2, 0], [w / 2, 0], [s * w * 0.15, h]], 5, 1.4), color));
+  e.add(mesh(fold([[-w / 2, 0], [w / 2, 0], [s * w * 0.15, h]], 5, 1.4), color, 0, 0, 0, FUR));
   if (inner) e.add(mesh(fold([[-w * 0.25, 1.5], [w * 0.25, 1.5], [s * w * 0.1, h * 0.7]], 1, 0.8), inner, 0, 0, 3.2));
   e.userData.rest = s * -0.2;
   head.add(e);
@@ -139,7 +150,7 @@ const pointyEars = (color, inner, w, h, dx, dy) => ({ head, surf }) => [-1, 1].m
 const longEars = (color, inner, len, dx, dy) => ({ head, surf }) => [-1, 1].map((s) => {
   const { p } = surf(s * dx, dy, -4);
   const e = group(p.x, p.y, p.z - 2);
-  e.add(mesh(new THREE.CapsuleGeometry(5.2, len, 3, 7).scale(1, 1, 0.45).translate(0, len / 2 + 3, 0), color));
+  e.add(mesh(new THREE.CapsuleGeometry(5.2, len, 3, 7).scale(1, 1, 0.45).translate(0, len / 2 + 3, 0), color, 0, 0, 0, FUR));
   e.add(mesh(new THREE.CapsuleGeometry(2.6, len * 0.8, 3, 6).scale(1, 1, 0.3).translate(0, len / 2 + 3, 2.2), inner));
   e.userData.rest = s * -0.22;
   e.userData.flick = 0.35;
@@ -149,7 +160,7 @@ const longEars = (color, inner, len, dx, dy) => ({ head, surf }) => [-1, 1].map(
 const flapEars = (color, len, dx, dy) => ({ head, surf }) => [-1, 1].map((s) => {
   const { p } = surf(s * dx, dy, -3);
   const e = group(p.x, p.y, p.z - 1);
-  const leaf = mesh(new THREE.SphereGeometry(1, 10, 6).scale(len, len * 0.42, 2.6), color, s * len * 0.8, -2, 0);
+  const leaf = mesh(new THREE.SphereGeometry(1, 10, 6).scale(len, len * 0.42, 2.6), color, s * len * 0.8, -2, 0, FUR);
   leaf.rotation.z = s * -0.35;
   e.add(leaf);
   e.userData.rest = 0;
@@ -188,18 +199,18 @@ defineModel('seniorHome', (opts, rig) => {
   const wall = '#ebe8de';
   const trim = '#6f5e45';
   // walls + front gable, roof as one continuous solid
-  rig.body.add(mesh(box(W, wallH, D), wall));
-  rig.body.add(mesh(slab([[-W / 2, wallH], [W / 2, wallH], [0, wallH + 32]], D - 2), wall));
-  rig.body.add(mesh(roofSolid(0, wallH + 36, W / 2 + 9, wallH - 4, 5, D + 10), '#6a5e48'));
-  rig.body.add(mesh(box(W + 2, 3, D + 2), '#cfc8b8')); // plinth
+  rig.body.add(mesh(box(W, wallH, D), wall, 0, 0, 0, PLASTER));
+  rig.body.add(mesh(slab([[-W / 2, wallH], [W / 2, wallH], [0, wallH + 32]], D - 2), wall, 0, 0, 0, PLASTER));
+  rig.body.add(mesh(roofSolid(0, wallH + 36, W / 2 + 9, wallH - 4, 5, D + 10), '#6a5e48', 0, 0, 0, SHINGLE));
+  rig.body.add(mesh(box(W + 2, 3, D + 2), '#cfc8b8', 0, 0, 0, STONE)); // plinth
   // door on a low step, under a porch roof on two posts
-  rig.body.add(mesh(box(30, 3, 12), '#b9ae9a', 0, 0, front + 6));
+  rig.body.add(mesh(box(30, 3, 12), '#b9ae9a', 0, 0, front + 6, STONE));
   const dz = front + 0.6;
-  rig.body.add(mesh(cbox(23, 30, 1.4), '#8b8272', -5.8, 3 + 15, dz));
-  rig.body.add(mesh(cbox(11, 30, 1.4), '#6d6555', 5.8, 3 + 15, dz + 0.1));
+  rig.body.add(mesh(cbox(23, 30, 1.4), '#8b8272', -5.8, 3 + 15, dz, WOOD));
+  rig.body.add(mesh(cbox(11, 30, 1.4), '#6d6555', 5.8, 3 + 15, dz + 0.1, WOOD));
   for (const s of [-1, 1]) rig.body.add(mesh(new THREE.SphereGeometry(1.1, 8, 6), '#ece9e0', s * 2.2, 20, dz + 1.2));
-  for (const s of [-1, 1]) rig.body.add(mesh(box(3, 36, 3), trim, s * 17, 3, front + 9));
-  rig.body.add(mesh(cbox(42, 4, 15), trim, 0, 41, front + 6.5)); // porch roof, resting on posts + wall
+  for (const s of [-1, 1]) rig.body.add(mesh(box(3, 36, 3), trim, s * 17, 3, front + 9, WOOD));
+  rig.body.add(mesh(cbox(42, 4, 15), trim, 0, 41, front + 6.5, WOOD)); // porch roof, resting on posts + wall
   // windows: pairs of tall panes
   for (const cx of [-34, 34]) {
     for (const s of [-1, 1]) {
@@ -210,7 +221,7 @@ defineModel('seniorHome', (opts, rig) => {
   // flower boxes on the ground under the windows, with blossoms
   const flowers = [];
   for (const cx of [-34, 34]) {
-    rig.body.add(mesh(box(26, 9, 7), '#7a5f3f', cx, 0, front + 4.5));
+    rig.body.add(mesh(box(26, 9, 7), '#7a5f3f', cx, 0, front + 4.5, PLANKS));
     rig.body.add(mesh(box(24.5, 2.5, 5.5), '#7d8f4a', cx, 9, front + 4.5));
     [-8, 0, 8].forEach((dx, i) => {
       const f = group(cx + dx, 11.5, front + 4.5);
@@ -232,18 +243,18 @@ defineModel('seniorHome', (opts, rig) => {
 // ── cane & crutch ─────────────────────────────────────────────────────────
 defineModel('cane', (opts, rig) => {
   const wood = '#7a6249';
-  rig.body.add(mesh(box(7, 92, 7), wood));
+  rig.body.add(mesh(box(7, 92, 7), wood, 0, 0, 0, WOOD));
   rig.body.add(mesh(box(8.4, 6, 8.4), '#4a3b2b')); // rubber tip
-  rig.body.add(mesh(new THREE.CapsuleGeometry(3.6, 26, 3, 6).rotateZ(PI / 2), wood, 0, 94, 0)); // handle
+  rig.body.add(mesh(new THREE.CapsuleGeometry(3.6, 26, 3, 6).rotateZ(PI / 2), wood, 0, 94, 0, WOOD)); // handle
 });
 
 defineModel('crutch', (opts, rig) => {
   const tube = '#c9b89a';
-  rig.body.add(mesh(box(5, 52, 5), '#7a6249'));
+  rig.body.add(mesh(box(5, 52, 5), '#7a6249', 0, 0, 0, WOOD));
   rig.body.add(mesh(box(6.5, 5, 6.5), '#4a3b2b'));
-  for (const s of [-1, 1]) rig.body.add(mesh(beam(0, 50, s * 9, 95, 3.4, 3.4), tube));
-  rig.body.add(mesh(cbox(28, 4, 6), '#7a6249', 0, 97, 0)); // armrest
-  rig.body.add(mesh(cbox(20, 3, 3.6), '#7a6249', 0, 70, 0)); // hand grip
+  for (const s of [-1, 1]) rig.body.add(mesh(beam(0, 50, s * 9, 95, 3.4, 3.4), tube, 0, 0, 0, METAL));
+  rig.body.add(mesh(cbox(28, 4, 6), '#7a6249', 0, 97, 0, WOOD)); // armrest
+  rig.body.add(mesh(cbox(20, 3, 3.6), '#7a6249', 0, 70, 0, WOOD)); // hand grip
 });
 
 // ── wheelchair — big rear wheels, front casters, seat facing +x ────────────
@@ -260,21 +271,21 @@ defineModel('wheelchair', (opts, rig) => {
     const c = spokedWheel(8, 4, wood, '#7a6249', 0);
     c.position.set(30, 8, s * (zW - 4));
     rig.body.add(c);
-    rig.body.add(mesh(box(2.4, 34, 2.4), frame, 30, 8, s * (zW - 4))); // caster fork
+    rig.body.add(mesh(box(2.4, 34, 2.4), frame, 30, 8, s * (zW - 4), METAL)); // caster fork
     // side frame: seat rail, backrest post, push handle, armrest
-    rig.body.add(mesh(beam(-16, R, 32, 40, 2.6, 2.6), frame, 0, 0, s * (zW - 5)));
-    rig.body.add(mesh(beam(-20, 40, -24, 92, 2.6, 2.6), frame, 0, 0, s * (zW - 5)));
-    rig.body.add(mesh(beam(-24, 92, -36, 92, 2.6, 2.6, 1), wood, 0, 0, s * (zW - 5)));
-    rig.body.add(mesh(cbox(30, 3, 4), wood, 4, 60, s * (zW - 5)));
-    rig.body.add(mesh(box(2.4, 18, 2.4), frame, 16, 42, s * (zW - 5)));
+    rig.body.add(mesh(beam(-16, R, 32, 40, 2.6, 2.6), frame, 0, 0, s * (zW - 5), METAL));
+    rig.body.add(mesh(beam(-20, 40, -24, 92, 2.6, 2.6), frame, 0, 0, s * (zW - 5), METAL));
+    rig.body.add(mesh(beam(-24, 92, -36, 92, 2.6, 2.6, 1), wood, 0, 0, s * (zW - 5), WOOD));
+    rig.body.add(mesh(cbox(30, 3, 4), wood, 4, 60, s * (zW - 5), WOOD));
+    rig.body.add(mesh(box(2.4, 18, 2.4), frame, 16, 42, s * (zW - 5), METAL));
   }
   // seat + backrest (sage), footrest
-  rig.body.add(mesh(cbox(40, 5, (zW - 5) * 2), seat, 6, 43, 0));
-  const back = mesh(cbox(4, 40, (zW - 5) * 2), seat, -21, 63, 0);
+  rig.body.add(mesh(cbox(40, 5, (zW - 5) * 2), seat, 6, 43, 0, FABRIC));
+  const back = mesh(cbox(4, 40, (zW - 5) * 2), seat, -21, 63, 0, FABRIC);
   back.rotation.z = 0.08;
   rig.body.add(back);
-  rig.body.add(mesh(beam(32, 40, 40, 14, 2.4, 2.4), frame, 0, 0, 0));
-  rig.body.add(mesh(cbox(12, 2, 18), frame, 42, 13, 0));
+  rig.body.add(mesh(beam(32, 40, 40, 14, 2.4, 2.4), frame, 0, 0, 0, METAL));
+  rig.body.add(mesh(cbox(12, 2, 18), frame, 42, 13, 0, METAL));
 });
 
 // ── stairLift — a staircase climbing away from the viewer, cream side walls,
@@ -296,9 +307,9 @@ defineModel('stairLift', (opts, rig) => {
   // side walls: one solid each, top edge following the stair line
   const wallShape = (pts) => slab(pts, 5).rotateY(-PI / 2); // shape x → world z
   const wallPts = [[zF + 2, 0], [zF + 2, 16], [zB - 4, top + 14], [zB - 4, 0]];
-  for (const s2 of [-1, 1]) rig.body.add(mesh(wallShape(wallPts), s2 < 0 ? cream : '#d6ccb6', s2 * (SW / 2 + 2.5), 0, 0));
+  for (const s2 of [-1, 1]) rig.body.add(mesh(wallShape(wallPts), s2 < 0 ? cream : '#d6ccb6', s2 * (SW / 2 + 2.5), 0, 0, PLASTER));
   // top landing with a guard rail
-  rig.body.add(mesh(box(SW + 10, top + 2, 10), '#d6ccb6', 0, 0, zB - 5));
+  rig.body.add(mesh(box(SW + 10, top + 2, 10), '#d6ccb6', 0, 0, zB - 5, PLASTER));
   rig.body.add(mesh(box(3, 16, 3), '#c9b89a', SW / 2 - 4, top + 2, zB - 5));
   rig.body.add(mesh(cbox(28, 3, 3), '#c9b89a', SW / 2 - 16, top + 18, zB - 5));
   // the rail on the inside of the left wall, following the stairs
@@ -313,8 +324,8 @@ defineModel('stairLift', (opts, rig) => {
   const chair = new THREE.Group();
   chair.add(mesh(cbox(7, 9, 9), '#9a8f7c', 0, 0, 0)); // carriage clamped on the rail
   chair.add(mesh(cbox(8, 4, 4), '#9a8f7c', 5, -4, 0)); // arm to the seat
-  chair.add(mesh(cbox(18, 4, 16), '#7f9187', 13, -4, 2)); // seat
-  chair.add(mesh(cbox(18, 18, 3.5), '#7f9187', 13, 7, -6)); // backrest
+  chair.add(mesh(cbox(18, 4, 16), '#7f9187', 13, -4, 2, FABRIC)); // seat
+  chair.add(mesh(cbox(18, 18, 3.5), '#7f9187', 13, 7, -6, FABRIC)); // backrest
   for (const s2 of [-1, 1]) chair.add(mesh(cbox(3, 3, 13), cream, 13 + s2 * 9, 3, 2)); // armrests
   for (const s2 of [-1, 1]) chair.add(mesh(cbox(2.4, 7, 2.4), cream, 13 + s2 * 9, -1, 7)); // armrest posts
   chair.add(mesh(cbox(14, 2, 8), cream, 13, -18, 10)); // footplate
@@ -340,13 +351,13 @@ function standing(parent, o) {
   const root = group(o.x ?? 0, 0, o.z ?? 0);
   parent.add(root);
   for (const s of [-1, 1]) {
-    root.add(mesh(box(o.legW, o.legH + 3, o.legW), o.legColor, s * o.legGap, 0, 0));
+    root.add(mesh(box(o.legW, o.legH + 3, o.legW), o.legColor, s * o.legGap, 0, 0, o.legTex ?? FABRIC));
     if (o.shoe) root.add(mesh(box(o.legW + 1.4, 3, o.legW + 2.4), o.shoe, s * o.legGap, 0, 1));
   }
   const y0 = o.legH;
   const y1 = y0 + o.bodyH;
   const bodyGeo = bodyFold(o.wBot, o.wTop, y0, y1, o.bodyD, o.bodyColor);
-  const torso = group(0, 0, 0, mesh(bodyGeo, o.bodyColor));
+  const torso = group(0, 0, 0, mesh(bodyGeo, o.bodyColor, 0, 0, 0, o.bodyTex ?? FABRIC));
   root.add(torso);
   const bz = bodyGeo.userData.zAt;
   if (o.apron) {
@@ -356,12 +367,12 @@ function standing(parent, o) {
     const p = ag.attributes.position;
     for (let i = 0; i < p.count; i += 1) p.setZ(i, p.getZ(i) + bz(p.getX(i)) + 0.5);
     ag.computeVertexNormals();
-    torso.add(mesh(ag, a.color));
-    if (a.bib) torso.add(mesh(cbox(a.bib[0], a.bib[1], 1.2), a.color, 0, y1 - a.below + a.bib[1] / 2 - 1, bz(0) + 1.1));
+    torso.add(mesh(ag, a.color, 0, 0, 0, FABRIC));
+    if (a.bib) torso.add(mesh(cbox(a.bib[0], a.bib[1], 1.2), a.color, 0, y1 - a.below + a.bib[1] / 2 - 1, bz(0) + 1.1, FABRIC));
   }
   const arms = [-1, 1].map((s) => {
     const sh = group(s * o.wTop * 0.46, y1 - 4, 0);
-    sh.add(mesh(new THREE.CapsuleGeometry(o.armR, o.armLen - o.armR * 2, 3, 6).translate(0, -o.armLen / 2 + o.armR, 0), o.armColor));
+    sh.add(mesh(new THREE.CapsuleGeometry(o.armR, o.armLen - o.armR * 2, 3, 6).translate(0, -o.armLen / 2 + o.armR, 0), o.armColor, 0, 0, 0, o.armTex ?? FABRIC));
     sh.rotation.z = s * (o.armOut ?? 0.8);
     sh.userData.side = s;
     torso.add(sh);
@@ -378,17 +389,17 @@ function standing(parent, o) {
 // ── bunnyNurse — long-eared bunny in a white apron, waving ─────────────────
 defineModel('bunnyNurse', (opts, rig) => {
   const c = standing(rig.body, {
-    legW: 7, legH: 12, legGap: 6, legColor: '#7d6a4c',
+    legW: 7, legH: 12, legGap: 6, legColor: '#7d6a4c', legTex: FUR,
     wBot: 46, wTop: 26, bodyH: 36, bodyD: 22, bodyColor: '#736245',
     apron: { wBot: 36, wTop: 22, below: 5, color: '#ebe8e0', bib: [16, 10] },
-    armR: 4, armLen: 26, armColor: '#9e8b6c', armOut: 0.75,
+    armR: 4, armLen: 26, armColor: '#9e8b6c', armTex: FUR, armOut: 0.75,
     head: {
       R: { x: 25, y: 22, z: 19 }, color: '#ab9a7c',
       eye: [6, 2.5, 1.6], cheek: [6.2, 15, -5], nose: [2.4, -2.5],
       ears: longEars('#a08d6f', '#5e4c33', 26, 9, 15),
     },
   });
-  const tail = mesh(new THREE.IcosahedronGeometry(4.5, 1), '#efe6da', 0, 22, -12);
+  const tail = mesh(new THREE.IcosahedronGeometry(4.5, 1), '#efe6da', 0, 22, -12, FUR);
   c.torso.add(tail);
   rig.anims.always = aliveTick([c.head], rig.seed);
   rig.anims.idle = (t, dt, ctx) => {
@@ -407,16 +418,16 @@ defineModel('bunnyNurse', (opts, rig) => {
 // ── lambBalloon — a little lamb holding a balloon on a string ──────────────
 defineModel('lambBalloon', (opts, rig) => {
   const c = standing(rig.body, {
-    legW: 6, legH: 12, legGap: 5, legColor: '#e7e0cf', shoe: '#372918',
+    legW: 6, legH: 12, legGap: 5, legColor: '#e7e0cf', legTex: WOOL, shoe: '#372918',
     wBot: 32, wTop: 20, bodyH: 26, bodyD: 18, bodyColor: '#8b9d91',
-    armR: 3.4, armLen: 18, armColor: '#e7e0cf', armOut: 0.7,
+    armR: 3.4, armLen: 18, armColor: '#e7e0cf', armTex: WOOL, armOut: 0.7,
     head: {
       R: { x: 17, y: 16, z: 14 }, color: '#e7e0cf',
       eye: [4.6, 1.5, 1.2], cheek: [3.4, 9.5, -3.5], nose: [1.5, -2.6],
       muzzle: [6, 4.5, -3.2, '#ecdcc2', 3.5],
       mask: ({ head, R }) => {
         // a fluffy wool cap over the crown (part of the head, not a hat)
-        head.add(mesh(new THREE.SphereGeometry(1, 14, 8, 0, PI * 2, 0, PI * 0.32).scale(R.x * 1.06, R.y * 1.06, R.z * 1.06), '#f1ebdf'));
+        head.add(mesh(new THREE.SphereGeometry(1, 14, 8, 0, PI * 2, 0, PI * 0.32).scale(R.x * 1.06, R.y * 1.06, R.z * 1.06), '#f1ebdf', 0, 0, 0, WOOL));
       },
       ears: flapEars('#d9c9a8', 9, 14, 5),
     },
@@ -473,8 +484,8 @@ defineModel('bearFamily', (opts, rig) => {
   });
   const dad = standing(rig.body, {
     x: 22, legW: 9, legH: 12, legGap: 8, legColor: '#5a4636',
-    wBot: 46, wTop: 32, bodyH: 34, bodyD: 26, bodyColor: '#a48e72',
-    armR: 4.6, armLen: 26, armColor: '#a48e72', armOut: 0.6,
+    wBot: 46, wTop: 32, bodyH: 34, bodyD: 26, bodyColor: '#a48e72', bodyTex: FUR,
+    armR: 4.6, armLen: 26, armColor: '#a48e72', armTex: FUR, armOut: 0.6,
     head: {
       R: { x: 29, y: 26, z: 22 }, color: '#b09c80',
       eye: [8, 3, 1.6], cheek: [7.5, 19, -6], nose: [3.6, -5],
@@ -487,9 +498,9 @@ defineModel('bearFamily', (opts, rig) => {
   const meet = [-6, meetY, 8];
   mom.arms[1].visible = false;
   dad.arms[0].visible = false;
-  rig.body.add(limb([-36 + 13.5, mom.y1 - 4, 2], meet, 4.2, '#8fa69c'));
-  rig.body.add(limb([22 - 14.5, dad.y1 - 4, 2], meet, 4.6, '#a48e72'));
-  rig.body.add(mesh(new THREE.SphereGeometry(4.6, 10, 8), '#c6b496', meet[0], meet[1], meet[2])); // clasped hands
+  rig.body.add(limb([-36 + 13.5, mom.y1 - 4, 2], meet, 4.2, '#8fa69c', FABRIC));
+  rig.body.add(limb([22 - 14.5, dad.y1 - 4, 2], meet, 4.6, '#a48e72', FUR));
+  rig.body.add(mesh(new THREE.SphereGeometry(4.6, 10, 8), '#c6b496', meet[0], meet[1], meet[2], FUR)); // clasped hands
   // the pram in front of the bear, its handle in his right paw
   const pram = group(22, 0, 40);
   rig.body.add(pram);
@@ -514,7 +525,7 @@ defineModel('bearFamily', (opts, rig) => {
   // cradle bars under the basket tie the four springs together
   for (const z of [-5, 5]) pram.add(mesh(cbox(15, 1.4, 1.4), '#e2d9c5', 0, 19.3, z));
   const basket = group(0, 21, 0);
-  basket.add(mesh(new THREE.CylinderGeometry(15, 11, 13, 8, 1).scale(1.15, 1, 0.85).translate(0, 4, 0), '#819386'));
+  basket.add(mesh(new THREE.CylinderGeometry(15, 11, 13, 8, 1).scale(1.15, 1, 0.85).translate(0, 4, 0), '#819386', 0, 0, 0, FABRIC));
   basket.add(mesh(new THREE.TorusGeometry(15.5, 1.3, 4, 10).rotateX(PI / 2).scale(1.15, 1, 0.85), '#e2d9c5', 0, 10.5, 0));
   pram.add(basket);
   // push handle rising back to the bear's paw
@@ -523,8 +534,8 @@ defineModel('bearFamily', (opts, rig) => {
   pram.add(mesh(cbox(21, 2.6, 2.6), '#e2d9c5', 0, 38, -20));
   // his right paw on the handle grip
   dad.arms[1].visible = false;
-  rig.body.add(limb([22 + 14.5, dad.y1 - 4, 4], [22 + 7, 38, 20], 4.6, '#a48e72'));
-  rig.body.add(mesh(new THREE.SphereGeometry(4.4, 9, 7), '#8f7a60', 22 + 7, 38, 20));
+  rig.body.add(limb([22 + 14.5, dad.y1 - 4, 4], [22 + 7, 38, 20], 4.6, '#a48e72', FUR));
+  rig.body.add(mesh(new THREE.SphereGeometry(4.4, 9, 7), '#8f7a60', 22 + 7, 38, 20, FUR));
   rig.anims.always = aliveTick([mom.head, dad.head], rig.seed);
   rig.anims.idle = (t, dt, ctx) => {
     const b = Math.sin(t * 2 + ctx.phase);
@@ -549,13 +560,13 @@ defineModel('grandparentsBench', (opts, rig) => {
   const seatD = 30;
   // bench: legs, seat planks, back posts + slats
   for (const x of [-62, 62]) {
-    rig.body.add(mesh(box(7, seatY, 6), wood, x, 0, seatD / 2 - 4));
-    rig.body.add(mesh(box(7, seatY, 6), wood, x, 0, -seatD / 2 + 4));
-    rig.body.add(mesh(beam(x, seatY, x - 0.1, 80, 6, 5), wood, 0, 0, -seatD / 2 + 2));
+    rig.body.add(mesh(box(7, seatY, 6), wood, x, 0, seatD / 2 - 4, WOOD));
+    rig.body.add(mesh(box(7, seatY, 6), wood, x, 0, -seatD / 2 + 4, WOOD));
+    rig.body.add(mesh(beam(x, seatY, x - 0.1, 80, 6, 5), wood, 0, 0, -seatD / 2 + 2, WOOD));
   }
-  for (let i = 0; i < 3; i += 1) rig.body.add(mesh(box(W, 3.6, seatD / 3 - 0.8), i % 2 ? woodLight : wood, 0, seatY, -seatD / 2 + seatD / 6 + (i * seatD) / 3));
-  for (const y of [48, 60, 72]) rig.body.add(mesh(cbox(W - 4, 7, 3), woodLight, 0, y, -seatD / 2 + 1));
-  rig.body.add(mesh(cbox(W + 8, 4, seatD + 6), wood, 0, seatY - 1, 0)); // seat frame edge
+  for (let i = 0; i < 3; i += 1) rig.body.add(mesh(box(W, 3.6, seatD / 3 - 0.8), i % 2 ? woodLight : wood, 0, seatY, -seatD / 2 + seatD / 6 + (i * seatD) / 3, WOOD));
+  for (const y of [48, 60, 72]) rig.body.add(mesh(cbox(W - 4, 7, 3), woodLight, 0, y, -seatD / 2 + 1, WOOD));
+  rig.body.add(mesh(cbox(W + 8, 4, seatD + 6), wood, 0, seatY - 1, 0, WOOD)); // seat frame edge
   const top = seatY + 3.6;
 
   // a seated body: hips on the seat, thighs forward, shins down to the floor
@@ -564,12 +575,12 @@ defineModel('grandparentsBench', (opts, rig) => {
     rig.body.add(root);
     const torso = group(0, top, -2);
     root.add(torso);
-    torso.add(mesh(bodyFold(o.wBot, o.wTop, 0, o.bodyH, o.bodyD, o.bodyColor), o.bodyColor));
+    torso.add(mesh(bodyFold(o.wBot, o.wTop, 0, o.bodyH, o.bodyD, o.bodyColor), o.bodyColor, 0, 0, 0, FABRIC));
     for (const s of [-1, 1]) {
       const kx = s * o.legGap;
       // thigh along the seat, knee at the front edge, shin down to the ground
-      root.add(mesh(cbox(o.legW + 2, o.legW, seatD * 0.6), o.thighColor, kx, top + o.legW / 2, seatD / 2 - seatD * 0.3));
-      root.add(mesh(box(o.legW, top + o.legW * 0.6, o.legW), o.legColor, kx, 0, seatD / 2 + 1));
+      root.add(mesh(cbox(o.legW + 2, o.legW, seatD * 0.6), o.thighColor, kx, top + o.legW / 2, seatD / 2 - seatD * 0.3, FABRIC));
+      root.add(mesh(box(o.legW, top + o.legW * 0.6, o.legW), o.legColor, kx, 0, seatD / 2 + 1, FABRIC));
       root.add(mesh(box(o.legW + 1.5, 3, o.legW + 3), o.shoe, kx, 0, seatD / 2 + 2.2));
     }
     const head = cuteHead(o.head);
@@ -588,14 +599,14 @@ defineModel('grandparentsBench', (opts, rig) => {
     },
   });
   // grandma's green skirt over her lap, and her hands folded on it
-  gma.root.add(mesh(cbox(30, 9, seatD * 0.62), '#546252', 0, top + 4.6, seatD / 2 - seatD * 0.31));
+  gma.root.add(mesh(cbox(30, 9, seatD * 0.62), '#546252', 0, top + 4.6, seatD / 2 - seatD * 0.31, FABRIC));
   // the skirt drapes over her knees, down toward the shins
-  gma.root.add(mesh(cbox(31, 15, 3), '#546252', 0, top - 2, seatD / 2 + 4.6));
+  gma.root.add(mesh(cbox(31, 15, 3), '#546252', 0, top - 2, seatD / 2 + 4.6, FABRIC));
   // arms down the sides of the cardigan, hands folded in her lap
   const pat = group(0, top + 11, seatD / 2 - 2);
-  for (const s2 of [-1, 1]) pat.add(mesh(new THREE.SphereGeometry(4.8, 9, 7), '#c5b59c', s2 * 5, 0, 0));
+  for (const s2 of [-1, 1]) pat.add(mesh(new THREE.SphereGeometry(4.8, 9, 7), '#c5b59c', s2 * 5, 0, 0, FUR));
   gma.root.add(pat);
-  for (const s2 of [-1, 1]) gma.root.add(limb([s2 * 19.5, top + 26, 0], [s2 * 6.5, top + 11.5, seatD / 2 - 2.5], 4.4, '#b1aca9'));
+  for (const s2 of [-1, 1]) gma.root.add(limb([s2 * 19.5, top + 26, 0], [s2 * 6.5, top + 11.5, seatD / 2 - 2.5], 4.4, '#b1aca9', FABRIC));
 
   const gpa = seated({
     x: 38, wBot: 50, wTop: 36, bodyH: 32, bodyD: 28, bodyColor: '#8b7c66',
@@ -615,8 +626,8 @@ defineModel('grandparentsBench', (opts, rig) => {
   });
   for (const s2 of [-1, 1]) {
     // arms down his round sides, paws resting on his knees
-    gpa.root.add(limb([s2 * 25, top + 27, 0], [s2 * 13, top + 9, seatD / 2 - 3], 5, '#8b7c66'));
-    gpa.root.add(mesh(new THREE.SphereGeometry(5, 9, 7), '#6f604c', s2 * 13, top + 9, seatD / 2 - 3));
+    gpa.root.add(limb([s2 * 25, top + 27, 0], [s2 * 13, top + 9, seatD / 2 - 3], 5, '#8b7c66', FABRIC));
+    gpa.root.add(mesh(new THREE.SphereGeometry(5, 9, 7), '#6f604c', s2 * 13, top + 9, seatD / 2 - 3, FUR));
   }
 
   rig.anims.always = aliveTick([gma.head, gpa.head], rig.seed);
