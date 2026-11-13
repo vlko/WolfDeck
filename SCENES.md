@@ -261,6 +261,11 @@ The rhythm: arrive at the scene → the first slide's title + subtitle → each
 when the slide's groups are done, the next `Space` swaps to the next slide's
 title (no walk) → past the last slide, the wolf walks to the next scene.
 
+A slide may set `"style"` (`paper`, `tear`, `screen`, `cyber`, `sticker`) to
+change how its panels and titles look and enter — see *Slide styles* in
+[SPECIFICATION.md](SPECIFICATION.md). Use it for emphasis: one slide in a
+different style stands out; a new style on every slide does not.
+
 A slide may also carry `"notes": "…"` — speaker notes for you alone. They
 never appear in the deck; press `F` to present and they show in the
 presenter window, next to a timer, a live preview and what the next `Space`

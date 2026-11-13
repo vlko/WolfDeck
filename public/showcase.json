@@ -288,6 +288,338 @@
           ]
         }
       ]
+    },
+    {
+      "id": "styles",
+      "kicker": "Štýly slidov",
+      "props": [
+        {
+          "type": "pineTree",
+          "position": [
+            -12,
+            0
+          ],
+          "layer": "back"
+        },
+        {
+          "type": "cottage",
+          "position": [
+            12,
+            0
+          ],
+          "layer": "back"
+        },
+        {
+          "type": "sheep",
+          "position": [
+            -7,
+            0
+          ],
+          "layer": "front"
+        }
+      ],
+      "slides": [
+        {
+          "id": "style-paper",
+          "title": "Papier",
+          "subtitle": "Predvolený vzhľad: papierová kartička s krémovým okrajom.",
+          "style": "paper",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "chart",
+                  "chart": "bar",
+                  "title": "Štýl v číslach",
+                  "data": [
+                    {
+                      "label": "A",
+                      "value": 40
+                    },
+                    {
+                      "label": "B",
+                      "value": 65
+                    },
+                    {
+                      "label": "C",
+                      "value": 52
+                    }
+                  ],
+                  "position": [
+                    -5.6,
+                    5
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "65",
+                  "label": "\"style\": \"paper\"",
+                  "position": [
+                    0.2,
+                    5.7
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Čo sa mení",
+                  "items": [
+                    "panely",
+                    "nadpis a podnadpis",
+                    "animácia objavenia"
+                  ],
+                  "position": [
+                    6.4,
+                    4.8
+                  ],
+                  "depth": "mid"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "style-tear",
+          "title": "Trhlina",
+          "subtitle": "Natrhnutý papier sveta a za ním čistá biela stránka.",
+          "style": "tear",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "chart",
+                  "chart": "bar",
+                  "title": "Štýl v číslach",
+                  "data": [
+                    {
+                      "label": "A",
+                      "value": 40
+                    },
+                    {
+                      "label": "B",
+                      "value": 65
+                    },
+                    {
+                      "label": "C",
+                      "value": 52
+                    }
+                  ],
+                  "position": [
+                    -5.6,
+                    5
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "65",
+                  "label": "\"style\": \"tear\"",
+                  "position": [
+                    0.2,
+                    5.7
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Čo sa mení",
+                  "items": [
+                    "panely",
+                    "nadpis a podnadpis",
+                    "animácia objavenia"
+                  ],
+                  "position": [
+                    6.4,
+                    4.8
+                  ],
+                  "depth": "mid"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "style-screen",
+          "title": "Svetelné okno",
+          "subtitle": "Svietiaci displej v tenkom grafitovom ráme.",
+          "style": "screen",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "chart",
+                  "chart": "bar",
+                  "title": "Štýl v číslach",
+                  "data": [
+                    {
+                      "label": "A",
+                      "value": 40
+                    },
+                    {
+                      "label": "B",
+                      "value": 65
+                    },
+                    {
+                      "label": "C",
+                      "value": 52
+                    }
+                  ],
+                  "position": [
+                    -5.6,
+                    5
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "65",
+                  "label": "\"style\": \"screen\"",
+                  "position": [
+                    0.2,
+                    5.7
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Čo sa mení",
+                  "items": [
+                    "panely",
+                    "nadpis a podnadpis",
+                    "animácia objavenia"
+                  ],
+                  "position": [
+                    6.4,
+                    4.8
+                  ],
+                  "depth": "mid"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "style-cyber",
+          "title": "Cyberpunk",
+          "subtitle": "Neónový rám so zrezanými rohmi, ktorý nabehne s poruchou.",
+          "style": "cyber",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "chart",
+                  "chart": "bar",
+                  "title": "Štýl v číslach",
+                  "data": [
+                    {
+                      "label": "A",
+                      "value": 40
+                    },
+                    {
+                      "label": "B",
+                      "value": 65
+                    },
+                    {
+                      "label": "C",
+                      "value": 52
+                    }
+                  ],
+                  "position": [
+                    -5.6,
+                    5
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "65",
+                  "label": "\"style\": \"cyber\"",
+                  "position": [
+                    0.2,
+                    5.7
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Čo sa mení",
+                  "items": [
+                    "panely",
+                    "nadpis a podnadpis",
+                    "animácia objavenia"
+                  ],
+                  "position": [
+                    6.4,
+                    4.8
+                  ],
+                  "depth": "mid"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "style-sticker",
+          "title": "Nálepka",
+          "subtitle": "Komiksová nálepka prilepená na skle pred scénou.",
+          "style": "sticker",
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "chart",
+                  "chart": "bar",
+                  "title": "Štýl v číslach",
+                  "data": [
+                    {
+                      "label": "A",
+                      "value": 40
+                    },
+                    {
+                      "label": "B",
+                      "value": 65
+                    },
+                    {
+                      "label": "C",
+                      "value": 52
+                    }
+                  ],
+                  "position": [
+                    -5.6,
+                    5
+                  ],
+                  "depth": "mid"
+                },
+                {
+                  "type": "stat",
+                  "value": "65",
+                  "label": "\"style\": \"sticker\"",
+                  "position": [
+                    0.2,
+                    5.7
+                  ],
+                  "depth": "front"
+                },
+                {
+                  "type": "bullets",
+                  "title": "Čo sa mení",
+                  "items": [
+                    "panely",
+                    "nadpis a podnadpis",
+                    "animácia objavenia"
+                  ],
+                  "position": [
+                    6.4,
+                    4.8
+                  ],
+                  "depth": "mid"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }

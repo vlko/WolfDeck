@@ -285,8 +285,8 @@ while shown, and shrink away when you step back — the exact reverse.
 ]
 ```
 
-- A **slide** carries `id`, `title`, `subtitle?`, `notes?` (and an optional
-  `kicker` overriding the scene's). With no `groups` it's a **title-only slide** — a
+- A **slide** carries `id`, `title`, `subtitle?`, `notes?`, `style?` (and an
+  optional `kicker` overriding the scene's). With no `groups` it's a **title-only slide** — a
   section divider / cover that shows just the big 3D title + subtitle.
 - A **group** (`{ "parts": [...] }`) reveals its panels together on one
   `Space` (staggered, one after another), and folds them away on `Backspace`.
@@ -324,6 +324,42 @@ before the move. Closeups are skipped in the flat presentation view (P) and
 while the wolf walks. Give them to the element each slide hinges on —
 `rozpocet-2025.json` has 26 across its 34 slides (the speaker, what a
 municipal budget is, the result of the year, the 0 € debt, the QR code…).
+
+### Slide styles
+
+`"style"` on a slide chooses how its **panels, heading, kicker and subtitle**
+look and how its panels **enter** (stepping back plays the entrance in
+reverse). The content of the panels is the same in every style.
+
+| `style` | Look | Entrance |
+| ------- | ---- | -------- |
+| `paper` | The default: an ivory paper card on a kraft board, cut-paper title | Grows in with a small overshoot |
+| `tear` | A rip in the paper world — a thin torn edge with white fibres and curls of paper, a flat white page behind; titles are torn-open strips | The tear runs left to right while the torn paper rolls up in front of it and drops away |
+| `screen` | A glowing display in a thin graphite bezel, with a soft halo; titles sit on slim strips of the same glass | Switches on: a line of light spreads sideways, then opens |
+| `cyber` | A cyberpunk display — black frame with cut corners, magenta and cyan neon, a hazard tab, a scan bar; titles are neon signage | Boots with a glitch: flickers, jumps, snaps into register |
+| `sticker` | A comic sticker that always faces the viewer squarely — ink outline, white border, contact shadow; titles are die-cut lettering | Flies down from above, askew, and is pressed on |
+
+```jsonc
+{ "meta": { "style": "screen" },                 // deck default (optional)
+  "scenes": [ { "id": "intro", "style": "tear",  // scene default (optional)
+    "slides": [
+      { "id": "a", "title": "Torn open" },                      // tear (from the scene)
+      { "id": "b", "title": "On a sticker", "style": "sticker" } // its own
+    ] } ] }
+```
+
+- The nearest setting wins: slide, then scene, then `meta.style`, then
+  `paper`. An unknown name warns and falls back.
+- Only the styles a deck uses are downloaded.
+- `?style=<name>` in the URL dresses **every** slide in one style — handy for
+  trying a style on an existing deck (`?deck=rozpocet-2025.json&style=cyber`).
+- `public/showcase.json` has a scene with one slide per style
+  (`?deck=showcase.json#style-paper`).
+- Styles live in `src/styles/<name>.js` and are listed in
+  `src/styles/index.js`. A style module exports a panel style (backing,
+  face, `update`, `reveal`) and a `title` style (heading layers, label
+  painter, colors) — the hooks are documented at `setPanelStyle` in
+  `src/parts/card.js` and `setTitleStyle` in `src/parts/title.js`.
 
 ### Part types
 
@@ -467,6 +503,7 @@ src/assets/                   palette (sheet swatches), paper textures and
                               materials, sprite standees, the asset catalog,
                               the wolf puppet, registry
 src/parts/                    card base, text/bullets/image, stat/numbered/callout/table, 3D charts, title
+src/styles/                   slide styles (tear, screen, cyber, sticker), loaded on demand
 ```
 
 `window.wolfdeck` exposes live engine objects for console debugging.
@@ -544,5 +581,7 @@ library grows:
   `src/models/order.js` (a later pack's model replaces an earlier one of the
   same name — the shared vehicles come last). An unlisted pack still works,
   it just registers last.
+- **Slide styles** (`src/styles/`) are separate modules too; a deck imports
+  only the ones its slides name.
 - **Sprites** (`.webp`) are fetched only for objects that have no 3D model;
   the deck waits for those few images before its first frame.

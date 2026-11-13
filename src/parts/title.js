@@ -15,6 +15,21 @@ const TITLE_SIZE = 1.2; // world units (cap-height-ish)
 const MAX_W = 15.5; // widest single line before the title wraps/shrinks
 const LAYER_GAP = 0.09; // z gap between ink and backing layer
 
+// ── title style ───────────────────────────────────────────────────────────
+// The look of headings and of the kicker / subtitle labels; it goes with the
+// panel style (card.js setPanelStyle). The default is the cut-paper title. A
+// style may give:
+//   heading(L, { paint, PX, size }) → [{ canvas, x?, y?, z? }]   the layers
+//   label(ctx, canvas, { kind, size })   background of a kicker / subtitle
+//   kickerColor, subtitleColor, labelPad (× the default label padding)
+const paperTitle = {
+  heading: null, label: null, kickerColor: null, subtitleColor: null, labelPad: 1,
+};
+let titleStyle = paperTitle;
+export function setTitleStyle(style) {
+  titleStyle = style ? { ...paperTitle, ...style } : paperTitle;
+}
+
 function makeTexture(canvas) {
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -46,12 +61,24 @@ function layout(text, { size, weight, maxW, spacing = 0, lineH = 1.18 }) {
   };
 }
 
-function paint(L, color, { stroke = 0, label = null } = {}) {
+// Paints the laid-out text. opts:
+//   stroke   outline width of the (single) pass in `color`
+//   passes   instead: [{ color, stroke?, dx?, dy?, composite?, shadow? }] in order
+//   margin   extra canvas px on every side (room for a style's background)
+//   before   (ctx, canvas) drawn under the text
+//   label    background color of a kicker / subtitle label; kind names which
+function paint(L, color, {
+  stroke = 0, passes = null, margin = 0, before = null, label = null, kind = null,
+} = {}) {
   const c = document.createElement('canvas');
-  c.width = L.wPx;
-  c.height = L.hPx;
+  c.width = L.wPx + margin * 2;
+  c.height = L.hPx + margin * 2;
   const ctx = c.getContext('2d');
-  if (label) {
+  if (label && titleStyle.label) {
+    ctx.save();
+    titleStyle.label(ctx, c, { kind, size: L.size * PX });
+    ctx.restore();
+  } else if (label) {
     // a torn-paper label behind small text, so it reads over the hills
     const r = Math.min(L.hPx / 2, L.size * PX * 0.6);
     ctx.fillStyle = label;
@@ -66,19 +93,36 @@ function paint(L, color, { stroke = 0, label = null } = {}) {
     for (let y = 0; y < c.height; y += g.height) for (let x = 0; x < c.width; x += g.width) ctx.drawImage(g, x, y);
     ctx.restore();
   }
+  if (before) {
+    ctx.save();
+    before(ctx, c);
+    ctx.restore();
+  }
   ctx.font = L.font;
   if (L.spacing) ctx.letterSpacing = `${L.spacing}px`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
-  ctx.fillStyle = color;
-  ctx.strokeStyle = color;
   ctx.lineJoin = 'round';
-  ctx.lineWidth = stroke;
-  L.lines.forEach((line, i) => {
-    const y = L.pad + L.size * PX * (0.92 + i * L.lineH);
-    if (stroke) ctx.strokeText(line, c.width / 2, y);
-    ctx.fillText(line, c.width / 2, y);
-  });
+  for (const pass of passes ?? [{ color, stroke }]) {
+    ctx.save();
+    ctx.fillStyle = pass.color;
+    ctx.strokeStyle = pass.color;
+    ctx.lineWidth = pass.stroke ?? 0;
+    if (pass.composite) ctx.globalCompositeOperation = pass.composite;
+    if (pass.shadow) {
+      ctx.shadowColor = pass.shadow.color;
+      ctx.shadowBlur = pass.shadow.blur ?? 0;
+      ctx.shadowOffsetX = pass.shadow.dx ?? 0;
+      ctx.shadowOffsetY = pass.shadow.dy ?? 0;
+    }
+    L.lines.forEach((line, i) => {
+      const x = c.width / 2 + (pass.dx ?? 0);
+      const y = margin + L.pad + L.size * PX * (0.92 + i * L.lineH) + (pass.dy ?? 0);
+      if (pass.stroke) ctx.strokeText(line, x, y);
+      if (!pass.strokeOnly) ctx.fillText(line, x, y);
+    });
+    ctx.restore();
+  }
   return c;
 }
 
@@ -95,26 +139,35 @@ function heading(text) {
       fit = Math.min(1, (MAX_W * PX) / L.wPx);
     }
   }
-  const w = (L.wPx / PX) * fit;
-  const h = (L.hPx / PX) * fit;
   const group = new THREE.Group();
-  const back = plane(paint(L, palette.sand, { stroke: TITLE_SIZE * PX * 0.06 }), w, h);
-  back.position.set(0.07, -0.08, -LAYER_GAP);
-  const ink = plane(paint(L, palette.slate), w, h);
-  group.add(back, ink);
-  group.userData.h = h - (L.pad * 2 * fit) / PX;
+  const layers = titleStyle.heading
+    ? titleStyle.heading(L, { paint, PX, size: TITLE_SIZE * PX })
+    : [
+      { canvas: paint(L, palette.sand, { stroke: TITLE_SIZE * PX * 0.06 }), x: 0.07, y: -0.08, z: -LAYER_GAP },
+      { canvas: paint(L, palette.slate) },
+    ];
+  let extra = 0; // a style's margin round the text (canvas px, both sides)
+  for (const l of layers) {
+    const m = plane(l.canvas, (l.canvas.width / PX) * fit, (l.canvas.height / PX) * fit);
+    m.position.set(l.x ?? 0, l.y ?? 0, l.z ?? 0);
+    group.add(m);
+    extra = Math.max(extra, l.canvas.height - L.hPx);
+  }
+  // Height the kicker / subtitle stack against: the text block, plus half of
+  // a style's margin (its outer half is shadow and glow, free to overlap).
+  group.userData.h = ((L.hPx - L.pad * 2 + extra * 0.5) * fit) / PX;
   return group;
 }
 
-function textLine(text, { size, weight, color, maxW = 14, spacing = 0, label = null }) {
+function textLine(text, { size, weight, color, maxW = 14, spacing = 0, label = null, kind = null }) {
   const L = layout(text, { size, weight, maxW, spacing, lineH: 1.35 });
   if (label) { // roomier padding for the paper label
-    const extra = Math.round(size * PX * 0.7);
+    const extra = Math.round(size * PX * 0.7 * titleStyle.labelPad);
     L.pad += extra / 2;
     L.wPx += extra * 1.4;
     L.hPx += extra;
   }
-  const mesh = plane(paint(L, color, { label }), L.wPx / PX, L.hPx / PX);
+  const mesh = plane(paint(L, color, { label, kind }), L.wPx / PX, L.hPx / PX);
   mesh.userData.h = L.hPx / PX;
   return mesh;
 }
@@ -136,7 +189,7 @@ export function createTitle(text, { kicker, subtitle } = {}) {
   const subPlanes = [];
   if (kicker) {
     const p = textLine(String(kicker).toUpperCase(), {
-      size: 0.32, weight: 800, color: palette.roseMauve, spacing: 5, label: 'rgba(251,248,241,0.88)',
+      size: 0.32, weight: 800, color: titleStyle.kickerColor ?? palette.roseMauve, spacing: 5, label: 'rgba(251,248,241,0.88)', kind: 'kicker',
     });
     p.position.y = topY + 0.3 + p.userData.h / 2;
     inner.add(p);
@@ -144,7 +197,7 @@ export function createTitle(text, { kicker, subtitle } = {}) {
   }
   if (subtitle) {
     const p = textLine(String(subtitle), {
-      size: 0.42, weight: 700, color: palette.inkBody, maxW: 18, label: 'rgba(251,248,241,0.9)',
+      size: 0.42, weight: 700, color: titleStyle.subtitleColor ?? palette.inkBody, maxW: 18, label: 'rgba(251,248,241,0.9)', kind: 'subtitle',
     });
     p.position.y = botY - 0.35 - p.userData.h / 2;
     inner.add(p);

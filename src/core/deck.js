@@ -5,6 +5,7 @@ import { createSun, createBackdrop } from '../environment/sky.js';
 import { createClouds } from '../environment/clouds.js';
 import { createTitle } from '../parts/title.js';
 import { buildPart } from '../parts/partsFactory.js';
+import { useStyle, DEFAULT_STYLE } from '../styles/index.js';
 import { addObstacle } from './world.js';
 import { CONTENT_LAYER } from './focusMode.js';
 import { ACTIVE_SCENE_RADIUS, PART_CASCADE, PART_STACK_DZ, PART_STAGGER } from '../config.js';
@@ -112,6 +113,7 @@ export function buildDeck(deck, scene3) {
     // extra perspective distance, and dropped a little when a kicker needs
     // headroom above the letters.
     const slideTitles = sceneDef.slides.map((sl) => {
+      useStyle(sl.style); // each slide wears its own style
       const t = createTitle(sl.title, { kicker: sl.kicker, subtitle: sl.subtitle });
       t.position.set(0, sl.kicker ? 7.9 : 8.5, -6.5);
       t.scale.setScalar(1.12);
@@ -128,6 +130,7 @@ export function buildDeck(deck, scene3) {
       // A step reveals its whole batch of parts on one press. Parts without
       // an explicit position/depth land on the cascade.
       if (step.clears) { slot = 0; zSeen = new Map(); }
+      useStyle(sceneDef.slides[step.slideIndex]?.style);
       return step.parts.map((partDef) => {
         const def = {
           ...partDef,
@@ -148,6 +151,8 @@ export function buildDeck(deck, scene3) {
         return part;
       });
     });
+
+    useStyle(DEFAULT_STYLE);
 
     const meta = sceneDef.steps.map((step) => ({
       clears: step.clears,

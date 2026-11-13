@@ -35,7 +35,7 @@ opens with `?deck=<file>`:
 | Deck | What it is |
 | ---- | ---------- |
 | `presentation.json` | The demo deck — a short tour of the meadow (default) |
-| `showcase.json` | Every part type and styling option, live |
+| `showcase.json` | Every part type, styling option and slide style, live |
 | `rozpocet-2025.json` | A full real-world talk: 15 scenes, 34 slides, speaker notes (Slovak) |
 
 ## Controls
@@ -125,6 +125,21 @@ Scenes are dressed with **props** — trees, houses, animals, vehicles.
 | `image` | A picture with a caption |
 | `chart` | 3D bar, grouped, horizontal, line, pie or donut chart |
 
+A slide can also pick a **style** — the look of its panels and titles and
+how the panels enter:
+
+| `"style"` | Look |
+| --------- | ---- |
+| `paper` | Ivory paper card, cut-paper title (default) |
+| `tear` | A rip in the paper world with a white page behind; tears open |
+| `screen` | A glowing display in a graphite bezel; switches on |
+| `cyber` | Cyberpunk display with neon and cut corners; glitches in |
+| `sticker` | Comic sticker facing the viewer; flies in and sticks |
+
+Set it per slide (`{ "id": "revenue", "style": "screen", … }`), per scene, or
+for the whole deck in `meta.style`. Add `?style=cyber` to the URL to try one
+style on every slide. `?deck=showcase.json#style-paper` shows all five.
+
 Where to go next:
 
 - [SCENES.md](SCENES.md) — the authoring tutorial, built around the demo deck.
@@ -153,6 +168,9 @@ Where to go next:
   give them; foreground props can genuinely pass in front of them.
 - **3D charts** — rising bars, plan-vs-actual bars, grouped series, popping
   pie and donut wedges, drawn line ribbons.
+- **Slide styles** — each slide can wear its own look, with matching titles
+  and its own entrance: the default paper card, a tear in the paper world,
+  a glowing screen, a cyberpunk display, or a comic sticker.
 - **Closeups** — the camera can move in on one key panel or prop as it
   appears; the next step pulls back.
 - **Titles in your language** — everything is set in Nunito (bundled, Latin
@@ -195,6 +213,7 @@ src/core/          deck loader and assembly, step machine, input, menu,
 src/engine/        renderer, camera rig, ticker, tweens
 src/environment/   meadow, rivers and roads, sky, hills, sun, clouds
 src/parts/         panels: text, bullets, stat, table, charts, title…
+src/styles/        slide styles: tear, screen, cyber, sticker
 src/assets/        asset catalog, palette, materials, textures, sprites
 src/models/        the 3D models, in lazily loaded packs
 src/sprites/       the cut-out sprites and their manifest

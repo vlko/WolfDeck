@@ -59,15 +59,48 @@ export function makeSlab(w, h, { color = palette.panelEdge, thickness = 0.12, ra
   return slab;
 }
 
+// ── panel style ───────────────────────────────────────────────────────────
+// How a panel is mounted in the world. The default is the paper card: a
+// kraft slab + a collage shadow behind an ivory, paper-grained face. A style
+// may replace any of it (see setPanelStyle):
+//   backing(w, h, opts) → Object3D[]   what stands behind / around the face
+//   face: { fill, grain, radius }      face color, paper tooth on/off, corner
+//                                      radius in world units
+//   float: false                       no idle bob
+//   reveal(content, k, ctx)            the style's own entrance: poses the
+//                                      panel for progress k = 0 (gone) … 1
+//                                      (in place); hiding runs it backwards.
+//                                      revealDuration: seconds
+//   update(content, t, ctx)            every frame, per revealed panel
+//                                      (ctx: { anchor, floater, tilt })
+const paperStyle = {
+  backing: (w, h, opts) => [makeSlab(w, h, opts), collageShadow(w, h)],
+  face: {},
+  float: true,
+  update: null,
+};
+let panelStyle = paperStyle;
+export function setPanelStyle(style) {
+  panelStyle = style ? { ...paperStyle, ...style, face: { ...(style.face ?? {}) } } : paperStyle;
+}
+// The slab + shadow (or whatever the active style mounts a panel on).
+export function makeBacking(w, h, opts = {}) {
+  return panelStyle.backing(w, h, opts);
+}
+// Face color and whether it carries the paper grain, under the active style.
+export function panelFace(opts = {}) {
+  return {
+    fill: opts.face ?? opts.color ?? panelStyle.face.fill ?? palette.panel,
+    grain: panelStyle.face.grain !== false,
+  };
+}
+
 // Canvas-faced card. draw(ctx, wPx, hPx) paints the front face.
 // opts: color/thickness/radius/seed (slab), bare (no slab — floating canvas
 // only), accent (CSS color — papercraft strip along the top edge).
 export function makeCard(w, h, draw, opts = {}) {
   const group = new THREE.Group();
-  if (!opts.bare) {
-    group.add(makeSlab(w, h, opts));
-    group.add(collageShadow(w, h));
-  }
+  if (!opts.bare) group.add(...makeBacking(w, h, opts));
 
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(w * PX);
@@ -79,8 +112,9 @@ export function makeCard(w, h, draw, opts = {}) {
   // fill is a rounded rect nested in the slab's die-cut corners, following
   // the concentric-corner rule: inner radius = outer radius − padding
   // (the face plane is inset 0.06 per side).
-  const faceFill = opts.bare ? null : (opts.face ?? opts.color ?? palette.panel);
-  const faceRadius = Math.max((opts.radius ?? 0.18) - 0.06, 0.04) * (canvas.width / (w - 0.12));
+  const faceStyle = panelFace(opts);
+  const faceFill = opts.bare ? null : faceStyle.fill;
+  const faceRadius = (panelStyle.face.radius ?? Math.max((opts.radius ?? 0.18) - 0.06, 0.04)) * (canvas.width / (w - 0.12));
   function fillFace() {
     const r = Math.min(faceRadius, canvas.width / 2, canvas.height / 2);
     ctx.fillStyle = faceFill;
@@ -92,6 +126,7 @@ export function makeCard(w, h, draw, opts = {}) {
     ctx.arcTo(0, 0, canvas.width, 0, r);
     ctx.closePath();
     ctx.fill();
+    if (!faceStyle.grain) return;
     // paper tooth, multiplied into the face only
     ctx.save();
     ctx.clip();
@@ -205,7 +240,12 @@ export function makeFloatingPart(contentGroup, { scale = 1, tilt = 0 } = {}) {
   floater.add(content);
   anchor.add(floater);
 
-  content.scale.setScalar(0.0001);
+  const style = panelStyle; // the style this panel was built under
+  const ctx = { anchor, floater, tilt };
+  const custom = style.reveal ?? null; // the style's own entrance, if any
+  const duration = custom ? (style.revealDuration ?? REVEAL_DURATION) : REVEAL_DURATION;
+
+  content.scale.setScalar(custom ? 1 : 0.0001);
   content.visible = false;
   content.rotation.z = tilt;
   anchor.scale.setScalar(scale);
@@ -215,6 +255,11 @@ export function makeFloatingPart(contentGroup, { scale = 1, tilt = 0 } = {}) {
 
   const state = { s: 0, y: -0.6 };
   function applyState() {
+    if (custom) {
+      content.visible = state.s > 0.001;
+      if (content.visible) custom(content, Math.min(state.s, 1), ctx);
+      return;
+    }
     const s = Math.max(state.s, 0.0001);
     content.scale.setScalar(s);
     content.position.y = state.y;
@@ -233,8 +278,8 @@ export function makeFloatingPart(contentGroup, { scale = 1, tilt = 0 } = {}) {
     const go = () => {
       if (g !== gen) return undefined;
       // Grow with overshoot while floating up into place.
-      const grow = tween(state, { s: 1 }, REVEAL_DURATION, ease.backOut, applyState);
-      tween(state, { y: 0 }, REVEAL_DURATION, ease.outCubic, applyState);
+      const grow = tween(state, { s: 1 }, duration, custom ? ease.linear : ease.backOut, applyState);
+      if (!custom) tween(state, { y: 0 }, REVEAL_DURATION, ease.outCubic, applyState);
       return grow.done.then(() => {
         if (g === gen && contentGroup.userData.growIn) return contentGroup.userData.growIn();
         return undefined;
@@ -251,9 +296,9 @@ export function makeFloatingPart(contentGroup, { scale = 1, tilt = 0 } = {}) {
     wait.t = 0;
     tween(wait, { t: 0 }, 0); // cancels a pending staggered reveal
     if (contentGroup.userData.resetGrow) contentGroup.userData.resetGrow();
-    const d = (REVEAL_DURATION * 0.8) / speed;
-    const shrink = tween(state, { s: 0 }, d, ease.inCubic, applyState);
-    tween(state, { y: -0.6 }, d, ease.inCubic, applyState);
+    const d = (duration * 0.8) / speed;
+    const shrink = tween(state, { s: 0 }, d, custom ? ease.linear : ease.inCubic, applyState);
+    if (!custom) tween(state, { y: -0.6 }, d, ease.inCubic, applyState);
     return shrink.done;
   };
   anchor.userData.revealInstant = () => {
@@ -267,7 +312,9 @@ export function makeFloatingPart(contentGroup, { scale = 1, tilt = 0 } = {}) {
   };
   anchor.userData.isRevealed = () => revealed;
   anchor.userData.update = (t) => {
-    if (revealed) floater.position.y = Math.sin(t * 0.8 + phase) * 0.07;
+    if (!revealed) return;
+    if (style.float) floater.position.y = Math.sin(t * 0.8 + phase) * 0.07;
+    if (style.update) style.update(content, t, ctx);
   };
 
   return anchor;

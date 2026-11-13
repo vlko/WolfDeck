@@ -1,4 +1,5 @@
 import { ROWS, SCENE_SPACING, WALK_SPEED, warn } from '../config.js';
+import { STYLE_NAMES, DEFAULT_STYLE } from '../styles/index.js';
 
 // Fetch + leniently validate public/presentation.json.
 // Only a JSON parse failure is fatal (shown in the #fatal overlay);
@@ -17,6 +18,14 @@ export async function loadPresentation(url = 'presentation.json') {
     throw err;
   }
   return normalize(raw);
+}
+
+// A slide style name, or the fallback when it is missing / unknown.
+function styleName(value, fallback, context) {
+  if (value == null) return fallback;
+  if (STYLE_NAMES.includes(value)) return value;
+  warn(`${context}: unknown style "${value}" — using "${fallback}" (known: ${STYLE_NAMES.join(', ')})`);
+  return fallback;
 }
 
 // Resolve a row name or raw number to a z depth.
@@ -38,6 +47,7 @@ function normalize(raw) {
       sceneSpacing: typeof meta.sceneSpacing === 'number' ? meta.sceneSpacing : SCENE_SPACING,
       walkSpeed: typeof meta.walkSpeed === 'number' ? meta.walkSpeed : WALK_SPEED,
       seed: typeof meta.seed === 'number' ? meta.seed : 1,
+      style: styleName(meta.style, DEFAULT_STYLE, 'meta'),
       rivers: Array.isArray(meta.rivers)
         ? meta.rivers
           .filter((r) => r && typeof r.x === 'number')
@@ -57,7 +67,7 @@ function normalize(raw) {
   const scenes = Array.isArray(deck.scenes) ? deck.scenes : [];
   if (!scenes.length) warn('deck has no scenes');
 
-  scenes.forEach((s, i) => out.scenes.push(normalizeScene(s, i)));
+  scenes.forEach((s, i) => out.scenes.push(normalizeScene(s, i, out.meta.style)));
   return out;
 }
 
@@ -66,9 +76,10 @@ function normalize(raw) {
 // revealed one at a time). Internally we flatten to a list of `steps` (one per
 // group) tagged with which slide they belong to, plus a `slides` summary that
 // the menu / URL address. Every group clears the previous one.
-function normalizeScene(s, i) {
+function normalizeScene(s, i, deckStyle = DEFAULT_STYLE) {
   const scene = typeof s === 'object' && s !== null ? s : {};
   const id = scene.id ?? `scene-${i}`;
+  const sceneStyle = styleName(scene.style, deckStyle, `scene "${id}"`);
   const kicker = typeof scene.kicker === 'string' ? scene.kicker : '';
   const props = (Array.isArray(scene.props) ? scene.props : [])
     .map((p, j) => normalizeProp(p, `scene "${id}" prop ${j}`));
@@ -134,6 +145,9 @@ function normalizeScene(s, i) {
       title: typeof slide.title === 'string' ? slide.title : '',
       subtitle: typeof slide.subtitle === 'string' ? slide.subtitle : '',
       kicker: typeof slide.kicker === 'string' ? slide.kicker : kicker, // slide overrides scene
+      // Look of this slide's panels and titles: its own, else the scene's,
+      // else the deck's (meta.style), else the paper default.
+      style: styleName(slide.style, sceneStyle, ctx),
       // Speaker notes — never drawn in the deck, shown in the presenter view (F).
       notes: Array.isArray(slide.notes) ? slide.notes.filter((n) => typeof n === 'string').join('\n\n')
         : (typeof slide.notes === 'string' ? slide.notes : ''),

@@ -26,6 +26,8 @@ import { loadFonts } from './parts/fonts.js';
 import { modelNamesFor } from './assets/catalog.js';
 import './assets/wolf.js';
 import { loadModelsFor } from './models/index.js'; // hand-built 3D models, in lazy packs
+import { loadStyles, STYLE_NAMES } from './styles/index.js';
+import { env as styleEnv } from './styles/env.js';
 
 async function start() {
   // ?deck=other.json presents a different deck from public/ — handy for
@@ -40,7 +42,16 @@ async function start() {
   for (const sc of deck.scenes) {
     for (const prop of sc.props) for (const n of modelNamesFor(prop.type, prop.options)) names.add(n);
   }
-  await loadModelsFor(names);
+  // ?style=<name> dresses every slide in one style — a quick way to try one.
+  const forced = new URLSearchParams(window.location.search).get('style');
+  if (STYLE_NAMES.includes(forced)) {
+    for (const sc of deck.scenes) for (const sl of sc.slides) sl.style = forced;
+  }
+  // …and only the slide styles it uses.
+  await Promise.all([
+    loadModelsFor(names),
+    loadStyles(deck.scenes.flatMap((sc) => sc.slides.map((sl) => sl.style))),
+  ]);
 
   let renderer;
   let scene;
@@ -82,6 +93,8 @@ async function start() {
     onStateChange: (s, k) => notifyState(s, k),
   });
   const focus = createFocusMode();
+  styleEnv.renderer = renderer;
+  styleEnv.camera = () => (focus.active ? focus.ortho : cameraRig.camera);
   const sceneMenu = createSceneMenu({ deckView, stepMachine });
   // F: fullscreen here + a presenter window (timer, notes, preview, next).
   const presenter = createPresenter({ deck, deckView, stepMachine, focus, renderer });

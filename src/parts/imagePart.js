@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { makeSlab, collageShadow, cardOptsFrom, wrapLines, FONT_STACK, PX } from './card.js';
+import { makeBacking, panelFace, cardOptsFrom, wrapLines, FONT_STACK, PX } from './card.js';
 import { plainColors, getGrainTexture } from '../assets/materials.js';
 import { palette } from '../assets/palette.js';
 import { warn } from '../config.js';
@@ -28,12 +28,12 @@ export function imagePart(def) {
 
   const cardOpts = cardOptsFrom(def);
   if (!cardOpts.bare) {
-    group.add(makeSlab(w, h, cardOpts));
-    group.add(collageShadow(w, h));
+    group.add(...makeBacking(w, h, cardOpts));
+    const face = panelFace(cardOpts);
     // ivory paper mat (unlit, like every panel face)
     const mat3 = new THREE.Mesh(
       plainColors(new THREE.PlaneGeometry(w - 0.12, h - 0.12)),
-      new THREE.MeshBasicMaterial({ color: cardOpts.color ?? palette.panel, map: getGrainTexture() }),
+      new THREE.MeshBasicMaterial({ color: face.fill, map: face.grain ? getGrainTexture() : null }),
     );
     mat3.position.z = 0.003;
     group.add(mat3);
