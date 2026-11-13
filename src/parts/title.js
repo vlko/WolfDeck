@@ -22,9 +22,18 @@ const LAYER_GAP = 0.09; // z gap between ink and backing layer
 //   heading(L, { paint, PX, size }) → [{ canvas, x?, y?, z? }]   the layers
 //   label(ctx, canvas, { kind, size })   background of a kicker / subtitle
 //   kickerColor, subtitleColor, labelPad (× the default label padding)
+//   headingSpacing   extra letter spacing of the heading, in canvas px
+//   reveal(stage, k, ctx)   the style's own entrance for the whole title
+//                    block: poses it for progress k = 0 (gone) … 1 (in
+//                    place); leaving runs it backwards. revealDuration: s
 const paperTitle = {
   heading: null, label: null, kickerColor: null, subtitleColor: null, labelPad: 1,
+  headingSpacing: 0, reveal: null, revealDuration: 0.5,
 };
+// A styled title block may not reach higher above its anchor than this
+// (world units): its backgrounds make it taller than the paper title, and
+// a kicker over a two-line heading would leave the top of the screen.
+const TOP_LIMIT = 2.05;
 let titleStyle = paperTitle;
 export function setTitleStyle(style) {
   titleStyle = style ? { ...paperTitle, ...style } : paperTitle;
@@ -128,14 +137,15 @@ function paint(L, color, {
 
 // The heading: ink layer + fattened sand backing layer behind it.
 function heading(text) {
-  let L = layout(text, { size: TITLE_SIZE, weight: 900, maxW: MAX_W * 1.6 });
+  const spacing = titleStyle.headingSpacing;
+  let L = layout(text, { size: TITLE_SIZE, weight: 900, maxW: MAX_W * 1.6, spacing });
   let fit = 1;
   if (L.wPx / PX > MAX_W) {
     // Prefer shrinking (one line keeps the panel zone free); only very long
     // headings wrap onto two lines.
     if ((MAX_W * PX) / L.wPx >= 0.6) fit = (MAX_W * PX) / L.wPx;
     else {
-      L = layout(text, { size: TITLE_SIZE, weight: 900, maxW: MAX_W * 0.98 });
+      L = layout(text, { size: TITLE_SIZE, weight: 900, maxW: MAX_W * 0.98, spacing });
       fit = Math.min(1, (MAX_W * PX) / L.wPx);
     }
   }
@@ -194,6 +204,7 @@ export function createTitle(text, { kicker, subtitle } = {}) {
     p.position.y = topY + 0.3 + p.userData.h / 2;
     inner.add(p);
     subPlanes.push(p);
+    topY += 0.3 + p.userData.h;
   }
   if (subtitle) {
     const p = textLine(String(subtitle), {
@@ -203,14 +214,29 @@ export function createTitle(text, { kicker, subtitle } = {}) {
     inner.add(p);
     subPlanes.push(p);
   }
-  group.add(inner);
+  // group → stage (a style's entrance poses this) → inner (idle bob)
+  const stage = new THREE.Group();
+  stage.add(inner);
+  group.add(stage);
   group.userData.hasKicker = Boolean(kicker);
+
+  const style = titleStyle; // the style this title was built under
+  const custom = style.reveal;
+  const ctx = { title: true };
+  // keep a styled block's top under the limit (the paper title never moves)
+  const baseY = style === paperTitle ? 0 : -Math.max(0, topY - TOP_LIMIT);
+  inner.position.y = baseY;
 
   const state = { s: 0 };
   let shown = false;
   const phase = Math.random() * Math.PI * 2;
 
   function apply() {
+    if (custom) {
+      stage.visible = state.s > 0.001;
+      if (stage.visible) custom(stage, Math.min(state.s, 1), ctx);
+      return;
+    }
     const s = Math.max(state.s, 0.0001);
     inner.scale.setScalar(s);
     inner.visible = state.s > 0.01;
@@ -224,7 +250,8 @@ export function createTitle(text, { kicker, subtitle } = {}) {
       state.s = want ? 1 : 0;
       apply();
     } else {
-      tween(state, { s: want ? 1 : 0 }, 0.5, want ? ease.backOut : ease.inCubic, apply);
+      const e = want ? ease.backOut : ease.inCubic;
+      tween(state, { s: want ? 1 : 0 }, custom ? style.revealDuration : 0.5, custom ? ease.linear : e, apply);
     }
   };
 
@@ -244,7 +271,7 @@ export function createTitle(text, { kicker, subtitle } = {}) {
 
   group.userData.update = (t) => {
     if (!shown) return;
-    inner.position.y = Math.sin(t * 0.7 + phase) * 0.08;
+    inner.position.y = baseY + Math.sin(t * 0.7 + phase) * 0.08;
     inner.rotation.z = Math.sin(t * 0.45 + phase) * 0.008;
   };
 

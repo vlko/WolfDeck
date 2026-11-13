@@ -328,8 +328,9 @@ municipal budget is, the result of the year, the 0 € debt, the QR code…).
 ### Slide styles
 
 `"style"` on a slide chooses how its **panels, heading, kicker and subtitle**
-look and how its panels **enter** (stepping back plays the entrance in
-reverse). The content of the panels is the same in every style.
+look and how they **enter** — the title block comes in the same way as the
+panels (stepping back plays the entrance in reverse). The content of the
+panels is the same in every style.
 
 | `style` | Look | Entrance |
 | ------- | ---- | -------- |

@@ -8,6 +8,8 @@ import { roundedRect, ringShape, flat, blurRect } from './util.js';
 import { env } from './env.js';
 
 const INK = '#16181d';
+const BORDER = 0.2; // white sticker border beyond the card, both sides together
+const EDGE = BORDER + 0.09; // …plus the outer ink line
 
 const q = new THREE.Quaternion();
 const tiltQ = new THREE.Quaternion();
@@ -25,6 +27,10 @@ export default {
       ctx.shadows = [];
       content.traverse((o) => { if (o.userData.shadow) ctx.shadows.push(o); });
       ctx.from = Math.random() < 0.5 ? -1 : 1;
+      // The sticker's border must not make the panel bigger than the card
+      // it replaces — decks space their panels for that footprint.
+      const size = content.children[0]?.userData.cardSize;
+      ctx.fit = size ? Math.min(size.w / (size.w + EDGE), size.h / (size.h + EDGE)) : 1;
     }
     const fly = Math.min(1, k / 0.72); // in the air
     const press = Math.max(0, (k - 0.72) / 0.28); // pressed on
@@ -34,7 +40,7 @@ export default {
     ctx.spin = ctx.from * 0.42 * lift;
     // bigger while it is nearer the viewer; a dip and a rebound as it is pressed
     const squash = press > 0 ? -0.07 * Math.sin(press * Math.PI) * (1 - press * 0.4) : 0;
-    content.scale.setScalar(1 + 0.42 * lift + squash);
+    content.scale.setScalar(ctx.fit * (1 + 0.42 * lift + squash));
     for (const sh of ctx.shadows) {
       const s = sh.userData.shadow;
       sh.position.x = s.x * (1 + lift * 9);
@@ -52,8 +58,8 @@ export default {
   },
   backing(w, h) {
     const out = [];
-    const W = w + 0.27;
-    const H = h + 0.27;
+    const W = w + BORDER;
+    const H = h + BORDER;
 
     // wide, soft shadow: the sticker stands a hair off the surface
     const far = blurRect(W, H, 0.7, 0.2);
@@ -74,8 +80,8 @@ export default {
     contact.userData.shadow = { x: 0.035, y: -0.05, o: 0.5 };
     out.push(contact);
 
-    out.push(flat(new THREE.ShapeGeometry(roundedRect(W + 0.11, H + 0.11, 0.25)), INK, -0.1)); // outer ink
-    out.push(flat(new THREE.ShapeGeometry(roundedRect(W, H, 0.2)), '#ffffff', -0.06)); // sticker border
+    out.push(flat(new THREE.ShapeGeometry(roundedRect(W + 0.09, H + 0.09, 0.22)), INK, -0.1)); // outer ink
+    out.push(flat(new THREE.ShapeGeometry(roundedRect(W, H, 0.18)), '#ffffff', -0.06)); // sticker border
     out.push(flat(new THREE.ShapeGeometry(ringShape(w + 0.04, h + 0.04, 0.1, w - 0.2, h - 0.2, 0.03)), INK, 0.012)); // ink line
     return out;
   },
@@ -115,12 +121,26 @@ export const title = {
       canvas: paint(L, INK, {
         margin: Math.round(size * 0.3),
         passes: [
-          { color: INK, stroke: size * 0.2, strokeOnly: true, shadow: { color: 'rgba(28,26,34,0.45)', blur: size * 0.13, dx: size * 0.03, dy: size * 0.08 } },
-          { color: '#ffffff', stroke: size * 0.115, strokeOnly: true },
+          { color: INK, stroke: size * 0.155, strokeOnly: true, shadow: { color: 'rgba(28,26,34,0.45)', blur: size * 0.13, dx: size * 0.03, dy: size * 0.08 } },
+          { color: '#ffffff', stroke: size * 0.085, strokeOnly: true },
           { color: INK },
         ],
       }),
     }];
   },
   label(ctx, c, { kind, size }) { pill(ctx, c, size, kind === 'kicker' ? '#fff3b0' : '#ffffff'); },
+  headingSpacing: 4, // a little air, so the outlines of neighbouring letters keep apart
+  // Drops in from above, askew and a size too big, and is pressed on.
+  revealDuration: 0.65,
+  reveal(stage, k, ctx) {
+    if (ctx.from == null) ctx.from = Math.random() < 0.5 ? -1 : 1;
+    const fly = Math.min(1, k / 0.72);
+    const press = Math.max(0, (k - 0.72) / 0.28);
+    const lift = (1 - fly) ** 2;
+    stage.position.y = 6 * (1 - fly) ** 2.2;
+    stage.position.x = ctx.from * 1.5 * lift;
+    stage.rotation.z = ctx.from * 0.3 * lift;
+    const squash = press > 0 ? -0.06 * Math.sin(press * Math.PI) * (1 - press * 0.4) : 0;
+    stage.scale.setScalar(1 + 0.35 * lift + squash);
+  },
 };

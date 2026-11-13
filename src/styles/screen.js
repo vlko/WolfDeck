@@ -39,7 +39,7 @@ function halo(w, h) {
   return m;
 }
 
-export default {
+const panel = {
   face: { fill: '#f2f8ff', grain: false, radius: 0.03 },
   float: false,
   // Switches on like a display: a thin line of light spreads sideways, then
@@ -136,3 +136,9 @@ export const title = {
     }
   },
 };
+
+// The title block enters the way the panels do.
+title.reveal = panel.reveal;
+title.revealDuration = panel.revealDuration;
+
+export default panel;

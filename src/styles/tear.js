@@ -9,7 +9,7 @@ import { env } from './env.js';
 import { flat, canvasTexture, blurRect } from './util.js';
 
 const RIM = '#e9e1cd'; // the world's paper, seen from the front
-const BACK = [0.74, 0.62, 0.44]; // …and its kraft back, on the curls (rgb)
+const BACK = [0.66, 0.53, 0.36]; // …and its kraft back, on the curls (rgb)
 const FIBRE = '#fffdf8';
 
 // Points walking round a rectangle of half-size (hx, hy), pushed in/out by
@@ -89,7 +89,7 @@ function addCurl(a, b, r, pos, col) {
   const base = Math.hypot(tx, ty) || 1;
   const ux = tx / base;
   const uy = ty / base;
-  const L = 0.2 + r() * 0.26;
+  const L = 0.28 + r() * 0.34;
   const S = 5;
   const start = 0.25 + r() * 0.35;
   const roll = 1.5 + r() * 1.3; // how far it rolls back
@@ -188,7 +188,7 @@ export default {
     // curls of paper still hanging on round the hole
     const pos = [];
     const col = [];
-    const n = Math.round(4 + (w + h) * 0.7 + r() * 2);
+    const n = Math.round(5 + (w + h) * 0.8 + r() * 2);
     for (let f = 0; f < n; f += 1) {
       const i = Math.floor(r() * inner.length);
       const a = inner[i];
@@ -300,4 +300,48 @@ export const title = {
     return [{ canvas: paint(L, '#23272c', { margin, before: (ctx, c) => tornStrip(ctx, c, size * 0.085) }) }];
   },
   label(ctx, c, { size }) { tornStrip(ctx, c, size * 0.14); },
+  // The strips tear open left to right like the panels, a small roll of
+  // paper running ahead of the tear.
+  revealDuration: 0.8,
+  reveal(stage, k, ctx) {
+    if (!ctx.tear) {
+      if (!env.renderer || k >= 1) return; // nothing to animate (instant)
+      env.renderer.localClippingEnabled = true;
+      const plane = new THREE.Plane();
+      let hx = 1;
+      let mask = 1;
+      let head = { w: 0, h: 0, y: 0 }; // the tallest strip: the heading
+      stage.traverse((o) => {
+        if (!o.isMesh) return;
+        o.material.clippingPlanes = [plane]; // a title's materials are its own
+        const g = o.geometry.parameters;
+        hx = Math.max(hx, g.width / 2 + Math.abs(o.position.x));
+        if (g.height > head.h) head = { w: g.width, h: g.height, y: o.position.y };
+        mask = o.layers.mask;
+      });
+      // the roll runs along the heading only — not through the gaps between
+      // the strips, nor past the heading's ends
+      const roll = new THREE.Mesh(
+        shadedColors(new THREE.CylinderGeometry(1, 1, head.h * 0.86, 9, 1), 4, 0.08),
+        new THREE.MeshBasicMaterial({ color: ROLL, vertexColors: true }),
+      );
+      roll.layers.mask = mask;
+      stage.add(roll);
+      ctx.tear = { plane, roll, hx, cy: head.y, reach: head.w / 2 };
+    }
+    const { plane, roll, hx, cy, reach } = ctx.tear;
+    const e = k * k * (3 - 2 * k);
+    const front = k >= 1 ? 1e4 : -hx - 0.4 + e * (hx * 2 + 0.8);
+    stage.updateWorldMatrix(true, false);
+    P.set(front, 0, 0).applyMatrix4(stage.matrixWorld);
+    N.set(-1, 0, 0).transformDirection(stage.matrixWorld);
+    plane.setFromNormalAndCoplanarPoint(N, P);
+    const end = Math.min(1, (1 - k) / 0.1);
+    const onHeading = Math.max(0, Math.min(1, (reach - Math.abs(front)) / 0.25 + 1));
+    const radius = (0.07 + 0.1 * e) * onHeading * end;
+    roll.visible = k > 0 && k < 1 && radius > 0.004;
+    roll.scale.set(radius, 1, radius);
+    roll.position.set(front + radius * 0.4, cy, 0.1 + radius);
+    roll.rotation.y = e * 14;
+  },
 };

@@ -61,7 +61,7 @@ function textures() {
 
 const additive = { transparent: true, depthWrite: false, blending: THREE.AdditiveBlending };
 
-export default {
+const panel = {
   face: { fill: '#f0fbff', grain: false, radius: 0 },
   float: false,
   // Boots with a glitch: the panel stutters in — flickering, jumping
@@ -241,3 +241,9 @@ export const title = {
     else bar(ctx, c, { pad: size * 0.3, cutSize: size * 0.3, fill: BODY, edge: CYAN });
   },
 };
+
+// The title block enters the way the panels do.
+title.reveal = panel.reveal;
+title.revealDuration = panel.revealDuration;
+
+export default panel;
