@@ -6,6 +6,9 @@
 //
 // L opens the scene menu (jump straight to any scene).
 //
+// F starts presenting: this window goes fullscreen (on a chosen screen where
+// the browser allows) and a presenter window opens with timer and notes.
+//
 // W/A/S/D walk the wolf around freely (A left, D right, W back away from
 // the viewer, S front toward the viewer; combine for diagonals). Five
 // seconds after the last movement key he trots back to his presenter post
@@ -17,7 +20,7 @@ const MOVE_KEYS = {
   KeyS: [0, 1],
 };
 
-export function bindInput(stepMachine, hero, focus, menu) {
+export function bindInput(stepMachine, hero, focus, menu, presenter) {
   const held = new Set();
 
   function pushDir() {
@@ -40,6 +43,13 @@ export function bindInput(stepMachine, hero, focus, menu) {
       return;
     }
 
+    // …and so does the screen picker of the presenter mode.
+    if (presenter?.isOpen) {
+      if (presenter.handleKey(e.code)) e.preventDefault();
+      return;
+    }
+    if (e.ctrlKey || e.metaKey || e.altKey) return; // browser shortcuts (Ctrl+F, Ctrl+L…)
+
     if (e.code === 'Space' || e.code === 'ArrowRight') {
       e.preventDefault();
       stepMachine.push(+1);
@@ -52,6 +62,9 @@ export function bindInput(stepMachine, hero, focus, menu) {
     } else if (e.code === 'KeyL' && !e.repeat) {
       e.preventDefault();
       menu?.toggle();
+    } else if (e.code === 'KeyF' && !e.repeat) {
+      e.preventDefault();
+      presenter?.start();
     } else if (e.code in MOVE_KEYS && !e.repeat) {
       e.preventDefault();
       held.add(e.code);

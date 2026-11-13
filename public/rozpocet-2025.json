@@ -236,6 +236,7 @@
           "id": "cover",
           "title": "Mestský rozpočet Námestovo 2025",
           "subtitle": "Ako mesto spravuje svoje financie – schválený rozpočet, päť zmien počas roka a skutočné plnenie k 31. 12. 2025.",
+          "notes": "Kompletný obraz roka 2025: schválený rozpočet, päť rozpočtových opatrení aj záverečný účet – od plánu cez zmeny až po skutočné plnenie.",
           "groups": []
         },
         {
@@ -243,6 +244,7 @@
           "title": "Marián Vlčák — „vlko\"",
           "subtitle": "Prečo vám o rozpočte rozpráva chlapík v tričku a nie úradník? Lebo dáta ma bavia a toto je moje mesto.",
           "kicker": "O prednášajúcom",
+          "notes": "Osobný úvod. Fakty overené z internetu (FinStat, WebUp Žilina, blog.vyvojari.dev, podcast Link s Dávidom Tvrdoňom). Pointa: netreba byť úradník, aby človek čítal rozpočet – stačí zvedavosť a vzťah k mestu.",
           "groups": [
             {
               "subtitle": true,
@@ -310,6 +312,7 @@
         {
           "id": "o-namestove",
           "title": "O Námestove a rozpočte",
+          "notes": "Základné pojmy pre divákov, ktorí rozpočet nikdy nečítali. Kľúčový bod: rozpočet nie je nemenný – počas roka 2025 sa menil piatimi opatreniami.",
           "groups": [
             {
               "parts": [
@@ -546,6 +549,7 @@
           "id": "prehlad-rozpoctu",
           "title": "Prehľad rozpočtu 2025: plán vs. skutočnosť",
           "subtitle": "Rozpočet bol schválený ako vyrovnaný. Päť zmien počas roka ho zdvihlo o 3,1 milióna € – najmä vďaka dotácii 2,2 mil. € z Environmentálneho fondu.",
+          "notes": "Rozpočet schválený v decembri 2024 bol vyrovnaný; zmeny počas roka ho zdvihli najmä o dotáciu Environmentálneho fondu. Skutočná štruktúra výsledku hospodárenia príde v závere.",
           "groups": [
             {
               "parts": [
@@ -639,6 +643,7 @@
         {
           "id": "odkial-peniaze",
           "title": "Odkiaľ mesto získava peniaze?",
+          "notes": "Trojica bežné / kapitálové / finančné operácie – vysvetliť rozdiel a ukázať plnenie oproti rozpočtu po zmenách.",
           "groups": [
             {
               "parts": [
@@ -905,6 +910,7 @@
         {
           "id": "dane",
           "title": "Dane: hlavný zdroj financovania",
+          "notes": "Daňové príjmy 2025 spolu 6 481 563 €, z toho podielové dane 5 444 594 € (84 %).",
           "groups": [
             {
               "closeup": {},
@@ -958,6 +964,7 @@
         {
           "id": "struktura-prijmov",
           "title": "Štruktúra príjmov: plán vs. skutočnosť",
+          "notes": "Kľúčové posolstvo: plán počítal s masívnym čerpaním rezerv, realita – rezervy takmer netreba, veľkú investíciu pokryla dotácia Environmentálneho fondu.",
           "groups": [
             {
               "parts": [
@@ -1192,6 +1199,7 @@
           "id": "kam-idu-peniaze",
           "title": "Kam idú peniaze?",
           "subtitle": "Skutočné výdavky 2025 podľa deviatich programov mesta (bez výdavkových finančných operácií 120 000 €).",
+          "notes": "Používame oficiálne programové členenie zo záverečného účtu (9 programov mesta).",
           "groups": [
             {
               "parts": [
@@ -1274,6 +1282,7 @@
           "id": "prenesene-pravomoci",
           "title": "Prenesené právomoci: štát prikazuje, mesto dopláca",
           "subtitle": "Úlohy, ktoré mestu zveril štát – sivý podklad = skutočné náklady 2025, tmavý pruh = štátne transfery.",
+          "notes": "Školstvo: náklady = P25 program 9 (7 553 866); štát = normatív ZŠ 2 037 257 + MŠ 1 002 497 + účelové transfery 729 980 (asistenti 181 140, strava 259 103, špecifiká 99 385, projekty 87 996, havarijný stav 36 714, učebnice, poukazy, dopravné, škola v prírode, lyžiarsky, SZP). Sociálne služby: náklady = príspevok mesta pre CSS 1 123 738 + 40 000 KV; štát = 613 824 + 29 525 stabilizačný + 4 000 rozvoj. Úrady: výdavky 152 161 (stavebný 62 594, matrika 51 190, školský úrad 34 833, evidencia 2 568, ŽP 976) vs. transfery 68 337 – krytie 45 %. Neštátne zariadenia 2025 (P25): súkromná ZUŠ Fernezová 758 039 + súkromná ZUŠ Babuliaková 602 272 + cirkevná ZŠ 65 280 + súkromné MŠ 16 813 + súkromné iné 10 681 = 1 453 085 €. Mechanizmus overený: žiaci neštátnych zariadení sa obci započítavajú do vzorca podielových daní (od 2007) a obec im zo zákona poskytuje min. 88 % sumy na žiaka vlastných zariadení (§ 6 ods. 12 písm. j zákona 596/2003). Financovanie originálnych školských kompetencií z DPFO od 1. 1. 2005; od 2025 MŠ financuje štát.",
           "groups": [
             {
               "parts": [
@@ -1374,6 +1383,7 @@
           "id": "originalne-pravomoci",
           "title": "Originálne právomoci",
           "subtitle": "Úlohy, ktoré mesto plní z vlastnej zodpovednosti a z vlastných zdrojov – skutočné výdavky 2025:",
+          "notes": "Originálne kompetencie – financované z vlastných príjmov, mesto samo určuje priority.",
           "groups": [
             {
               "parts": [
@@ -1429,6 +1439,7 @@
           "id": "hlavne-oblasti",
           "title": "Hlavné oblasti výdavkov: rozpočet vs. skutočnosť",
           "subtitle": "Sivý podklad = rozpočet po zmenách, modrý pruh = skutočné čerpanie k 31. 12. 2025.",
+          "notes": "Investície sú jediný program s plnením pod 85 %; skutočný podiel kapitálových výdavkov na celkových výdavkoch 2025 je 13,5 %.",
           "groups": [
             {
               "parts": [
@@ -1713,6 +1724,7 @@
         {
           "id": "cast-2",
           "title": "Analýza výdavkov mestského rozpočtu",
+          "notes": "Druhá časť: detailný rozbor skutočného čerpania výdavkov 2025 po jednotlivých oblastiach.",
           "groups": [
             {
               "parts": [
@@ -1735,6 +1747,7 @@
         {
           "id": "prehlad-vzdelavanie",
           "title": "Prehľad rozpočtu na vzdelávanie",
+          "notes": "Školstvo je dlhodobo stabilná dominanta mestského rozpočtu (~55 % výdavkov aj v predchádzajúcich rokoch).",
           "groups": [
             {
               "parts": [
@@ -1800,6 +1813,7 @@
         {
           "id": "kam-smeruju",
           "title": "Kam smerujú prostriedky na vzdelávanie",
+          "notes": "ZŠ spolu 3 613 023 vrátane údržby a cirkevnej – tu rozdelené: 1 841 136 (Komenského) + 1 699 637 (Slnečná) = 3 540 773; MŠ 1 147 383 vrátane údržby a súkromných – tu: 3 MŠ = 1 116 126. Súkromné/cirkevné: 65 280 + 16 813 + 10 681 = 92 774.",
           "groups": [
             {
               "parts": [
@@ -2064,6 +2078,7 @@
         {
           "id": "socialne-sluzby",
           "title": "Sociálne služby",
+          "notes": "Program 2 v roku 2025: 1 271 342 € (bežné 1 231 342 + kapitálové 40 000).",
           "groups": [
             {
               "parts": [
@@ -2131,6 +2146,7 @@
         {
           "id": "kto-profituje",
           "title": "Kto profituje zo sociálnych služieb",
+          "notes": "Priama pomoc sa čerpala na 84,7 % rozpočtu – nižší počet žiadostí, než sa plánovalo.",
           "groups": [
             {
               "parts": [
@@ -2380,6 +2396,7 @@
           "id": "technicke-sluzby",
           "title": "Technické služby",
           "subtitle": "Príspevková organizácia mesta – príspevky z rozpočtu 2025 podľa účelu:",
+          "notes": "Príspevky TS podľa programového rozpočtu + hospodárenie TS zo záverečného účtu; externý odber a likvidáciu odpadu platí mesto priamo dodávateľom.",
           "groups": [
             {
               "parts": [
@@ -2685,6 +2702,7 @@
         {
           "id": "sport-kultura",
           "title": "Šport a kultúra: investície do kvality života",
+          "notes": "Šport bol v roku 2025 bez veľkej jednorazovej investície (atletický areál sa dokončil v 2024); kultúra naopak investične rástla – kino, javisko, amfiteáter.",
           "groups": [
             {
               "parts": [
@@ -2998,6 +3016,7 @@
         {
           "id": "kapitalove-investicie",
           "title": "Kapitálové investície: plán vs. realita 2025",
+          "notes": "Plán vs. skutočnosť v rámci roka 2025: kapitálový rozpočet po zmenách 2 256 399 €, čerpanie 1 894 952 €.",
           "groups": [
             {
               "parts": [
@@ -3300,6 +3319,7 @@
         {
           "id": "financne-rezervy",
           "title": "Finančné rezervy: naša záchranná sieť",
+          "notes": "Použitie rezervného fondu bolo v rozpočte plánované až do výšky 1,82 mil. € – reálne stačilo 790 tis., zvyšok investícií pokryla dotácia Environmentálneho fondu.",
           "groups": [
             {
               "parts": [
@@ -3384,6 +3404,7 @@
           "id": "dlhova-brzda",
           "title": "Čo je dlhová brzda?",
           "subtitle": "Ústavný zákon o rozpočtovej zodpovednosti chráni verejné financie: keď dlh štátu prekročí sankčné pásma, obmedzenia dopadajú aj na obce a mestá.",
+          "notes": "Koncept dlhovej brzdy rámcoval investičné rozhodovanie mesta v roku 2025 – ďalší slide ukazuje, ako to dopadlo v Námestove. Právny stav overený k 07/2026 (RRZ, ŠÚ SR).",
           "groups": [
             {
               "closeup": {},
@@ -3464,6 +3485,7 @@
           "id": "dlhova-brzda-namestovo",
           "title": "Dlhová brzda a Námestovo: ako to dopadlo",
           "subtitle": "Rok 2025 bol poslednou príležitosťou investovať pred aktiváciou sankcií dlhovej brzdy. Výsledok:",
+          "notes": "Mesto výnimku nevyužilo na úver – investície utiahli dotácie a rezervný fond; dlh ostáva nulový a limity dlhovej brzdy sú splnené s obrovskou rezervou.",
           "groups": [
             {
               "parts": [
@@ -3703,6 +3725,7 @@
         {
           "id": "cast-3",
           "title": "Realita mestského rozpočtu",
+          "notes": "Tretia časť: širší kontext financovania samosprávy na Slovensku + lokálne dáta Námestova 2025. Celoslovenské čísla boli overené proti primárnym zdrojom (ŠÚ SR, Eurostat, ZMOS, RRZ, slov-lex) k júlu 2026.",
           "groups": [
             {
               "parts": [
@@ -3726,6 +3749,7 @@
           "id": "konsolidacia",
           "title": "Konsolidovaná účtovná závierka",
           "subtitle": "Čo vlastne znamená „konsolidovaná“? Ako korporátna skupina: mesto musí ukázať kompletný obraz vrátane svojich organizácií, aby sa odhalil skutočný finančný stav.",
+          "notes": "Konsolidovaná účtovná závierka za rok 2025 vyjde v priebehu roka 2026; dovtedy najlepší obraz dáva záverečný účet.",
           "groups": [
             {
               "parts": [
@@ -3822,6 +3846,7 @@
           "id": "ako-ovplyvnuju-prijmy",
           "title": "Ako mestá ovplyvňujú svoje príjmy",
           "subtitle": "Zdieľané dane: najväčší zdroj, najmenšia kontrola. 40–60 % príjmov miest pochádza z podielu na dani z príjmov fyzických osôb – o jeho výške rozhoduje výlučne štát. Vzorec rozdelenia (platný od 1. 1. 2026):",
+          "notes": "Váhy vzorca overené k 07/2026 (nariadenie vlády č. 668/2004 Z. z. v znení nariadenia č. 393/2025 Z. z.; RRZ komunálna kalkulačka). Pôvodný „5 % vyrovnávací komponent“ už vo vzorci neexistuje – štyri kritériá dávajú spolu 100 %. Námestovo 2025: −58 obyvateľov = priamy negatívny vplyv na budúce podielové dane.",
           "groups": [
             {
               "parts": [
@@ -4099,6 +4124,7 @@
           "id": "rizika-financovania",
           "title": "Riziká financovania samospráv",
           "subtitle": "Najhoršia finančná kríza samospráv od získania nezávislosti – odhady ZMOS, overené k júlu 2026:",
+          "notes": "Overené 07/2026: ZMOS 16. 9. 2025 (534 mil. € = 300 + 234; 3,1 mld. do 2027) a 13. 11. 2025 (591 mil. €). Staršie číslo „kumulatívny deficit 1,3 mld. €“ sa v aktuálnych zdrojoch nepotvrdilo – nepoužívať.",
           "groups": [
             {
               "parts": [
@@ -4209,6 +4235,7 @@
         {
           "id": "demograficky-kolaps",
           "title": "Demografický kolaps: kríza populácie",
+          "notes": "Čísla overené 07/2026 priamo z API Eurostatu (EUROPOP2023: proj_23np, proj_23ndbi) a ŠÚ SR (index starnutia 2024 = 118,9). Staršie hodnoty „−660 tis. / 80 → 215 / 51 → 101“ pochádzali z projekcie EUROPOP2019 a prognózy VDC s bázou ~2010–2016.",
           "groups": [
             {
               "parts": [
@@ -4490,6 +4517,7 @@
         {
           "id": "uspory-odpady",
           "title": "Úspory v odpadovom hospodárstve",
+          "notes": "Prepočet na obyvateľa: 532 843 / 7 244 ≈ 74 €/obyv. Košeca: systém ELWIS od 2019, prvá obec SR s elektronickou evidenciou; pôvodne uvádzaná „investícia 10 000 €“ sa nepodarila doložiť, preto vypustená (prevádzka ~2 €/obyv./rok).",
           "groups": [
             {
               "parts": [
@@ -4578,6 +4606,7 @@
           "id": "zevo",
           "title": "Premena odpadu na energiu (ZEVO): alternatíva k skládkam",
           "subtitle": "ZEVO = zariadenie na energetické využitie odpadu. Zmesový odpad, ktorý by inak skončil na skládke, sa spáli pri vysokej teplote a vyrobí sa z neho elektrina a teplo. Na Slovensku fungujú dve – v Bratislave (OLO) a Košiciach (KOSIT).",
+          "notes": "Historické ceny skládkovania: WOOD & Company (2022): 40 €/t (2018) → 76 €/t (2021) → 100–120 €/t (2023). Stĺpec 2025/26 = stred pásma 110–140 €/t za upravený odpad (ekorestart/odpady-portal). Pôvodné tvrdenie „ZEVO ~84 €/t, ceny stabilné“ bolo z prognózy 2022 – aktuálny cenník je 116 €/t, preto preformulované.",
           "groups": [
             {
               "parts": [
@@ -4887,6 +4916,7 @@
           "id": "buducnost-samospravy",
           "title": "Budúcnosť samosprávy: efektívnosť vs. identita",
           "subtitle": "Slovensko je s Českom a Francúzskom v trojici najrozdrobenejších krajín EÚ – 2 890 obcí s priemerom 1 875 obyvateľov (medián len ~670). Fragmentácia stojí stovky miliónov ročne.",
+          "notes": "Presné hodnoty ŠÚ SR (31. 12. 2024): 2 890 obcí, priemer 1 875, medián ~670; 64 % obcí pod 1 000 obyv.; 146 obcí pod 100. IFP štúdia viaže 50 % administratívy na obce pod 250 obyvateľov (nie pod 1 000, ako sa niekedy cituje).",
           "groups": [
             {
               "parts": [
@@ -4976,6 +5006,7 @@
         {
           "id": "riesenia-konsolidacie",
           "title": "Riešenia konsolidácie: medzinárodné skúsenosti",
+          "notes": "Overené k 07/2026: Dánsko (regioner.dk – reforma 2007), Poľsko (GUS k 1. 1. 2025), Vysoké Tatry (15 častí, nariadenie SNR č. 52/1947 + premenovanie 1999), Tornaľa (MIRRI/MV SR, otvorené 3/2025). Región Námestova (Biela Orava) je prirodzený kandidát na zdieľané služby.",
           "groups": [
             {
               "parts": [
@@ -5215,6 +5246,7 @@
         {
           "id": "vyzvy-su-realne",
           "title": "Výzvy sú reálne – riešenia existujú",
+          "notes": "Záverečný slide spája výsledky 2025 s výzvou na občiansku participáciu.",
           "groups": [
             {
               "parts": [
@@ -5283,6 +5315,7 @@
           "title": "Ďakujem za pozornosť",
           "subtitle": "Rozpočet je príbeh o tom, aké mesto chceme. Píšme ho spoločne.",
           "kicker": "Ďakujem za pozornosť",
+          "notes": "Záverečný pozdrav + výzva na zapojenie. QR vedie na https://ok-no.sk (OKNO Námestovo, občianske združenie usporadúvajúce túto prednášku). QR vygenerovaný lokálne (tools/qr_gen.py); overený proti ISO testovaciemu vektoru a round-trip dekódovaním na 'https://ok-no.sk', no neoverený reálnym skenom telefónu.",
           "groups": [
             {
               "parts": [

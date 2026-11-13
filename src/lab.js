@@ -9,6 +9,7 @@
 // the model at three-quarters (perspective) | from the side.
 import * as THREE from 'three';
 import { preloadSprites } from './assets/sprites.js';
+import { PACK_ORDER } from './models/order.js';
 import { buildModel, hasModel, modelNames, modelInfo, setPack } from './models/registry.js';
 import { loadFonts } from './parts/fonts.js';
 import { addSceneLights } from './engine/lights.js';
@@ -23,7 +24,7 @@ const url = (n) => urls[`./sprites/${n}.webp`];
 const q = new URLSearchParams(location.search);
 
 // Model modules, in dependency order (trees before the packs that reuse them).
-const PACKS = ['visual', 'village', 'trees', 'city1', 'city2', 'office', 'shop', 'construction', 'school', 'sport', 'social', 'services', 'money', 'namestovo', 'extras', 'vehicles'];
+const PACKS = PACK_ORDER;
 const modules = import.meta.glob('./models/*.js');
 for (const pack of q.get('pack') ? [q.get('pack')] : PACKS) {
   setPack(pack);

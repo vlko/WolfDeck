@@ -16,8 +16,15 @@ import { hasModel, buildModel } from '../models/registry.js';
 //       flip             — scale.x = ±1 mirrors the card (facing)
 //         edge, card     — the cardboard edge and the printed face
 
-const urls = import.meta.glob('../sprites/*.webp', { eager: true, query: '?url', import: 'default' });
-const urlOf = Object.fromEntries(Object.entries(urls).map(([p, u]) => [p.split('/').pop().replace('.webp', ''), u]));
+// Sprite URLs are resolved LAZILY, one sprite at a time, when it is wanted.
+// (An eager glob — or `new URL(\`…${name}.webp\`, import.meta.url)`, which
+// Vite turns into one — makes the dev server request every .webp as a module
+// on startup.)
+const urlLoaders = import.meta.glob('../sprites/*.webp', { query: '?url', import: 'default' });
+const urlOf = (name) => {
+  const load = urlLoaders[`../sprites/${name}.webp`];
+  return load ? load() : Promise.reject(new Error('no such sprite'));
+};
 
 const loader = new THREE.TextureLoader();
 const textures = new Map();
@@ -29,7 +36,7 @@ function setup(tex) {
 }
 
 export function hasSprite(name) {
-  return Boolean(manifest[name] && urlOf[name]);
+  return Boolean(manifest[name]);
 }
 
 export function spriteNames() {
@@ -41,18 +48,35 @@ export function spriteAspect(name) {
   return m ? m.w / m.h : 1;
 }
 
+// Sprites are fetched on demand: only an object WITHOUT a 3D model shows
+// its flat sprite, so a deck downloads the few it really uses. The texture
+// is handed out at once and gets its image when it arrives.
+const pending = new Set();
 export function getTexture(name) {
-  if (!textures.has(name)) textures.set(name, setup(loader.load(urlOf[name])));
+  if (!textures.has(name)) {
+    const tex = setup(new THREE.Texture());
+    textures.set(name, tex);
+    const p = urlOf(name)
+      .then((url) => loader.loadAsync(url))
+      .then((loaded) => { tex.image = loaded.image; tex.needsUpdate = true; })
+      .catch(() => warn(`sprite "${name}" failed to load`))
+      .finally(() => pending.delete(p));
+    pending.add(p);
+  }
   return textures.get(name);
 }
 
-// Loads every sprite up front so the first frame is complete (no pop-in).
+// Resolves once every sprite requested so far has arrived — the deck waits
+// for it before its first frame, so nothing pops in.
+export function spritesSettled() {
+  return Promise.all([...pending]);
+}
+
+// Loads EVERY sprite up front — only the model lab wants that (it shows each
+// sprite next to its model).
 export function preloadSprites() {
-  return Promise.all(spriteNames().map((name) => {
-    if (textures.has(name)) return null;
-    return loader.loadAsync(urlOf[name]).then((tex) => textures.set(name, setup(tex)))
-      .catch(() => warn(`sprite "${name}" failed to load`));
-  }));
+  spriteNames().forEach((name) => getTexture(name));
+  return spritesSettled();
 }
 
 // ── shared bits ─────────────────────────────────────────────────────────

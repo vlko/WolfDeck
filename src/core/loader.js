@@ -134,6 +134,9 @@ function normalizeScene(s, i) {
       title: typeof slide.title === 'string' ? slide.title : '',
       subtitle: typeof slide.subtitle === 'string' ? slide.subtitle : '',
       kicker: typeof slide.kicker === 'string' ? slide.kicker : kicker, // slide overrides scene
+      // Speaker notes — never drawn in the deck, shown in the presenter view (F).
+      notes: Array.isArray(slide.notes) ? slide.notes.filter((n) => typeof n === 'string').join('\n\n')
+        : (typeof slide.notes === 'string' ? slide.notes : ''),
       // Jump target: the first slide is the k=0 arrival cover; every later
       // slide lands on its title beat (steps 0..firstStep, visible = beat).
       jumpK: isFirst ? 0 : firstStep + 1,

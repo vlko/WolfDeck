@@ -15,7 +15,7 @@ import {
 // them by distance driven); rig.parts.wheelRadius in model units. No
 // 'drive' animation here: core/traffic.js drives, steers and U-turns.
 //
-// This module loads LAST (see models/index.js), so these definitions
+// This module loads LAST (see models/order.js), so these definitions
 // replace the earlier per-sheet vehicle models of the same name.
 
 const B = 1.6; // body bevel

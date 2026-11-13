@@ -14,25 +14,33 @@ import { bindUrlHash } from './core/urlHash.js';
 import { createSpeechBubble } from './core/speechBubble.js';
 import { createSceneMenu } from './core/sceneMenu.js';
 import { createTouchControls } from './core/touchControls.js';
+import { createPresenter } from './core/presenter.js';
 import * as world from './core/world.js';
 import * as traffic from './core/traffic.js';
 
-import { preloadSprites } from './assets/sprites.js';
+import { spritesSettled } from './assets/sprites.js';
 import { loadFonts } from './parts/fonts.js';
 
 // Register the asset library (side-effect imports): every asset is a sprite
 // cut from the reference sheets (see tools/extract-sprites.mjs).
-import './assets/catalog.js';
+import { modelNamesFor } from './assets/catalog.js';
 import './assets/wolf.js';
-import './models/index.js'; // hand-built 3D models (replace sprites as they land)
+import { loadModelsFor } from './models/index.js'; // hand-built 3D models, in lazy packs
 
 async function start() {
   // ?deck=other.json presents a different deck from public/ — handy for
   // authoring a new presentation next to the shipped demo.
   const deckUrl = new URLSearchParams(window.location.search).get('deck') ?? 'presentation.json';
-  // Sprites and the panel typeface load in parallel with the deck, so the
-  // first frame is complete — no pop-in, no fallback-font canvases.
-  const [deck] = await Promise.all([loadPresentation(deckUrl), preloadSprites(), loadFonts()]);
+  // The panel typeface loads in parallel with the deck, so no panel is drawn
+  // in a fallback font.
+  const [deck] = await Promise.all([loadPresentation(deckUrl), loadFonts()]);
+  // Download only the model packs this deck's props are built from (plus the
+  // wolf) — not the whole library.
+  const names = new Set(['wolf']);
+  for (const sc of deck.scenes) {
+    for (const prop of sc.props) for (const n of modelNamesFor(prop.type, prop.options)) names.add(n);
+  }
+  await loadModelsFor(names);
 
   let renderer;
   let scene;
@@ -49,6 +57,9 @@ async function start() {
   });
 
   const deckView = buildDeck(deck, scene);
+  // Objects without a 3D model stand in as flat sprites; wait for just those
+  // images so the first frame is complete (no pop-in).
+  await spritesSettled();
 
   const hero = createHero({
     walkSpeed: deck.meta.walkSpeed,
@@ -72,7 +83,9 @@ async function start() {
   });
   const focus = createFocusMode();
   const sceneMenu = createSceneMenu({ deckView, stepMachine });
-  bindInput(stepMachine, hero, focus, sceneMenu);
+  // F: fullscreen here + a presenter window (timer, notes, preview, next).
+  const presenter = createPresenter({ deck, deckView, stepMachine, focus, renderer });
+  bindInput(stepMachine, hero, focus, sceneMenu, presenter);
   bindOrbit(cameraRig, renderer.domElement);
   // Touch/keyboard-less devices get corner buttons for the core shortcuts.
   createTouchControls({ stepMachine, focus, menu: sceneMenu, hero, canvas: renderer.domElement });
@@ -80,7 +93,10 @@ async function start() {
   bubble.announce(1); // greet on the opening scene
   // #<slide-id> in the URL ↔ current slide; editing the hash jumps there.
   const urlHash = bindUrlHash({ deck, deckView, stepMachine, cameraRig });
-  notifyState = urlHash.writeHashForState; // hash follows every slide change
+  notifyState = (s, k) => {
+    urlHash?.writeHashForState(s, k); // hash follows every slide change
+    presenter.onState(s, k); // …and so does the presenter view
+  };
 
   const ticker = createTicker();
   ticker.add((t, dt) => {
@@ -94,10 +110,11 @@ async function start() {
     cameraRig.update(t, dt);
     deckView.update(t, dt, cameraRig.x, focus);
     focus.render(renderer, scene, cameraRig.camera);
+    presenter.afterRender(); // thumbnail for the presenter view, if one is open
   });
 
   // Console debugging handle.
-  window.wolfdeck = { deck, deckView, hero, stepMachine, cameraRig, scene, focus, sceneMenu, renderer, world, traffic };
+  window.wolfdeck = { deck, deckView, hero, stepMachine, cameraRig, scene, focus, sceneMenu, presenter, renderer, world, traffic };
 }
 
 start();

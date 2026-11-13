@@ -550,6 +550,7 @@ register('mountainBackdrop', buildMountains);
 
 // Every sprite by its own name — exact piece, sensible default height.
 const SPRITE_HEIGHT = {};
+const NAMED = {}; // per-sprite asset type → its definition
 for (const def of Object.values(TYPES)) {
   const names = Array.isArray(def.sprites) ? def.sprites : Object.values(def.sprites).flat();
   for (const n of names) if (!SPRITE_HEIGHT[n]) SPRITE_HEIGHT[n] = { def, h: typeof def.height === 'object' ? def.height[n] : def.height };
@@ -559,7 +560,18 @@ for (const n of spriteNames()) {
   if (TYPES[n] || n === 'wolf' || !hasSprite(n)) continue;
   const known = SPRITE_HEIGHT[n];
   const def = { ...(known?.def ?? {}), sprites: [n], height: known?.h ?? 2 };
+  NAMED[n] = def;
   register(n, (options) => buildType(n, def, options));
+}
+
+// The sprite / model names an asset will be built from — the very pick
+// buildType makes (same seeded choice). The deck uses it to download only
+// the model packs its props need.
+export function modelNamesFor(typeName, options = {}) {
+  if (typeName === 'fence') return ['fence3d'];
+  const def = TYPES[typeName] ?? NAMED[typeName];
+  if (!def) return [];
+  return [chooseSprite(def, options, rng((options.seed ?? 0) * 7 + typeName.length))];
 }
 
 // Default world height of a sprite / model by name (the lab uses it to show

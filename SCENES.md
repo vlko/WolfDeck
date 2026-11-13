@@ -261,6 +261,11 @@ The rhythm: arrive at the scene → the first slide's title + subtitle → each
 when the slide's groups are done, the next `Space` swaps to the next slide's
 title (no walk) → past the last slide, the wolf walks to the next scene.
 
+A slide may also carry `"notes": "…"` — speaker notes for you alone. They
+never appear in the deck; press `F` to present and they show in the
+presenter window, next to a timer, a live preview and what the next `Space`
+brings (`public/rozpocet-2025.json` has notes on every slide).
+
 - **Group** = a batch of ≤4 panels revealed together (staggered). Split a
   busy slide into several groups instead of crowding one.
 - **Slide** = the addressable unit: `#slide-id` in the URL, a row in the `L`
@@ -271,7 +276,7 @@ title (no walk) → past the last slide, the wolf walks to the next scene.
   panels, shrinks to fit long headings, and renders Slovak diacritics as
   folded-paper accents.
 
-`rozpocet-2025.json` is authored exactly this way — 15 scenes, 33 slides
+`rozpocet-2025.json` is authored exactly this way — 15 scenes, 34 slides
 (one per source slide, headings preserved), ~42 groups.
 
 ## A minimal scene skeleton

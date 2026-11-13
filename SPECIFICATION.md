@@ -41,6 +41,7 @@ npm run preview      # test the built bundle locally
 | `Backspace` / `←` | Previous: hide the last group, step back a slide, or walk back to the previous scene |
 | `L` | Open the **slide menu** ("Stránky"): a scrollable list of every slide (kicker + title). Click, or arrow ↑↓ and press Enter, to jump straight to any slide. `L` or `Esc` closes it |
 | `P` | Presentation (focus) mode: the camera flattens to a straight-on orthographic view anchored to the ground — the diorama reads as a 2D paper theatre along the bottom of the screen, everything stays visible and keeps animating. The active slide's title moves to the top; panels keep their authored arrangement and are only nudged apart where they overlap. On exit everything returns to its exact 3D spot |
+| `F` | **Present**: this window goes fullscreen and a **presenter window** opens — timer (pause / reset) and clock, the slide's speaker `notes`, a live thumbnail of the audience view, and the text the next `Space` will bring. With several screens (Chrome / Edge, which ask for the *window management* permission once) a picker asks where the deck should go; the presenter window takes the other screen. Elsewhere the deck goes fullscreen where it is and you place the two windows by hand — drag the deck to the projector first. `Space` / `Backspace` / `←` `→` / `P` work in either window. `F` again leaves / re-enters fullscreen; `Esc` leaves it |
 | Hold mouse + drag | Peek around the diorama (orbit left/right/up/down, clamped). Release and the camera glides back to exactly the default framing — presentation state never changes |
 | `W` `A` `S` `D` | Walk the wolf freely: `A` left, `D` right, `W` back (away from the viewer), `S` front (toward the viewer); combine for diagonals. Five seconds after the last movement key he trots back to his presenter post by himself. Pure showmanship — presentation state never changes |
 | URL hash | The address bar always carries the current **slide** (`#<slide-id>`) — a shareable deep link. Editing the hash (a slide id, a scene id, or a 1-based number like `#4`), browser Back/Forward, or opening a link with one **jumps** straight there with the reveal state replayed correctly |
@@ -67,6 +68,9 @@ Behavior details:
 - At the ends of the deck the wolf does a little squash-stretch hop instead
   of moving.
 - Keys are ignored while an input field has focus.
+- **Touch devices** (coarse pointer) get four corner buttons — slide menu,
+  presentation mode, back, next — and touch-and-hold on the scene walks the
+  wolf.
 
 ## 3. The coordinate model: x, y, and depth rows
 
@@ -186,7 +190,7 @@ readable overlay). (A scene given a legacy `steps[]`/`title` instead of
 Another deck in `public/` can be presented without touching the demo:
 `http://localhost:3000/?deck=my-deck.json`. The shipped
 `public/showcase.json` exercises every part type and styling option, and
-`public/rozpocet-2025.json` is a full real-world deck (15 scenes, 33
+`public/rozpocet-2025.json` is a full real-world deck (15 scenes, 34
 slides). Combine with the URL hash to deep-link a slide:
 `?deck=rozpocet-2025.json#rezervy`.
 
@@ -281,8 +285,8 @@ while shown, and shrink away when you step back — the exact reverse.
 ]
 ```
 
-- A **slide** carries `id`, `title`, `subtitle?` (and an optional `kicker`
-  overriding the scene's). With no `groups` it's a **title-only slide** — a
+- A **slide** carries `id`, `title`, `subtitle?`, `notes?` (and an optional
+  `kicker` overriding the scene's). With no `groups` it's a **title-only slide** — a
   section divider / cover that shows just the big 3D title + subtitle.
 - A **group** (`{ "parts": [...] }`) reveals its panels together on one
   `Space` (staggered, one after another), and folds them away on `Backspace`.
@@ -291,6 +295,8 @@ while shown, and shrink away when you step back — the exact reverse.
   slide's panels **and swaps the 3D title/subtitle** (no wolf walk). The wolf
   walks only between *scenes*.
 - Each slide has a URL hash (`#revenue`) and a row in the **L** menu.
+- `notes` (a string, or an array of paragraphs) are the slide's **speaker
+  notes**: never drawn in the deck, shown only in the presenter window (`F`).
 
 A group with a single panel may use `{ "part": {…} }` for brevity.
 
@@ -316,7 +322,7 @@ with an optional `"size": [w, h]`; `"zoom": 2` forces a distance (twice as
 close as the normal view) instead of fitting the target, `"delay"` the wait
 before the move. Closeups are skipped in the flat presentation view (P) and
 while the wolf walks. Give them to the element each slide hinges on —
-`rozpocet-2025.json` has 26 across its 33 slides (the speaker, what a
+`rozpocet-2025.json` has 26 across its 34 slides (the speaker, what a
 municipal budget is, the result of the year, the 0 € debt, the QR code…).
 
 ### Part types
@@ -398,7 +404,7 @@ going backward perfectly symmetric.
   divider/cover: just the big title + subtitle until you advance.
 
 The shipped `rozpocet-2025.json` is authored this way: 15 scenes (dioramas),
-33 slides (one per source slide, each with its heading), ~42 groups.
+34 slides (one per source slide, each with its heading), ~42 groups.
 
 ### The 3D title
 
@@ -439,17 +445,22 @@ Latin Extended, so Slovak diacritics render natively.
 public/presentation.json      the demo deck (edit this, or add your own .json
                               next to it and present it with ?deck=<file>)
 public/showcase.json          live reference deck: every part type + styling
-public/rozpocet-2025.json     a full real-world deck (12 scenes, Slovak)
+public/rozpocet-2025.json     a full real-world deck (15 scenes, Slovak)
 public/images/                your image-part files
 docs/assets/README.md         asset catalog (generated) + sprites.jpg contact sheet
 *.png (repo root)             the reference sheets every sprite is cut from
 tools/extract-sprites.mjs     cuts the sheets into src/sprites/ (npm run sprites)
 tools/sprites.config.js       the cut list: sprite name → sheet + rectangle
 tools/gen-asset-docs.mjs      regenerates docs/assets/README.md
+tools/gen-model-index.mjs     regenerates src/models/packs.json (model → pack)
+src/models/                   the hand-built 3D models, in lazily loaded packs
 src/config.js                 rows, camera tilt/fov, spacing, speeds
 src/engine/                   renderer, camera rig, ticker, tween
 src/core/                     loader, deck assembly, step machine, hero,
-                              input, URL-hash navigation, speech bubble
+                              input, URL-hash navigation, speech bubble,
+                              presenter mode (fullscreen + presenter window)
+presenter.html, src/presenter/ the presenter window: timer, notes, preview, next
+tools/verify/presenter.mjs    headless check of the presenter mode
 src/environment/              paper meadow, rivers/roads, sky, hills, sun, clouds
 src/sprites/                  the cut-out sprites (.webp) + manifest.json
 src/assets/                   palette (sheet swatches), paper textures and
@@ -478,3 +489,60 @@ New art comes from new reference sheets — generate them with the recipe in
    `TYPES` in `src/assets/catalog.js`, then `npm run asset-docs`.
 5. Determinism rule: use `rng(seed)` from helpers, never `Math.random()`, for
    anything that affects what is shown (random is fine for animation phase).
+
+### Models, textures and paper staging
+
+- **Models.** Every piece on the reference sheets is modeled in
+  `src/models/` as a rigged, faceted paper object that matches the
+  illustration from the front and makes physical sense from every side:
+  characters blink, turn their heads, wave and flick their ears; the wolf
+  walks on four legs with his tail streaming behind (sitting, it wraps round
+  his flank as on the sheet); vehicles have four turning wheels and U-turn;
+  trees bend in the wind; chimneys smoke; the crane slews, the excavator
+  digs, the well's crank hauls the bucket. Objects no sheet has (crane,
+  excavator, schoolhouse, vault, piggy bank…) are modeled in the same style.
+  Compare a model with its sprite at `/lab.html?m=<name>`.
+- **Material textures** (`src/assets/materialTextures.js`) — five woods
+  (knotty grain, fine joinery grain, horizontal planks, vertical
+  board-and-batten, logs), seven stones (cobble courses, dressed ashlar,
+  fieldstone rubble, concrete, paving slabs, granite, roughcast plinth
+  render), bricks, clay tiles, shingles, thatch, plaster, fur, wool, cloth,
+  sheet metal, leaves, bark and asphalt. They are drawn procedurally at
+  start-up as gray tiles that multiply the model's own color, so the palette
+  stays intact. A part opts in with
+  `mesh(geo, color, x, y, z, { tex: 'brick' })`; the texture is projected
+  onto each flat facet in world units, so brick courses run level and a
+  brick is the same size on a cottage and on the town hall. `texRotate`
+  turns the pattern 90° (grain down a roof board). Windows on folded fronts
+  use `foldPanel()` so they bend with the wall. `?tex=0` (or the lab's
+  *Textúry* button) turns textures off;
+  `node tools/verify/zoom.mjs <model> <1|2|3>` renders one lab view at 3×.
+- **Sprites as the fallback.** An object without a model stands as a
+  die-cut card cut from the sheets by `tools/extract-sprites.mjs`
+  (background and soft shadows removed), with a sliver of cardboard edge and
+  a soft contact shadow. Cards sway, breathe, hop, graze or swing according
+  to their type, and a vehicle card turns round by flipping.
+- **The wolf** trots, squashes to sit, hops, and left alone sits for a
+  while, glances around, or trots up to the viewer and back.
+- **Old decks load unchanged:** every asset name of the earlier procedural
+  library maps to its nearest current piece.
+
+### What a deck downloads
+
+A deck fetches only what its own props are built from, however large the
+library grows:
+
+- **3D models** live in *packs* — one module per reference sheet,
+  `src/models/<pack>.js`, each its own file in the build. Before the first
+  frame the deck works out which model every prop will use (the same seeded
+  variant pick the builder makes) and imports just those packs
+  (`loadModelsFor` in `src/models/index.js`). The model lab loads all of them.
+- `src/models/packs.json` maps every model to its pack. It is **generated**
+  (`npm run model-index`) — the dev server and the build refresh it by
+  themselves, also whenever a file in `src/models/` changes. Commit it.
+- A new pack is a new file in `src/models/`; list it in
+  `src/models/order.js` (a later pack's model replaces an earlier one of the
+  same name — the shared vehicles come last). An unlisted pack still works,
+  it just registers last.
+- **Sprites** (`.webp`) are fetched only for objects that have no 3D model;
+  the deck waits for those few images before its first frame.
