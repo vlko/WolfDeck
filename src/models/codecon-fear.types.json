@@ -1,0 +1,10 @@
+{
+  "deadTree": { "sprites": ["deadTree"], "height": 3.8, "anim": "sway" },
+  "stormCloud": { "sprites": ["stormCloud"], "height": 4.0, "anim": "storm", "shadow": false, "obstacle": false },
+  "crow": { "sprites": ["crow"], "height": 1.3, "anim": "idle", "anims": ["idle", "caw", "peck"] },
+  "tombstoneCode": { "sprites": ["tombstoneCode"], "height": 1.2, "anim": "idle" },
+  "impostorSheep": { "sprites": ["impostorSheep"], "height": 1.9, "anim": "peek", "anims": ["peek", "idle"] },
+  "standingMirror": { "sprites": ["standingMirror"], "height": 2.3, "anim": "idle" },
+  "tumbleweed": { "sprites": ["tumbleweed"], "height": 0.7, "anim": "idle", "anims": ["idle", "roll"] },
+  "emptySpotlight": { "sprites": ["emptySpotlight"], "height": 1.7, "anim": "idle" }
+}

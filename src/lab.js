@@ -47,6 +47,7 @@ const ENVS = [
   ['construction', 'Stavba'],
   ['services', 'Služby mesta'],
   ['town', 'Námestovo'],
+  ['codecon', 'CodeCon 2026'],
 ];
 const BY_NAME = {
   folk: ['wolf', 'sheep', 'badger', 'wolfHead', 'bearDog', 'fox', 'kit', 'panda', 'bearBoss', 'catWorker', 'koalaWorker', 'bearWorker', 'wolfShopkeeper', 'boar', 'pandaKid', 'pandaGirl', 'foremanBear', 'builderBear', 'bunnyPupil', 'bearPupil', 'catPupil', 'foxTeacher', 'grandparentsBench', 'bunnyNurse', 'bearFamily', 'lambBalloon', 'pandaRunner', 'foxViolinist', 'wasteBear', 'accountantBear'],
@@ -59,7 +60,10 @@ const BY_NAME = {
   office: ['deskLamp'],
   town: ['churchNamestovo', 'oravaLake', 'faceHouse', 'stoneCottage', 'flowerIsland', 'roundabout', 'cycleSign', 'apartmentBlock', 'signTangle', 'chalet'],
 };
-const PACK_ENV = { visual: 'village', village: 'village', trees: 'trees', city1: 'city', city2: 'city', office: 'office', shop: 'shop' };
+const PACK_ENV = {
+  'codecon-race': 'codecon', 'codecon-cheese': 'codecon', 'codecon-work': 'codecon', 'codecon-fear': 'codecon',
+  'codecon-learn': 'codecon', 'codecon-voice': 'codecon', 'codecon-stage': 'codecon',
+  visual: 'village', village: 'village', trees: 'trees', city1: 'city', city2: 'city', office: 'office', shop: 'shop' };
 function envsOf(name) {
   const envs = Object.entries(BY_NAME).filter(([, list]) => list.includes(name)).map(([e]) => e);
   if (!envs.length || (envs.length === 1 && envs[0] === 'folk')) envs.push(PACK_ENV[modelInfo(name).pack] ?? 'services');

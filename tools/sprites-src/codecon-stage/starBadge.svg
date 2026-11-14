@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="370" height="500" viewBox="0 0 370 500">
+<g transform="translate(185,500) scale(5,-5)">
+<polygon points="-20,6.5 -33,6.5 -29.5,11.5 -33,16.5 -20,16.5" fill="#917270" />
+<polygon points="20,6.5 33,6.5 29.5,11.5 33,16.5 20,16.5" fill="#7d6261" />
+<polygon points="-29,0 29,0 26,7 -26,7" fill="#cfcbbd" />
+<polygon points="-29,0 0,0 0,7 -26,7" fill="#e2dece" />
+<polygon points="-21.5,7 0,7 0,19 -21.5,19" fill="#ede8da" /><polygon points="0,7 21.5,7 21.5,19 0,19" fill="#d2cbbc" />
+<polygon points="-24,19 0,19 0,21.5 -24,21.5" fill="#f1eee3" /><polygon points="0,19 24,19 24,21.5 0,21.5" fill="#d8d5c6" />
+<polygon points="-23,8 -8.5,8 -8.5,18 -23,18" fill="#9e7c7a" /><polygon points="-8.5,8 8.5,8 8.5,18 -8.5,18" fill="#ae8e8c" /><polygon points="8.5,8 23,8 23,18 8.5,18" fill="#8b6c6b" />
+<polygon points="-2.2,21.5 2.2,21.5 2.2,50 -2.2,50" fill="#b58d42" />
+<polygon points="0,62 0,100 -9.29,74.78" fill="#d9b76d" />
+<polygon points="0,62 -9.29,74.78 -36.14,73.74" fill="#b58d42" />
+<polygon points="0,62 -36.14,73.74 -15.03,57.12" fill="#d9b76d" />
+<polygon points="0,62 -15.03,57.12 -22.34,31.26" fill="#b58d42" />
+<polygon points="0,62 -22.34,31.26 0,46.2" fill="#d9b76d" />
+<polygon points="0,62 0,46.2 22.34,31.26" fill="#b58d42" />
+<polygon points="0,62 22.34,31.26 15.03,57.12" fill="#d9b76d" />
+<polygon points="0,62 15.03,57.12 36.14,73.74" fill="#b58d42" />
+<polygon points="0,62 36.14,73.74 9.29,74.78" fill="#d9b76d" />
+<polygon points="0,62 9.29,74.78 0,100" fill="#b58d42" />
+</g>
+</svg>

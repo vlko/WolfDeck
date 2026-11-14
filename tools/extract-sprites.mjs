@@ -1,5 +1,5 @@
-// Cuts the papercraft sprites out of the reference sheets (visual.png,
-// city 1.png, city 2.png, office.png, shop.png) into src/sprites/*.webp and
+// Cuts the papercraft sprites out of the reference sheets in
+// RawSources/sheets/ (visual.png, city 1.png, …) into src/sprites/*.webp and
 // writes src/sprites/manifest.json ({ name: { w, h } }).
 //
 //   npm run sprites            # re-extract everything
@@ -20,6 +20,7 @@ import { fileURLToPath } from 'url';
 import { sheets, sheetDefaults, sprites, SHEET_SCALE } from './sprites.config.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const sheetDir = path.join(root, 'RawSources/sheets'); // the reference sheets
 const outDir = path.join(root, 'src/sprites');
 const wantSheet = process.argv.includes('--sheet');
 const only = process.argv.find((a) => a.startsWith('--only='))?.slice(7).split(',');
@@ -49,7 +50,7 @@ function flood(img, W, H, accept) {
 }
 
 async function analyseSheet(file) {
-  const { data, info } = await sharp(path.join(root, file)).removeAlpha().raw()
+  const { data, info } = await sharp(path.join(sheetDir, file)).removeAlpha().raw()
     .toBuffer({ resolveWithObject: true });
   const W = info.width;
   const H = info.height;

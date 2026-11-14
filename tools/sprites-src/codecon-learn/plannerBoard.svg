@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 500" width="360" height="500">
+  <!-- easel -->
+  <polygon points="174,40 186,40 186,500 174,500" fill="#6a5539"/>
+  <polygon points="150,2 166,2 46,500 30,500" fill="#bd9662"/>
+  <polygon points="194,2 210,2 330,500 314,500" fill="#a17d4e"/>
+  <polygon points="146,0 214,0 214,16 146,16" fill="#8a6c47"/>
+  <!-- board -->
+  <rect x="15" y="40" width="330" height="262" fill="#7b6548"/>
+  <rect x="15" y="40" width="165" height="262" fill="#8a7252"/>
+  <rect x="25" y="50" width="310" height="242" fill="#e3dccb"/>
+  <rect x="25" y="50" width="155" height="242" fill="#ebe5d6"/>
+  <!-- header -->
+  <rect x="25" y="50" width="310" height="34" fill="#94716f"/>
+  <rect x="25" y="50" width="155" height="34" fill="#a5817f"/>
+  <rect x="40" y="61" width="90" height="11" fill="#ebe7d7"/>
+  <!-- day chips -->
+  <g fill="#4b5654">
+    <rect x="32" y="92" width="38" height="12"/><rect x="74.7" y="92" width="38" height="12"/>
+    <rect x="117.3" y="92" width="38" height="12"/><rect x="160" y="92" width="38" height="12"/>
+    <rect x="202.7" y="92" width="38" height="12"/>
+  </g>
+  <rect x="245.3" y="92" width="38" height="12" fill="#d79c92"/><rect x="288" y="92" width="38" height="12" fill="#d79c92"/>
+  <!-- cells -->
+  <g fill="#f8f5ec">
+    <rect x="32" y="112" width="38" height="40"/><rect x="74.7" y="112" width="38" height="40"/><rect x="117.3" y="112" width="38" height="40"/><rect x="160" y="112" width="38" height="40"/><rect x="202.7" y="112" width="38" height="40"/><rect x="245.3" y="112" width="38" height="40"/><rect x="288" y="112" width="38" height="40"/>
+    <rect x="32" y="157" width="38" height="40"/><rect x="74.7" y="157" width="38" height="40"/><rect x="117.3" y="157" width="38" height="40"/><rect x="160" y="157" width="38" height="40"/><rect x="202.7" y="157" width="38" height="40"/><rect x="245.3" y="157" width="38" height="40"/><rect x="288" y="157" width="38" height="40"/>
+    <rect x="32" y="202" width="38" height="40"/><rect x="74.7" y="202" width="38" height="40"/><rect x="117.3" y="202" width="38" height="40"/><rect x="160" y="202" width="38" height="40"/><rect x="202.7" y="202" width="38" height="40"/><rect x="245.3" y="202" width="38" height="40"/><rect x="288" y="202" width="38" height="40"/>
+  </g>
+  <!-- scheduled sessions -->
+  <rect x="32" y="112" width="38" height="40" fill="#a4b1a2"/>
+  <rect x="74.7" y="157" width="38" height="40" fill="#bd9662"/>
+  <rect x="117.3" y="112" width="38" height="85" fill="#6fa3a0"/>
+  <rect x="160" y="202" width="38" height="40" fill="#798877"/>
+  <rect x="202.7" y="157" width="38" height="40" fill="#a5817f"/>
+  <rect x="245.3" y="112" width="38" height="40" fill="#d6b386"/>
+  <rect x="32" y="202" width="38" height="40" fill="#d6b386"/>
+  <!-- check row -->
+  <g fill="#f8f5ec">
+    <rect x="39" y="252" width="24" height="24"/><rect x="81.7" y="252" width="24" height="24"/><rect x="124.3" y="252" width="24" height="24"/><rect x="167" y="252" width="24" height="24"/><rect x="209.7" y="252" width="24" height="24"/><rect x="252.3" y="252" width="24" height="24"/><rect x="295" y="252" width="24" height="24"/>
+  </g>
+  <g fill="none" stroke="#6f9e74" stroke-width="5">
+    <polyline points="43,264 50,271 61,256"/><polyline points="85.7,264 92.7,271 103.7,256"/>
+    <polyline points="128.3,264 135.3,271 146.3,256"/><polyline points="171,264 178,271 189,256"/>
+    <polyline points="213.7,264 220.7,271 231.7,256"/>
+  </g>
+  <!-- red ring around one day -->
+  <ellipse cx="222" cy="132" rx="29" ry="27" fill="none" stroke="#b5544d" stroke-width="5" transform="rotate(-8 222 132)"/>
+  <!-- ledge -->
+  <rect x="8" y="302" width="344" height="12" fill="#a17d4e"/>
+  <rect x="8" y="302" width="172" height="12" fill="#bd9662"/>
+  <!-- pinned note -->
+  <polygon points="288,30 352,38 344,100 280,92" fill="#f3e3b8"/>
+  <polygon points="344,100 326,98 340,84" fill="#d9c592"/>
+  <polygon points="296,58 334,63 333,69 295,64" fill="#bd9662"/>
+  <polygon points="294,72 324,76 323,82 293,78" fill="#bd9662"/>
+  <circle cx="320" cy="40" r="7" fill="#b5544d"/>
+</svg>

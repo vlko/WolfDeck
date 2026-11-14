@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 500">
+<g transform="translate(370,500) scale(5,-5)">
+  <rect x="-69" y="0" width="138" height="100" fill="#a4b1a2"/>
+  <rect x="0" y="0" width="69" height="100" fill="#9aa798"/>
+  <g fill="#b5c0b2">
+    <rect x="-59.5" y="23" width="7" height="75"/><rect x="-43.5" y="23" width="7" height="75"/><rect x="-27.5" y="23" width="7" height="75"/>
+    <rect x="-11.5" y="44" width="7" height="54"/>
+  </g>
+  <g fill="#aab6a8">
+    <rect x="4.5" y="44" width="7" height="54"/><rect x="20.5" y="23" width="7" height="75"/><rect x="36.5" y="23" width="7" height="75"/><rect x="52.5" y="23" width="7" height="75"/>
+  </g>
+  <rect x="-69.5" y="98" width="139" height="2" fill="#e9e2d1"/>
+  <rect x="-72.5" y="0" width="145" height="22" fill="#e9e2d1"/>
+  <rect x="0" y="0" width="72.5" height="22" fill="#dcd4c2"/>
+  <rect x="-73" y="22" width="146" height="2.4" fill="#f2ede2"/>
+  <path d="M-16.4,0 L-16.4,24 A16.4,16.4 0 0 0 16.4,24 L16.4,0 Z" fill="#f2ede2"/>
+  <path d="M0,0 L0,40.4 A16.4,16.4 0 0 0 16.4,24 L16.4,0 Z" fill="#e2dccc"/>
+  <path d="M-13,0 L-13,24 A13,13 0 0 0 13,24 L13,0 Z" fill="#2b2523"/>
+  <polygon points="-19,0 19,0 19,2 -19,2" fill="#a5817f"/><polygon points="0,0 19,0 19,2 0,2" fill="#93706e"/>
+</g>
+</svg>

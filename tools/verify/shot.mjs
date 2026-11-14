@@ -3,8 +3,9 @@
 import { launch, BASE } from './browser.mjs';
 const [,, path, out, ...keys] = process.argv;
 const { browser, page } = await launch();
-await page.goto(`${BASE}${path}`);
-await page.waitForTimeout(4000);
+await page.goto(`${BASE}${path}`, { timeout: 120000 });
+await page.waitForFunction(() => window.wolfdeck, null, { timeout: 120000 }); // the dev server's first load is slow
+await page.waitForTimeout(3000);
 let i = 0;
 for (const k of keys) {
   if (k.startsWith('wait')) await page.waitForTimeout(+k.slice(4));

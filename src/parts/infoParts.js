@@ -1,4 +1,4 @@
-import { makeCard, cardOptsFrom, growDriver, windowK, wrapLines, FONT_STACK, PX } from './card.js';
+import { makeCard, cardOptsFrom, growDriver, windowK, wrapLines, fillLine, FONT_STACK, PX } from './card.js';
 import { fontsFor } from './textParts.js';
 import { palette } from '../assets/palette.js';
 import { ease } from '../engine/tween.js';
@@ -61,14 +61,14 @@ export function statPart(def) {
       ctx.font = `700 ${labelSize}px ${FONT_STACK}`;
       for (const line of labelLines) {
         y += labelSize * 1.3;
-        ctx.fillText(line, pad, y);
+        fillLine(ctx, line, pad, y);
       }
       if (noteLines.length) y += 0.14 * PX;
       ctx.fillStyle = palette.inkMuted;
       ctx.font = `400 ${noteSize}px ${FONT_STACK}`;
       for (const line of noteLines) {
         y += noteSize * LINE;
-        ctx.fillText(line, pad, y);
+        fillLine(ctx, line, pad, y);
       }
     };
   }
@@ -148,7 +148,7 @@ export function numberedPart(def) {
       ctx.fillStyle = palette.ink;
       ctx.font = titleFont;
       for (const line of titleLines) {
-        ctx.fillText(line, pad, y);
+        fillLine(ctx, line, pad, y);
         y += titleSize * LINE;
       }
       if (titleLines.length) {
@@ -176,7 +176,7 @@ export function numberedPart(def) {
           ctx.fillStyle = palette.ink;
           ctx.font = itemTitleFont;
           for (const line of it.title) {
-            ctx.fillText(line, textX, ty);
+            fillLine(ctx, line, textX, ty);
             ty += bodySize * 1.3;
           }
           ty += bodySize * 0.05;
@@ -184,7 +184,7 @@ export function numberedPart(def) {
         ctx.fillStyle = palette.inkBody;
         ctx.font = bodyFont;
         for (const line of it.text) {
-          ctx.fillText(line, textX, ty);
+          fillLine(ctx, line, textX, ty);
           ty += bodySize * LINE;
         }
         y += itemH(it) + itemGap;
@@ -260,13 +260,13 @@ export function calloutPart(def) {
     ctx.fillStyle = palette.ink;
     ctx.font = titleFontStr;
     for (const line of titleLines) {
-      ctx.fillText(line, textX, y);
+      fillLine(ctx, line, textX, y);
       y += bodySize * LINE;
     }
     ctx.fillStyle = palette.inkBody;
     ctx.font = bodyFontStr;
     for (const line of lines) {
-      ctx.fillText(line, textX, y);
+      fillLine(ctx, line, textX, y);
       y += bodySize * LINE;
     }
   }, cardOptsFrom(def, { color: palette.parchment }));
@@ -336,7 +336,7 @@ export function tablePart(def) {
     ctx.fillStyle = palette.ink;
     ctx.font = titleFont;
     for (const line of titleLines) {
-      ctx.fillText(line, pad, y);
+      fillLine(ctx, line, pad, y);
       y += titleSize * LINE;
     }
     if (titleLines.length) {

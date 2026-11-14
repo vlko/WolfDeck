@@ -1,0 +1,11 @@
+{
+  "brandStairs": { "sprites": ["brandStairs"], "height": 2.4, "anim": "idle" },
+  "stageSpot": { "sprites": ["stageSpot"], "height": 2.8, "anim": "sweep", "anims": ["sweep", "idle"] },
+  "curtain": { "sprites": ["curtain"], "height": 5.0, "anim": "open", "anims": ["open", "closed", "reveal"] },
+  "starBadge": { "sprites": ["starBadge"], "height": 1.6, "anim": "spin", "anims": ["spin", "idle"] },
+  "confettiCannon": { "sprites": ["confettiCannon"], "height": 1.0, "anim": "pop", "anims": ["pop", "idle"] },
+  "lightbulb": { "sprites": ["lightbulb"], "height": 1.4, "anim": "glow", "anims": ["glow", "off"] },
+  "makerBench": { "sprites": ["makerBench"], "height": 1.7, "anim": "work" },
+  "paperRocket": { "sprites": ["paperRocket"], "height": 2.6, "anim": "idle", "anims": ["idle", "launch"] },
+  "trophyPick": { "sprites": ["trophyPick"], "height": 1.2, "anim": "idle" }
+}

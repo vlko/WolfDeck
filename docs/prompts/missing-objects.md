@@ -4,9 +4,9 @@ Every shipped deck (`presentation`, `rozpocet-2025`, `showcase`,
 `test-props`) was checked against the five reference sheets. This file lists
 what the decks need but no sheet shows, and gives a ready-to-paste
 Midjourney prompt for each new sheet. The recipe and the reasoning behind
-every style phrase are in [`midjourney.md`](../../midjourney.md).
+every style phrase are in [`midjourney.md`](midjourney.md).
 
-Once a sheet is generated: put it in the repo root, add one cut rectangle
+Once a sheet is generated: put it in `RawSources/sheets/`, add one cut rectangle
 per piece to `tools/sprites.config.js`, run `npm run sprites`, then model the
 piece in `src/models/` against its new sprite (`/lab.html`).
 

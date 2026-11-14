@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="540" height="500" viewBox="0 0 540 500">
+<g transform="translate(270,500) scale(5,-5)">
+<polygon points="-53,0 -35,0 -35,4 -53,4" fill="#4b5654"/>
+<polygon points="-48,4 -40,4 -40,82 -48,82" fill="#56625f"/>
+<polygon points="-48,4 -44,4 -44,82 -48,82" fill="#6a7572"/>
+<polygon points="-48.6,4 -39.4,4 -39.4,9 -48.6,9" fill="#a34c45"/>
+<polygon points="-48.6,4 -44,4 -44,9 -48.6,9" fill="#b5544d"/>
+<polygon points="-48.6,9 -39.4,9 -39.4,14 -48.6,14" fill="#d4d0c2"/>
+<polygon points="-48.6,9 -44,9 -44,14 -48.6,14" fill="#ebe7d7"/>
+<polygon points="-48.6,14 -39.4,14 -39.4,19 -48.6,19" fill="#a34c45"/>
+<polygon points="-48.6,14 -44,14 -44,19 -48.6,19" fill="#b5544d"/>
+<polygon points="-40,62 -40,67 -27,80 -22,80" fill="#5e6a67"/>
+<polygon points="35,0 53,0 53,4 35,4" fill="#4b5654"/>
+<polygon points="40,4 48,4 48,82 40,82" fill="#56625f"/>
+<polygon points="40,4 44,4 44,82 40,82" fill="#6a7572"/>
+<polygon points="39.4,4 48.6,4 48.6,9 39.4,9" fill="#a34c45"/>
+<polygon points="39.4,4 44,4 44,9 39.4,9" fill="#b5544d"/>
+<polygon points="39.4,9 48.6,9 48.6,14 39.4,14" fill="#d4d0c2"/>
+<polygon points="39.4,9 44,9 44,14 39.4,14" fill="#ebe7d7"/>
+<polygon points="39.4,14 48.6,14 48.6,19 39.4,19" fill="#a34c45"/>
+<polygon points="39.4,14 44,14 44,19 39.4,19" fill="#b5544d"/>
+<polygon points="40,62 40,67 27,80 22,80" fill="#4d5856"/>
+<polygon points="-52,80 52,80 52,96 -52,96" fill="#3a413f"/>
+<polygon points="-52,80 0,80 0,96 -52,96" fill="#444c4a"/>
+<polygon points="-54,96 54,96 54,100 -54,100" fill="#d4d0c2"/>
+<polygon points="-54,96 0,96 0,100 -54,100" fill="#ebe7d7"/>
+<circle cx="-32" cy="88" r="6.3" fill="#262a29"/>
+<circle cx="-32" cy="88" r="5" fill="#e2564b"/>
+<circle cx="-33.4" cy="89.5" r="1.5" fill="#f29a8c"/>
+<circle cx="-16" cy="88" r="6.3" fill="#262a29"/>
+<circle cx="-16" cy="88" r="5" fill="#e2564b"/>
+<circle cx="-17.4" cy="89.5" r="1.5" fill="#f29a8c"/>
+<circle cx="0" cy="88" r="6.3" fill="#262a29"/>
+<circle cx="0" cy="88" r="5" fill="#e2564b"/>
+<circle cx="-1.4" cy="89.5" r="1.5" fill="#f29a8c"/>
+<circle cx="16" cy="88" r="6.3" fill="#262a29"/>
+<circle cx="16" cy="88" r="5" fill="#5a3a37"/>
+<circle cx="32" cy="88" r="6.3" fill="#262a29"/>
+<circle cx="32" cy="88" r="5" fill="#5a3a37"/>
+</g>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 500" width="330" height="500">
+  <!-- tail -->
+  <path d="M215,385 Q300,392 300,330 Q300,290 280,288" fill="none" stroke="#bd9662" stroke-width="20"/>
+  <circle cx="280" cy="288" r="10" fill="#ebe7d7"/>
+  <!-- stool -->
+  <polygon points="92,400 106,400 84,500 72,500" fill="#8f7654"/>
+  <polygon points="224,400 238,400 258,500 246,500" fill="#6a5539"/>
+  <polygon points="158,400 172,400 172,500 158,500" fill="#7b6548"/>
+  <rect x="80" y="380" width="170" height="20" fill="#7b6548"/>
+  <rect x="80" y="380" width="85" height="20" fill="#93795a"/>
+  <!-- torso -->
+  <polygon points="100,380 165,380 165,230 115,230" fill="#8d9c8b"/>
+  <polygon points="165,380 230,380 215,230 165,230" fill="#6d7a6c"/>
+  <polygon points="115,230 215,230 213,244 117,244" fill="#a4b1a2"/>
+  <!-- legs -->
+  <polygon points="108,345 160,345 160,385 108,385" fill="#d6b386"/>
+  <polygon points="170,345 222,345 222,385 170,385" fill="#bd9662"/>
+  <polygon points="112,385 150,385 150,482 112,482" fill="#cfa873"/>
+  <polygon points="180,385 218,385 218,482 180,482" fill="#b08a58"/>
+  <polygon points="106,478 154,478 154,500 106,500" fill="#ebe7d7"/>
+  <polygon points="176,478 224,478 224,500 176,500" fill="#d6cdb8"/>
+  <!-- notebook -->
+  <polygon points="80,312 250,312 256,350 74,350" fill="#8a6866"/>
+  <polygon points="86,308 163,310 163,342 80,342" fill="#f4f0e5"/>
+  <polygon points="167,310 244,308 250,342 167,342" fill="#e3dccb"/>
+  <rect x="162" y="308" width="6" height="36" fill="#4b5654"/>
+  <g fill="#7c8784">
+    <rect x="94" y="315" width="56" height="3"/><rect x="92" y="322" width="60" height="3"/><rect x="90" y="329" width="48" height="3"/><rect x="88" y="336" width="62" height="3"/>
+    <rect x="176" y="315" width="54" height="3"/><rect x="176" y="322" width="30" height="3"/>
+  </g>
+  <!-- arms -->
+  <polygon points="100,246 126,240 138,300 112,312" fill="#a4b1a2"/>
+  <circle cx="124" cy="310" r="14" fill="#e6cba4"/>
+  <polygon points="230,246 204,240 196,300 222,312" fill="#5f6b5e"/>
+  <!-- pencil -->
+  <polygon points="212,326 220,330 252,262 244,258" fill="#cfa04a"/>
+  <polygon points="212,326 220,330 211,340" fill="#3a332b"/>
+  <polygon points="244,258 252,262 257,252 249,248" fill="#d79c92"/>
+  <circle cx="214" cy="308" r="14" fill="#cfa873"/>
+  <!-- ears -->
+  <polygon points="52,90 62,2 116,52" fill="#dcbd92"/>
+  <polygon points="66,72 68,24 98,54" fill="#d79c92"/>
+  <polygon points="278,90 268,2 214,52" fill="#b08a58"/>
+  <polygon points="264,72 262,24 232,54" fill="#c4897f"/>
+  <!-- head -->
+  <polygon points="165,40 120,40 70,80 50,140 80,200 130,230 165,230" fill="#dcbd92"/>
+  <polygon points="165,40 210,40 260,80 280,140 250,200 200,230 165,230" fill="#bd9662"/>
+  <polygon points="165,40 120,40 70,80 165,110" fill="#e6cba4"/>
+  <polygon points="165,40 210,40 260,80 165,110" fill="#c9a36d"/>
+  <!-- tabby stripes -->
+  <polygon points="161,42 169,42 167,72 163,72" fill="#a17d4e"/>
+  <polygon points="136,44 144,44 147,68 143,68" fill="#a17d4e"/>
+  <polygon points="186,44 194,44 187,68 183,68" fill="#8f6f45"/>
+  <!-- muzzle -->
+  <polygon points="165,160 135,172 130,200 150,222 165,226" fill="#f4f0e5"/>
+  <polygon points="165,160 195,172 200,200 180,222 165,226" fill="#ddd5c2"/>
+  <polygon points="157,166 173,166 165,178" fill="#c98f86"/>
+  <!-- cheeks, eyes -->
+  <circle cx="88" cy="168" r="20" fill="#d79c92" opacity="0.85"/>
+  <circle cx="242" cy="168" r="20" fill="#d79c92" opacity="0.85"/>
+  <circle cx="120" cy="134" r="9" fill="#1f1d1a"/>
+  <circle cx="210" cy="134" r="9" fill="#1f1d1a"/>
+  <!-- round glasses -->
+  <circle cx="120" cy="134" r="29" fill="none" stroke="#4b5654" stroke-width="6"/>
+  <circle cx="210" cy="134" r="29" fill="none" stroke="#4b5654" stroke-width="6"/>
+  <rect x="149" y="130" width="32" height="6" fill="#4b5654"/>
+</svg>

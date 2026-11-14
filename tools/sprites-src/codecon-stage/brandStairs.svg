@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1055" height="500" viewBox="0 0 1055 500">
+<g transform="translate(527.5,500) scale(5,-5)">
+<polygon points="-104,0 -69.33,0 -69.33,17 -104,17" fill="#aab6a9" /><polygon points="-69.33,0 -34.67,0 -34.67,17 -69.33,17" fill="#97a395" />
+<polygon points="-105.5,17 -34.67,17 -34.67,20 -105.5,20" fill="#bdc7bc" />
+<circle cx="-69.33" cy="7" r="4" fill="#838e82" />
+<polygon points="-34.67,0 0,0 0,37 -34.67,37" fill="#c29d6d" /><polygon points="0,0 34.67,0 34.67,37 0,37" fill="#ae8a5a" />
+<polygon points="-36.17,37 34.67,37 34.67,40 -36.17,40" fill="#cfb38e" />
+<circle cx="-6.5" cy="27" r="4" fill="#97784e" />
+<circle cx="6.5" cy="27" r="4" fill="#97784e" />
+<polygon points="34.67,0 69.33,0 69.33,57 34.67,57" fill="#ab8a88" /><polygon points="69.33,0 104,0 104,57 69.33,57" fill="#987775" />
+<polygon points="33.17,57 105.5,57 105.5,60 33.17,60" fill="#bea4a3" />
+<circle cx="56.33" cy="47" r="4" fill="#846766" />
+<circle cx="69.33" cy="47" r="4" fill="#846766" />
+<circle cx="82.33" cy="47" r="4" fill="#846766" />
+<polygon points="82.8,60 85.2,60 85.2,92 82.8,92" fill="#ebe7d7" />
+<polygon points="82.8,89 82.8,76 60,82.5" fill="#be6962" />
+<polygon points="82.8,89 82.8,82.5 60,82.5" fill="#ca847f" />
+<polygon points="84,100 82.41,96.18 78.29,95.85 81.43,93.17 80.47,89.15 84,91.3 87.53,89.15 86.57,93.17 89.71,95.85 85.59,96.18" fill="#d3ab55" />
+</g>
+</svg>

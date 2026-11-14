@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 500" width="420" height="500">
+  <!-- light cone -->
+  <polygon points="215,222 365,222 415,420 165,420" fill="#ffe7a8" opacity="0.32"/>
+  <!-- base -->
+  <polygon points="40,500 160,500 152,484 48,484" fill="#4b5654"/>
+  <polygon points="40,500 100,500 100,484 48,484" fill="#5f6b68"/>
+  <!-- arched arm -->
+  <path d="M100,486 L100,150 Q100,7 200,7 Q290,2 290,105" fill="none" stroke="#4b5654" stroke-width="11"/>
+  <path d="M97,486 L97,150" fill="none" stroke="#6b7774" stroke-width="5"/>
+  <!-- bulb -->
+  <circle cx="290" cy="224" r="17" fill="#ffe7a8"/>
+  <!-- shade -->
+  <polygon points="245,110 290,110 290,220 205,220" fill="#dcbd92"/>
+  <polygon points="290,110 335,110 375,220 290,220" fill="#bd9662"/>
+  <polygon points="245,110 335,110 338,118 242,118" fill="#a17d4e"/>
+  <polygon points="208,212 372,212 375,220 205,220" fill="#a17d4e"/>
+  <polygon points="262,118 276,118 252,212 232,212" fill="#e6cba4"/>
+</svg>

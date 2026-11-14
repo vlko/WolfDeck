@@ -1,4 +1,4 @@
-import { makeCard, cardOptsFrom, wrapLines, FONT_STACK, PX } from './card.js';
+import { makeCard, cardOptsFrom, wrapLines, fillLine, FONT_STACK, PX } from './card.js';
 import { palette } from '../assets/palette.js';
 
 // text and bullets parts — papercraft cards with canvas-drawn typography.
@@ -56,7 +56,7 @@ export function textPart(def) {
     ctx.fillStyle = palette.ink;
     ctx.font = titleFont;
     for (const line of titleLines) {
-      ctx.fillText(line, tx, y);
+      fillLine(ctx, line, tx, y);
       y += titleSize * LINE;
     }
     if (titleLines.length) {
@@ -69,7 +69,7 @@ export function textPart(def) {
     ctx.fillStyle = palette.inkBody;
     ctx.font = bodyFont;
     for (const line of bodyLines) {
-      ctx.fillText(line, tx, y);
+      fillLine(ctx, line, tx, y);
       y += bodySize * LINE;
     }
   }, cardOptsFrom(def));
@@ -99,7 +99,7 @@ export function bulletsPart(def) {
     ctx.fillStyle = palette.ink;
     ctx.font = titleFont;
     for (const line of titleLines) {
-      ctx.fillText(line, pad, y);
+      fillLine(ctx, line, pad, y);
       y += titleSize * LINE;
     }
     if (titleLines.length) {
@@ -118,7 +118,7 @@ export function bulletsPart(def) {
       ctx.restore();
       ctx.fillStyle = palette.inkBody;
       for (const line of lines) {
-        ctx.fillText(line, pad + 0.45 * PX, y);
+        fillLine(ctx, line, pad + 0.45 * PX, y);
         y += bodySize * LINE;
       }
       y += itemGap;

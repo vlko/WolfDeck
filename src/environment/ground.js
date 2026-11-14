@@ -46,11 +46,77 @@ function makeNoise(seed) {
   };
 }
 
+// Ground kinds — what a scene stands on ("ground" on a scene). The meadow is
+// the default; the others repaint (and mostly level) the terrain under that
+// scene, with a ragged paper edge where two kinds meet.
+//   color(ix, iz, r) → facet color of grid cell (ix, iz); flat: how much the bumps are
+//   ironed out (0…1); far: the tone the ground fades to at the horizon; lip:
+//   the front edge strip.
+const tone = (hex) => new THREE.Color(hex);
+export const GROUNDS = {
+  meadow: { flat: 0, far: tone(FAR_FIELD), lip: tone(palette.sageDeep), color: null },
+  // a paddock / car park: warm paper asphalt
+  asphalt: {
+    flat: 0.96, far: tone('#a6a89c'), lip: tone('#7f8179'),
+    color: (ix, iz, r) => tone('#a2a498').offsetHSL(0, 0, (r() - 0.5) * 0.03),
+  },
+  // an indoor floor: large two-tone tiles
+  floor: {
+    flat: 1, far: tone('#d5cdb9'), lip: tone('#a89b83'),
+    color: (ix, iz) => tone((Math.floor(ix / 2) + Math.floor(iz / 2)) % 2 ? '#ddd5c3' : '#cfc6b1'),
+  },
+  // dried-out, cracked earth
+  barren: {
+    flat: -0.35, far: tone('#a69a87'), lip: tone('#7a6f60'),
+    color: (ix, iz, r) => tone(r() < 0.16 ? '#8f8373' : '#a89c88').offsetHSL(0, 0, (r() - 0.5) * 0.07),
+  },
+  // stage boards running along the front edge
+  stage: {
+    flat: 1, far: tone('#b28f68'), lip: tone('#6e563c'),
+    color: (ix, iz) => {
+      const row = iz;
+      const plank = Math.floor((ix + row * 3) / 5);
+      return tone(['#b8946a', '#ad8960', '#c09c72', '#a8845c'][((row * 3 + plank) % 4 + 4) % 4]);
+    },
+  },
+};
+export const GROUND_NAMES = Object.keys(GROUNDS);
+
 // rivers: [{ x, width }] — a band crossing the ground near world-x, running in z.
 // roads:  [{ z, width, from, to }] — an asphalt band running along x in a
 //         world-x range, flattened into the terrain.
-export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [] }) {
+// zones: [{ x0, x1, kind }] — stretches of another ground kind (see GROUNDS).
+export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [], zones = [] }) {
   const noise = makeNoise(seed);
+
+  // How strongly zone kind `k` applies at world x: 1 inside, easing to 0
+  // over EDGE units beyond its ends.
+  const EDGE = 4;
+  const smooth = (v) => { const c = Math.min(Math.max(v, 0), 1); return c * c * (3 - 2 * c); };
+  function zoneWeights(x) {
+    const out = [];
+    for (const zn of zones) {
+      const w = smooth(Math.min(x - zn.x0, zn.x1 - x) / EDGE + 0.5);
+      if (w > 0) out.push([GROUNDS[zn.kind] ?? GROUNDS.meadow, w]);
+    }
+    return out;
+  }
+  // The kind a facet at x takes: a seeded dither across the seam, so two
+  // grounds meet in a torn, patchy edge instead of a ruled line.
+  function kindAt(x, dice) {
+    let pick = GROUNDS.meadow;
+    let best = 0;
+    for (const [kind, w] of zoneWeights(x)) {
+      const score = w > dice ? w : 0;
+      if (score > best) { best = score; pick = kind; }
+    }
+    return pick;
+  }
+  function flatAt(x) {
+    let f = 0;
+    for (const [kind, w] of zoneWeights(x)) f += kind.flat * w;
+    return Math.max(-1, Math.min(1, f));
+  }
 
   function riverFactor(x, z) {
     // 0 = dry land, 1 = river center. Rivers wind slightly with z.
@@ -85,6 +151,7 @@ export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [] }) 
     let h = noise(x, z) * NOISE_AMP * 2 * damp;
     h -= riverFactor(x, z) * 0.3; // river bed dips
     h *= 1 - roadFactor(x, z) * 0.9; // roads are graded flat
+    if (zones.length) h *= 1 - flatAt(x) * 0.94; // floors and tarmac are level, barren land rougher
     return h;
   }
 
@@ -131,12 +198,15 @@ export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [] }) 
     const shade = Math.max(-0.12, (n.dot(lightDir) - lightDir.y) * 1.6) + (r() - 0.5) * 0.035;
     const rdf = roadFactor(cx, cz);
     const rf = riverFactor(cx, cz);
+    const kind = zones.length ? kindAt(cx, 0.15 + r() * 0.7) : GROUNDS.meadow;
     if (rdf > 0.7) tmp.copy(tarmac);
     else if (rf > 0.55) tmp.copy(water);
     else {
-      tmp.copy(base);
+      // the two triangles of a grid cell share its color (tiles, planks)
+      if (kind.color) tmp.copy(kind.color(Math.floor((cx - minX) / (width / cols)), Math.floor((cz + GROUND_DEPTH / 2 + 2) / ((GROUND_DEPTH + 2) / rows)), r));
+      else tmp.copy(base);
       // fade toward the horizon: z −1 … −10
-      tmp.lerp(far, Math.min(Math.max((-cz - 1) / 9, 0), 1) * 0.55);
+      tmp.lerp(kind.far, Math.min(Math.max((-cz - 1) / 9, 0), 1) * 0.55);
     }
     tmp.offsetHSL(0, 0, shade * 0.5);
     for (let j = 0; j < 3; j += 1) {
@@ -151,6 +221,7 @@ export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [] }) 
   wash.repeat.set(width / 14, (GROUND_DEPTH + 2) / 14);
   const terrain = new THREE.Mesh(flat, new THREE.MeshBasicMaterial({ map: wash, vertexColors: true }));
   group.add(terrain);
+  const tintMats = [terrain.material]; // what a mood recolors
 
   // Rivers and roads get their own smooth paper ribbons laid over the
   // terrain (the facet coloring underneath is only a fallback where the
@@ -159,7 +230,9 @@ export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [] }) 
     const t = getWashTexture(strength).clone();
     t.needsUpdate = true;
     t.repeat.set(0.25, 0.25);
-    return new THREE.MeshBasicMaterial({ color, map: t, side: THREE.DoubleSide });
+    const m = new THREE.MeshBasicMaterial({ color, map: t, side: THREE.DoubleSide });
+    tintMats.push(m);
+    return m;
   };
   // A strip through centerline points [x, z] with half-width hw (per point).
   function ribbon(points, hw, lift, material) {
@@ -210,10 +283,22 @@ export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [] }) 
   // Far field: a flat meadow from the terrain's back edge to the hills, so
   // the ground runs all the way to the horizon.
   const farZ0 = -GROUND_DEPTH / 2 - 2;
-  const farGeo = new THREE.PlaneGeometry(width + 240, 60, 1, 1).rotateX(-Math.PI / 2);
-  const farMesh = new THREE.Mesh(farGeo, new THREE.MeshBasicMaterial({ color: FAR_FIELD, map: wash }));
-  farMesh.position.set(minX + width / 2, -0.25, farZ0 - 30 + 0.4);
+  const farW = width + 240;
+  const farGeo = new THREE.PlaneGeometry(farW, 60, Math.ceil(farW / 3), 1).rotateX(-Math.PI / 2);
+  // …in each stretch's own far tone
+  const farCol = new Float32Array(farGeo.attributes.position.count * 3);
+  const farX0 = minX + width / 2;
+  for (let i = 0; i < farGeo.attributes.position.count; i += 1) {
+    const wx = farGeo.attributes.position.getX(i) + farX0;
+    tmp.copy(GROUNDS.meadow.far);
+    for (const [kind, w] of zoneWeights(wx)) tmp.lerp(kind.far, w);
+    farCol.set([tmp.r, tmp.g, tmp.b], i * 3);
+  }
+  farGeo.setAttribute('color', new THREE.BufferAttribute(farCol, 3));
+  const farMesh = new THREE.Mesh(farGeo, new THREE.MeshBasicMaterial({ map: wash, vertexColors: true }));
+  farMesh.position.set(farX0, -0.25, farZ0 - 30 + 0.4);
   group.add(farMesh);
+  tintMats.push(farMesh.material);
 
   // Front edge: the cut face of the diorama slab, built like layered card —
   // a thin sage lip, a kraft core line, then cream board down to y = −2.5.
@@ -237,11 +322,26 @@ export function createGround({ minX, maxX, seed = 1, rivers = [], roads = [] }) 
   const edgeWash = getWashTexture().clone();
   edgeWash.needsUpdate = true;
   edgeWash.repeat.set(width / 10, 0.3);
-  for (const [a, b, col] of layers) {
-    const mesh = new THREE.Mesh(edgeGeo(a, b), new THREE.MeshBasicMaterial({ color: col, map: edgeWash, side: THREE.DoubleSide }));
+  layers.forEach(([a, b, col], li) => {
+    const g = edgeGeo(a, b);
+    const mat = new THREE.MeshBasicMaterial({ color: col, map: edgeWash, side: THREE.DoubleSide });
+    if (li === 0 && zones.length) {
+      // the lip is the ground's own top layer: it takes each stretch's tone
+      const lipCol = new Float32Array(g.attributes.position.count * 3);
+      for (let i = 0; i < g.attributes.position.count; i += 1) {
+        tmp.copy(GROUNDS.meadow.lip);
+        for (const [kind, w] of zoneWeights(g.attributes.position.getX(i))) tmp.lerp(kind.lip, w);
+        lipCol.set([tmp.r, tmp.g, tmp.b], i * 3);
+      }
+      g.setAttribute('color', new THREE.BufferAttribute(lipCol, 3));
+      mat.color.set('#ffffff');
+      mat.vertexColors = true;
+    }
+    const mesh = new THREE.Mesh(g, mat);
     mesh.position.z = nearZ;
     group.add(mesh);
-  }
+    tintMats.push(mat);
+  });
 
-  return { group, heightAt };
+  return { group, heightAt, tintMats };
 }

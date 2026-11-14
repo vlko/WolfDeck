@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1210" height="500" viewBox="0 0 1210 500">
+<g transform="translate(605,500) scale(5,-5)">
+<path d="M-101,83 Q0,21 101,83" fill="none" stroke="#c4665e" stroke-width="5" />
+<path d="M0,52 Q50.5,52 101,83" fill="none" stroke="#b5544d" stroke-width="5" />
+<polygon points="-118,0 -92,0 -96,5 -102,6.5 -108,6.5 -114,5" fill="#a98a48"/>
+<polygon points="-118,0 -105,0 -105,6.5 -108,6.5 -114,5" fill="#bb9a55"/>
+<rect x="-107.6" y="6" width="5.2" height="82" fill="#d6b56f" />
+<rect x="-105" y="6" width="2.6" height="82" fill="#a98a48" />
+<rect x="-109.2" y="80" width="8.4" height="3.5" fill="#d6b56f" />
+<rect x="-105" y="80" width="4.2" height="3.5" fill="#a98a48" />
+<circle cx="-101" cy="83" r="3" fill="#d6b56f"/>
+<circle cx="-105" cy="93" r="5.6" fill="#d6b56f"/>
+<path d="M-105,87.4 A5.6,5.6 0 0 1 -105,98.6 Z" fill="#a98a48"/>
+<rect x="-106" y="98" width="2" height="2" fill="#a98a48" />
+<polygon points="92,0 118,0 114,5 108,6.5 102,6.5 96,5" fill="#a98a48"/>
+<polygon points="92,0 105,0 105,6.5 102,6.5 96,5" fill="#bb9a55"/>
+<rect x="102.4" y="6" width="5.2" height="82" fill="#d6b56f" />
+<rect x="105" y="6" width="2.6" height="82" fill="#a98a48" />
+<rect x="100.8" y="80" width="8.4" height="3.5" fill="#d6b56f" />
+<rect x="105" y="80" width="4.2" height="3.5" fill="#a98a48" />
+<circle cx="101" cy="83" r="3" fill="#a98a48"/>
+<circle cx="105" cy="93" r="5.6" fill="#d6b56f"/>
+<path d="M105,87.4 A5.6,5.6 0 0 1 105,98.6 Z" fill="#a98a48"/>
+<rect x="104" y="98" width="2" height="2" fill="#a98a48" />
+</g>
+</svg>

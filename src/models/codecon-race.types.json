@@ -1,0 +1,9 @@
+{
+  "formulaCar": { "sprites": ["formulaRed", "formulaTeal", "formulaOchre"], "height": 0.7 },
+  "raceTrack": { "sprites": ["raceTrack"], "height": 6, "shadow": false, "obstacle": false },
+  "startGantry": { "sprites": ["startGantry"], "height": 2.6, "anim": "lights" },
+  "tyreStack": { "sprites": ["tyreStack"], "height": 0.75 },
+  "chequeredFlag": { "sprites": ["chequeredFlag"], "height": 2.2, "anim": "wave" },
+  "pitCrew": { "sprites": ["pitCrew"], "height": 1.7, "anim": "idle" },
+  "timingTower": { "sprites": ["timingTower"], "height": 3.0, "anim": "idle" }
+}

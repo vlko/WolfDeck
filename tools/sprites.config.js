@@ -8,6 +8,7 @@
 
 export const SHEET_SCALE = 2944 / 2000;
 
+// Sheet files, in RawSources/sheets/.
 export const sheets = {
   visual: 'visual.png',
   city1: 'city 1.png',

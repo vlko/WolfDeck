@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1900 500">
+<g transform="translate(950,500) scale(5,-5)">
+  <polygon points="126,2 174,2 174,20 126,20" fill="#c9a577"/><ellipse cx="154" cy="20" rx="9" ry="1.2" fill="#2b2523"/>
+  <polygon points="-172,4 -160,0 116,0 128,4 128,18 116,22 -160,22 -172,18" fill="#d6b386"/>
+  <polygon points="-22,0 116,0 128,4 128,18 116,22 -22,22" fill="#c6a274"/>
+  <polygon points="-160,22 116,22 108,24.5 -152,24.5" fill="#bd9662"/>
+  <!-- leftover corner -->
+  <polygon points="-115,23 -111,23 -111,95 -115,99" fill="#efdfb0"/>
+  <polygon points="-111,23 -36,23 -34,28.5 -111,95" fill="#e2b95f"/>
+  <polygon points="-111,23 -36,23 -34,28.5 -70,36" fill="#d6aa52"/>
+  <circle cx="-91" cy="53" r="9" fill="#a67d3b"/><circle cx="-66" cy="35" r="5" fill="#a67d3b"/>
+  <!-- crumbs -->
+  <g fill="#e2b95f">
+    <polygon points="-12,23.5 6,23.5 -2,38"/><polygon points="20,23.5 32,23.5 27,33"/><polygon points="44,23.5 60,23.5 50,36"/>
+    <polygon points="72,23.5 82,23.5 78,31"/><polygon points="-136,23.5 -124,23.5 -131,33"/><polygon points="88,23.5 96,23.5 91,30"/>
+  </g>
+  <g fill="#cfa34d">
+    <polygon points="-2,38 6,23.5 1,23.5"/><polygon points="50,36 60,23.5 54,23.5"/><polygon points="27,33 32,23.5 29,23.5"/>
+  </g>
+</g>
+</svg>

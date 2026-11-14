@@ -467,6 +467,12 @@ const TYPES = {
   gem: { sprites: ['coinGold', 'gemRose', 'gemSlate', 'gemTan', 'plum'], height: 0.8 },
 };
 
+// Packs may bring their own asset types: src/models/<pack>.types.json holds
+// the same entries as TYPES above (plain data — sprites, height, anim,
+// anims, shadow, obstacle), so a new pack needs no edit here.
+const packTypes = import.meta.glob('../models/*.types.json', { eager: true, import: 'default' });
+for (const frag of Object.values(packTypes)) Object.assign(TYPES, frag);
+
 // ── builder ───────────────────────────────────────────────────────────────
 
 function hexDist(a, b) {
@@ -519,6 +525,8 @@ function buildType(typeName, def, options = {}) {
   if (!ownNames.length) {
     for (const a of def.anims ?? (def.anim && ANIM[def.anim] ? [def.anim] : [])) anims[a] = ANIM[a];
   }
+  // flat things lying on the ground (a track, a rug) are walked over
+  if (def.obstacle === false) group.userData.noObstacle = true;
   if (def.extra) def.extra(group, options, anims, def);
   // A 3D model brings its own rigged animations (blinking, waving, wagging…).
   let fallback = def.anim ?? null;
@@ -547,6 +555,18 @@ register('fence', (options = {}) => {
   return g;
 });
 register('mountainBackdrop', buildMountains);
+
+// light — an invisible lamp that lights the 3D models around it: a pool of
+// light on a night stage, a warm corner in a gloomy scene. Place it with
+// position [x, height] like any prop. options: color (default warm white),
+// intensity (default 2.2), distance (how far it reaches, default 9).
+register('light', (options = {}) => {
+  const group = new THREE.Group();
+  const lamp = new THREE.PointLight(options.color ?? '#ffe9c4', options.intensity ?? 2.2, options.distance ?? 9, 0.6);
+  group.add(lamp);
+  group.userData.noObstacle = true;
+  return group;
+});
 
 // Every sprite by its own name — exact piece, sensible default height.
 const SPRITE_HEIGHT = {};
@@ -580,4 +600,4 @@ export function spriteHeight(name) {
   return SPRITE_HEIGHT[name]?.h ?? 2;
 }
 
-export const assetTypes = Object.keys(TYPES).concat(['fence', 'mountainBackdrop']);
+export const assetTypes = Object.keys(TYPES).concat(['fence', 'mountainBackdrop', 'light']);

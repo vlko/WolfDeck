@@ -3,6 +3,10 @@
   "w": 484,
   "h": 560
  },
+ "aiRobot": {
+  "w": 336,
+  "h": 560
+ },
  "apartmentBlock": {
   "w": 653,
   "h": 560
@@ -67,6 +71,10 @@
   "w": 229,
   "h": 132
  },
+ "bookTower": {
+  "w": 268,
+  "h": 560
+ },
  "bookshelf": {
   "w": 339,
   "h": 463
@@ -82,6 +90,10 @@
  "brakeLever": {
   "w": 535,
   "h": 457
+ },
+ "brandStairs": {
+  "w": 900,
+  "h": 426
  },
  "breadCrate": {
   "w": 366,
@@ -163,6 +175,14 @@
   "w": 306,
   "h": 173
  },
+ "careerLadder": {
+  "w": 269,
+  "h": 560
+ },
+ "carpenterBench": {
+  "w": 839,
+  "h": 560
+ },
  "cart": {
   "w": 224,
   "h": 229
@@ -194,6 +214,26 @@
  "chapel": {
   "w": 247,
   "h": 447
+ },
+ "cheese": {
+  "w": 728,
+  "h": 560
+ },
+ "cheeseCloche": {
+  "w": 455,
+  "h": 560
+ },
+ "cheeseCrumbs": {
+  "w": 900,
+  "h": 257
+ },
+ "cheeseSign": {
+  "w": 451,
+  "h": 560
+ },
+ "chequeredFlag": {
+  "w": 333,
+  "h": 560
  },
  "churchNamestovo": {
   "w": 271,
@@ -239,6 +279,10 @@
   "w": 265,
   "h": 547
  },
+ "confettiCannon": {
+  "w": 614,
+  "h": 560
+ },
  "cottageGable": {
   "w": 454,
   "h": 506
@@ -255,6 +299,10 @@
   "w": 520,
   "h": 511
  },
+ "couch": {
+  "w": 900,
+  "h": 433
+ },
  "crackedPiggy": {
   "w": 570,
   "h": 426
@@ -263,12 +311,28 @@
   "w": 497,
   "h": 640
  },
+ "crow": {
+  "w": 330,
+  "h": 560
+ },
  "crutch": {
   "w": 156,
   "h": 483
  },
+ "curtain": {
+  "w": 900,
+  "h": 433
+ },
+ "cvStack": {
+  "w": 557,
+  "h": 560
+ },
  "cycleSign": {
   "w": 212,
+  "h": 560
+ },
+ "deadTree": {
+  "w": 415,
   "h": 560
  },
  "desk": {
@@ -278,6 +342,10 @@
  "drumRoller": {
   "w": 374,
   "h": 234
+ },
+ "emptySpotlight": {
+  "w": 336,
+  "h": 560
  },
  "excavator": {
   "w": 337,
@@ -299,6 +367,10 @@
   "w": 248,
   "h": 452
  },
+ "floorLamp": {
+  "w": 421,
+  "h": 560
+ },
  "flourSack": {
   "w": 411,
   "h": 483
@@ -311,6 +383,10 @@
   "w": 209,
   "h": 342
  },
+ "fomoFeed": {
+  "w": 327,
+  "h": 560
+ },
  "footballDark": {
   "w": 194,
   "h": 193
@@ -318,6 +394,18 @@
  "foremanBear": {
   "w": 495,
   "h": 640
+ },
+ "formulaOchre": {
+  "w": 900,
+  "h": 281
+ },
+ "formulaRed": {
+  "w": 900,
+  "h": 281
+ },
+ "formulaTeal": {
+  "w": 900,
+  "h": 281
  },
  "fox": {
   "w": 271,
@@ -371,6 +459,14 @@
   "w": 447,
   "h": 472
  },
+ "headphones": {
+  "w": 476,
+  "h": 560
+ },
+ "hiredSign": {
+  "w": 459,
+  "h": 560
+ },
  "hut": {
   "w": 540,
   "h": 504
@@ -382,6 +478,10 @@
  "hydrantRed": {
   "w": 103,
   "h": 146
+ },
+ "impostorSheep": {
+  "w": 459,
+  "h": 560
  },
  "kindergarten": {
   "w": 907,
@@ -407,13 +507,25 @@
   "w": 123,
   "h": 511
  },
+ "laptop": {
+  "w": 812,
+  "h": 560
+ },
  "lawnMower": {
   "w": 441,
   "h": 325
  },
+ "learnerCat": {
+  "w": 293,
+  "h": 560
+ },
  "ledger": {
   "w": 545,
   "h": 459
+ },
+ "lightbulb": {
+  "w": 459,
+  "h": 560
  },
  "lighthouse": {
   "w": 180,
@@ -423,13 +535,33 @@
   "w": 723,
   "h": 475
  },
+ "makerBench": {
+  "w": 790,
+  "h": 560
+ },
  "meetingTable": {
   "w": 749,
   "h": 330
  },
+ "meetupChairs": {
+  "w": 900,
+  "h": 409
+ },
  "moneyBag": {
   "w": 281,
   "h": 415
+ },
+ "mouse": {
+  "w": 900,
+  "h": 556
+ },
+ "mouseHole": {
+  "w": 818,
+  "h": 560
+ },
+ "mouseTrap": {
+  "w": 900,
+  "h": 243
  },
  "mug": {
   "w": 220,
@@ -439,9 +571,25 @@
   "w": 160,
   "h": 332
  },
+ "newsletterStack": {
+  "w": 640,
+  "h": 560
+ },
+ "notifySwarm": {
+  "w": 486,
+  "h": 560
+ },
  "officeChair": {
   "w": 239,
   "h": 389
+ },
+ "onAirSign": {
+  "w": 404,
+  "h": 560
+ },
+ "openBook": {
+  "w": 470,
+  "h": 560
  },
  "oravaLake": {
   "w": 990,
@@ -461,6 +609,14 @@
  },
  "pandaRunner": {
   "w": 361,
+  "h": 560
+ },
+ "paperPlane": {
+  "w": 900,
+  "h": 347
+ },
+ "paperRocket": {
+  "w": 325,
   "h": 560
  },
  "papers": {
@@ -515,6 +671,14 @@
   "w": 319,
   "h": 559
  },
+ "pitCrew": {
+  "w": 415,
+  "h": 560
+ },
+ "plannerBoard": {
+  "w": 386,
+  "h": 560
+ },
  "plant": {
   "w": 321,
   "h": 428
@@ -522,6 +686,18 @@
  "plum": {
   "w": 197,
   "h": 182
+ },
+ "podcastHost": {
+  "w": 395,
+  "h": 560
+ },
+ "podcastMic": {
+  "w": 450,
+  "h": 560
+ },
+ "postBoxOpen": {
+  "w": 280,
+  "h": 560
  },
  "postbox": {
   "w": 85,
@@ -559,6 +735,18 @@
   "w": 406,
   "h": 408
  },
+ "projectorScreen": {
+  "w": 470,
+  "h": 560
+ },
+ "queueRope": {
+  "w": 900,
+  "h": 381
+ },
+ "raceTrack": {
+  "w": 900,
+  "h": 250
+ },
  "recyclingBin": {
   "w": 264,
   "h": 342
@@ -570,6 +758,10 @@
  "recyclingBin3": {
   "w": 256,
   "h": 342
+ },
+ "retroTv": {
+  "w": 404,
+  "h": 560
  },
  "roadBarrier": {
   "w": 319,
@@ -617,6 +809,10 @@
  },
  "seniorHome": {
   "w": 724,
+  "h": 560
+ },
+ "serverRack": {
+  "w": 269,
   "h": 560
  },
  "shed": {
@@ -671,6 +867,10 @@
   "w": 703,
   "h": 314
  },
+ "speechBubbles": {
+  "w": 584,
+  "h": 560
+ },
  "stackTree": {
   "w": 308,
   "h": 551
@@ -683,6 +883,10 @@
   "w": 570,
   "h": 326
  },
+ "stageSpot": {
+  "w": 415,
+  "h": 560
+ },
  "stairLift": {
   "w": 536,
   "h": 560
@@ -691,9 +895,25 @@
   "w": 560,
   "h": 560
  },
+ "standingMirror": {
+  "w": 319,
+  "h": 560
+ },
+ "starBadge": {
+  "w": 405,
+  "h": 560
+ },
+ "startGantry": {
+  "w": 605,
+  "h": 560
+ },
  "stoneCottage": {
   "w": 474,
   "h": 409
+ },
+ "stormCloud": {
+  "w": 470,
+  "h": 560
  },
  "streetlamp": {
   "w": 98,
@@ -706,6 +926,14 @@
  "stripedPost": {
   "w": 73,
   "h": 519
+ },
+ "timingTower": {
+  "w": 168,
+  "h": 560
+ },
+ "tombstoneCode": {
+  "w": 554,
+  "h": 560
  },
  "towerIvory": {
   "w": 231,
@@ -770,6 +998,22 @@
  "trafficLight": {
   "w": 105,
   "h": 530
+ },
+ "trophyPick": {
+  "w": 326,
+  "h": 560
+ },
+ "tumbleweed": {
+  "w": 524,
+  "h": 560
+ },
+ "typewriter": {
+  "w": 798,
+  "h": 560
+ },
+ "tyreStack": {
+  "w": 900,
+  "h": 496
  },
  "umbrellaClosed": {
   "w": 165,

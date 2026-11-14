@@ -3,6 +3,7 @@ import { textPart, bulletsPart } from './textParts.js';
 import { statPart, numberedPart, calloutPart, tablePart } from './infoParts.js';
 import { imagePart } from './imagePart.js';
 import { chartPart } from './charts.js';
+import { diffPart } from './diffPart.js';
 import { palette } from '../assets/palette.js';
 import { warn } from '../config.js';
 
@@ -33,8 +34,9 @@ export function buildPart(def) {
       case 'table': content = tablePart(def); break;
       case 'image': content = imagePart(def); break;
       case 'chart': content = chartPart(def); break;
+      case 'diff': content = diffPart(def); break;
       default:
-        warn(`unknown part type "${def.type}" — magenta placeholder used (known: text, bullets, stat, numbered, callout, table, image, chart)`);
+        warn(`unknown part type "${def.type}" — magenta placeholder used (known: text, bullets, stat, numbered, callout, table, image, chart, diff)`);
     }
   } catch (err) {
     warn(`part "${def.type}" failed to build:`, err);

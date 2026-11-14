@@ -1,0 +1,9 @@
+{
+  "mouse": { "sprites": ["mouse"], "height": 0.8, "anim": "idle" },
+  "cheese": { "sprites": ["cheese"], "height": 0.8, "anim": "idle" },
+  "cheeseCrumbs": { "sprites": ["cheeseCrumbs"], "height": 0.22 },
+  "mouseHole": { "sprites": ["mouseHole"], "height": 1.6 },
+  "cheeseSign": { "sprites": ["cheeseSign"], "height": 1.7, "anim": "swing" },
+  "mouseTrap": { "sprites": ["mouseTrap"], "height": 0.3, "anim": "idle" },
+  "cheeseCloche": { "sprites": ["cheeseCloche"], "height": 1.1, "anim": "idle" }
+}

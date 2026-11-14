@@ -1,0 +1,3413 @@
+{
+  "meta": {
+    "title": "Ako sa stať amatérskym blogerom, pomocným podcasterom a spíkrom, ktorého vybrala AI",
+    "sceneSpacing": 34,
+    "walkSpeed": 9,
+    "seed": 26
+  },
+  "scenes": [
+    {
+      "id": "uvod",
+      "kicker": "CodeCon 2026 · Žilina",
+      "style": "paper",
+      "props": [
+        {
+          "type": "lake",
+          "position": [
+            -10.5,
+            0,
+            0.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 1
+          }
+        },
+        {
+          "type": "churchTower",
+          "position": [
+            8.5,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 2
+          }
+        },
+        {
+          "type": "chalet",
+          "position": [
+            13.2,
+            0,
+            1.2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 3,
+            "variant": "chalet"
+          }
+        },
+        {
+          "type": "stoneCottage",
+          "position": [
+            -3.2,
+            0,
+            -0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 4
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -14.5,
+            0,
+            1
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 5,
+            "tiers": 6
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            3.6,
+            0,
+            -0.8
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 6
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            11.2,
+            0,
+            -0.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 7,
+            "height": 3.6
+          }
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -13,
+            0
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 8,
+            "height": 3.4
+          }
+        },
+        {
+          "type": "sheep",
+          "position": [
+            -8.2,
+            0,
+            1.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 9,
+            "animation": "graze"
+          }
+        },
+        {
+          "type": "lamb",
+          "position": [
+            -6.4,
+            0,
+            2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 10
+          }
+        },
+        {
+          "type": "sheep",
+          "position": [
+            9.4,
+            0,
+            -0.6
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 11
+          }
+        },
+        {
+          "type": "fence",
+          "position": [
+            11.5,
+            0,
+            0.8
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 12,
+            "length": 5
+          }
+        },
+        {
+          "type": "haystack",
+          "position": [
+            -11.5,
+            0,
+            -0.4
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 13
+          }
+        }
+      ],
+      "slides": [
+        {
+          "id": "titul",
+          "title": "Ako sa stať…",
+          "subtitle": "…amatérskym blogerom, pomocným podcasterom a spíkrom, ktorého vybrala AI",
+          "notes": [
+            "Krátko pozdraviť."
+          ],
+          "groups": [
+            {
+              "subtitle": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    0,
+                    3.6
+                  ],
+                  "depth": "mid",
+                  "title": "Marián Vlčák",
+                  "body": "alias vlko",
+                  "align": "center",
+                  "width": 6.2,
+                  "fontScale": 1.25
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "kto-som",
+          "title": "Kto som",
+          "kicker": "Marián Vlčák alias vlko",
+          "notes": [
+            "Odsťahoval som sa na Oravu a ako jedinému programátorovi mi bolo smutno.",
+            "Posledných 15 rokov sa preto nejakým spôsobom snažím podporovať slovenskú developerskú komunitu.",
+            "Konkrétne kroky ukážem postupne v START blokoch."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "image",
+                  "position": [
+                    -6,
+                    3.6
+                  ],
+                  "depth": "mid",
+                  "src": "images/vlko.jpg",
+                  "caption": "Marián „vlko“ Vlčák",
+                  "width": 5
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "bullets",
+                  "position": [
+                    4.2,
+                    3.4
+                  ],
+                  "depth": "mid",
+                  "title": "Marián Vlčák alias vlko",
+                  "items": [
+                    "CTO FinStat.sk",
+                    "žijem a tvorím v Námestove na Orave",
+                    "amatérsky bloger — technologický týždenník na vyvojari.dev",
+                    "WebUP supporter s pravidelným mesačníkom",
+                    "súčasť hodnotiacej komisie CodeCon",
+                    "dvojka v podcaste Link"
+                  ],
+                  "width": 8.4,
+                  "fontScale": 1.05
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "co-to-nebude",
+          "title": "Čo to nebude",
+          "subtitle": "…a čo si odnesieš",
+          "notes": [
+            "Toto nebude prednáška o tom, ako sa stať influencerom, ani návod na LinkedIn algoritmus.",
+            "Bude to rekapitulácia cesty introverta. Nemám teóriu ani metodiku, mám 15 rokov pokusov, omylov a niekoľko vecí, ktoré nečakane vyšli."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "bullets",
+                  "position": [
+                    -6.4,
+                    5.6
+                  ],
+                  "depth": "mid",
+                  "title": "Čakáš?",
+                  "items": [
+                    "~~ako sa stať influencerom~~",
+                    "~~návod na LinkedIn algoritmus~~"
+                  ],
+                  "width": 7.4,
+                  "tilt": -3,
+                  "fontScale": 1.3
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "numbered",
+                  "position": [
+                    4.2,
+                    4.3
+                  ],
+                  "depth": "front",
+                  "title": "Odnesieš si",
+                  "items": [
+                    "Prečo je osobný brand v ére AI dôležitý",
+                    "Čo reálne funguje, keď si introvert, nebývaš v Bratislave a marketing ti nejde",
+                    "Prečo stačí vystúpiť z komfortnej zóny a ozvať sa"
+                  ],
+                  "width": 8
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jazda",
+      "kicker": "Čo sa zmenilo",
+      "style": "screen",
+      "ground": "asphalt",
+      "props": [
+        {
+          "type": "raceTrack",
+          "position": [
+            0,
+            0
+          ],
+          "layer": -3.7,
+          "options": {
+            "seed": 14,
+            "flip": false
+          }
+        },
+        {
+          "type": "formulaCar",
+          "position": [
+            0,
+            0.04
+          ],
+          "layer": -3.7,
+          "options": {
+            "seed": 15,
+            "variant": "formulaRed",
+            "flip": false,
+            "move": {
+              "kind": "loop",
+              "oval": [
+                0,
+                -3.7,
+                7.8,
+                2.1
+              ],
+              "speed": 5.6,
+              "lane": 0.42,
+              "startAt": 0.02
+            }
+          }
+        },
+        {
+          "type": "formulaCar",
+          "position": [
+            0,
+            0.04
+          ],
+          "layer": -3.7,
+          "options": {
+            "seed": 16,
+            "variant": "formulaTeal",
+            "flip": false,
+            "move": {
+              "kind": "loop",
+              "oval": [
+                0,
+                -3.7,
+                7.8,
+                2.1
+              ],
+              "speed": 5,
+              "lane": -0.42,
+              "startAt": 0.3
+            }
+          }
+        },
+        {
+          "type": "formulaCar",
+          "position": [
+            0,
+            0.04
+          ],
+          "layer": -3.7,
+          "options": {
+            "seed": 17,
+            "variant": "formulaOchre",
+            "flip": false,
+            "move": {
+              "kind": "loop",
+              "oval": [
+                0,
+                -3.7,
+                7.8,
+                2.1
+              ],
+              "speed": 5,
+              "lane": -0.42,
+              "startAt": 0.78
+            }
+          }
+        },
+        {
+          "type": "startGantry",
+          "position": [
+            9.9,
+            0
+          ],
+          "layer": -3.7,
+          "options": {
+            "seed": 18,
+            "flip": false
+          }
+        },
+        {
+          "type": "stadiumStand",
+          "position": [
+            -4.5,
+            0
+          ],
+          "layer": -8.6,
+          "options": {
+            "seed": 19,
+            "variant": "stadiumStand"
+          },
+          "scale": 1.5
+        },
+        {
+          "type": "stadiumStand",
+          "position": [
+            5,
+            0
+          ],
+          "layer": -8.6,
+          "options": {
+            "seed": 20,
+            "variant": "stadiumStand"
+          },
+          "scale": 1.5
+        },
+        {
+          "type": "timingTower",
+          "position": [
+            -12.6,
+            0,
+            1.5
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 21
+          }
+        },
+        {
+          "type": "tyreStack",
+          "position": [
+            -11.3,
+            0,
+            2.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 22
+          }
+        },
+        {
+          "type": "tyreStack",
+          "position": [
+            12.2,
+            0,
+            -3.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 23
+          }
+        },
+        {
+          "type": "tyreStack",
+          "position": [
+            11.6,
+            0,
+            2.8
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 24
+          }
+        },
+        {
+          "type": "chequeredFlag",
+          "position": [
+            -9.6,
+            0,
+            0.6
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 25
+          }
+        },
+        {
+          "type": "pitCrew",
+          "position": [
+            -7.6,
+            0,
+            1.2
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 26,
+            "animation": "wave",
+            "flip": false
+          }
+        },
+        {
+          "type": "trafficCone",
+          "position": [
+            6.4,
+            0,
+            -1.4
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 27
+          }
+        },
+        {
+          "type": "trafficCone",
+          "position": [
+            7.6,
+            0,
+            -0.9
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 28
+          }
+        }
+      ],
+      "slides": [
+        {
+          "id": "jazda",
+          "title": "Posledný rok bol jazda",
+          "notes": [
+            "Ešte pár rokov dozadu som veril, že budem celý život programátorom.",
+            "Pred dvoma rokmi som zistil, že AI vie generovať kód.",
+            "Pred rokom, že vie programovať.",
+            "Pred pol rokom, že vie programovať obstojne.",
+            "Pred 2 mesiacmi, že vie generovať UI.",
+            "Pred mesiacom, že vytvorí plnohodnotné aplikácie.",
+            "Ale…"
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -9.3,
+                    5.6
+                  ],
+                  "depth": "mid",
+                  "title": "Kód",
+                  "body": "pred 2 rokmi",
+                  "align": "center",
+                  "width": 4.3,
+                  "fontScale": 1.15
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -3.1,
+                    5.6
+                  ],
+                  "depth": "mid",
+                  "title": "Programovanie",
+                  "body": "pred rokom",
+                  "align": "center",
+                  "width": 5.6,
+                  "fontScale": 1.15
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    3.3,
+                    5.6
+                  ],
+                  "depth": "mid",
+                  "title": "Grafika",
+                  "body": "pred pol rokom",
+                  "align": "center",
+                  "width": 4.8,
+                  "fontScale": 1.15
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    9.2,
+                    5.6
+                  ],
+                  "depth": "mid",
+                  "title": "UI",
+                  "body": "pred 2 mesiacmi",
+                  "align": "center",
+                  "width": 4.6,
+                  "fontScale": 1.15
+                }
+              ]
+            },
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    0,
+                    4.8
+                  ],
+                  "depth": "front",
+                  "title": "ALE…",
+                  "align": "center",
+                  "width": 6,
+                  "fontScale": 2.4
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "syr",
+      "kicker": "Čo sa zmenilo",
+      "style": "tear",
+      "ground": "floor",
+      "props": [
+        {
+          "type": "cheese",
+          "position": [
+            -8.5,
+            0,
+            1.9
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 29,
+            "flip": false,
+            "move": {
+              "kind": "flee",
+              "from": "mouse",
+              "spots": [
+                [
+                  -9,
+                  1.6
+                ],
+                [
+                  9,
+                  1.5
+                ],
+                [
+                  -3.5,
+                  3.6
+                ],
+                [
+                  4.5,
+                  3.4
+                ]
+              ],
+              "near": 2.3,
+              "hop": 2.2,
+              "air": 0.6
+            }
+          },
+          "id": "cheese",
+          "scale": 1.885
+        },
+        {
+          "type": "mouse",
+          "position": [
+            6,
+            0,
+            1.8
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 30,
+            "flip": false,
+            "move": {
+              "kind": "chase",
+              "target": "cheese",
+              "speed": 4.2,
+              "reach": 2.3,
+              "think": 1.2,
+              "anims": {
+                "move": "run",
+                "still": "sniff"
+              }
+            }
+          },
+          "id": "mouse",
+          "scale": 1.885
+        },
+        {
+          "type": "mouseHole",
+          "position": [
+            -12.2,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 31,
+            "flip": false
+          },
+          "scale": 1.45
+        },
+        {
+          "type": "cheeseSign",
+          "position": [
+            11.8,
+            0,
+            0.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 32,
+            "flip": false
+          },
+          "scale": 1.45
+        },
+        {
+          "type": "table",
+          "position": [
+            -6.2,
+            0,
+            1.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 33
+          },
+          "scale": 1.45
+        },
+        {
+          "type": "cheeseCloche",
+          "position": [
+            -6.2,
+            1.74,
+            1.9
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 34
+          },
+          "scale": 1.45
+        },
+        {
+          "type": "cheeseCrumbs",
+          "position": [
+            5.2,
+            0,
+            0.9
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 35
+          },
+          "scale": 1.45
+        },
+        {
+          "type": "mouseTrap",
+          "position": [
+            12.4,
+            0,
+            -0.8
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 36,
+            "flip": false
+          },
+          "scale": 1.45
+        },
+        {
+          "type": "bookshelf",
+          "position": [
+            6.6,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 37
+          },
+          "scale": 1.45
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            -13.8,
+            0,
+            1.2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 38
+          },
+          "scale": 1.45
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            12.6,
+            0,
+            0.8
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 39
+          },
+          "scale": 1.45
+        }
+      ],
+      "slides": [
+        {
+          "id": "cheese",
+          "title": "AI moved my cheese",
+          "subtitle": "pred rokom vs. tento rok",
+          "notes": [
+            "Dnes AI píše väčšiu časť kódu.",
+            "To, čo nás robilo šťastnými, teda programovanie, strácame a musíme sa s tým nejako vyrovnať.",
+            "[NÁVRH] Môj deň pred rokom: ráno otvorím IDE a väčšinu dňa píšem kód. Najlepší pocit dňa je chvíľa, keď to po hodine ladenia konečne zbehne.",
+            "[NÁVRH] Môj deň teraz: ráno napíšem zadanie, agent píše a ja čítam, opravujem a rozhodujem. Kódu je viac, ale ten pocit „toto som vyriešil ja“ prichádza menej často. Syr sa presunul a ja ho hľadám inde."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "bullets",
+                  "position": [
+                    -5.6,
+                    4.7
+                  ],
+                  "depth": "mid",
+                  "title": "Pred rokom",
+                  "items": [
+                    "kód píšem ja",
+                    "AI mi dopĺňa riadky",
+                    "radosť: vyriešil som to"
+                  ],
+                  "width": 7.6,
+                  "fontScale": 1.25,
+                  "tilt": -1.5
+                },
+                {
+                  "type": "bullets",
+                  "position": [
+                    5.6,
+                    4.7
+                  ],
+                  "depth": "mid",
+                  "title": "Tento rok",
+                  "items": [
+                    "kód píše AI",
+                    "ja zadávam, čítam a rozhodujem",
+                    "radosť: …kam sa podela?"
+                  ],
+                  "width": 8.6,
+                  "fontScale": 1.25,
+                  "tilt": 1.5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diff-praca",
+      "kicker": "git diff pred-rokom..teraz",
+      "style": "cyber",
+      "ground": "floor",
+      "props": [
+        {
+          "type": "towerSlate",
+          "position": [
+            -9.8,
+            0
+          ],
+          "layer": -9.5,
+          "options": {
+            "seed": 40,
+            "height": 6,
+            "flip": false
+          }
+        },
+        {
+          "type": "towerIvory",
+          "position": [
+            0.4,
+            0
+          ],
+          "layer": -9,
+          "options": {
+            "seed": 41,
+            "height": 6
+          }
+        },
+        {
+          "type": "careerLadder",
+          "position": [
+            -9.4,
+            0,
+            0.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 42,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "fox",
+          "position": [
+            -11.4,
+            0,
+            1.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 43,
+            "height": 1.6
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "serverRack",
+          "position": [
+            -13.6,
+            0,
+            0.8
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 44
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "serverRack",
+          "position": [
+            -12.1,
+            0,
+            0.8
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 45
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "desk",
+          "position": [
+            4.4,
+            0,
+            -0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 46,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "aiRobot",
+          "position": [
+            6.9,
+            0,
+            0.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 47,
+            "animation": "scan",
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "hiredSign",
+          "position": [
+            2.2,
+            0,
+            1.3
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 48,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "queueRope",
+          "position": [
+            10.4,
+            0,
+            1.9
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 49,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "kit",
+          "position": [
+            9.4,
+            0,
+            0.5
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 50,
+            "height": 1.5
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "bearDog",
+          "position": [
+            11.2,
+            0,
+            0.3
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 51,
+            "height": 1.6
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "pandaKid",
+          "position": [
+            12.9,
+            0,
+            0.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 52,
+            "height": 1.4
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "boar",
+          "position": [
+            14.5,
+            0,
+            0.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 53,
+            "height": 1.6
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "cvStack",
+          "position": [
+            12.6,
+            0,
+            1.6
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 54
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            0.6,
+            0,
+            1
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 55
+          },
+          "scale": 1.35
+        }
+      ],
+      "slides": [
+        {
+          "id": "diff-kariera",
+          "title": "DIFF: Kariéra",
+          "notes": [
+            "[NÁVRH] Pred rokom bola špecializácia istota: čím hlbšie si vedel jednu vec, tým si bol vzácnejší.",
+            "[NÁVRH] Dnes hlbokú znalosť jednej technológie čiastočne nahradí model. Hodnotu má ten, kto vie spojiť viac oblastí, zadať prácu a posúdiť výsledok. Zo špecialistu sa stáva generalista, ktorý je však ľahšie nahraditeľný."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "diff",
+                  "position": [
+                    0,
+                    5.2
+                  ],
+                  "depth": "mid",
+                  "title": "Kariéra",
+                  "before": "pred rokom",
+                  "after": "teraz",
+                  "lines": [
+                    "- istoty, špecialista",
+                    "+ nahraditeľnosť, generalista"
+                  ],
+                  "width": 13.6,
+                  "fontScale": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "diff-hiring",
+          "title": "DIFF: Hiring",
+          "notes": [
+            "Trh práce vyzerá tak, že firmy radšej kúpia AI agenta ako programátora.",
+            "[NÁVRH] Pred rokom sme si my vyberali, kam pôjdeme, a firmy sa o ľudí bili. Dnes je na jednu pozíciu rad uchádzačov a chodenie po pohovoroch bolí. Juniori to cítia najviac."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "diff",
+                  "position": [
+                    0,
+                    5.2
+                  ],
+                  "depth": "mid",
+                  "title": "Hiring",
+                  "before": "pred rokom",
+                  "after": "teraz",
+                  "lines": [
+                    "- nedostatok ľudí, mohli sme si vyberať",
+                    "+ prebytok ľudí, bolestné chodenie po pohovoroch"
+                  ],
+                  "width": 13.6,
+                  "fontScale": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diff-skola",
+      "kicker": "git diff pred-rokom..teraz",
+      "style": "cyber",
+      "props": [
+        {
+          "type": "schoolhouse",
+          "position": [
+            -11.2,
+            0,
+            0.2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 56
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "blackboard",
+          "position": [
+            -7.2,
+            0,
+            2.2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 57
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "pupil",
+          "position": [
+            -5.4,
+            0,
+            2.8
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 58
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "carpenterBench",
+          "position": [
+            -8.6,
+            0,
+            2.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 59,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "bricks",
+          "position": [
+            -2.9,
+            0,
+            0.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 60
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "builder",
+          "position": [
+            -1.4,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 61,
+            "animal": "bear",
+            "animation": "work"
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "cementMixer",
+          "position": [
+            0.9,
+            0,
+            1.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 62
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "desk",
+          "position": [
+            8.2,
+            0,
+            0.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 63,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "notifySwarm",
+          "position": [
+            8.2,
+            0,
+            0.5
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 64,
+            "obstacle": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "laptop",
+          "position": [
+            10.9,
+            1.35,
+            1.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 65,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "table",
+          "position": [
+            10.9,
+            0,
+            1.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 66,
+            "height": 1
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "officeChair",
+          "position": [
+            12.6,
+            0,
+            1.8
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 67
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            4.4,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 68
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            13.8,
+            0,
+            0.8
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 69
+          },
+          "scale": 1.35
+        }
+      ],
+      "slides": [
+        {
+          "id": "diff-skolstvo",
+          "title": "DIFF: Školstvo",
+          "notes": [
+            "[NÁVRH] Pred rokom sme deťom radili: choď na IT, programátor sa nestratí.",
+            "[NÁVRH] Dnes počúvam opak: nauč sa remeslo, stolára ani murára AI tak skoro nenahradí. Či je to dobrá rada, neviem, ale ukazuje, ako rýchlo sa otočila nálada."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "diff",
+                  "position": [
+                    0,
+                    5.2
+                  ],
+                  "depth": "mid",
+                  "title": "Školstvo",
+                  "before": "pred rokom",
+                  "after": "teraz",
+                  "lines": [
+                    "- IT, programátor",
+                    "+ stolár, murár"
+                  ],
+                  "width": 13.6,
+                  "fontScale": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "diff-work",
+          "title": "DIFF: Work",
+          "notes": [
+            "[NÁVRH] Pred rokom bol dobrý deň ten, keď som mal tri hodiny ticha a jeden problém.",
+            "[NÁVRH] Dnes mi beží niekoľko agentov naraz. Každý sa niečo pýta, každý niečo dokončil a ja preskakujem medzi kontextami. Menej píšem, viac prepínam."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "diff",
+                  "position": [
+                    0,
+                    5.2
+                  ],
+                  "depth": "mid",
+                  "title": "Work",
+                  "before": "pred rokom",
+                  "after": "teraz",
+                  "lines": [
+                    "- focus",
+                    "+ context switching"
+                  ],
+                  "width": 13.6,
+                  "fontScale": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "strach",
+      "kicker": "Čo sa zmenilo",
+      "style": "cyber",
+      "mood": "gloom",
+      "ground": "barren",
+      "props": [
+        {
+          "type": "deadTree",
+          "position": [
+            -11.6,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 70
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "deadTree",
+          "position": [
+            9.2,
+            0,
+            -0.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 71
+          },
+          "scale": 1.105
+        },
+        {
+          "type": "deadTree",
+          "position": [
+            13.6,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 72
+          },
+          "scale": 0.91
+        },
+        {
+          "type": "stormCloud",
+          "position": [
+            -4.2,
+            0,
+            1.2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 73,
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "stormCloud",
+          "position": [
+            6,
+            0
+          ],
+          "layer": -9,
+          "options": {
+            "seed": 74,
+            "flip": false
+          },
+          "scale": 1.43
+        },
+        {
+          "type": "tombstoneCode",
+          "position": [
+            -7.4,
+            0,
+            0.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 75,
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "crow",
+          "position": [
+            4.8,
+            0,
+            1
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 76,
+            "animation": "caw"
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "crow",
+          "position": [
+            -13.4,
+            0,
+            2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 77,
+            "animation": "idle"
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "cheeseCrumbs",
+          "position": [
+            -2.8,
+            0,
+            2
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 78
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "emptySpotlight",
+          "position": [
+            9.8,
+            0,
+            2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 79,
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "meetupChairs",
+          "position": [
+            12.9,
+            0,
+            1.6
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 80
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "tumbleweed",
+          "position": [
+            -14,
+            0
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 81,
+            "flip": false,
+            "move": {
+              "kind": "cross",
+              "from": [
+                -15,
+                3.1
+              ],
+              "to": [
+                15,
+                2.5
+              ],
+              "speed": 2.3,
+              "pause": 4,
+              "startAt": 0.4
+            }
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "lighthouse",
+          "position": [
+            -14.6,
+            0,
+            -1.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 82
+          },
+          "scale": 1.3
+        }
+      ],
+      "slides": [
+        {
+          "id": "strach",
+          "title": "STRACH",
+          "notes": [
+            "Strach z toho, čo prináša AI. Všetky DIFF-y vyššie sa dajú zhrnúť do tohto pocitu."
+          ],
+          "groups": []
+        },
+        {
+          "id": "nikoho-nezaujimam",
+          "title": "NIKOHO NEZAUJÍMAM",
+          "style": "tear",
+          "notes": [
+            "(Chvíľka ticha.)",
+            "Možno za chvíľu nebude záležať na tom, čo vieš, ale na tom, či o tebe vôbec niekto vie, že existuješ.",
+            "Tým je zodpovedaný bod 1: preto je osobný brand v ére AI dôležitý."
+          ],
+          "groups": []
+        },
+        {
+          "id": "ako-to-zmenit",
+          "title": "Ako to zmeniť?",
+          "style": "sticker",
+          "mood": "dawn",
+          "notes": [
+            "Viditeľnosť v komunite je možno najlacnejšia poistka, ktorú si vieme kúpiť."
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "id": "impostor",
+      "kicker": "Z čoho vychádzam",
+      "style": "tear",
+      "mood": "dusk",
+      "props": [
+        {
+          "type": "impostorSheep",
+          "position": [
+            -4.2,
+            0,
+            0.6
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 83,
+            "animation": "peek",
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "standingMirror",
+          "position": [
+            -7.6,
+            0,
+            2.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 84,
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "sheep",
+          "position": [
+            6.2,
+            0,
+            0.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 85
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "sheep",
+          "position": [
+            8.6,
+            0,
+            1.8
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 86,
+            "animation": "graze"
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "lamb",
+          "position": [
+            10.4,
+            0,
+            0.8
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 87
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "sheep",
+          "position": [
+            11.8,
+            0,
+            1.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 88
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "fence",
+          "position": [
+            -12.6,
+            0,
+            1.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 89,
+            "length": 5
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -13.4,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 90
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            13.6,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 91
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            2.2,
+            0,
+            -1
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 92
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "hut",
+          "position": [
+            -9.8,
+            0,
+            1
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 93
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "haystack",
+          "position": [
+            13.2,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 94
+          },
+          "scale": 1.3
+        }
+      ],
+      "slides": [
+        {
+          "id": "impostor",
+          "title": "IMPOSTOR SYNDROME",
+          "notes": [
+            "Toto je bod, z ktorého vychádzam. Introvert, nebývam v Bratislave, marketing mi nejde a stále mám pocit, že na to nemám.",
+            "Ďalej nebudem rozprávať o tom, ako sa toho pocitu zbaviť, ale ako napriek nemu niečo robiť."
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "id": "learning",
+      "style": "sticker",
+      "props": [
+        {
+          "type": "projectorScreen",
+          "position": [
+            -9.4,
+            0,
+            2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 95,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "teacher",
+          "position": [
+            -12,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 96
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "meetupChairs",
+          "position": [
+            -7.6,
+            0,
+            2.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 97
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "learnerCat",
+          "position": [
+            -4.4,
+            0,
+            2.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 98,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "plannerBoard",
+          "position": [
+            7.2,
+            0,
+            0.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 99,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "couch",
+          "position": [
+            11.6,
+            0,
+            1.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 100,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "floorLamp",
+          "position": [
+            13.8,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 101,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "townhouse",
+          "position": [
+            2.8,
+            0,
+            -0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 102
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            13.6,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 103,
+            "shape": "round"
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            -14.2,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 104,
+            "shape": "cone"
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "bench",
+          "position": [
+            4.6,
+            0,
+            2.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 105
+          },
+          "scale": 1.35
+        }
+      ],
+      "slides": [
+        {
+          "id": "start-learning",
+          "title": "START LEARNING",
+          "kicker": "Chceš začať?",
+          "notes": [
+            "Musíš: zorganizovať si čas na učenie.",
+            "Vzdaj sa: komfortu.",
+            "Ako to bolo u mňa: WebUP Daniela Harčeka v Žiline.",
+            "[NÁVRH] Z Oravy je to do Žiliny hodina a pol autom. Bolo pohodlnejšie ostať doma, ale chodil som, lebo to bolo jediné miesto, kde som stretol ľudí, čo riešia to isté čo ja. Najprv som len sedel vzadu a počúval. Neskôr som začal WebUP podporovať a robiť pre neho mesačník."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -4.8,
+                    5.7
+                  ],
+                  "depth": "mid",
+                  "title": "MUSÍŠ: ORGANIZE",
+                  "align": "center",
+                  "width": 8.6,
+                  "fontScale": 1.45,
+                  "accentColor": "#5f7a63",
+                  "tilt": -1.5
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    5,
+                    4.5
+                  ],
+                  "depth": "front",
+                  "title": "VZDAJ SA: COMFORT",
+                  "align": "center",
+                  "width": 8.6,
+                  "fontScale": 1.45,
+                  "accentColor": "#b4843f",
+                  "tilt": 1.5
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -5.4,
+                    3.3
+                  ],
+                  "depth": "front",
+                  "title": "Ako to bolo u mňa",
+                  "body": "WebUP Daniela Harčeka v Žiline",
+                  "width": 7.6,
+                  "fontScale": 1.15,
+                  "tilt": -2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reading",
+      "style": "sticker",
+      "ground": "floor",
+      "props": [
+        {
+          "type": "bookshelf",
+          "position": [
+            -12.6,
+            0,
+            1
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 106,
+            "variant": "bookshelfTall"
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "bookshelf",
+          "position": [
+            -10.2,
+            0,
+            1
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 107,
+            "variant": "bookshelf"
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "openBook",
+          "position": [
+            -7.6,
+            0,
+            1.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 108,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "bookTower",
+          "position": [
+            -4.6,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 109
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "floorLamp",
+          "position": [
+            -10.4,
+            0,
+            1.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 110,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "retroTv",
+          "position": [
+            8.6,
+            0,
+            0.8
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 111,
+            "animation": "watch",
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "couch",
+          "position": [
+            11.4,
+            0,
+            1.4
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 112,
+            "flip": true
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "bookTower",
+          "position": [
+            5.6,
+            0,
+            1.8
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 113
+          },
+          "scale": 1.08
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            13.8,
+            0,
+            1.2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 114
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "officePlant",
+          "position": [
+            1.4,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 115
+          },
+          "scale": 1.35
+        }
+      ],
+      "slides": [
+        {
+          "id": "start-reading",
+          "title": "START READING",
+          "kicker": "Chceš začať?",
+          "notes": [
+            "Musíš: čítať, nie len pozerať.",
+            "Vzdaj sa: pasívneho pozerania videí a scrollovania stránok (STOP WATCHING).",
+            "[NÁVRH] Ako to bolo u mňa: video ma zabaví, ale na druhý deň si z neho pamätám málo. Z článku si odnesiem viac, lebo si určujem tempo sám, vraciam sa a môžem si z neho niečo vypísať. Odkedy píšem týždenník, čítam každý týždeň desiatky článkov a práve z nich mám väčšinu toho, čo viem."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -4.8,
+                    5.7
+                  ],
+                  "depth": "mid",
+                  "title": "MUSÍŠ: ČÍTAŤ",
+                  "align": "center",
+                  "width": 8.6,
+                  "fontScale": 1.45,
+                  "accentColor": "#5f7a63",
+                  "tilt": -1.5
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    5,
+                    4.5
+                  ],
+                  "depth": "front",
+                  "title": "VZDAJ SA: ~~WATCHING~~",
+                  "align": "center",
+                  "width": 8.6,
+                  "fontScale": 1.45,
+                  "accentColor": "#b4843f",
+                  "tilt": 1.5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "writing",
+      "style": "sticker",
+      "props": [
+        {
+          "type": "table",
+          "position": [
+            -8.4,
+            0,
+            0.8
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 116
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "typewriter",
+          "position": [
+            -8.4,
+            1.62,
+            1.1
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 117,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "officeChair",
+          "position": [
+            -10.6,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 118
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "newsletterStack",
+          "position": [
+            -5.6,
+            0,
+            2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 119
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "newsletterStack",
+          "position": [
+            -4.4,
+            0,
+            1.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 120
+          },
+          "scale": 1.08
+        },
+        {
+          "type": "postBoxOpen",
+          "position": [
+            -12.6,
+            0,
+            0.6
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 121,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "paperPlane",
+          "position": [
+            -12,
+            0.81
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 122,
+            "flip": false,
+            "move": {
+              "kind": "cross",
+              "from": [
+                -11.5,
+                -2.6
+              ],
+              "to": [
+                14.5,
+                -5.2
+              ],
+              "speed": 3.2,
+              "pause": 2.5
+            }
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "fomoFeed",
+          "position": [
+            9.6,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 123,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "fomoFeed",
+          "position": [
+            12.4,
+            0,
+            1.2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 124,
+            "flip": false
+          },
+          "scale": 1.215
+        },
+        {
+          "type": "cottage",
+          "position": [
+            2.4,
+            0,
+            -0.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 125,
+            "variant": "timber"
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -14.4,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 126
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            6.4,
+            0,
+            0.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 127
+          },
+          "scale": 1.35
+        }
+      ],
+      "slides": [
+        {
+          "id": "start-writing",
+          "title": "START WRITING",
+          "kicker": "amatérsky bloger",
+          "notes": [
+            "Prvá rola z názvu: amatérsky bloger.",
+            "Musíš: písať pravidelne a po anglicky, aby to malo dosah.",
+            "Vzdaj sa: FOMO. [NÁVRH] Nemusíš pokryť každú novinku ani byť prvý. Keby som čakal, kým stihnem všetko, nevyšlo by ani jedno číslo. Stačí vybrať to, čo zaujalo teba, a vydať to v ten istý deň ako minulý týždeň.",
+            "Ako to bolo u mňa: správičky na vyvojari.sk, neskôr vyvojari.dev. To sa nepresadilo, lebo marketing mi nejde. Tak som začal písať týždenník. Píšem ho ôsmy rok, zadarmo a občas cez zaťaté zuby. Anglická verzia ide na Substack."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -4.8,
+                    5.7
+                  ],
+                  "depth": "mid",
+                  "title": "MUSÍŠ: CONSISTENCY IS KEY",
+                  "align": "center",
+                  "width": 8.6,
+                  "fontScale": 1.45,
+                  "accentColor": "#5f7a63",
+                  "tilt": -1.5
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    5,
+                    4.5
+                  ],
+                  "depth": "front",
+                  "title": "VZDAJ SA: FOMO",
+                  "align": "center",
+                  "width": 8.6,
+                  "fontScale": 1.45,
+                  "accentColor": "#b4843f",
+                  "tilt": 1.5
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -5.4,
+                    3.3
+                  ],
+                  "depth": "front",
+                  "title": "Ako to bolo u mňa",
+                  "body": "týždenník na vyvojari.dev — ôsmy rok, každý týždeň",
+                  "width": 7.6,
+                  "fontScale": 1.15,
+                  "tilt": -2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "talking",
+      "style": "sticker",
+      "props": [
+        {
+          "type": "table",
+          "position": [
+            -7.4,
+            0,
+            1
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 128
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "podcastMic",
+          "position": [
+            -8.6,
+            1.62,
+            1.3
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 129,
+            "flip": false
+          },
+          "scale": 0.81
+        },
+        {
+          "type": "headphones",
+          "position": [
+            -6.2,
+            1.62,
+            1.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 130
+          },
+          "scale": 1.08
+        },
+        {
+          "type": "podcastHost",
+          "position": [
+            -10.6,
+            0,
+            0.8
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 131,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "onAirSign",
+          "position": [
+            -13.2,
+            0,
+            -0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 132,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "speechBubbles",
+          "position": [
+            -4.2,
+            0.54,
+            2.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 133,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "stage",
+          "position": [
+            9.4,
+            0,
+            1.2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 134
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "musician",
+          "position": [
+            12.6,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 135
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "citizen",
+          "position": [
+            7.2,
+            0,
+            1.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 136
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "citizen",
+          "position": [
+            9.2,
+            0,
+            2.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 137
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "citizen",
+          "position": [
+            11,
+            0,
+            1.2
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 138
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "speechBubbles",
+          "position": [
+            9.6,
+            2.025,
+            1
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 139,
+            "flip": false
+          },
+          "scale": 0.945
+        },
+        {
+          "type": "townhouse",
+          "position": [
+            2.2,
+            0,
+            -0.8
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 140
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "parkTree",
+          "position": [
+            -14.6,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 141,
+            "shape": "round"
+          },
+          "scale": 1.35
+        }
+      ],
+      "slides": [
+        {
+          "id": "start-talking",
+          "title": "START TALKING",
+          "kicker": "pomocný podcaster",
+          "notes": [
+            "Druhá rola z názvu: pomocný podcaster.",
+            "Musíš: ozvať sa, stačí sa opýtať. Pridaj sa ku komunite, napríklad Ďakovačka. [NÁVRH] Ďakovačka: jednoduchý zvyk verejne poďakovať človeku, ktorý ti pomohol alebo ťa niečo naučil. Nestojí nič, nevyžaduje odvahu vystúpiť a je to najľahší prvý krok do komunity. (Over, či to sedí s tým, čo pod Ďakovačkou myslíš ty.)",
+            "Vzdaj sa: komfortnej zóny.",
+            "Ako to bolo u mňa: cez WebUP som sa pripletol ku CODECON-u a skončil vo výberovej komisii.",
+            "Pred rokom som napísal Dávidovi Tvrdoňovi, že nemôžem byť horší ako AI hlas v jeho podcaste Link. Odvtedy som spolumoderátor.",
+            "Toto je zároveň odpoveď na bod 3: stačí sa ozvať."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -4.8,
+                    5.7
+                  ],
+                  "depth": "mid",
+                  "title": "MUSÍŠ: JUST ASK · JOIN COMMUNITY",
+                  "align": "center",
+                  "width": 8.6,
+                  "fontScale": 1.45,
+                  "accentColor": "#5f7a63",
+                  "tilt": -1.5
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    5,
+                    4.5
+                  ],
+                  "depth": "front",
+                  "title": "VZDAJ SA: komfortnej zóny",
+                  "align": "center",
+                  "width": 8.6,
+                  "fontScale": 1.45,
+                  "accentColor": "#b4843f",
+                  "tilt": 1.5
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -5.4,
+                    3.3
+                  ],
+                  "depth": "front",
+                  "title": "Ako to bolo u mňa",
+                  "body": "cez WebUP ku CodeCon-u · jedna správa Dávidovi a som v podcaste Link",
+                  "width": 7.6,
+                  "fontScale": 1.15,
+                  "tilt": -2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "create",
+      "kicker": "learning + reading + writing + talking",
+      "style": "sticker",
+      "props": [
+        {
+          "type": "makerBench",
+          "position": [
+            -8.2,
+            0,
+            0.8
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 142,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "lightbulb",
+          "position": [
+            -4.6,
+            0,
+            2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 143,
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "paperRocket",
+          "position": [
+            9.2,
+            0,
+            0.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 144,
+            "animation": "launch",
+            "flip": false
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "crane",
+          "position": [
+            13.4,
+            0,
+            0.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 145
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "scaffold",
+          "position": [
+            5.2,
+            0,
+            1
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 146
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "builder",
+          "position": [
+            -11.8,
+            0,
+            1.8
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 147,
+            "animal": "bear",
+            "animation": "work"
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "bricks",
+          "position": [
+            6.6,
+            0,
+            1.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 148
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "typewriter",
+          "position": [
+            11.6,
+            0,
+            1.2
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 149,
+            "flip": false
+          },
+          "scale": 1.89
+        },
+        {
+          "type": "bookTower",
+          "position": [
+            12.9,
+            0,
+            1.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 150
+          },
+          "scale": 1.08
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            -14.2,
+            0
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 151
+          },
+          "scale": 1.35
+        },
+        {
+          "type": "pineTree",
+          "position": [
+            1.2,
+            0,
+            -0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 152
+          },
+          "scale": 1.35
+        }
+      ],
+      "slides": [
+        {
+          "id": "create",
+          "title": "CREATE something",
+          "notes": [
+            "[NÁVRH] Učenie, čítanie, písanie aj rozprávanie majú zmysel vtedy, keď po nich niečo ostane. Nemusí to byť startup. Stačí článok, malý nástroj, prednáška na meetupe alebo epizóda podcastu.",
+            "[NÁVRH] U mňa: táto prezentácia beží v nástroji, ktorý som si na ňu postavil. Aj to je „create something“.",
+            "[NÁVRH] Dôležité je, že výsledok je verejný a ostáva po ňom stopa."
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "id": "brand",
+      "kicker": "spíker, ktorého vybrala AI",
+      "style": "screen",
+      "mood": "night",
+      "ground": "stage",
+      "props": [
+        {
+          "type": "brandStairs",
+          "position": [
+            6.8,
+            0,
+            2.2
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 153,
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "light",
+          "position": [
+            7.4,
+            4.2
+          ],
+          "layer": -3.2,
+          "options": {
+            "seed": 154,
+            "intensity": 3,
+            "distance": 10
+          }
+        },
+        {
+          "type": "light",
+          "position": [
+            -7.4,
+            3.6
+          ],
+          "layer": -1.6,
+          "options": {
+            "seed": 155,
+            "intensity": 2,
+            "distance": 8,
+            "color": "#dfe8ff"
+          }
+        },
+        {
+          "type": "starBadge",
+          "position": [
+            12.6,
+            0,
+            0.2
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 156,
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "aiRobot",
+          "position": [
+            -6.6,
+            0,
+            1.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 157,
+            "animation": "point",
+            "flip": true
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "trophyPick",
+          "position": [
+            -9,
+            0,
+            2.4
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 158,
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "stageSpot",
+          "position": [
+            -13,
+            0,
+            -0.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 159,
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "stageSpot",
+          "position": [
+            13.6,
+            0,
+            0.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 160,
+            "flip": true
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "serverRack",
+          "position": [
+            -11.2,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 161
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "serverRack",
+          "position": [
+            -9.7,
+            0,
+            0.6
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 162
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "onAirSign",
+          "position": [
+            2.4,
+            0,
+            0.4
+          ],
+          "layer": "back",
+          "options": {
+            "seed": 163,
+            "flip": false
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "meetupChairs",
+          "position": [
+            -2.6,
+            0,
+            1.4
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 164
+          },
+          "scale": 1.3
+        },
+        {
+          "type": "meetupChairs",
+          "position": [
+            2.8,
+            0,
+            1.6
+          ],
+          "layer": "front",
+          "options": {
+            "seed": 165
+          },
+          "scale": 1.3
+        }
+      ],
+      "slides": [
+        {
+          "id": "brand",
+          "title": "Výsledok",
+          "notes": [
+            "Keď robíš štyri START bloky dlhodobo, vzniká brand. Ľudia o tebe vedia a vie o tebe aj AI.",
+            "Keď sa niekto spýta AI, koho pozvať alebo komu veriť, vyberie toho, o kom existuje stopa.",
+            "Odpoveď na NIKOHO NEZAUJÍMAM zo slidu 11 a uzavretie háčika zo slidu 1.",
+            "[NÁVRH – over fakty] Konkrétny príbeh: organizátori tejto konferencie pri výbere tém a spíkrov použili AI. Tá ma odporučila, lebo o mne našla osem rokov týždenníka, mesačník pre WebUP, podcast a prácu v komisii. Nikdy som si brand neplánoval, vznikol ako vedľajší produkt. (Doplň, ako to presne bolo.)"
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    -7.4,
+                    4.3
+                  ],
+                  "depth": "mid",
+                  "title": "BUILD YOUR BRAND",
+                  "align": "center",
+                  "width": 7.4,
+                  "fontScale": 1.15
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    0,
+                    5.5
+                  ],
+                  "depth": "mid",
+                  "title": "BE RECOGNIZABLE",
+                  "align": "center",
+                  "width": 7,
+                  "fontScale": 1.15
+                }
+              ]
+            },
+            {
+              "keep": true,
+              "parts": [
+                {
+                  "type": "text",
+                  "position": [
+                    7.2,
+                    6.7
+                  ],
+                  "depth": "mid",
+                  "title": "BE CHOSEN BY AI",
+                  "align": "center",
+                  "width": 6.8,
+                  "fontScale": 1.15
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zaver",
+      "kicker": "Záver",
+      "style": "paper",
+      "ground": "stage",
+      "props": [
+        {
+          "type": "curtain",
+          "position": [
+            0,
+            0
+          ],
+          "layer": -8.4,
+          "options": {
+            "seed": 166,
+            "animation": "open",
+            "flip": false,
+            "height": 7
+          }
+        },
+        {
+          "type": "text3d",
+          "position": [
+            0,
+            2.1
+          ],
+          "layer": -6.2,
+          "options": {
+            "seed": 167,
+            "text": "THAT'S ALL\nFOLKS",
+            "size": 1.15,
+            "shadow": false,
+            "colors": [
+              "#bd9662",
+              "#a5817f",
+              "#798877",
+              "#d6b386"
+            ],
+            "animation": "wave"
+          }
+        },
+        {
+          "type": "confettiCannon",
+          "position": [
+            -9.4,
+            0,
+            1.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 168,
+            "flip": false
+          },
+          "scale": 2.2
+        },
+        {
+          "type": "confettiCannon",
+          "position": [
+            9.4,
+            0,
+            1.6
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 169,
+            "flip": true
+          },
+          "scale": 2.2
+        },
+        {
+          "type": "stageSpot",
+          "position": [
+            -13.6,
+            0,
+            -1
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 170,
+            "animation": "idle",
+            "flip": false
+          }
+        },
+        {
+          "type": "stageSpot",
+          "position": [
+            13.6,
+            0,
+            -1
+          ],
+          "layer": "mid",
+          "options": {
+            "seed": 171,
+            "animation": "idle",
+            "flip": true
+          }
+        },
+        {
+          "type": "starBadge",
+          "position": [
+            -12.4,
+            0,
+            1.6
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 172,
+            "flip": false
+          }
+        },
+        {
+          "type": "paperRocket",
+          "position": [
+            12.6,
+            0,
+            1.4
+          ],
+          "layer": "action",
+          "options": {
+            "seed": 173,
+            "flip": false
+          },
+          "scale": 0.7
+        }
+      ],
+      "slides": [
+        {
+          "id": "rekapitulacia",
+          "title": "Rekapitulácia",
+          "notes": [
+            "Žiadny z týchto krokov nebol plánovaný. Vždy stačilo ozvať sa a urobiť prvý krok.",
+            "[NÁVRH] Jedna vec, ktorú môžeš urobiť ešte dnes: napíš jednému človeku z tejto konferencie, ktorého prednáška ťa zaujala. Poďakuj a spýtaj sa jednu otázku. Presne tak sa začali všetky moje kroky."
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "numbered",
+                  "position": [
+                    0,
+                    5.3
+                  ],
+                  "depth": "front",
+                  "items": [
+                    {
+                      "title": "Osobný brand v ére AI",
+                      "text": "kým o tebe nevedia, nikoho nezaujímaš"
+                    },
+                    {
+                      "title": "Čo funguje",
+                      "text": "START learning · reading · writing · talking"
+                    },
+                    {
+                      "title": "Komfortná zóna",
+                      "text": "stačí sa ozvať"
+                    }
+                  ],
+                  "width": 9.4,
+                  "fontScale": 1.12
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "thats-all-folks",
+          "title": "Ďakujem!",
+          "kicker": "(in 3D)",
+          "notes": [
+            "Poďakovať, priestor na otázky.",
+            "QR: vyvojari.dev je hotový. Substack a Link sú zatiaľ zástupné obrázky — po doplnení adries spusti: node tools/gen-qr.mjs substack <url> link <url>"
+          ],
+          "groups": [
+            {
+              "parts": [
+                {
+                  "type": "image",
+                  "position": [
+                    -9,
+                    1.9
+                  ],
+                  "depth": "front",
+                  "src": "images/qr-vyvojari.png",
+                  "caption": "vyvojari.dev",
+                  "width": 2.8
+                },
+                {
+                  "type": "image",
+                  "position": [
+                    0,
+                    1.9
+                  ],
+                  "depth": "front",
+                  "src": "images/qr-substack.png",
+                  "caption": "týždenník po anglicky",
+                  "width": 2.8
+                },
+                {
+                  "type": "image",
+                  "position": [
+                    9,
+                    1.9
+                  ],
+                  "depth": "front",
+                  "src": "images/qr-link.png",
+                  "caption": "podcast Link",
+                  "width": 2.8
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

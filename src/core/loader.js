@@ -1,5 +1,7 @@
 import { ROWS, SCENE_SPACING, WALK_SPEED, warn } from '../config.js';
 import { STYLE_NAMES, DEFAULT_STYLE } from '../styles/index.js';
+import { MOOD_NAMES, DEFAULT_MOOD } from '../environment/moods.js';
+import { GROUND_NAMES } from '../environment/ground.js';
 
 // Fetch + leniently validate public/presentation.json.
 // Only a JSON parse failure is fatal (shown in the #fatal overlay);
@@ -25,6 +27,14 @@ function styleName(value, fallback, context) {
   if (value == null) return fallback;
   if (STYLE_NAMES.includes(value)) return value;
   warn(`${context}: unknown style "${value}" — using "${fallback}" (known: ${STYLE_NAMES.join(', ')})`);
+  return fallback;
+}
+
+// One of a fixed set of names (mood, ground), or the fallback.
+function oneOf(value, names, fallback, what, context) {
+  if (value == null) return fallback;
+  if (names.includes(value)) return value;
+  warn(`${context}: unknown ${what} "${value}" — using "${fallback}" (known: ${names.join(', ')})`);
   return fallback;
 }
 
@@ -81,6 +91,9 @@ function normalizeScene(s, i, deckStyle = DEFAULT_STYLE) {
   const id = scene.id ?? `scene-${i}`;
   const sceneStyle = styleName(scene.style, deckStyle, `scene "${id}"`);
   const kicker = typeof scene.kicker === 'string' ? scene.kicker : '';
+  // The scene's weather and what it stands on (see environment/moods.js, ground.js).
+  const mood = oneOf(scene.mood, MOOD_NAMES, DEFAULT_MOOD, 'mood', `scene "${id}"`);
+  const ground = oneOf(scene.ground, GROUND_NAMES, 'meadow', 'ground', `scene "${id}"`);
   const props = (Array.isArray(scene.props) ? scene.props : [])
     .map((p, j) => normalizeProp(p, `scene "${id}" prop ${j}`));
 
@@ -148,6 +161,8 @@ function normalizeScene(s, i, deckStyle = DEFAULT_STYLE) {
       // Look of this slide's panels and titles: its own, else the scene's,
       // else the deck's (meta.style), else the paper default.
       style: styleName(slide.style, sceneStyle, ctx),
+      // A slide may change the scene's weather while it is on screen.
+      mood: oneOf(slide.mood, MOOD_NAMES, mood, 'mood', ctx),
       // Speaker notes — never drawn in the deck, shown in the presenter view (F).
       notes: Array.isArray(slide.notes) ? slide.notes.filter((n) => typeof n === 'string').join('\n\n')
         : (typeof slide.notes === 'string' ? slide.notes : ''),
@@ -157,7 +172,7 @@ function normalizeScene(s, i, deckStyle = DEFAULT_STYLE) {
     };
   });
 
-  return { id, kicker, props, steps, slides };
+  return { id, kicker, mood, ground, props, steps, slides };
 }
 
 function normalizeProp(p, context) {
@@ -168,6 +183,7 @@ function normalizeProp(p, context) {
   if (typeof scale === 'number') scale = [scale, scale, scale];
   return {
     type: String(prop.type ?? 'unknown'),
+    id: typeof prop.id === 'string' ? prop.id : null, // lets a moving prop name its target
     x: Number(pos[0]) || 0,
     y: Number(pos[1]) || 0,
     dz: Number(pos[2]) || 0,

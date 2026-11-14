@@ -7,6 +7,8 @@ import { createTitle } from '../parts/title.js';
 import { buildPart } from '../parts/partsFactory.js';
 import { useStyle, DEFAULT_STYLE } from '../styles/index.js';
 import { addObstacle } from './world.js';
+import { createMover } from './movers.js';
+import { moodState, mixMoods, easeMood } from '../environment/moods.js';
 import { CONTENT_LAYER } from './focusMode.js';
 import { ACTIVE_SCENE_RADIUS, PART_CASCADE, PART_STACK_DZ, PART_STAGGER } from '../config.js';
 
@@ -22,7 +24,8 @@ function tagContent(obj) {
 function registerObstacle(obj, prop, originX, z, sceneId) {
   // vehicles move (traffic handles them), backdrops are scenery, and things
   // stacked on furniture (a mug on a desk) stand on another obstacle
-  if (obj.userData.drives || prop.type === 'mountainBackdrop' || prop.y > 0.2) return;
+  if (obj.userData.drives || obj.userData.moves || obj.userData.noObstacle || prop.options.obstacle === false
+    || prop.type === 'mountainBackdrop' || prop.y > 0.2) return;
   const f = obj.userData.footprint3d;
   const sp = obj.userData.sprite;
   if (!f && !sp) return;
@@ -55,8 +58,12 @@ export function buildDeck(deck, scene3) {
   document.title = deck.meta.title;
 
   // Terrain (rivers may be requested per scene later; keep the hook simple).
+  // a scene may stand on its own kind of ground (asphalt, floor, stage…)
+  const zones = deck.scenes
+    .map((sc, i) => ({ kind: sc.ground, x0: (i - 0.5) * spacing, x1: (i + 0.5) * spacing }))
+    .filter((zn) => zn.kind && zn.kind !== 'meadow');
   const ground = createGround({
-    minX, maxX, seed: deck.meta.seed, rivers: deck.meta.rivers, roads: deck.meta.roads,
+    minX, maxX, seed: deck.meta.seed, rivers: deck.meta.rivers, roads: deck.meta.roads, zones,
   });
   scene3.add(ground.group);
 
@@ -78,6 +85,12 @@ export function buildDeck(deck, scene3) {
 
     const updatables = [];
     const propObjs = []; // in deck order — closeups can aim at a prop
+    const byId = new Map(); // props a moving prop can name ("target", "from")
+    const moverEnv = {
+      originX,
+      heightAt: (x, z) => ground.heightAt(originX + x, z),
+      byId: (id) => byId.get(id) ?? null,
+    };
 
     for (const prop of sceneDef.props) {
       const obj = build(prop.type, prop.options);
@@ -101,6 +114,12 @@ export function buildDeck(deck, scene3) {
       }
       group.add(obj);
       propObjs.push(obj);
+      if (prop.id) byId.set(prop.id, obj);
+      // a prop with options.move travels by itself (core/movers.js)
+      if (prop.options.move && typeof prop.options.move === 'object') {
+        const drive = createMover(obj, prop, moverEnv);
+        if (drive) obj.userData.update = drive;
+      }
       registerObstacle(obj, prop, originX, z, sceneDef.id);
       obj.traverse((child) => {
         if (child.userData.update) updatables.push(child.userData.update);
@@ -164,13 +183,62 @@ export function buildDeck(deck, scene3) {
     for (const batch of stepParts) {
       for (const part of batch) part.userData.pos3d = part.position.clone();
     }
-    return { group, originX, slideTitles, stepParts, meta, slides: sceneDef.slides, updatables, propObjs };
+    return { group, originX, slideTitles, stepParts, meta, slides: sceneDef.slides, mood: sceneDef.mood, updatables, propObjs };
   });
+
+  // ── mood: the weather follows the camera from scene to scene ──────────
+  // Each scene has a mood (the one on screen may take its active slide's);
+  // the world's tints, fog and lights are mixed by camera position between
+  // the two nearest scenes and eased, so walking into the gloom darkens the
+  // sky gradually and a slide can brighten it again.
+  const usesMoods = deck.scenes.some((sc) => sc.mood !== 'day' || sc.slides.some((sl) => sl.mood !== 'day'));
+  const lights = { hemi: null, key: null };
+  scene3.traverse((o) => {
+    if (o.isHemisphereLight) lights.hemi = o;
+    else if (o.isDirectionalLight) lights.key = o;
+  });
+  const moodCache = new Map();
+  const moodOf = (name) => { if (!moodCache.has(name)) moodCache.set(name, moodState(name)); return moodCache.get(name); };
+  const moodNow = moodState('day');
+  const moodGoal = moodState('day');
+  const based = (mats) => mats.map((m) => ({ m, base: m.color.clone() }));
+  const tinted = {
+    sky: based(backdrop.userData.skyMats),
+    hills: based(backdrop.userData.hillMats),
+    clouds: based(clouds.userData.mats),
+    ground: based(ground.tintMats),
+  };
+  const sunMats = sun.userData.mats;
+  const bgBase = scene3.background?.isColor ? scene3.background.clone() : null;
+  let shownAt = { scene: 0, slide: 0 };
+  let moodDirty = true;
+  function applyMood(m) {
+    for (const key of Object.keys(tinted)) for (const { m: mat, base } of tinted[key]) mat.color.copy(base).multiply(m[key]);
+    if (bgBase) scene3.background.copy(bgBase).multiply(m.sky);
+    if (scene3.fog) { scene3.fog.color.copy(m.fog); scene3.fog.near = m.fogNear; scene3.fog.far = m.fogFar; }
+    if (lights.hemi) { lights.hemi.color.copy(m.hemiSky); lights.hemi.groundColor.copy(m.hemiGround); lights.hemi.intensity = m.hemi; }
+    if (lights.key) { lights.key.color.copy(m.key); lights.key.intensity = m.keyI; }
+    for (const mat of sunMats) mat.opacity = m.sun;
+    const stars = backdrop.userData.stars;
+    stars.visible = m.stars > 0.01;
+    stars.material.opacity = m.stars * 0.9;
+  }
+  function updateMood(cameraX, dt) {
+    if (!usesMoods) return;
+    const f = Math.max(0, Math.min(sceneCount - 1, cameraX / spacing));
+    const i = Math.min(Math.floor(f), Math.max(sceneCount - 2, 0));
+    const j = Math.min(i + 1, sceneCount - 1);
+    const name = (s) => (s === shownAt.scene ? scenes[s].slides[shownAt.slide]?.mood : null) ?? scenes[s].mood;
+    const k = Math.min(Math.max((f - i - 0.2) / 0.6, 0), 1); // hold near a scene, change on the way
+    mixMoods(moodGoal, moodOf(name(i)), moodOf(name(j)), k * k * (3 - 2 * k));
+    if (easeMood(moodNow, moodGoal, dt) || moodDirty) { applyMood(moodNow); moodDirty = false; }
+  }
 
   // The single title visible right now (across all scenes/slides).
   let shownTitle = null;
   function showSlideTitle(sceneIndex, slideIndex) {
     const t = scenes[sceneIndex].slideTitles[slideIndex];
+    shownAt = { scene: sceneIndex, slide: slideIndex };
     if (t === shownTitle) return;
     if (shownTitle) shownTitle.userData.setShown(false);
     t.userData.setShown(true, !shownTitle); // instant for the very first
@@ -430,6 +498,7 @@ export function buildDeck(deck, scene3) {
       const flat = !!focus?.active;
       sun.visible = !flat;
       backdrop.scale.y = flat ? 0.45 : 1;
+      updateMood(cameraX, dt);
       clouds.userData.update(t, dt);
       for (const s of scenes) {
         if (Math.abs(s.originX - cameraX) > ACTIVE_SCENE_RADIUS) continue;

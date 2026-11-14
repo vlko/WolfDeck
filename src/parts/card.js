@@ -211,13 +211,18 @@ export function windowK(k, i, n, overlap = 0.55) {
 
 export const FONT_STACK = "Nunito, 'Avenir Next', 'Trebuchet MS', sans-serif";
 
+// Inline markup: ~~text~~ is struck through (see fillLine). Markers take no
+// room when measuring.
+const STRIKE = '~~';
+const plain = (text) => text.split(STRIKE).join('');
+
 export function wrapLines(ctx, text, maxWidth) {
   const lines = [];
   for (const para of String(text).split('\n')) {
     let line = '';
     for (const word of para.split(' ')) {
       const attempt = line ? `${line} ${word}` : word;
-      if (ctx.measureText(attempt).width > maxWidth && line) {
+      if (ctx.measureText(plain(attempt)).width > maxWidth && line) {
         lines.push(line);
         line = word;
       } else {
@@ -226,7 +231,50 @@ export function wrapLines(ctx, text, maxWidth) {
     }
     lines.push(line);
   }
-  return lines;
+  // a struck run that wraps is closed on its line and reopened on the next
+  let open = false;
+  return lines.map((raw) => {
+    let line = open ? STRIKE + raw : raw;
+    open = (line.split(STRIKE).length - 1) % 2 === 1;
+    if (open) line += STRIKE;
+    return line;
+  });
+}
+
+// fillText with the inline markup honored: struck runs are dimmed and
+// crossed by a rose line. Respects ctx.textAlign left / center / right.
+export function fillLine(ctx, line, x, y, strikeColor = '#b5544d') {
+  if (!line.includes(STRIKE)) { ctx.fillText(line, x, y); return; }
+  const runs = line.split(STRIKE);
+  const widths = runs.map((r) => ctx.measureText(r).width);
+  const total = widths.reduce((a, b) => a + b, 0);
+  const align = ctx.textAlign;
+  let cx = align === 'center' ? x - total / 2 : (align === 'right' || align === 'end' ? x - total : x);
+  const size = parseFloat(ctx.font.match(/([\d.]+)px/)?.[1] ?? '32');
+  const fill = ctx.fillStyle;
+  const alpha = ctx.globalAlpha;
+  ctx.textAlign = 'left';
+  runs.forEach((run, i) => {
+    const struck = i % 2 === 1;
+    ctx.globalAlpha = alpha * (struck ? 0.62 : 1);
+    ctx.fillText(run, cx, y);
+    if (struck && run.trim()) {
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = strikeColor;
+      const lead = ctx.measureText(run.match(/^\s*/)[0]).width;
+      const trail = ctx.measureText(run.match(/\s*$/)[0]).width;
+      const t = Math.max(3, size * 0.1);
+      ctx.save();
+      ctx.translate(cx + lead - size * 0.08, y - size * 0.3);
+      ctx.rotate(-0.025); // a hand-drawn slant
+      ctx.fillRect(0, -t / 2, widths[i] - lead - trail + size * 0.16, t);
+      ctx.restore();
+      ctx.fillStyle = fill;
+    }
+    cx += widths[i];
+  });
+  ctx.globalAlpha = alpha;
+  ctx.textAlign = align;
 }
 
 // Wraps content into the floating in-place part the deck places in a scene:

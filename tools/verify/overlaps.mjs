@@ -6,7 +6,7 @@ const decks = process.argv.slice(2).length ? process.argv.slice(2) : ['presentat
 const { browser, page } = await launch({ width: 800, height: 450 });
 for (const deck of decks) {
   await page.goto(`${BASE}/?deck=${deck}`);
-  await page.waitForFunction(() => window.wolfdeck, null, { timeout: 30000 });
+  await page.waitForFunction(() => window.wolfdeck, null, { timeout: 120000 });
   const report = await page.evaluate(() => {
     const w = window.wolfdeck.world;
     const obs = w.allObstacles();

@@ -7,7 +7,7 @@ const n = names.split(',').length;
 const { browser, page } = await launch({ width: 1600, height: 420 * n + 110 }); // + toolbar (may wrap to two lines)
 const pack = process.env.LAB_PACK ? `&pack=${process.env.LAB_PACK}` : '';
 await page.goto(`${BASE}/lab.html?m=${names}&t=${t}${anim ? `&anim=${anim}` : ''}${pack}`);
-await page.waitForFunction(() => window.labReady, null, { timeout: 30000 }).catch(() => console.log('lab not ready'));
+await page.waitForFunction(() => window.labReady, null, { timeout: 120000 }).catch(() => console.log('lab not ready'));
 // fit the window to the whole page (the toolbar wraps as filters are added);
 // a spacer under the last row keeps it clear of the bottom edge
 await page.evaluate(() => { const d = document.createElement('div'); d.style.height = '140px'; document.getElementById('rows').appendChild(d); });

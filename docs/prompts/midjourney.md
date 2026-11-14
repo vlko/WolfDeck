@@ -1,7 +1,7 @@
 # Midjourney prompts for WolfDeck assets
 
 Recipe for generating new asset art in the exact style of the project's
-reference sheets ([`visual.png`](visual.png), `city 1.png`, `city 2.png`,
+reference sheets ([`visual.png`](../../RawSources/sheets/visual.png), `city 1.png`, `city 2.png`,
 `office.png`, `shop.png`) — papercraft low-poly, cozy storybook palette.
 WolfDeck's sprites are cut straight out of these sheets, so a new sheet made
 with this recipe becomes new props the moment you add its cut list (see
@@ -92,7 +92,7 @@ Ready-made prompts for every object the decks still miss are in
 4. Upscale. Keep the background **pure white** and objects **apart from
    each other** — `tools/extract-sprites.mjs` floods the white (and the soft
    shadows) from the border, and touching objects come out as one piece.
-5. Drop the sheet in the repo root, add it to `tools/sprites.config.js` with
+5. Drop the sheet in `RawSources/sheets/`, add it to `tools/sprites.config.js` with
    one rectangle per piece, and run `npm run sprites`. Check the contact
    sheet `docs/assets/sprites.jpg` for bites (use `tight`/`hull`) or
    leftover shadow (use `hardShadow`).

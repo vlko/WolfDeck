@@ -1,0 +1,11 @@
+{
+  "couch": { "sprites": ["couch"], "height": 1.25, "anim": "idle" },
+  "plannerBoard": { "sprites": ["plannerBoard"], "height": 1.9, "anim": "plan", "anims": ["plan", "idle"] },
+  "retroTv": { "sprites": ["retroTv"], "height": 1.5, "anim": "watch", "anims": ["watch", "off"] },
+  "openBook": { "sprites": ["openBook"], "height": 1.35, "anim": "read", "anims": ["read", "idle"] },
+  "meetupChairs": { "sprites": ["meetupChairs"], "height": 1.0 },
+  "projectorScreen": { "sprites": ["projectorScreen"], "height": 2.5, "anim": "slides", "anims": ["slides", "idle"] },
+  "floorLamp": { "sprites": ["floorLamp"], "height": 2.1, "anim": "idle" },
+  "bookTower": { "sprites": ["bookTower"], "height": 1.6, "anim": "idle" },
+  "learnerCat": { "sprites": ["learnerCat"], "height": 1.5, "anim": "write", "anims": ["write", "idle"] }
+}

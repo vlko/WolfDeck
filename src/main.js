@@ -50,6 +50,8 @@ async function start() {
   // …and only the slide styles it uses.
   await Promise.all([
     loadModelsFor(names),
+    // extruded lettering brings a font along — only decks that use it pay
+    deck.scenes.some((sc) => sc.props.some((p) => p.type === 'text3d')) ? import('./assets/text3d.js') : null,
     loadStyles(deck.scenes.flatMap((sc) => sc.slides.map((sl) => sl.style))),
   ]);
 

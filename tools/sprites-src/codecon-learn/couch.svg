@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 500" width="1040" height="500">
+  <!-- feet -->
+  <polygon points="58,468 102,468 96,500 66,500" fill="#7b6548"/>
+  <polygon points="938,468 982,468 974,500 944,500" fill="#5f4d37"/>
+  <!-- back -->
+  <polygon points="110,300 110,52 150,2 520,0 520,300" fill="#a5817f"/>
+  <polygon points="520,0 890,2 930,52 930,300 520,300" fill="#8a6866"/>
+  <!-- back cushions -->
+  <polygon points="140,86 506,86 323,190" fill="#c6a8a5"/>
+  <polygon points="140,86 323,190 140,294" fill="#b99895"/>
+  <polygon points="506,86 506,294 323,190" fill="#a38381"/>
+  <polygon points="140,294 323,190 506,294" fill="#ad8c8a"/>
+  <polygon points="534,86 900,86 717,190" fill="#b29390"/>
+  <polygon points="534,86 717,190 534,294" fill="#a68684"/>
+  <polygon points="900,86 900,294 717,190" fill="#8f6f6d"/>
+  <polygon points="534,294 717,190 900,294" fill="#997977"/>
+  <!-- base -->
+  <polygon points="120,290 520,290 520,470 120,470" fill="#9a7775"/>
+  <polygon points="520,290 920,290 920,470 520,470" fill="#82605e"/>
+  <!-- seat cushions -->
+  <polygon points="124,306 138,292 504,292 516,306 516,352 504,364 138,364 124,352" fill="#b39290"/>
+  <polygon points="138,292 504,292 516,306 124,306" fill="#c8aba8"/>
+  <polygon points="524,306 536,292 902,292 916,306 916,352 902,364 536,364 524,352" fill="#9c7a78"/>
+  <polygon points="536,292 902,292 916,306 524,306" fill="#b29390"/>
+  <!-- folded blanket -->
+  <polygon points="160,274 330,274 330,294 160,294" fill="#798877"/>
+  <polygon points="164,256 326,256 330,274 160,274" fill="#a4b1a2"/>
+  <polygon points="160,238 330,238 326,256 164,256" fill="#8c9c8a"/>
+  <polygon points="296,238 310,238 308,256 294,256" fill="#e9e2d1"/>
+  <polygon points="294,256 308,256 310,274 296,274" fill="#f2ede2"/>
+  <polygon points="296,274 310,274 310,294 296,294" fill="#d6cdb8"/>
+  <!-- throw pillow -->
+  <g transform="translate(825,222) rotate(-20)">
+    <polygon points="-55,-55 55,-55 0,0" fill="#dcbb88"/>
+    <polygon points="-55,-55 0,0 -55,55" fill="#cfa873"/>
+    <polygon points="55,-55 55,55 0,0" fill="#a8844f"/>
+    <polygon points="-55,55 0,0 55,55" fill="#b89159"/>
+  </g>
+  <!-- arms -->
+  <polygon points="0,470 0,252 26,210 96,210 122,252 122,470" fill="#b99895"/>
+  <polygon points="96,210 122,252 122,470 96,470" fill="#a5817f"/>
+  <polygon points="0,252 26,210 96,210 122,252" fill="#cdb1ae"/>
+  <polygon points="918,470 918,252 944,210 1014,210 1040,252 1040,470" fill="#8f6c6b"/>
+  <polygon points="944,210 918,252 918,470 944,470" fill="#9c7a78"/>
+  <polygon points="918,252 944,210 1014,210 1040,252" fill="#a98987"/>
+  <!-- tv remote on the right armrest -->
+  <polygon points="950,196 1012,196 1016,210 946,210" fill="#4b5654"/>
+  <polygon points="950,196 1012,196 1010,190 954,190" fill="#5f6b68"/>
+  <rect x="960" y="191" width="9" height="4" fill="#b5544d"/>
+  <rect x="976" y="191" width="6" height="4" fill="#e9e2d1"/>
+  <rect x="987" y="191" width="6" height="4" fill="#e9e2d1"/>
+  <rect x="998" y="191" width="6" height="4" fill="#e9e2d1"/>
+</svg>

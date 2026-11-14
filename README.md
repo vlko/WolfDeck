@@ -37,6 +37,7 @@ opens with `?deck=<file>`:
 | `presentation.json` | The demo deck — a short tour of the meadow (default) |
 | `showcase.json` | Every part type, styling option and slide style, live |
 | `rozpocet-2025.json` | A full real-world talk: 15 scenes, 34 slides, speaker notes (Slovak) |
+| `codecon-2026.json` | A conference talk using moods, grounds, moving props, the `diff` part and all five styles (Slovak; written from `tools/decks/codecon-2026.mjs`) |
 
 ## Controls
 
@@ -124,6 +125,9 @@ Scenes are dressed with **props** — trees, houses, animals, vehicles.
 | `table` | A small data table |
 | `image` | A picture with a caption |
 | `chart` | 3D bar, grouped, horizontal, line, pie or donut chart |
+| `diff` | A console diff — removed lines red, added lines green, typed in line by line |
+
+In text parts `~~words~~` are struck through.
 
 A slide can also pick a **style** — the look of its panels and titles and
 how the panels enter:
@@ -139,6 +143,13 @@ how the panels enter:
 Set it per slide (`{ "id": "revenue", "style": "screen", … }`), per scene, or
 for the whole deck in `meta.style`. Add `?style=cyber` to the URL to try one
 style on every slide. `?deck=showcase.json#style-paper` shows all five.
+
+A scene can also set its **mood** (`day`, `gloom`, `dawn`, `dusk`, `night` —
+sky, fog and light change as the wolf walks in) and its **ground** (`meadow`,
+`asphalt`, `floor`, `barren`, `stage`), and props can **move** by themselves:
+lap a circuit, cross the scene, chase or flee one another
+(`"options": { "move": { "kind": "loop", … } }`). `"type": "text3d"` stands
+extruded lettering in the scene.
 
 Where to go next:
 
@@ -200,7 +211,7 @@ Where to go next:
 - **Catalog** — [docs/assets/](docs/assets/README.md) lists every asset
   type, its variants, default height and allowed animations.
 - **Adding art** — generate a reference sheet with the recipe in
-  [midjourney.md](midjourney.md), cut it with `npm run sprites`, then model
+  [midjourney.md](docs/prompts/midjourney.md), cut it with `npm run sprites`, then model
   the pieces; see *Extending the asset library* in
   [SPECIFICATION.md](SPECIFICATION.md).
 
@@ -231,6 +242,7 @@ docs/assets/       the generated asset catalog
 | `npm run build` | Static bundle in `dist/` |
 | `npm run preview` | Serve the built bundle locally |
 | `npm run sprites` | Re-cut the sprites from the sheets and refresh the catalog |
+| `npm run svg-sprites` | Render the drawn reference sprites in `tools/sprites-src/` |
 | `npm run asset-docs` | Regenerate `docs/assets/README.md` |
 | `npm run model-index` | Regenerate `src/models/packs.json` (dev and build do it by themselves) |
 
@@ -254,6 +266,6 @@ JSON is fetched relative to the page URL.
 - [SPECIFICATION.md](SPECIFICATION.md) — full reference
 - [SCENES.md](SCENES.md) — authoring tutorial
 - [docs/assets/](docs/assets/README.md) — asset catalog
-- [midjourney.md](midjourney.md) — prompt recipe for new reference sheets
+- [docs/prompts/midjourney.md](docs/prompts/midjourney.md) — prompt recipe for new reference sheets
 
 Licensed under the [MIT License](LICENSE).

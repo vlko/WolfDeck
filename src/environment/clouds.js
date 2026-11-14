@@ -23,6 +23,8 @@ export function createClouds({ minX, maxX, count = 7, seed = 5 }) {
   const group = new THREE.Group();
   const r = rng(seed);
   const clouds = [];
+  let bodyMat = null; // own materials, so a mood can tint the clouds
+  let baseMat = null;
 
   for (let i = 0; i < count; i += 1) {
     const parts = [];
@@ -38,9 +40,13 @@ export function createClouds({ minX, maxX, count = 7, seed = 5 }) {
     top.translate(-x / 2, 0, 0);
     const cloud = new THREE.Group();
     const body = paperMesh(top, palette.cloud, seed + i, 0.03, { unlit: true, side: THREE.DoubleSide });
+    bodyMat ??= body.material.clone();
+    body.material = bodyMat;
     cloud.add(body);
     // shaded flat underside strip, like the folded base of a paper cloud
     const base = paperMesh(new THREE.PlaneGeometry(x * 0.94, 0.3).translate(0, -0.15, 0.01), '#e9e4d6', seed + i + 50, 0.02, { unlit: true, side: THREE.DoubleSide });
+    baseMat ??= base.material.clone();
+    base.material = baseMat;
     cloud.add(base);
     cloud.position.set(minX + r() * (maxX - minX), 11 + r() * 4, -22 - r() * 10);
     const s = 0.8 + r() * 0.6;
@@ -57,5 +63,6 @@ export function createClouds({ minX, maxX, count = 7, seed = 5 }) {
     }
   };
 
+  group.userData.mats = [bodyMat, baseMat].filter(Boolean);
   return group;
 }

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 500" width="280" height="500">
+<g transform="translate(140 500) scale(5 -5)">
+<polygon points="-25,0 0,0 0,6 -25,6" fill="#4b5654"/><polygon points="0,0 25,0 25,6 0,6" fill="#3a4442"/>
+<polygon points="-22,6 0,6 0,10 -22,10" fill="#66726f"/><polygon points="0,6 22,6 22,10 0,10" fill="#4b5654"/>
+<polygon points="-20,10 -2,10 -2,80 -20,80" fill="#c9645a"/><polygon points="-2,10 20,10 20,80 -2,80" fill="#97443f"/>
+<polygon points="-8,10 6,10 6,80 -8,80" fill="#b5544d"/>
+<polygon points="-20,20 -2,20 -2,23 -20,23" fill="#a34a44"/><polygon points="-2,20 20,20 20,23 -2,23" fill="#82393a"/>
+<polygon points="-9,33 0,33 0,45 -9,45" fill="#e9e2d1"/><polygon points="0,33 9,33 9,45 0,45" fill="#d2cab7"/>
+<polygon points="-6,40 6,40 6,42 -6,42" fill="#4b5654"/>
+<polygon points="-6,36.5 3,36.5 3,38 -6,38" fill="#66726f"/>
+<polygon points="-17,52 0,52 0,66 -17,66" fill="#f1ecdf"/><polygon points="0,52 17,52 17,66 0,66" fill="#ddd6c4"/>
+<polygon points="-15,56 15,56 15,62 -15,62" fill="#24221e"/>
+<polygon points="-15,62.5 15,62.5 16,66.5 -16,66.5" fill="#d57a6e"/>
+<polygon points="-14,60 -2,61 -1,52 -13,50" fill="#d6b386"/>
+<polygon points="-14,60 -2,61 -7.5,56" fill="#bd9a6e"/>
+<polygon points="3,61 14,60 15,51 4,52.5" fill="#f1ecdf"/>
+<polygon points="3,61 14,60 9,56" fill="#ddd6c4"/>
+<polygon points="-24,80 -2,80 -2,84 -24,84" fill="#c9645a"/><polygon points="-2,80 24,80 24,84 -2,84" fill="#97443f"/>
+<polygon points="-23,84 -2,84 -2,94 -8,94 -18,91" fill="#b5544d"/><polygon points="-2,84 23,84 18,91 8,94 -2,94" fill="#8c3f3b"/>
+<polygon points="-4,94 -1,94 -1,100 -4,100" fill="#c9645a"/><polygon points="-1,94 4,94 4,100 -1,100" fill="#97443f"/>
+<g transform="translate(1 80) rotate(-7)"><polygon points="-12,-7 12,-7 12,7 -12,7" fill="#f6f2e6"/><polygon points="-12,7 12,7 0,-1.5" fill="#e0d9c7"/><polygon points="6.5,-5.2 10,-5.2 10,-1.7 6.5,-1.7" fill="#a5817f"/></g>
+</g>
+</svg>

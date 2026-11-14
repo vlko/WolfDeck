@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="270" height="500" viewBox="0 0 270 500">
+<g transform="translate(135,500) scale(5,-5)">
+<polygon points="-24,0 -21,0 -13,84 -15,84" fill="#6d5a40"/>
+<polygon points="21,0 24,0 15,84 13,84" fill="#5f4d36"/>
+<rect x="-18.43" y="10.7" width="36.86" height="3" fill="#e0c39a" />
+<rect x="0" y="10.7" width="18.43" height="3" fill="#cbab7e" />
+<rect x="-17.36" y="22.7" width="34.71" height="3" fill="#e0c39a" />
+<rect x="0" y="22.7" width="17.36" height="3" fill="#cbab7e" />
+<rect x="-16.29" y="34.7" width="32.57" height="3" fill="#e0c39a" />
+<rect x="0" y="34.7" width="16.29" height="3" fill="#cbab7e" />
+<rect x="-15.21" y="46.7" width="30.43" height="3" fill="#e0c39a" />
+<rect x="0" y="46.7" width="15.21" height="3" fill="#cbab7e" />
+<rect x="-13.07" y="70.7" width="26.14" height="3" fill="#e0c39a" />
+<rect x="0" y="70.7" width="13.07" height="3" fill="#cbab7e" />
+<polygon points="-14.14,61.6 -14.14,58.4 -3.5,54.6 -1.6,56.2 -3.2,56.6 -2.2,58.2" fill="#e0c39a"/>
+<polygon points="14.14,61.6 14.14,58.4 5.5,55.8 3.4,57 5.2,57.8 4,59.6" fill="#cbab7e"/>
+<polygon points="-22,0 -17,0 -9.5,84 -14.5,84" fill="#c9a36c"/>
+<polygon points="17,0 22,0 14.5,84 9.5,84" fill="#ad8855"/>
+<rect x="-23" y="0" width="7" height="1.6" fill="#5a6664" />
+<rect x="16" y="0" width="7" height="1.6" fill="#465150" />
+<rect x="-16" y="83" width="32" height="4" fill="#8a7253" />
+<rect x="0" y="83" width="16" height="4" fill="#6d5a40" />
+<rect x="-0.8" y="87" width="1.6" height="13" fill="#465150" />
+<polygon points="0.8,99.5 22,95 0.8,90.5" fill="#c4665e"/>
+<polygon points="0.8,95 22,95 0.8,90.5" fill="#b5544d"/>
+</g>
+</svg>

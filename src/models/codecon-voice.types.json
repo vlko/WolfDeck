@@ -1,0 +1,12 @@
+{
+  "typewriter": { "sprites": ["typewriter"], "height": 0.6, "anim": "type" },
+  "newsletterStack": { "sprites": ["newsletterStack"], "height": 0.8, "anim": "idle" },
+  "paperPlane": { "sprites": ["paperPlane"], "height": 1.0, "anim": "glide", "shadow": false },
+  "postBoxOpen": { "sprites": ["postBoxOpen"], "height": 1.7, "anim": "post" },
+  "podcastMic": { "sprites": ["podcastMic"], "height": 1.6, "anim": "idle" },
+  "headphones": { "sprites": ["headphones"], "height": 0.9, "anim": "idle" },
+  "speechBubbles": { "sprites": ["speechBubbles"], "height": 2.0, "anim": "chat", "shadow": false },
+  "onAirSign": { "sprites": ["onAirSign"], "height": 1.9, "anim": "on" },
+  "podcastHost": { "sprites": ["podcastHost"], "height": 1.6, "anim": "talk" },
+  "fomoFeed": { "sprites": ["fomoFeed"], "height": 2.2, "anim": "scroll" }
+}

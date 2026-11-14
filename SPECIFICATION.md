@@ -2,8 +2,8 @@
 
 WolfDeck is a WebGL presentation framework styled as a **paper-theatre
 diorama**. Every tree, house, car and animal is a piece cut straight out of
-the illustrated reference sheets (`visual.png`, `city 1.png`, `city 2.png`,
-`office.png`, `shop.png`) and stood upright on a faceted paper meadow like a
+the illustrated reference sheets (`RawSources/sheets/`: `visual.png`, `city 1.png`,
+`city 2.png`, `office.png`, `shop.png` …) and stood upright on a faceted paper meadow like a
 cardboard theatre figure. Sky, hills, panels and charts are drawn in code in
 the same nine-swatch palette (printed on `shop.png`) with the same paper
 grain, so everything reads as one illustration. A cute origami wolf trots
@@ -205,7 +205,8 @@ slides). Combine with the URL hash to deep-link a slide:
   "layer": "back",             // back | mid | action | front — or a number (z)
   "scale": 1.2,                // uniform, or [x, y, z]
   "rotation": 15,              // degrees of yaw — real 3D, turns the object
-  "options": { }               // per-asset options (see its doc file)
+  "options": { },              // per-asset options (see its doc file)
+  "id": "cheese"               // optional name — lets a moving prop refer to it
 }
 ```
 
@@ -216,6 +217,50 @@ Placement tips:
 - Animated assets take `{ "animation": "<name>" }`; each asset's allowed
   animation names are listed in its doc file (and in the table below).
   Unknown names warn and fall back to the asset's default.
+
+### Moving props
+
+A prop travels through its scene by itself when its options carry `move`.
+The mover positions it every frame, turns it to face where it is going
+(models are built front = +x), spins `rig.parts.wheels`, and plays the rig's
+moving animation (`drive` / `run` / `roll` / `glide`…) while it travels and
+its still one (`idle` / `sniff`…) while it rests. Coordinates are
+scene-local `[x, z]`. Moving props are no obstacle for the wolf; a chaser
+arcs round him and a crossing prop drifts aside when he stands in its way.
+
+| `move.kind` | Fields | Does |
+|---|---|---|
+| `loop` | `oval: [cx, cz, halfStraight, radius]` or `points: [[x, z], …]` (≥ 3, rounded into a smooth closed curve), `speed`, `startAt` (0–1), `lane` (sideways offset), `clockwise` | Laps a closed circuit — race cars |
+| `cross` | `from: [x, z]`, `to: [x, z]`, `speed`, `pause` (seconds between runs), `startAt` | Crosses the scene again and again, shrinking away at the far end — a tumbleweed, a paper plane |
+| `chase` | `target: "<prop id>"`, `speed`, `reach`, `think` (seconds it looks around when the target has moved) | Runs after another prop |
+| `flee` | `from: "<prop id>"`, `spots: [[x, z], …]`, `near` (how close the chaser may get), `hop` (jump height), `air` (seconds in the air) | Rests on a spot until the chaser is near, then hops to the spot farthest from it |
+
+`"anims": { "move": "run", "still": "sniff" }` overrides the animation pick.
+
+```jsonc
+{ "type": "cheese", "id": "cheese", "position": [-8, 0], "layer": "action",
+  "options": { "move": { "kind": "flee", "from": "mouse", "spots": [[-8, 2], [8, 2], [0, 3.4]] } } },
+{ "type": "mouse", "id": "mouse", "position": [6, 0], "layer": "action",
+  "options": { "move": { "kind": "chase", "target": "cheese", "speed": 3.6 } } }
+```
+
+### Lamps
+
+`"type": "light"` is an invisible lamp that lights the 3D models around it —
+a pool of light on a `night` stage, a warm corner in the `gloom`. Place it
+with `"position": [x, height]`; options `color`, `intensity` (default 2.2),
+`distance` (reach, default 9). Panels and titles are unlit and unaffected.
+Use a few per deck, not dozens — every lamp is computed for every model.
+
+### 3D lettering
+
+`"type": "text3d"` stands real extruded letters in the scene — a sign, a
+closing title. Options: `text` (`\n` starts a new row), `size` (cap height,
+default 1.4), `depth`, `color` or `colors: [..]` (cycled per letter),
+`sideColor`, `arc` (degrees the row bends over), `glow` (0–1, for dark
+moods), `animation`: `wave` (default) / `pop` / `none`. The font (Optimer
+Bold) has no diacritics — keep to plain Latin. The font is downloaded only
+by decks that use the prop.
 
 ### Asset catalog
 
@@ -374,6 +419,11 @@ panels is the same in every style.
 | `table` | `title?`, `columns: [string]`, `rows: [[cell]]`, `align?: ["left"\|"right"]` — numeric-looking columns right-align automatically; fonts shrink rather than let columns collide |
 | `image` | `src` (path under `public/`), `caption?` |
 | `chart` | `chart: "bar"\|"barh"\|"line"\|"pie"`, `title?`, `data: [{label, value, plan?, display?}]`, `colors?`, `valueLabels?` — plus grouped bars and donuts, below |
+| `diff` | `title?`, `lines: [string]`, `before?`, `after?` — a console diff: a dark terminal pane in a monospace face; a line starting with `-` is a removal (red), `+` an addition (green), `@` a hunk header, anything else context. `before` / `after` are short captions for the two sides shown in the title bar. Lines type themselves in one after another |
+
+**Struck-through text.** In `text`, `bullets`, `numbered` and `callout`
+parts, `~~like this~~` is drawn dimmed and crossed out — also across a line
+wrap.
 
 Charts are **real 3D papercraft**: bars are faceted blocks rising one after
 another, pie slices are extruded wedges popping in around the circle, lines
@@ -463,6 +513,45 @@ Latin Extended, so Slovak diacritics render natively.
 
 ## 7. Scenes, transitions, camera
 
+### Mood and ground
+
+A scene can change the weather and what it stands on:
+
+```jsonc
+{ "id": "fear", "mood": "gloom", "ground": "barren", "props": [ … ], "slides": [
+  { "id": "fear", "title": "FEAR" },
+  { "id": "hope", "title": "What now?", "mood": "dawn" }   // a slide may override the mood
+] }
+```
+
+| `mood` | The world becomes |
+|---|---|
+| `day` | The storybook day (default) |
+| `gloom` | Overcast and heavy: dark sky and hills, close fog, dim light, no sun |
+| `dawn` | Warm first light |
+| `dusk` | A warm evening |
+| `night` | Dark blue with stars — lamps, screens and other glowing parts shine |
+
+The sky, hills, clouds, ground, fog and the lights on the 3D models ease
+toward a scene's mood as the camera walks there and back to the next one's
+as it leaves; a slide's own `mood` takes over while that slide is on screen.
+Panels and titles are unlit and stay readable in every mood. Presets live
+in `src/environment/moods.js`.
+
+| `ground` | The scene stands on |
+|---|---|
+| `meadow` | The paper meadow (default) |
+| `asphalt` | Level warm-grey tarmac — a paddock, a car park |
+| `floor` | A level two-tone tiled floor — indoors |
+| `barren` | Rough, dried-out earth |
+| `stage` | Level stage boards |
+
+Each kind covers the scene's own stretch of terrain and meets its
+neighbours in a ragged paper seam. Kinds live in `GROUNDS` in
+`src/environment/ground.js`.
+
+### The walk
+
 - Advancing past a scene's last slide trots the wolf to the next scene; the
   camera **trails the wolf** with damped easing, so every depth row slides at
   its natural parallax speed during the walk. Advancing between slides *within*
@@ -485,7 +574,8 @@ public/showcase.json          live reference deck: every part type + styling
 public/rozpocet-2025.json     a full real-world deck (15 scenes, Slovak)
 public/images/                your image-part files
 docs/assets/README.md         asset catalog (generated) + sprites.jpg contact sheet
-*.png (repo root)             the reference sheets every sprite is cut from
+RawSources/sheets/*.png       the reference sheets every sprite is cut from
+RawSources/talks/             the talks the shipped decks were written from
 tools/extract-sprites.mjs     cuts the sheets into src/sprites/ (npm run sprites)
 tools/sprites.config.js       the cut list: sprite name → sheet + rectangle
 tools/gen-asset-docs.mjs      regenerates docs/assets/README.md
@@ -512,9 +602,9 @@ src/styles/                   slide styles (tear, screen, cyber, sticker), loade
 ### Extending the asset library
 
 New art comes from new reference sheets — generate them with the recipe in
-[midjourney.md](midjourney.md) so they match, then:
+[docs/prompts/midjourney.md](docs/prompts/midjourney.md) so they match, then:
 
-1. Put the sheet (white background) in the repo root and add it to
+1. Put the sheet (white background) in `RawSources/sheets/` and add it to
    `sheets` in `tools/sprites.config.js`.
 2. Add a cut line per piece: `[name, sheet, [x0, y0, x1, y1]]`, the rect in
    the sheet's 2000-px-wide preview space (cut options: `maxH`, `tight`,
@@ -527,6 +617,15 @@ New art comes from new reference sheets — generate them with the recipe in
    `TYPES` in `src/assets/catalog.js`, then `npm run asset-docs`.
 5. Determinism rule: use `rng(seed)` from helpers, never `Math.random()`, for
    anything that affects what is shown (random is fine for animation phase).
+
+**Objects no sheet has** can be *drawn*: put an SVG in
+`tools/sprites-src/<pack>/<name>.svg` (transparent, in the sheets' flat
+origami style) and run `npm run svg-sprites` — it becomes
+`src/sprites/<name>.webp` like any cut-out, and is the reference the 3D
+model is then built from. A model pack can bring its own asset types in
+`src/models/<pack>.types.json` (the same entries as `TYPES`: `sprites`,
+`height`, `anim`, `anims`, `shadow`, plus `obstacle: false` for flat things
+the wolf may walk over), so adding a pack needs no edit to the catalog.
 
 ### Models, textures and paper staging
 

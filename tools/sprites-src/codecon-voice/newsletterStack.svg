@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 610 500" width="610" height="500">
+<g transform="translate(320 500) scale(5 -5)">
+<polygon points="-52,0 4,0 4,10.8 -52,10.8" fill="#e9e2d1"/><polygon points="4,0 48,0 48,10.8 4,10.8" fill="#d2cab7"/>
+<polygon points="-52,5 48,5 48,5.7 -52,5.7" fill="#b9b09c"/>
+<polygon points="-52,10.8 48,10.8 48,11.6 -52,11.6" fill="#8f8674"/>
+<polygon points="-47,11.6 9,11.6 9,22.4 -47,22.4" fill="#f1ecdf"/><polygon points="9,11.6 53,11.6 53,22.4 9,22.4" fill="#ddd6c4"/>
+<polygon points="-47,16.6 53,16.6 53,17.3 -47,17.3" fill="#b9b09c"/>
+<polygon points="-47,22.4 53,22.4 53,23.2 -47,23.2" fill="#8f8674"/>
+<polygon points="-51,23.2 5,23.2 5,34 -51,34" fill="#e2d6bd"/><polygon points="5,23.2 49,23.2 49,34 5,34" fill="#cbbfa6"/>
+<polygon points="-51,28.2 49,28.2 49,28.9 -51,28.9" fill="#b9b09c"/>
+<polygon points="-51,34 49,34 49,34.8 -51,34.8" fill="#8f8674"/>
+<polygon points="-48,34.8 8,34.8 8,45.6 -48,45.6" fill="#f1ecdf"/><polygon points="8,34.8 52,34.8 52,45.6 8,45.6" fill="#ddd6c4"/>
+<polygon points="-48,39.8 52,39.8 52,40.5 -48,40.5" fill="#b9b09c"/>
+<polygon points="-48,45.6 52,45.6 52,46.4 -48,46.4" fill="#8f8674"/>
+<polygon points="-53,46.4 3,46.4 3,57.2 -53,57.2" fill="#e9e2d1"/><polygon points="3,46.4 47,46.4 47,57.2 3,57.2" fill="#d2cab7"/>
+<polygon points="-53,51.4 47,51.4 47,52.1 -53,52.1" fill="#b9b09c"/>
+<polygon points="-53,57.2 47,57.2 47,58 -53,58" fill="#8f8674"/>
+<polygon points="-49,58 7,58 7,68.8 -49,68.8" fill="#e2d6bd"/><polygon points="7,58 51,58 51,68.8 7,68.8" fill="#cbbfa6"/>
+<polygon points="-49,63 51,63 51,63.7 -49,63.7" fill="#b9b09c"/>
+<polygon points="-49,68.8 51,68.8 51,69.6 -49,69.6" fill="#8f8674"/>
+<polygon points="-50,69.6 6,69.6 6,80.4 -50,80.4" fill="#f1ecdf"/><polygon points="6,69.6 50,69.6 50,80.4 6,80.4" fill="#ddd6c4"/>
+<polygon points="-50,74.6 50,74.6 50,75.3 -50,75.3" fill="#b9b09c"/>
+<polygon points="-50,80.4 50,80.4 50,81.2 -50,81.2" fill="#8f8674"/>
+<polygon points="50,81.2 28,81.2 51,91" fill="#fbf8ee"/>
+<polygon points="16,0 18.4,0 18.4,81.4 16,81.4" fill="#a07d4f"/>
+<polygon points="17,83 4,97 1,86" fill="#bd9662"/>
+<polygon points="17,83 31,100 35,88" fill="#a07d4f"/>
+<polygon points="17,83 10,72 13,71" fill="#bd9662"/>
+<polygon points="17,83 25,70 28,72" fill="#a07d4f"/>
+<polygon points="20,83 18.6,85.42 15.8,85.42 14.4,83 15.8,80.58 18.6,80.58" fill="#7b6548"/>
+<g transform="translate(-57 0) rotate(4) translate(23 0)"><polygon points="-23,0 0,0 0,62 -23,62" fill="#f6f2e6"/><polygon points="0,0 23,0 23,62 0,62" fill="#e3dccb"/><polygon points="-19,51 19,51 19,57 -19,57" fill="#4b5654"/><polygon points="-19,47.6 19,47.6 19,48.6 -19,48.6" fill="#66726f"/><polygon points="-19,27 -10,27 -10,44 -19,44" fill="#a5817f"/><polygon points="-10,27 -1,27 -1,44 -10,44" fill="#8b6a68"/><polygon points="2,42 19,42 19,43.4 2,43.4" fill="#9aa39c"/><polygon points="2,38.5 19,38.5 19,39.9 2,39.9" fill="#9aa39c"/><polygon points="2,35 19,35 19,36.4 2,36.4" fill="#9aa39c"/><polygon points="2,31.5 19,31.5 19,32.9 2,32.9" fill="#9aa39c"/><polygon points="2,28 12,28 12,29.4 2,29.4" fill="#9aa39c"/><polygon points="-19,22 19,22 19,23.4 -19,23.4" fill="#9aa39c"/><polygon points="-19,18.5 19,18.5 19,19.9 -19,19.9" fill="#9aa39c"/><polygon points="-19,15 19,15 19,16.4 -19,16.4" fill="#9aa39c"/><polygon points="-19,11.5 19,11.5 19,12.9 -19,12.9" fill="#9aa39c"/><polygon points="-19,8 4,8 4,9.4 -19,9.4" fill="#9aa39c"/></g>
+</g>
+</svg>

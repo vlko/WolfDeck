@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 500" width="380" height="500">
+<g transform="translate(190 500) scale(5 -5)">
+<polygon points="-15,0 0,0 0,4 -15,4" fill="#4b5654"/><polygon points="0,0 15,0 15,4 0,4" fill="#3a4442"/>
+<polygon points="-2.4,4 0,4 0,67 -2.4,67" fill="#66726f"/><polygon points="0,4 2.4,4 2.4,67 0,67" fill="#4b5654"/>
+<polygon points="-7,62 0,62 0,67 -7,67" fill="#4b5654"/><polygon points="0,62 7,62 7,67 0,67" fill="#3a4442"/>
+<polygon points="-36,69 -33,66 0,66 0,100 -33,100 -36,97" fill="#4b5654"/><polygon points="0,66 33,66 36,69 36,97 33,100 0,100" fill="#3a4442"/>
+<polygon points="-32,70 0,70 0,96 -32,96" fill="#d8695d"/><polygon points="0,70 32,70 32,96 0,96" fill="#c4554c"/>
+<polygon points="-23.25,76 -15.75,76 -15.75,90 -23.25,90" fill="none" stroke="#f6f0e0" stroke-width="2.2"/>
+<polyline points="-13.25,74.9 -13.25,90 -5.75,76 -5.75,91.1" fill="none" stroke="#f6f0e0" stroke-width="2.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+<polyline points="1.25,74.9 5,90 8.75,74.9" fill="none" stroke="#f6f0e0" stroke-width="2.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+<polyline points="3,80.5 7,80.5" fill="none" stroke="#f6f0e0" stroke-width="2.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+<polyline points="12.15,74.9 12.15,91.1" fill="none" stroke="#f6f0e0" stroke-width="2.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+<polyline points="15.55,74.9 15.55,90 23.05,90 23.05,83.5 15.55,83.5" fill="none" stroke="#f6f0e0" stroke-width="2.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+<polyline points="18,83.5 23.05,74.9" fill="none" stroke="#f6f0e0" stroke-width="2.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+</g>
+</svg>
