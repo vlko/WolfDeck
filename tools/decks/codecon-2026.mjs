@@ -35,13 +35,30 @@ const N = (...lines) => lines; // speaker notes, one paragraph per entry
 
 // One START block: the title is the slide, then MUSÍŠ, then VZDAJ SA, then
 // (where the outline has it) how it went for me.
-function startSlide({ id, verb, role, must, giveUp, mine, notes }) {
+// `hacks` (optional): short tips, each a small panel along the bottom.
+// `en: true` puts the fixed labels in English. `also` (optional) replaces
+// "Ako to bolo u mňa" with a titled list: { title, items }.
+function startSlide({ id, verb, role, must, giveUp, mine, also, hacks, notes, en = true }) {
+  const L = en
+    ? { must: 'MUST', giveUp: 'GIVE UP', kicker: 'Want to start?', mine: 'What worked for me' }
+    : { must: 'MUSÍŠ', giveUp: 'VZDAJ SA', kicker: 'Chceš začať?', mine: 'Ako to bolo u mňa' };
   const groups = [
-    { parts: [part('text', -4.8, 5.7, { title: `MUSÍŠ: ${must}`, align: 'center', width: 8.6, fontScale: 1.45, accentColor: '#5f7a63', tilt: -1.5 })] },
-    { keep: true, parts: [part('text', 5, 4.5, { title: `VZDAJ SA: ${giveUp}`, align: 'center', width: 8.6, fontScale: 1.45, accentColor: '#b4843f', tilt: 1.5, depth: 'front' })] },
+    { parts: [part('text', -4.8, 5.7, { title: `${L.must}: ${must}`, align: 'center', width: 8.6, fontScale: 1.45, accentColor: '#5f7a63', tilt: -1.5 })] },
+    { keep: true, parts: [part('text', 5, 4.5, { title: `${L.giveUp}: ${giveUp}`, align: 'center', width: 8.6, fontScale: 1.45, accentColor: '#b4843f', tilt: 1.5, depth: 'front' })] },
   ];
-  if (mine) groups.push({ keep: true, parts: [part('text', -5.4, 3.3, { title: 'Ako to bolo u mňa', body: mine, width: 7.6, fontScale: 1.15, tilt: -2, depth: 'front' })] });
-  return { id, title: `START ${verb}`, kicker: role ?? 'Chceš začať?', notes, groups };
+  // tips sit along the bottom of the same page, under the two big cards
+  if (hacks?.length) {
+    const xs = hacks.length === 1 ? [0] : [-5.6, 5.6];
+    groups.push({
+      keep: true,
+      parts: hacks.slice(0, 2).map((h, i) => part('text', xs[i], 1.9, {
+        title: `Hacks: ${h}`, align: 'center', width: 8.4, fontScale: 1, accentColor: '#7a6a9a', tilt: i ? 1 : -1, depth: 'front',
+      })),
+    });
+  }
+  if (mine) groups.push({ keep: true, parts: [part('text', -5.4, hacks?.length ? 3.5 : 3.3, { title: L.mine, body: mine, width: 7.6, fontScale: 1.15, tilt: -2, depth: hacks?.length ? 'mid' : 'front' })] });
+  if (also) groups.push({ keep: true, parts: [part('bullets', -5.4, 3.2, { title: also.title, items: also.items, width: 7.6, fontScale: 1.25, tilt: -2, depth: 'front' })] });
+  return { id, title: `START ${verb}`, kicker: role ?? L.kicker, notes, groups };
 }
 
 // ── scenes ────────────────────────────────────────────────────────────────
@@ -50,6 +67,13 @@ const scenes = [];
 // A. Úvod — Orava: the lake, the church, a chalet, sheep on the meadow
 scenes.push({
   id: 'uvod',
+  quips: [
+    'Vybrala ma AI!',
+    'Vlk z Oravy, teší ma.',
+    'Slidy písala AI. Asi.',
+    'Dúfam, že mikrofón ide.',
+    'Žiadny LinkedIn návod!',
+  ],
   kicker: 'CodeCon 2026 · Žilina',
   style: 'paper',
   props: [
@@ -63,8 +87,8 @@ scenes.push({
     p('pineTree', -13, 'mid', { height: 3.4 }),
     p('sheep', -8.2, 'mid', { dz: 1.2, animation: 'graze' }),
     p('lamb', -6.4, 'mid', { dz: 2 }),
-    p('sheep', 9.4, 'front', { dz: -0.6 }),
-    p('fence', 11.5, 'front', { dz: 0.8, length: 5 }),
+    p('sheep', 11.3, 'mid', { dz: 2.2, flip: true }),
+    p('fence', -9.5, 'front', { dz: 1.4, length: 5 }),
     p('haystack', -11.5, 'front', { dz: -0.4 }),
   ],
   slides: [
@@ -72,46 +96,21 @@ scenes.push({
       id: 'titul',
       title: 'Ako sa stať…',
       subtitle: '…amatérskym blogerom, pomocným podcasterom a spíkrom, ktorého vybrala AI',
+      message: true,
+      heroSide: -4.2,
       notes: N('Krátko pozdraviť.'),
-      groups: [
-        { subtitle: true, parts: [part('text', 0, 3.6, { title: 'Marián Vlčák', body: 'alias vlko', align: 'center', width: 6.2, fontScale: 1.25 })] },
-      ],
-    },
-    {
-      id: 'kto-som',
-      title: 'Kto som',
-      kicker: 'Marián Vlčák alias vlko',
-      notes: N(
-        'Odsťahoval som sa na Oravu a ako jedinému programátorovi mi bolo smutno.',
-        'Posledných 15 rokov sa preto nejakým spôsobom snažím podporovať slovenskú developerskú komunitu.',
-        'Konkrétne kroky ukážem postupne v START blokoch.',
-      ),
-      groups: [
-        { parts: [part('image', -6, 3.6, { src: 'images/vlko.jpg', caption: 'Marián „vlko“ Vlčák', width: 5 })] },
-        {
-          keep: true,
-          parts: [part('bullets', 4.2, 3.4, {
-            title: 'Marián Vlčák alias vlko',
-            items: [
-              'CTO FinStat.sk',
-              'žijem a tvorím v Námestove na Orave',
-              'amatérsky bloger — technologický týždenník na vyvojari.dev',
-              'WebUP supporter s pravidelným mesačníkom',
-              'súčasť hodnotiacej komisie CodeCon',
-              'dvojka v podcaste Link',
-            ],
-            width: 8.4, fontScale: 1.05,
-          })],
-        },
-      ],
+      // the byline: small, bottom right, there from the start
+      parts: [part('text', 8.5, 1.05, { title: 'Marián Vlčák', body: '@vlkodotnet', align: 'center', width: 4.2, fontScale: 0.85, depth: 'front' })],
+      groups: [],
     },
     {
       id: 'co-to-nebude',
       title: 'Čo to nebude',
       subtitle: '…a čo si odnesieš',
       notes: N(
-        'Toto nebude prednáška o tom, ako sa stať influencerom, ani návod na LinkedIn algoritmus.',
-        'Bude to rekapitulácia cesty introverta. Nemám teóriu ani metodiku, mám 15 rokov pokusov, omylov a niekoľko vecí, ktoré nečakane vyšli.',
+        'Teraz by ste sa mali dozvedieť, o čom bude táto prednáška.',
+        'S istotou viem povedať, že nedostanete návod, ako sa stať influencerom, ani ako rozbiť LinkedIn algoritmy.',
+        'Dozviete sa o ceste introverta, ktorý má za sebou 15 rokov pokusov, omylov a niekoľko vecí, ktoré nečakane vyšli.',
       ),
       groups: [
         {
@@ -135,6 +134,39 @@ scenes.push({
         },
       ],
     },
+    {
+      id: 'kto-som',
+      title: 'Kto som',
+      kicker: 'Marián Vlčák alias vlko',
+      notes: N(
+        'Odsťahoval som sa na Oravu a ako jedinému programátorovi mi bolo smutno.',
+        'Posledných 15 rokov sa preto nejakým spôsobom snažím podporovať slovenskú developerskú komunitu.',
+        'CTO FinStat.sk',
+        'žijem a tvorím v Námestove na Orave',
+        'amatérsky bloger — technologický týždenník na vyvojari.dev',
+        'WebUP supporter s pravidelným mesačníkom',
+        'súčasť hodnotiacej komisie CodeCon',
+        'dvojka v podcaste Link',
+      ),
+      groups: [
+        { parts: [part('image', -6, 3.6, { src: 'images/vlko.jpg', caption: 'Marián „vlko“ Vlčák', width: 5 })] },
+        {
+          keep: true,
+          parts: [part('bullets', 4.2, 3.4, {
+            title: 'Marián Vlčák alias vlko',
+            items: [
+              'CTO FinStat.sk',
+              'žijem a tvorím v Námestove na Orave',
+              'amatérsky bloger — technologický týždenník na vyvojari.dev',
+              'WebUP supporter s pravidelným mesačníkom',
+              'súčasť hodnotiacej komisie CodeCon',
+              'dvojka v podcaste Link',
+            ],
+            width: 8.4, fontScale: 1.05,
+          })],
+        },
+      ],
+    },
   ],
 });
 
@@ -143,6 +175,13 @@ const OVAL = [0, -3.7, 7.8, 2.1]; // raceTrack at height 6: 1 model unit = 0.06
 K = 1;
 scenes.push({
   id: 'jazda',
+  quips: [
+    'Zapnite si pásy!',
+    'Brzdy? Aké brzdy?',
+    'Kto to šoféruje?!',
+    'Rok za štyri okruhy.',
+    'Minulý týždeň = retro.',
+  ],
   kicker: 'Čo sa zmenilo',
   style: 'screen',
   ground: 'asphalt',
@@ -191,6 +230,13 @@ scenes.push({
 K = 1.45;
 scenes.push({
   id: 'syr',
+  quips: [
+    'Kto mi zobral syr?!',
+    'Sniff… tu bol kód.',
+    'Kávička ostala.',
+    'Tokeny idú, ja sedím.',
+    'Myš to vie tiež.',
+  ],
   kicker: 'Čo sa zmenilo',
   style: 'tear',
   ground: 'floor',
@@ -211,18 +257,19 @@ scenes.push({
     {
       id: 'cheese',
       title: 'AI moved my cheese',
-      subtitle: 'pred rokom vs. tento rok',
+      subtitle: 'pred rokom vs. dnes',
       notes: N(
         'Dnes AI píše väčšiu časť kódu.',
         'To, čo nás robilo šťastnými, teda programovanie, strácame a musíme sa s tým nejako vyrovnať.',
-        '[NÁVRH] Môj deň pred rokom: ráno otvorím IDE a väčšinu dňa píšem kód. Najlepší pocit dňa je chvíľa, keď to po hodine ladenia konečne zbehne.',
-        '[NÁVRH] Môj deň teraz: ráno napíšem zadanie, agent píše a ja čítam, opravujem a rozhodujem. Kódu je viac, ale ten pocit „toto som vyriešil ja“ prichádza menej často. Syr sa presunul a ja ho hľadám inde.',
+        'Pred rokom som si ráno urobil kávičku, otvoril som Visual Studio, Jiru a väčšinu dňa, ak do toho nevošla porada, tak písal kód.',
+        'Dnes? Otvorím ráno konzolu, Jiru, v konzole aspoň dve session a spustím prompty. Urobím si kávičku, popíjam a pozerám, ako sa míňajú tokeny.',
+        'Akurát niekde v tom procese sa podela tá radosť, že som niečo urobil. Je čas ju hľadať inde.',
       ),
       groups: [
         {
           parts: [
             part('bullets', -5.6, 4.7, { title: 'Pred rokom', items: ['kód píšem ja', 'AI mi dopĺňa riadky', 'radosť: vyriešil som to'], width: 7.6, fontScale: 1.25, tilt: -1.5 }),
-            part('bullets', 5.6, 4.7, { title: 'Tento rok', items: ['kód píše AI', 'ja zadávam, čítam a rozhodujem', 'radosť: …kam sa podela?'], width: 8.6, fontScale: 1.25, tilt: 1.5 }),
+            part('bullets', 5.6, 4.7, { title: 'Dnes', items: ['kód píše AI', 'ja zadávam, čítam a rozhodujem', 'radosť: …kam sa podela?'], width: 8.6, fontScale: 1.25, tilt: 1.5 }),
           ],
         },
       ],
@@ -237,6 +284,13 @@ const diff = (title, lines, x = 0, y = 5.2) => part('diff', x, y, {
 K = 1.35;
 scenes.push({
   id: 'diff-praca',
+  quips: [
+    'git blame: AI',
+    'Merge conflict so životom.',
+    'Senior prompt inžinier.',
+    'LGTM. Asi.',
+    'Open for work? Aj ja.',
+  ],
   kicker: 'git diff pred-rokom..teraz',
   style: 'cyber',
   ground: 'floor',
@@ -263,8 +317,8 @@ scenes.push({
       id: 'diff-kariera',
       title: 'DIFF: Kariéra',
       notes: N(
-        '[NÁVRH] Pred rokom bola špecializácia istota: čím hlbšie si vedel jednu vec, tým si bol vzácnejší.',
-        '[NÁVRH] Dnes hlbokú znalosť jednej technológie čiastočne nahradí model. Hodnotu má ten, kto vie spojiť viac oblastí, zadať prácu a posúdiť výsledok. Zo špecialistu sa stáva generalista, ktorý je však ľahšie nahraditeľný.',
+        'Pred rokom bola špecializácia istotou: čím viac si bol odborník vo svojej oblasti, tým si bol vzácnejší.',
+        'Dnes hĺbkovú znalosť nahrádza AI model. Očakávania sú od nás iné, len nám to ešte nikto nepovedal. Naša práca sa posúva z odborníka na generalistu. A už neplatí, že cintoríny sú plné nenahraditeľných ľudí, ale naše náhrady sú v tokenoch.',
       ),
       groups: [{ parts: [diff('Kariéra', ['- istoty, špecialista', '+ nahraditeľnosť, generalista'])] }],
     },
@@ -273,7 +327,7 @@ scenes.push({
       title: 'DIFF: Hiring',
       notes: N(
         'Trh práce vyzerá tak, že firmy radšej kúpia AI agenta ako programátora.',
-        '[NÁVRH] Pred rokom sme si my vyberali, kam pôjdeme, a firmy sa o ľudí bili. Dnes je na jednu pozíciu rad uchádzačov a chodenie po pohovoroch bolí. Juniori to cítia najviac.',
+        'Pred rokom sme si my vyberali, kam pôjdeme, a firmy sa o programátorov bili. Dnes mám plný LinkedIn Open for work. Nikde sa neprijíma, našťastie zatiaľ ani nevyhadzuje. A juniori to schytali najviac.',
       ),
       groups: [{ parts: [diff('Hiring', ['- nedostatok ľudí, mohli sme si vyberať', '+ prebytok ľudí, bolestné chodenie po pohovoroch'])] }],
     },
@@ -284,6 +338,13 @@ scenes.push({
 // under a swarm of notifications
 scenes.push({
   id: 'diff-skola',
+  quips: [
+    'Idem za stolára.',
+    'Vlk murár, prečo nie.',
+    'Fokus? Ten býval.',
+    'Tri agenty, jedna hlava.',
+    'Kde mi hlava stojí?',
+  ],
   kicker: 'git diff pred-rokom..teraz',
   style: 'cyber',
   props: [
@@ -307,8 +368,8 @@ scenes.push({
       id: 'diff-skolstvo',
       title: 'DIFF: Školstvo',
       notes: N(
-        '[NÁVRH] Pred rokom sme deťom radili: choď na IT, programátor sa nestratí.',
-        '[NÁVRH] Dnes počúvam opak: nauč sa remeslo, stolára ani murára AI tak skoro nenahradí. Či je to dobrá rada, neviem, ale ukazuje, ako rýchlo sa otočila nálada.',
+        'Pred rokom bola kariéra v IT bezpečnou istotou budúcnosti.',
+        'Dnes počúvam, že byť taký stolár a murár nie je na zahodenie. Zmenilo sa to neuveriteľne rýchlo.',
       ),
       groups: [{ parts: [diff('Školstvo', ['- IT, programátor', '+ stolár, murár'])] }],
     },
@@ -316,8 +377,8 @@ scenes.push({
       id: 'diff-work',
       title: 'DIFF: Work',
       notes: N(
-        '[NÁVRH] Pred rokom bol dobrý deň ten, keď som mal tri hodiny ticha a jeden problém.',
-        '[NÁVRH] Dnes mi beží niekoľko agentov naraz. Každý sa niečo pýta, každý niečo dokončil a ja preskakujem medzi kontextami. Menej píšem, viac prepínam.',
+        'Pred rokom som vedel celý deň presedieť nad problémom.',
+        'Dnes mi beží niekoľko agentov naraz. Hlavu mám v dvoch až troch problémoch súčasne a neviem, kde mi hlava stojí.',
       ),
       groups: [{ parts: [diff('Work', ['- focus', '+ context switching'])] }],
     },
@@ -328,6 +389,13 @@ scenes.push({
 K = 1.3;
 scenes.push({
   id: 'strach',
+  quips: [
+    'Brrr.',
+    'Tu straší.',
+    'Aúúú… to nič.',
+    'Krkavec vie viac.',
+    'Kto zhasol?',
+  ],
   kicker: 'Čo sa zmenilo',
   style: 'cyber',
   mood: 'gloom',
@@ -357,9 +425,13 @@ scenes.push({
     {
       id: 'nikoho-nezaujimam',
       title: 'NIKOHO NEZAUJÍMAM',
+      kicker: '', // the scene's "Čo sa zmenilo" strapline stays off this slide
+      message: true,
       style: 'tear',
       notes: N(
         '(Chvíľka ticha.)',
+        'Pre mňa bolo najdôležitejšie zistenie, že „Nikoho nezaujímam“. Niežeby to bolo predtým iné, ale v období nedostatku zisťovali moju hodnotu až vo firme. Teraz je na mne ukázať, že mám hodnotu.',
+        'A tu má začať aj vaša cesta: zmenilo sa prostredie, musíte sa zmeniť aj vy. Nemusí sa z vás stať druhý vlko. Akákoľvek zmena vám pomôže zvýšiť vašu hodnotu, ktorú musíte ukázať vopred.',
         'Možno za chvíľu nebude záležať na tom, čo vieš, ale na tom, či o tebe vôbec niekto vie, že existuješ.',
         'Tým je zodpovedaný bod 1: preto je osobný brand v ére AI dôležitý.',
       ),
@@ -380,6 +452,13 @@ scenes.push({
 K = 1.3;
 scenes.push({
   id: 'impostor',
+  quips: [
+    'Ja som fakt vlk?',
+    'Tá ovca je podozrivá.',
+    'Pochvale neverím.',
+    'Zrkadlo klame.',
+    'Odhalia ma. Určite.',
+  ],
   kicker: 'Z čoho vychádzam',
   style: 'tear',
   mood: 'dusk',
@@ -401,9 +480,12 @@ scenes.push({
     {
       id: 'impostor',
       title: 'IMPOSTOR SYNDROME',
+      message: true,
+      heroSide: 3.2,
       notes: N(
-        'Toto je bod, z ktorého vychádzam. Introvert, nebývam v Bratislave, marketing mi nejde a stále mám pocit, že na to nemám.',
-        'Ďalej nebudem rozprávať o tom, ako sa toho pocitu zbaviť, ale ako napriek nemu niečo robiť.',
+        'Celý život mám impostor syndróm, teda pocit, že nie som dosť dobrý, že som sa sem dostal len náhodou a každú chvíľu na to niekto príde. Keby ste mi dali pochvalu, tak vám neuverím ani slovo.',
+        'Uff, to je materiál v mojej hlave, s ktorým celý život bojujem. Prirátajte introvertnosť a život mimo centra diania, na okraji Slovenska.',
+        'Ale s trochou konzistencie sa s tým dá pohnúť. Tu sú 4 kroky.',
       ),
       groups: [],
     },
@@ -414,6 +496,13 @@ scenes.push({
 K = 1.35;
 scenes.push({
   id: 'learning',
+  quips: [
+    'Meetup? Idem!',
+    'Sedím vzadu.',
+    'Pizza bude?',
+    'Z gauča to nepôjde.',
+    'Aspoň jeden za mesiac.',
+  ],
   style: 'sticker',
   props: [
     p('projectorScreen', -9.4, 'back', { dz: 2, flip: false }),
@@ -433,12 +522,12 @@ scenes.push({
     verb: 'LEARNING',
     must: 'ORGANIZE',
     giveUp: 'COMFORT',
-    mine: 'WebUP Daniela Harčeka v Žiline',
+    also: { title: 'Learning is also:', items: ['communities'] },
     notes: N(
-      'Musíš: zorganizovať si čas na učenie.',
-      'Vzdaj sa: komfortu.',
-      'Ako to bolo u mňa: WebUP Daniela Harčeka v Žiline.',
-      '[NÁVRH] Z Oravy je to do Žiliny hodina a pol autom. Bolo pohodlnejšie ostať doma, ale chodil som, lebo to bolo jediné miesto, kde som stretol ľudí, čo riešia to isté čo ja. Najprv som len sedel vzadu a počúval. Neskôr som začal WebUP podporovať a robiť pre neho mesačník.',
+      'Môže sa zdať, že s príchodom AI nemá zmysel učiť sa niečo nové. Opak je ale pravdou. Niekto tie prompty musí kontrolovať, niekto musí specke povedať, že má používať túto novú technológiu.',
+      'Na učenie sa ale človek musí pripraviť. Nainštalujte si dobrú RSS čítačku, prihláste sa do dobrých newsletterov. A dajte novej téme čas, niekedy mi trvá aj pár týždňov, kým sa to celé v hlave poskladá.',
+      'Musíte ale niečo obetovať. Vyčleňte si čas, nahraďte hodinu pred TV/Netflixom/YouTube za hodinu koncentrovaného konzumovania noviniek.',
+      'Nezabudnite, že vzdelávanie je aj stretávanie sa s komunitami. Tak ako tento CodeCon, tak ako náš žilinský WebUP.',
     ),
   })],
 });
@@ -446,6 +535,13 @@ scenes.push({
 // D. START READING — books against the television
 scenes.push({
   id: 'reading',
+  quips: [
+    'Čítam, nescrollujem.',
+    'Kniha nemá notifikácie.',
+    'Ešte jednu kapitolu.',
+    'TL;DR neexistuje.',
+    'Papier nepadá.',
+  ],
   style: 'sticker',
   ground: 'floor',
   props: [
@@ -463,12 +559,13 @@ scenes.push({
   slides: [startSlide({
     id: 'start-reading',
     verb: 'READING',
-    must: 'ČÍTAŤ',
+    must: 'READ',
     giveUp: '~~WATCHING~~',
+    hacks: ['e-ink / low blue light', 'paging, not scrolling'],
     notes: N(
-      'Musíš: čítať, nie len pozerať.',
-      'Vzdaj sa: pasívneho pozerania videí a scrollovania stránok (STOP WATCHING).',
-      '[NÁVRH] Ako to bolo u mňa: video ma zabaví, ale na druhý deň si z neho pamätám málo. Z článku si odnesiem viac, lebo si určujem tempo sám, vraciam sa a môžem si z neho niečo vypísať. Odkedy píšem týždenník, čítam každý týždeň desiatky článkov a práve z nich mám väčšinu toho, čo viem.',
+      'Nekonzumujte obsah len vo forme videa. Pri čítaní sa mozog prepína do špeciálneho módu, ktorý pri videu nedosiahnete. Rýchlejšie tak pochopíte súvislosti.',
+      'Vzdajte sa pasívneho pozerania videí a scrollovania. A keď máte novinky hotové, tak si otvorte knižku.',
+      'Mám pár tipov: kúpte si Android e-ink zariadenie, čítať večer pred spaním na mobile je zabijak spánku, a kúpte alebo vyvibecodujte si RSS čítačku, čo vie stránkovať obsah.',
     ),
   })],
 });
@@ -476,6 +573,13 @@ scenes.push({
 // D. START WRITING — the amateur blogger
 scenes.push({
   id: 'writing',
+  quips: [
+    'Píšem, teda som.',
+    'Prvý článok bolí.',
+    'FOMO, zbohom!',
+    'Čitateľ číslo 1: mama.',
+    'Publish a utekaj.',
+  ],
   style: 'sticker',
   props: [
     p('table', -8.4, 'mid', { dz: 0.8 }),
@@ -494,15 +598,17 @@ scenes.push({
   slides: [startSlide({
     id: 'start-writing',
     verb: 'WRITING',
-    role: 'amatérsky bloger',
+    role: 'amateur blogger',
     must: 'CONSISTENCY IS KEY',
     giveUp: 'FOMO',
-    mine: 'týždenník na vyvojari.dev — ôsmy rok, každý týždeň',
+    mine: 'a weekly on vyvojari.dev — eighth year, every week',
     notes: N(
       'Prvá rola z názvu: amatérsky bloger.',
-      'Musíš: písať pravidelne a po anglicky, aby to malo dosah.',
-      'Vzdaj sa: FOMO. [NÁVRH] Nemusíš pokryť každú novinku ani byť prvý. Keby som čakal, kým stihnem všetko, nevyšlo by ani jedno číslo. Stačí vybrať to, čo zaujalo teba, a vydať to v ten istý deň ako minulý týždeň.',
-      'Ako to bolo u mňa: správičky na vyvojari.sk, neskôr vyvojari.dev. To sa nepresadilo, lebo marketing mi nejde. Tak som začal písať týždenník. Píšem ho ôsmy rok, zadarmo a občas cez zaťaté zuby. Anglická verzia ide na Substack.',
+      'Musíš začať písať pravidelne, bez výhovoriek a hlavne pre seba. Skutočné dosahy ale dosiahneš, ak budeš písať po anglicky.',
+      'Daj si pozor na FOMO, fear of missing out. Nemusíš pokryť úplne všetko. Časom si vybudujete solídnu základňu zdrojov a článkov a nedá sa popísať všetko. Nastavte si hranicu.',
+      'Ja som začal písať krátke správičky pred dávnymi rokmi. Bol to des, ale krátke texty stačia pre začiatok. Skúste Twitter. Postupne mi prestal formát dostačovať, lebo FOMO písať to denne zaberalo veľa času. Tak som prešiel na týždenné intervaly, ale aj tak som s tým na desať rokov sekol.',
+      'vyvojari.dev bola pre mňa nová fáza, lebo som zistil, že bez revízie toho, čo prečítam, sa mi neukladajú informácie dobre. Neverili by ste, ako pomôže dať svoje myšlienky na papier alebo ich zapísať na klávesnici. Tak som to začal robiť pravidelne a už ôsmy rok píšem týždenník cez zaťaté zuby, či sa mi chce, alebo nechce. A keďže som amatérsky bloger, tak každý týždenník má čítanosť tak 50 až 80 ľudí. To nie je moc, ale ako mi povedal jeden kamarát: nie je dôležité koľko, ale kto ťa číta.',
+      'Pred rokom som začal pomocou AI a manuálneho review s anglickou verziou. Keďže som slabý marketér, tak mám už asi 15 čítaní na jednu verziu. Ach jaj.',
     ),
   })],
 });
@@ -510,6 +616,13 @@ scenes.push({
 // D. START TALKING — the co-host
 scenes.push({
   id: 'talking',
+  quips: [
+    'Skúška, raz, dva.',
+    'Nahrávame?',
+    'Introvert pri mikrofóne.',
+    'Hlas mám po dedovi.',
+    'Aúúú do éteru!',
+  ],
   style: 'sticker',
   props: [
     p('table', -7.4, 'mid', { dz: 1 }),
@@ -530,17 +643,15 @@ scenes.push({
   slides: [startSlide({
     id: 'start-talking',
     verb: 'TALKING',
-    role: 'pomocný podcaster',
-    must: 'JUST ASK · JOIN COMMUNITY',
-    giveUp: 'komfortnej zóny',
-    mine: 'cez WebUP ku CodeCon-u · jedna správa Dávidovi a som v podcaste Link',
+    role: 'sidekick podcaster',
+    must: 'JOIN COMMUNITY · JUST ASK',
+    giveUp: 'COMFORT ZONE',
+    mine: 'via WebUP to CodeCon · one message to Dávid and I am on the Link podcast',
     notes: N(
       'Druhá rola z názvu: pomocný podcaster.',
-      'Musíš: ozvať sa, stačí sa opýtať. Pridaj sa ku komunite, napríklad Ďakovačka. [NÁVRH] Ďakovačka: jednoduchý zvyk verejne poďakovať človeku, ktorý ti pomohol alebo ťa niečo naučil. Nestojí nič, nevyžaduje odvahu vystúpiť a je to najľahší prvý krok do komunity. (Over, či to sedí s tým, čo pod Ďakovačkou myslíš ty.)',
-      'Vzdaj sa: komfortnej zóny.',
-      'Ako to bolo u mňa: cez WebUP som sa pripletol ku CODECON-u a skončil vo výberovej komisii.',
-      'Pred rokom som napísal Dávidovi Tvrdoňovi, že nemôžem byť horší ako AI hlas v jeho podcaste Link. Odvtedy som spolumoderátor.',
-      'Toto je zároveň odpoveď na bod 3: stačí sa ozvať.',
+      'Viete, ako začnete hovoriť na verejných eventoch? Tak, že začnete hovoriť na tých neverejných. Spravte si mini event raz za mesiac vo vašej firme, nájdite si malú milú komunitu, ktorá vám dá feedback, ako je WebUP.',
+      'Budete ale musieť vystúpiť mimo svoju komfortnú zónu. Úprimne, ja som mal a asi aj stále mám asi všetky chyby, aké prednášajúci môže mať. Rýchlo hovorím, mumlem, opakujem sa, keď som v úzkych, tak je to samé akokebyže, akože, takže. Ale cvičenie robí majstra. Keď som pred 4 rokmi začal mať na WebUP mesačník, tak to bolo utrpenie pre poslucháčov aj mňa, našťastie sa stretávame tam, kde čapujú pivo, tak to nejak prežili. Ale začal som sám seba nútiť lepšie artikulovať, pomalšie hovoriť. O rok na tom budem lepšie ako teraz.',
+      'A vystúpiť z komfortnej zóny znamená aj sa jednoducho spýtať. Všetky komunitné eventy hľadajú speakerov, stačí zaplniť 15 až 20 min. Spýtajte sa, či nepotrebujú pomôcť s organizáciou. Mimochodom, ja som sa tak raz spýtal Dávida Tvrdoňa, že či nechce vyskúšať nahradiť také robotické hlasy tým mojím, veď horšie to už nemôže byť, a už rok robím pomocného podcastera v podcaste Link. Aj do hodnotiacej komisie CodeCon som sa dostal, lebo sa stačilo iba ponúknuť.',
     ),
   })],
 });
@@ -548,6 +659,13 @@ scenes.push({
 // D. CREATE something — the maker's corner
 scenes.push({
   id: 'create',
+  quips: [
+    'Idem niečo zbúchať.',
+    'Nápad! Kde je pero?',
+    'Funguje to? Šokujúce.',
+    'Side project číslo 47.',
+    'Hotové je lepšie.',
+  ],
   kicker: 'learning + reading + writing + talking',
   style: 'sticker',
   props: [
@@ -568,11 +686,27 @@ scenes.push({
       id: 'create',
       title: 'CREATE something',
       notes: N(
-        '[NÁVRH] Učenie, čítanie, písanie aj rozprávanie majú zmysel vtedy, keď po nich niečo ostane. Nemusí to byť startup. Stačí článok, malý nástroj, prednáška na meetupe alebo epizóda podcastu.',
-        '[NÁVRH] U mňa: táto prezentácia beží v nástroji, ktorý som si na ňu postavil. Aj to je „create something“.',
-        '[NÁVRH] Dôležité je, že výsledok je verejný a ostáva po ňom stopa.',
+        'Pri všetkom tom AI, čo je okolo nás, verím, že si ľudia budú ceniť to, čo tvoríme ručne. Nemusí to byť nič zložité, nájdite si komunitu v okolí, spravte malú prednášku na meetupe.',
+        'A teraz prichádza časť, kedy by ste si mali vytiahnuť telefóny, lebo prichádzajú odkazy.',
+        'Prvá dvojica je písanie. Týždenník na vyvojari.dev je môj technologický prehľad, ktorý píšem ôsmy rok každý týždeň. Weekly Dev Digest na Substacku je jeho anglická verzia, ktorú robím asi rok s pomocou AI a ručného review.',
+        'Druhá dvojica je rozprávanie. WebUP je žilinský meetup, na YouTube nájdete záznamy prednášok aj môj mesačník. Link je technologický podcast Dávida Tvrdoňa, v ktorom robím pomocného podcastera.',
+        'Tretia dvojica je to, čo som si postavil sám. WolfDeck je nástroj, v ktorom beží táto prezentácia. WolfMark je môj denný zápisník: obyčajné Markdown súbory, kalendár namiesto zoznamu a história poznámok.',
       ),
-      groups: [],
+      // what I made: three pairs of links, one pair at a time
+      groups: [
+        { parts: [
+          part('image', -5.2, 4.3, { src: 'images/qr-tyzdennik.png', caption: 'Týždenník', width: 5.4, tilt: -1.5, depth: 'front' }),
+          part('image', 5.2, 4.3, { src: 'images/qr-substack.png', caption: 'Weekly Dev Digest', width: 5.4, tilt: 1.5, depth: 'front' }),
+        ] },
+        { parts: [
+          part('image', -5.2, 4.3, { src: 'images/qr-webup.png', caption: 'WebUP', width: 5.4, tilt: -1.5, depth: 'front' }),
+          part('image', 5.2, 4.3, { src: 'images/qr-link.png', caption: 'Link', width: 5.4, tilt: 1.5, depth: 'front' }),
+        ] },
+        { parts: [
+          part('image', -5.2, 4.3, { src: 'images/qr-wolfdeck.png', caption: 'WolfDeck', width: 5.4, tilt: -1.5, depth: 'front' }),
+          part('image', 5.2, 4.3, { src: 'images/qr-wolfmark.png', caption: 'WolfMark', width: 5.4, tilt: 1.5, depth: 'front' }),
+        ] },
+      ],
     },
   ],
 });
@@ -581,6 +715,13 @@ scenes.push({
 K = 1.3;
 scenes.push({
   id: 'brand',
+  quips: [
+    'Reflektor? Na mňa?',
+    'AI si ma pamätá!',
+    'Schod po schode.',
+    'Pozná ma aj chatbot.',
+    'Stopa je stopa.',
+  ],
   kicker: 'spíker, ktorého vybrala AI',
   style: 'screen',
   mood: 'night',
@@ -606,15 +747,16 @@ scenes.push({
       id: 'brand',
       title: 'Výsledok',
       notes: N(
-        'Keď robíš štyri START bloky dlhodobo, vzniká brand. Ľudia o tebe vedia a vie o tebe aj AI.',
-        'Keď sa niekto spýta AI, koho pozvať alebo komu veriť, vyberie toho, o kom existuje stopa.',
-        'Odpoveď na NIKOHO NEZAUJÍMAM zo slidu 11 a uzavretie háčika zo slidu 1.',
-        '[NÁVRH – over fakty] Konkrétny príbeh: organizátori tejto konferencie pri výbere tém a spíkrov použili AI. Tá ma odporučila, lebo o mne našla osem rokov týždenníka, mesačník pre WebUP, podcast a prácu v komisii. Nikdy som si brand neplánoval, vznikol ako vedľajší produkt. (Doplň, ako to presne bolo.)',
+        'Keď sa prelúskaš cez všetky štyri START bloky, tak je veľká šanca, že si vytvoríš brand.',
+        'Keď o tebe vedia ľudia, tak sa o tebe dozvie aj AI. Treba len internet zamoriť svojím obsahom.',
+        'A to je ten finálny krok. Byť vybratý AI. Mimochodom, to je dôvod, prečo vznikla táto prednáška.',
       ),
       groups: [
         { parts: [part('text', -7.4, 4.3, { title: 'BUILD YOUR BRAND', align: 'center', width: 7.4, fontScale: 1.15 })] },
         { keep: true, parts: [part('text', 0, 5.5, { title: 'BE RECOGNIZABLE', align: 'center', width: 7, fontScale: 1.15 })] },
         { keep: true, parts: [part('text', 7.2, 6.7, { title: 'BE CHOSEN BY AI', align: 'center', width: 6.8, fontScale: 1.15 })] },
+        // the proof: the chat message where an AI put me on the speaker list
+        { parts: [part('image', 0, 3.6, { src: 'images/chosen-by-ai.png', width: 13, aspect: 753 / 316, depth: 'front' })] },
       ],
     },
   ],
@@ -624,6 +766,13 @@ scenes.push({
 K = 1;
 scenes.push({
   id: 'zaver',
+  quips: [
+    'Už len potlesk.',
+    'Prežili sme to!',
+    'Otázky? Ľahké, prosím.',
+    'QR kódy neštípu.',
+    'Aúúú, ďakujem!',
+  ],
   kicker: 'Záver',
   style: 'paper',
   ground: 'stage',

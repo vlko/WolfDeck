@@ -19,6 +19,8 @@ const RETURN_AFTER = 5; // seconds of no movement input before he heads home
 const MANUAL_RANGE_X = 13; // how far from his post he may roam
 const MANUAL_Z = [-3.2, 4.6]; // stay on the meadow
 const RADIUS = 0.45; // his footprint when steering round props
+const ASIDE_SPEED = 5; // …at this trot
+const ASIDE_YAW = 1.1; // then turns toward the middle — nearly side-on, his face still to the audience
 
 // Shortest signed angle from a to b.
 function angleTo(a, b) {
@@ -95,9 +97,14 @@ export function createHero({ walkSpeed, heightAt }) {
   let behavior = null;
   let nextBehaviorIn = 6 + Math.random() * 6;
 
+  // Stepping aside (setAside): an offset on top of his logical position —
+  // the camera, his post and the route planning keep using `x`, so the
+  // scene stays centred while he stands off to one side.
+  const aside = { want: 0, cur: 0, stride: 0 };
+
   function place() {
-    group.position.x = x;
-    group.position.y = heightAt(x, group.position.z);
+    group.position.x = x + aside.cur;
+    group.position.y = heightAt(group.position.x, group.position.z);
   }
   function setX(nx) {
     x = nx;
@@ -244,6 +251,19 @@ export function createHero({ walkSpeed, heightAt }) {
       stationZ = spot.z;
     },
 
+    // Step off the post by `offset` (− left, + right) and look back at the
+    // middle of the screen; 0 brings him home. Safe to call every frame.
+    setAside(offset) {
+      let want = offset;
+      if (want && blocked(station + want, stationZ, RADIUS)) {
+        const spot = nearestFree({ x: station + want, z: stationZ }, RADIUS, { z0: stationZ - 0.01, z1: stationZ + 0.01 });
+        want = spot ? spot.x - station : 0;
+      }
+      if (want === aside.want) return;
+      if (want && mode === 'idle' && behavior) cancelBehavior();
+      aside.want = want;
+    },
+
     // Free-walk input from A/S/D/F ([-1..1] each axis; 0,0 = released).
     setManualDir(dx, dz) {
       manualDir.x = dx;
@@ -296,12 +316,21 @@ export function createHero({ walkSpeed, heightAt }) {
     update(t, dt) {
       step(t, dt);
       applyHeading(dt);
-      agent.x = x;
+      agent.x = group.position.x;
       agent.z = group.position.z;
     },
   };
 
   function step(t, dt) {
+    // He only stands aside at rest — a walk or free roaming brings the
+    // offset back to zero as he goes.
+    const goal = mode === 'walk' || mode === 'manual' ? 0 : aside.want;
+    const gap = goal - aside.cur;
+    const sidling = Math.abs(gap) > 0.01;
+    if (sidling) {
+      aside.cur += Math.sign(gap) * Math.min(Math.abs(gap), ASIDE_SPEED * dt);
+      place();
+    }
     {
       if (mode === 'walk') {
         const ws = walkState;
@@ -374,6 +403,17 @@ export function createHero({ walkSpeed, heightAt }) {
         if (manualDir.x || manualDir.z) {
           mode = 'manual';
           manualIdleTime = 0;
+          return;
+        }
+        if (sidling) { // trotting to (or back from) his spot beside the message
+          heading.y += angleTo(heading.y, Math.sign(gap) * Math.PI * 0.4) * Math.min(dt * 8, 1);
+          aside.stride += ASIDE_SPEED * dt * 1.6;
+          pose.walk(aside.stride, t, dt);
+          return;
+        }
+        if (aside.want) { // there: turned toward the text, reading it
+          heading.y += angleTo(heading.y, -Math.sign(aside.want) * ASIDE_YAW) * Math.min(dt * 5, 1);
+          pose.idle(t, dt);
           return;
         }
         // Ease yaw back to front-facing, then idle.

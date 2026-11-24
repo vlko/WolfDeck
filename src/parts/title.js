@@ -166,6 +166,7 @@ function heading(text) {
   // Height the kicker / subtitle stack against: the text block, plus half of
   // a style's margin (its outer half is shadow and glow, free to overlap).
   group.userData.h = ((L.hPx - L.pad * 2 + extra * 0.5) * fit) / PX;
+  group.userData.w = (L.wPx * fit) / PX;
   return group;
 }
 
@@ -182,7 +183,25 @@ function textLine(text, { size, weight, color, maxW = 14, spacing = 0, label = n
   return mesh;
 }
 
-export function createTitle(text, { kicker, subtitle } = {}) {
+// A slide's KEY MESSAGE: the subtitle, in the same label style, but large
+// and hung in the middle of the screen instead of tucked under the heading.
+const MESSAGE_SIZE = 0.86;
+const MESSAGE_MAX_W = 15.5;
+
+// Drawn over the scene whatever stands in front — a key message must not
+// hide behind a steeple or a storm cloud.
+function onTop(obj) {
+  let order = 20;
+  obj.traverse((m) => {
+    if (!m.material) return;
+    m.material.depthTest = false;
+    m.renderOrder = order++;
+  });
+}
+
+// `message`: the title block carries the slide's key message; `messageY` is
+// where its centre hangs, relative to the heading's (title-local units).
+export function createTitle(text, { kicker, subtitle, message = false, messageY = -5 } = {}) {
   const group = new THREE.Group();
   if (!text && !kicker && !subtitle) return group;
 
@@ -194,6 +213,7 @@ export function createTitle(text, { kicker, subtitle } = {}) {
     const hd = heading(String(text));
     inner.add(hd);
     topY = hd.userData.h / 2;
+    group.userData.headingW = hd.userData.w;
     botY = -hd.userData.h / 2;
   }
   const subPlanes = [];
@@ -208,12 +228,20 @@ export function createTitle(text, { kicker, subtitle } = {}) {
   }
   if (subtitle) {
     const p = textLine(String(subtitle), {
-      size: 0.42, weight: 700, color: titleStyle.subtitleColor ?? palette.inkBody, maxW: 18, label: 'rgba(251,248,241,0.9)', kind: 'subtitle',
+      size: message ? MESSAGE_SIZE : 0.42, weight: message ? 800 : 700, color: titleStyle.subtitleColor ?? palette.inkBody,
+      maxW: message ? MESSAGE_MAX_W : 18, label: 'rgba(251,248,241,0.9)', kind: 'subtitle',
     });
     p.position.y = botY - 0.35 - p.userData.h / 2;
+    // mid-screen, unless a long message needs the room right under the heading
+    if (message) {
+      p.position.y = Math.min(p.position.y, messageY);
+      onTop(p);
+    }
     inner.add(p);
-    subPlanes.push(p);
+    // a message stays for the whole slide; only the kicker steps aside
+    if (!message) subPlanes.push(p);
   }
+  if (message && !subtitle) onTop(inner); // the heading itself is the message
   // group → stage (a style's entrance poses this) → inner (idle bob)
   const stage = new THREE.Group();
   stage.add(inner);

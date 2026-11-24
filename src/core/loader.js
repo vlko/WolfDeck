@@ -7,6 +7,8 @@ import { GROUND_NAMES } from '../environment/ground.js';
 // Only a JSON parse failure is fatal (shown in the #fatal overlay);
 // everything else degrades to warnings and defaults.
 
+const ASIDE = 5.4; // how far the wolf steps off his post to clear a key message
+
 export async function loadPresentation(url = 'presentation.json') {
   let raw;
   try {
@@ -20,6 +22,11 @@ export async function loadPresentation(url = 'presentation.json') {
     throw err;
   }
   return normalize(raw);
+}
+
+// Speech-bubble lines: non-empty strings only.
+function quipList(value) {
+  return Array.isArray(value) ? value.filter((q) => typeof q === 'string' && q.trim()) : [];
 }
 
 // A slide style name, or the fallback when it is missing / unknown.
@@ -58,6 +65,8 @@ function normalize(raw) {
       walkSpeed: typeof meta.walkSpeed === 'number' ? meta.walkSpeed : WALK_SPEED,
       seed: typeof meta.seed === 'number' ? meta.seed : 1,
       style: styleName(meta.style, DEFAULT_STYLE, 'meta'),
+      // the wolf's own lines for this deck (else the built-in ones)
+      quips: quipList(meta.quips),
       rivers: Array.isArray(meta.rivers)
         ? meta.rivers
           .filter((r) => r && typeof r.x === 'number')
@@ -158,6 +167,15 @@ function normalizeScene(s, i, deckStyle = DEFAULT_STYLE) {
       title: typeof slide.title === 'string' ? slide.title : '',
       subtitle: typeof slide.subtitle === 'string' ? slide.subtitle : '',
       kicker: typeof slide.kicker === 'string' ? slide.kicker : kicker, // slide overrides scene
+      // Panels that belong to the slide itself: they come and go with its
+      // title, with no step of their own (a byline, a logo, a QR code).
+      parts: Array.isArray(slide.parts) ? (normalizeGroup({ parts: slide.parts }, `${ctx} parts`) ?? []) : [],
+      // The slide's key message — its subtitle, or the heading itself when
+      // there is none — goes large in the middle of the screen and stays
+      // through the slide's groups; the wolf steps to `heroSide` and looks.
+      message: slide.message === true,
+      // "left" (default) / "right", or his exact offset from the scene's centre
+      heroSide: Number.isFinite(slide.heroSide) ? slide.heroSide : (slide.heroSide === 'right' ? ASIDE : -ASIDE),
       // Look of this slide's panels and titles: its own, else the scene's,
       // else the deck's (meta.style), else the paper default.
       style: styleName(slide.style, sceneStyle, ctx),
@@ -172,7 +190,9 @@ function normalizeScene(s, i, deckStyle = DEFAULT_STYLE) {
     };
   });
 
-  return { id, kicker, mood, ground, props, steps, slides };
+  // What the wolf may say on arriving here (else the deck's / built-in lines).
+  const quips = quipList(scene.quips);
+  return { id, kicker, mood, ground, quips, props, steps, slides };
 }
 
 function normalizeProp(p, context) {

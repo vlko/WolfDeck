@@ -4,7 +4,7 @@ import { plainColors, getGrainTexture } from '../assets/materials.js';
 import { palette } from '../assets/palette.js';
 import { warn } from '../config.js';
 
-// ── image ── fields: src (under public/), caption?, width?
+// ── image ── fields: src (under public/), caption?, width?, aspect?
 // A paper mat with the picture inset and an optional caption strip.
 // Missing image → magenta face + console warning (deck keeps running).
 
@@ -21,9 +21,12 @@ export function imagePart(def) {
   const capH = capLines.length ? 0.32 + capLines.length * 0.4 : 0;
 
   const group = new THREE.Group();
-  // Assume 4:3 until the texture arrives, then rescale the picture plane.
+  // The frame is cut before the texture arrives: 4:3-ish unless the deck
+  // gives the picture's "aspect" (width / height) — a wide screenshot then
+  // gets a wide frame instead of bands of empty mat. The picture plane is
+  // rescaled into it once loaded.
   let picW = w - mat * 2;
-  let picH = picW * 0.72;
+  let picH = typeof def.aspect === 'number' && def.aspect > 0 ? picW / def.aspect : picW * 0.72;
   const h = picH + mat * 2 + capH;
 
   const cardOpts = cardOptsFrom(def);

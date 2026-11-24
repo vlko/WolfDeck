@@ -20,6 +20,7 @@ import * as traffic from './core/traffic.js';
 
 import { spritesSettled } from './assets/sprites.js';
 import { loadFonts } from './parts/fonts.js';
+import * as boot from './core/boot.js';
 
 // Register the asset library (side-effect imports): every asset is a sprite
 // cut from the reference sheets (see tools/extract-sprites.mjs).
@@ -35,6 +36,7 @@ async function start() {
   const deckUrl = new URLSearchParams(window.location.search).get('deck') ?? 'presentation.json';
   // The panel typeface loads in parallel with the deck, so no panel is drawn
   // in a fallback font.
+  await boot.phase('Loading the deck and fonts', 0.3, 0.4);
   const [deck] = await Promise.all([loadPresentation(deckUrl), loadFonts()]);
   // Download only the model packs this deck's props are built from (plus the
   // wolf) — not the whole library.
@@ -48,13 +50,15 @@ async function start() {
     for (const sc of deck.scenes) for (const sl of sc.slides) sl.style = forced;
   }
   // …and only the slide styles it uses.
+  await boot.phase('Loading 3D models', 0.4, 0.6);
   await Promise.all([
-    loadModelsFor(names),
+    loadModelsFor(names, (done, total, pack) => boot.progress(done, total, `${done} / ${total} packs${pack ? ` (${pack})` : ''}`)),
     // extruded lettering brings a font along — only decks that use it pay
     deck.scenes.some((sc) => sc.props.some((p) => p.type === 'text3d')) ? import('./assets/text3d.js') : null,
     loadStyles(deck.scenes.flatMap((sc) => sc.slides.map((sl) => sl.style))),
   ]);
 
+  await boot.phase('Starting the renderer', 0.6, 0.62);
   let renderer;
   let scene;
   try {
@@ -69,10 +73,13 @@ async function start() {
     cameraRig.resize();
   });
 
-  const deckView = buildDeck(deck, scene);
+  await boot.phase('Building the scenes', 0.62, 0.9);
+  const deckView = await buildDeck(deck, scene, (i, n, id) => boot.step(i, n, `${i + 1} / ${n} (${id})`));
   // Objects without a 3D model stand in as flat sprites; wait for just those
   // images so the first frame is complete (no pop-in).
+  await boot.phase('Loading images', 0.9, 0.95);
   await spritesSettled();
+  await boot.phase('First frame', 0.95, 1);
 
   const hero = createHero({
     walkSpeed: deck.meta.walkSpeed,
@@ -85,13 +92,15 @@ async function start() {
   // The wolf announces every scene in a papercraft bubble — on arrival,
   // not when he sets off.
   const bubble = createSpeechBubble(hero);
+  // a scene's own lines, else the deck's, else the built-in ones
+  const quipsFor = (i) => (deck.scenes[i]?.quips.length ? deck.scenes[i].quips : deck.meta.quips);
   scene.add(bubble.group);
 
   let notifyState = () => {}; // set once the URL-hash sync exists (below)
   const stepMachine = createStepMachine({
     deckView,
     hero,
-    onArrive: (i) => bubble.announce(i + 1),
+    onArrive: (i) => bubble.announce(i + 1, quipsFor(i)),
     onStateChange: (s, k) => notifyState(s, k),
   });
   const focus = createFocusMode();
@@ -105,7 +114,7 @@ async function start() {
   // Touch/keyboard-less devices get corner buttons for the core shortcuts.
   createTouchControls({ stepMachine, focus, menu: sceneMenu, hero, canvas: renderer.domElement });
 
-  bubble.announce(1); // greet on the opening scene
+  bubble.announce(1, quipsFor(0)); // greet on the opening scene
   // #<slide-id> in the URL ↔ current slide; editing the hash jumps there.
   const urlHash = bindUrlHash({ deck, deckView, stepMachine, cameraRig });
   notifyState = (s, k) => {
@@ -122,14 +131,23 @@ async function start() {
     // closeups: only on a resting 3D view (not while walking, not in the flat P view)
     const st = stepMachine.state;
     cameraRig.setCloseup(hero.walking || focus.active ? null : deckView.closeupFor(st.scene, st.step));
+    hero.setAside(focus.active ? 0 : deckView.heroSideFor(st.scene, st.step));
     cameraRig.update(t, dt);
     deckView.update(t, dt, cameraRig.x, focus);
     focus.render(renderer, scene, cameraRig.camera);
     presenter.afterRender(); // thumbnail for the presenter view, if one is open
   });
 
+  // The first frames compile every shader and upload every texture — the
+  // loading screen stays until one has actually been drawn.
+  requestAnimationFrame(() => requestAnimationFrame(boot.finish));
+  setTimeout(boot.finish, 1500); // a background tab draws no frames
+
   // Console debugging handle.
   window.wolfdeck = { deck, deckView, hero, stepMachine, cameraRig, scene, focus, sceneMenu, presenter, renderer, world, traffic };
 }
 
-start();
+start().catch((err) => {
+  boot.fail(err);
+  throw err;
+});

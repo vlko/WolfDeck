@@ -49,7 +49,14 @@ function registerObstacle(obj, prop, originX, z, sceneId) {
 // the step machine drives. Every scene's props AND parts are built up front —
 // stepping back through an already-visited scene is instant and exact.
 
-export function buildDeck(deck, scene3) {
+// A slide's key message ("message": true) hangs mid-screen: the height of
+// its centre, and how wide a heading that IS the message may grow (world units).
+const MESSAGE_Y = 2.8;
+const MESSAGE_HEADING_W = 17;
+
+// `onScene(i, count, id)` is awaited before each scene is built — the loading
+// screen repaints there.
+export async function buildDeck(deck, scene3, onScene) {
   const spacing = deck.meta.sceneSpacing;
   const sceneCount = deck.scenes.length;
   const minX = -spacing * 0.6;
@@ -77,7 +84,7 @@ export function buildDeck(deck, scene3) {
   const clouds = createClouds({ minX, maxX });
   scene3.add(clouds);
 
-  const scenes = deck.scenes.map((sceneDef, i) => {
+  const buildScene = (sceneDef, i) => {
     const group = new THREE.Group();
     const originX = i * spacing;
     group.position.x = originX;
@@ -133,14 +140,39 @@ export function buildDeck(deck, scene3) {
     // headroom above the letters.
     const slideTitles = sceneDef.slides.map((sl) => {
       useStyle(sl.style); // each slide wears its own style
-      const t = createTitle(sl.title, { kicker: sl.kicker, subtitle: sl.subtitle });
-      t.position.set(0, sl.kicker ? 7.9 : 8.5, -6.5);
+      const titleY = sl.kicker ? 7.9 : 8.5;
+      const t = createTitle(sl.title, {
+        kicker: sl.kicker, subtitle: sl.subtitle, message: sl.message, messageY: (MESSAGE_Y - titleY) / 1.12,
+      });
+      t.position.set(0, titleY, -6.5);
       t.scale.setScalar(1.12);
+      if (sl.message && !sl.subtitle && sl.title) {
+        // the heading IS the key message: mid-screen, as large as fits
+        t.position.y = MESSAGE_Y;
+        t.scale.setScalar(Math.max(1.12, Math.min(1.6, MESSAGE_HEADING_W / t.userData.headingW)));
+      }
       t.userData.pos3d = t.position.clone();
       tagContent(t);
       group.add(t);
       updatables.push(t.userData.update);
       return t;
+    });
+
+    // A slide's own panels ("parts" on the slide) appear and leave with its
+    // title — see showSlideTitle.
+    sceneDef.slides.forEach((sl, si) => {
+      useStyle(sl.style);
+      slideTitles[si].userData.extras = sl.parts.map((partDef) => {
+        const part = buildPart({
+          ...partDef, x: partDef.x ?? 0, y: partDef.y ?? PART_CASCADE.y, z: partDef.z ?? PART_CASCADE.z0,
+        });
+        part.position.y += ground.heightAt(originX + part.position.x, part.position.z);
+        part.userData.pos3d = part.position.clone();
+        tagContent(part);
+        group.add(part);
+        updatables.push(part.userData.update);
+        return part;
+      });
     });
 
     let slot = 0; // cascade slot — restarts each group (every group clears)
@@ -184,7 +216,12 @@ export function buildDeck(deck, scene3) {
       for (const part of batch) part.userData.pos3d = part.position.clone();
     }
     return { group, originX, slideTitles, stepParts, meta, slides: sceneDef.slides, mood: sceneDef.mood, updatables, propObjs };
-  });
+  };
+  const scenes = [];
+  for (const [i, sceneDef] of deck.scenes.entries()) {
+    await onScene?.(i, sceneCount, sceneDef.id);
+    scenes.push(buildScene(sceneDef, i));
+  }
 
   // ── mood: the weather follows the camera from scene to scene ──────────
   // Each scene has a mood (the one on screen may take its active slide's);
@@ -240,8 +277,14 @@ export function buildDeck(deck, scene3) {
     const t = scenes[sceneIndex].slideTitles[slideIndex];
     shownAt = { scene: sceneIndex, slide: slideIndex };
     if (t === shownTitle) return;
-    if (shownTitle) shownTitle.userData.setShown(false);
+    if (shownTitle) {
+      shownTitle.userData.setShown(false);
+      for (const p of shownTitle.userData.extras) p.userData.hide();
+    }
     t.userData.setShown(true, !shownTitle); // instant for the very first
+    for (const p of t.userData.extras) {
+      if (shownTitle) p.userData.reveal(0.25); else p.userData.revealInstant();
+    }
     shownTitle = t;
   }
   // Active slide index for a state (scene, k = steps revealed): k=0 is the
@@ -445,6 +488,13 @@ export function buildDeck(deck, scene3) {
     // { x, y, z, w, h, zoom, delay } — or null. Only the closeup group's own
     // step frames it; any other state returns null, so the next step eases
     // the camera back while its own content comes in.
+    // Which side the wolf should step to (−1 left, +1 right, 0 stay): a
+    // slide whose subtitle is its key message wants the middle of the screen.
+    heroSideFor(i, k) {
+      const sl = scenes[i].slides[activeSlideIndex(i, k)];
+      return sl?.message ? sl.heroSide : 0;
+    },
+
     closeupFor(i, k) {
       if (k <= 0) return null;
       const s = scenes[i];

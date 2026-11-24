@@ -125,7 +125,7 @@ export function createSpeechBubble(hero) {
   const group = new THREE.Group();
   let bubble = null;
   let age = 0;
-  let lastPhrase = -1;
+  let lastPhrase = null;
 
   function clear() {
     if (!bubble) return;
@@ -145,12 +145,15 @@ export function createSpeechBubble(hero) {
     group,
 
     // Show "random phrase + #number" (number is the 1-based scene number).
-    announce(number) {
-      let i = Math.floor(Math.random() * PHRASES.length);
-      if (i === lastPhrase) i = (i + 1) % PHRASES.length; // no instant repeat
-      lastPhrase = i;
+    // `lines` are the scene's or the deck's own quips; without any, the
+    // built-in phrases.
+    announce(number, lines = null) {
+      const pool = lines?.length ? lines : PHRASES;
+      let i = Math.floor(Math.random() * pool.length);
+      if (pool[i] === lastPhrase) i = (i + 1) % pool.length; // no instant repeat
+      lastPhrase = pool[i];
       clear();
-      bubble = makeBubble(PHRASES[i], number);
+      bubble = makeBubble(pool[i], number);
       bubble.scale.setScalar(0.001);
       group.add(bubble);
       age = 0;

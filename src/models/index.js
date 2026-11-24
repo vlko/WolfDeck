@@ -16,24 +16,28 @@ const loading = new Map(); // pack → import promise
 
 // One after another, in registration order — a later pack's model replaces
 // an earlier one of the same name, whatever the network does.
-async function loadPacks(packs) {
-  for (const pack of ORDER) {
-    if (!packs.has(pack)) continue;
+async function loadPacks(packs, onProgress) {
+  const wanted = ORDER.filter((p) => packs.has(p));
+  let done = 0;
+  for (const pack of wanted) {
+    onProgress?.(done, wanted.length, pack);
     if (!loading.has(pack)) {
       setPack(pack);
       loading.set(pack, modules[pathOf(pack)]());
     }
     await loading.get(pack);
+    done++;
   }
+  onProgress?.(done, wanted.length);
   setPack(null);
 }
 
 // Load the packs that hold these models (names without a model are skipped —
 // those objects show their flat sprite).
-export function loadModelsFor(names) {
+export function loadModelsFor(names, onProgress) {
   const packs = new Set();
   for (const n of names) if (index.models[n]) packs.add(index.models[n]);
-  return loadPacks(packs);
+  return loadPacks(packs, onProgress);
 }
 
 export function loadAllModels() {

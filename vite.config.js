@@ -31,7 +31,15 @@ export default defineConfig({
   server: {
 	host: true, // bind 0.0.0.0 so Docker port mappings can reach the server
     port: 3000,
-    // Reliable change detection on WSL2 / network filesystems.
-    watch: { usePolling: true, interval: 300 },
+    // Reliable change detection on WSL2 / network filesystems. Polling stats
+    // every watched file through the same small thread pool the server reads
+    // files with, so keep the set small: thousands of polled screenshots made
+    // every font, image and deck request wait seconds.
+    watch: {
+      usePolling: true,
+      interval: 300,
+      binaryInterval: 3000, // sprites and images change rarely
+      ignored: ['**/tools/out/**', '**/dist/**', '**/RawSources/**', '**/docs/**'],
+    },
   },
 });

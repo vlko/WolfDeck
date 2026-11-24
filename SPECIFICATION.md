@@ -305,6 +305,9 @@ warnings.
 The hero wolf is added automatically — you never declare it. Extra wolves can
 be placed as props. On every scene arrival the wolf announces himself with a
 little paper **speech bubble** (a random phrase + the scene number).
+Give him lines of his own with `"quips": ["…", "…"]` — on a scene (what he
+may say on arriving there) or in `meta` (for every scene without its own);
+one is picked at random each time. Keep them short: the bubble is one line.
 
 ## 6. Slides & groups — revealing content with in-place parts
 
@@ -350,6 +353,25 @@ panels to the ones already shown instead of clearing them, so a slide can
 bring in one element on its own and still end with the full layout. A group
 with `"subtitle": true` keeps the slide's subtitle visible (e.g. a portrait
 that goes with it).
+
+**Slide parts.** `"parts"` directly on a slide (the same objects as in a
+group) are panels that belong to the slide itself: they are there as soon as
+its title is and leave with it, without a step of their own — a byline, a
+logo, a QR code.
+
+**Key message.** `"message": true` on a slide makes its subtitle the slide's
+key message: the same label, set large in the middle of the screen, drawn
+over the scenery and kept through all of the slide's groups (place their
+panels beside it). A slide with no subtitle promotes its **heading** instead
+— it hangs mid-screen, as large as fits. The wolf steps off his post and
+turns toward the text; `"heroSide"` says where he stands: `"left"` (default),
+`"right"`, or his exact offset from the scene's centre (e.g. `-4.2`).
+
+```jsonc
+{ "id": "cover", "title": "How to become…", "subtitle": "…the speaker an AI picked",
+  "message": true, "heroSide": "left",
+  "groups": [{ "parts": [{ "type": "text", "position": [7.5, 2.5], "depth": "front", "title": "Jane Doe" }] }] }
+```
 
 **Closeups.** An interesting element can make an entrance: put it in a group
 of its own with `"closeup"` and the camera moves in on it **as it appears**;
@@ -417,7 +439,7 @@ panels is the same in every style.
 | `numbered` | `title?`, `items: [{title?, text} \| string]`, `start?` — 01/02/03 circle badges, items fade in one after another |
 | `callout` | `text` (or `body`), `title?`, `tone: "info"\|"positive"\|"warning"` — accent-edged banner with a → / ✓ / ! icon |
 | `table` | `title?`, `columns: [string]`, `rows: [[cell]]`, `align?: ["left"\|"right"]` — numeric-looking columns right-align automatically; fonts shrink rather than let columns collide |
-| `image` | `src` (path under `public/`), `caption?` |
+| `image` | `src` (path under `public/`), `caption?`, `aspect?` (width ÷ height of the picture — gives a wide or tall image a frame that fits; default ≈ 4:3) |
 | `chart` | `chart: "bar"\|"barh"\|"line"\|"pie"`, `title?`, `data: [{label, value, plan?, display?}]`, `colors?`, `valueLabels?` — plus grouped bars and donuts, below |
 | `diff` | `title?`, `lines: [string]`, `before?`, `after?` — a console diff: a dark terminal pane in a monospace face; a line starting with `-` is a removal (red), `+` an addition (green), `@` a hunk header, anything else context. `before` / `after` are short captions for the two sides shown in the title bar. Lines type themselves in one after another |
 
@@ -588,6 +610,7 @@ src/core/                     loader, deck assembly, step machine, hero,
                               presenter mode (fullscreen + presenter window)
 presenter.html, src/presenter/ the presenter window: timer, notes, preview, next
 tools/verify/presenter.mjs    headless check of the presenter mode
+tools/verify/loadtime.mjs     startup profile: time per loading phase, slowest requests
 src/environment/              paper meadow, rivers/roads, sky, hills, sun, clouds
 src/sprites/                  the cut-out sprites (.webp) + manifest.json
 src/assets/                   palette (sheet swatches), paper textures and
