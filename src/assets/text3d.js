@@ -11,7 +11,7 @@ import { applyAnimation } from './helpers.js';
 //   options: text ("\n" starts a new row), size (cap height in world units,
 //   default 1.4), depth (extrusion, default size × 0.45), color (faces),
 //   sideColor, colors: [..] (cycled per letter), arc (degrees the row bends
-//   over, 0 = straight), glow (0…1 — how much the letters shine by
+//   over, 0 = straight), roll (degrees the whole lettering leans), glow (0…1 — how much the letters shine by
 //   themselves; use it in dark moods), animation: "wave" (default) | "pop" | "none".
 // The font (Optimer Bold) has no Slovak diacritics — keep to plain Latin.
 const font = new FontLoader().parse(fontData);
@@ -28,6 +28,10 @@ register('text3d', (options = {}) => {
   const depth = options.depth ?? size * 0.45;
   const colors = Array.isArray(options.colors) && options.colors.length ? options.colors : [options.color ?? '#bd9662'];
   const rows = text.split('\n');
+  // the lettering as a whole — `roll` leans it (degrees, + = rising to the right)
+  const body = new THREE.Group();
+  body.rotation.z = ((options.roll ?? 0) * Math.PI) / 180;
+  group.add(body);
   const lineH = size * 1.42;
   const letters = [];
   let n = 0;
@@ -73,7 +77,7 @@ register('text3d', (options = {}) => {
       } else g.position.x -= rowW / 2;
     }
     rowGroup.position.y = (rows.length - 1 - ri) * lineH;
-    group.add(rowGroup);
+    body.add(rowGroup);
   });
   for (const l of letters) l.baseY = l.holder.position.y;
 

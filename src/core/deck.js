@@ -8,6 +8,7 @@ import { buildPart } from '../parts/partsFactory.js';
 import { useStyle, DEFAULT_STYLE } from '../styles/index.js';
 import { addObstacle } from './world.js';
 import { createMover } from './movers.js';
+import { tween, ease } from '../engine/tween.js';
 import { moodState, mixMoods, easeMood } from '../environment/moods.js';
 import { CONTENT_LAYER } from './focusMode.js';
 import { ACTIVE_SCENE_RADIUS, PART_CASCADE, PART_STACK_DZ, PART_STAGGER } from '../config.js';
@@ -49,6 +50,9 @@ function registerObstacle(obj, prop, originX, z, sceneId) {
 // the step machine drives. Every scene's props AND parts are built up front —
 // stepping back through an already-visited scene is instant and exact.
 
+const BOW_EVERY = 3.4; // seconds between two bows of a bowing prop
+const BOW_ANGLE = 0.62; // how deep (radians)
+
 // A slide's key message ("message": true) hangs mid-screen: the height of
 // its centre, and how wide a heading that IS the message may grow (world units).
 const MESSAGE_Y = 2.8;
@@ -73,6 +77,8 @@ export async function buildDeck(deck, scene3, onScene) {
     minX, maxX, seed: deck.meta.seed, rivers: deck.meta.rivers, roads: deck.meta.roads, zones,
   });
   scene3.add(ground.group);
+  // the ground is drawn first, so an overlay (ringTunnel) can paint over it
+  ground.group.traverse((m) => { if (m.isMesh && !m.material.transparent) m.renderOrder = -2000; });
 
   const backdrop = createBackdrop({ minX, maxX });
   scene3.add(backdrop);
@@ -92,6 +98,7 @@ export async function buildDeck(deck, scene3, onScene) {
 
     const updatables = [];
     const propObjs = []; // in deck order — closeups can aim at a prop
+    const slideProps = []; // props that are on stage during one slide only
     const byId = new Map(); // props a moving prop can name ("target", "from")
     const moverEnv = {
       originX,
@@ -128,6 +135,29 @@ export async function buildDeck(deck, scene3, onScene) {
         if (drive) obj.userData.update = drive;
       }
       registerObstacle(obj, prop, originX, z, sceneDef.id);
+      // a prop that takes a bow ("bow": true, or seconds of delay): it leans
+      // forward from the feet every few seconds, whatever else it is doing
+      if (prop.options.bow != null && prop.options.bow !== false) {
+        const delay = Number(prop.options.bow) || 0;
+        updatables.push((t) => {
+          const c = (((t - delay) % BOW_EVERY) + BOW_EVERY) % BOW_EVERY;
+          let k = 0; // down 0.45 s · held 0.5 s · up 0.55 s · standing the rest
+          if (c < 0.45) k = c / 0.45;
+          else if (c < 0.95) k = 1;
+          else if (c < 1.5) k = 1 - (c - 0.95) / 0.55;
+          obj.rotation.x = k * k * (3 - 2 * k) * BOW_ANGLE;
+        });
+      }
+      // a prop bound to one slide ("slide": "<id>") waits off stage
+      if (prop.slide) {
+        const slideIndex = sceneDef.slides.findIndex((sl) => sl.id === prop.slide);
+        if (slideIndex < 0) console.warn(`[wolfdeck] scene "${sceneDef.id}": prop "${prop.type}" names unknown slide "${prop.slide}"`);
+        else {
+          slideProps.push({ obj, slideIndex, scale: obj.scale.clone(), state: { k: 0 }, shown: false });
+          obj.visible = false;
+          obj.scale.setScalar(0.0001);
+        }
+      }
       obj.traverse((child) => {
         if (child.userData.update) updatables.push(child.userData.update);
       });
@@ -215,7 +245,7 @@ export async function buildDeck(deck, scene3, onScene) {
     for (const batch of stepParts) {
       for (const part of batch) part.userData.pos3d = part.position.clone();
     }
-    return { group, originX, slideTitles, stepParts, meta, slides: sceneDef.slides, mood: sceneDef.mood, updatables, propObjs };
+    return { group, originX, slideTitles, stepParts, meta, slides: sceneDef.slides, mood: sceneDef.mood, updatables, propObjs, slideProps };
   };
   const scenes = [];
   for (const [i, sceneDef] of deck.scenes.entries()) {
@@ -276,6 +306,19 @@ export async function buildDeck(deck, scene3, onScene) {
   function showSlideTitle(sceneIndex, slideIndex) {
     const t = scenes[sceneIndex].slideTitles[slideIndex];
     shownAt = { scene: sceneIndex, slide: slideIndex };
+    // props bound to a slide pop in with it and shrink away after
+    scenes.forEach((sc, si) => {
+      for (const sp of sc.slideProps) {
+        const want = si === sceneIndex && sp.slideIndex === slideIndex;
+        if (want === sp.shown) continue;
+        sp.shown = want;
+        if (want) sp.obj.visible = true;
+        tween(sp.state, { k: want ? 1 : 0 }, shownTitle ? 0.6 : 0.001, want ? ease.backOut : ease.inCubic, () => {
+          sp.obj.scale.copy(sp.scale).multiplyScalar(Math.max(sp.state.k, 0.0001));
+          sp.obj.visible = sp.state.k > 0.002;
+        });
+      }
+    });
     if (t === shownTitle) return;
     if (shownTitle) {
       shownTitle.userData.setShown(false);
@@ -495,6 +538,12 @@ export async function buildDeck(deck, scene3, onScene) {
       return sl?.message ? sl.heroSide : 0;
     },
 
+    // Where the wolf should back away to and peek from (world x, y, z), or null.
+    heroPerchFor(i, k) {
+      const hp = scenes[i].slides[activeSlideIndex(i, k)]?.heroPerch;
+      return hp ? { x: scenes[i].originX + hp.x, y: hp.y, z: hp.z } : null;
+    },
+
     closeupFor(i, k) {
       if (k <= 0) return null;
       const s = scenes[i];
@@ -509,7 +558,7 @@ export async function buildDeck(deck, scene3, onScene) {
         const box = new THREE.Box3().setFromObject(obj);
         const ctr = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
-        c = { x: ctr.x, y: ctr.y, z: ctr.z, w: size.x, h: size.y };
+        c = { x: ctr.x, y: ctr.y, z: ctr.z, w: size.x, h: size.y, live: Boolean(obj.userData.moves) };
       } else {
         const part = s.stepParts[k - 1][cu.part];
         if (!part) return null;

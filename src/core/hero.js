@@ -20,6 +20,8 @@ const MANUAL_RANGE_X = 13; // how far from his post he may roam
 const MANUAL_Z = [-3.2, 4.6]; // stay on the meadow
 const RADIUS = 0.45; // his footprint when steering round props
 const ASIDE_SPEED = 5; // …at this trot
+const PERCH_TIME = 1.9; // seconds to back away to a perch (and to come back)
+const PERCH_PEEK = 0.5; // how far he bobs up and down there, peeking
 const ASIDE_YAW = 1.1; // then turns toward the middle — nearly side-on, his face still to the audience
 
 // Shortest signed angle from a to b.
@@ -102,9 +104,21 @@ export function createHero({ walkSpeed, heightAt }) {
   // scene stays centred while he stands off to one side.
   const aside = { want: 0, cur: 0, stride: 0 };
 
+  // Perched (setPerch): he backs away from his post to a spot that may be
+  // off the ground — inside a prop, up on a ledge — and peeks out from it.
+  // Like `aside`, it rides on top of his logical position.
+  const perch = { on: false, to: null, k: 0, stride: 0, bob: 0 };
+  const smooth = (k) => k * k * (3 - 2 * k);
+
   function place() {
     group.position.x = x + aside.cur;
     group.position.y = heightAt(group.position.x, group.position.z);
+    if (perch.k > 0 && perch.to) {
+      const e = smooth(perch.k);
+      group.position.x += (perch.to.x - group.position.x) * e;
+      group.position.z = stationZ + (perch.to.z - stationZ) * e;
+      group.position.y += (perch.to.y - group.position.y) * e + perch.bob * e;
+    }
   }
   function setX(nx) {
     x = nx;
@@ -264,6 +278,16 @@ export function createHero({ walkSpeed, heightAt }) {
       aside.want = want;
     },
 
+    // Back away to a spot ({ x, y, z } in world units) and peek out from it;
+    // null brings him home. Safe to call every frame.
+    setPerch(to) {
+      if (to) {
+        if (!perch.on && mode === 'idle' && behavior) cancelBehavior();
+        perch.to = to;
+      }
+      perch.on = Boolean(to);
+    },
+
     // Free-walk input from A/S/D/F ([-1..1] each axis; 0,0 = released).
     setManualDir(dx, dz) {
       manualDir.x = dx;
@@ -324,6 +348,16 @@ export function createHero({ walkSpeed, heightAt }) {
   function step(t, dt) {
     // He only stands aside at rest — a walk or free roaming brings the
     // offset back to zero as he goes.
+    // …and only perches at rest, on his post (not mid-wander).
+    const perchGoal = perch.on && mode === 'idle' && !behavior ? 1 : 0;
+    const backing = Math.abs(perchGoal - perch.k) > 1e-4;
+    if (backing) {
+      perch.k += Math.sign(perchGoal - perch.k) * Math.min(Math.abs(perchGoal - perch.k), dt / PERCH_TIME);
+      if (perch.k <= 0) group.position.z = stationZ;
+    }
+    // once there he bobs up and down — peeking over the edge
+    perch.bob = perch.k > 0 ? Math.max(0, Math.sin(t * 1.5)) ** 2 * PERCH_PEEK - PERCH_PEEK * 0.5 : 0;
+    if (perch.k > 0) place();
     const goal = mode === 'walk' || mode === 'manual' ? 0 : aside.want;
     const gap = goal - aside.cur;
     const sidling = Math.abs(gap) > 0.01;
@@ -403,6 +437,14 @@ export function createHero({ walkSpeed, heightAt }) {
         if (manualDir.x || manualDir.z) {
           mode = 'manual';
           manualIdleTime = 0;
+          return;
+        }
+        if (perch.k > 0) { // backing away, perched, or coming back: always facing the audience
+          heading.y += (0 - heading.y) * Math.min(dt * 6, 1);
+          if (backing) {
+            perch.stride += dt * 9;
+            pose.walk(perch.stride, t, dt);
+          } else pose.idle(t, dt);
           return;
         }
         if (sidling) { // trotting to (or back from) his spot beside the message

@@ -203,7 +203,14 @@ function onTop(obj) {
 // where its centre hangs, relative to the heading's (title-local units).
 export function createTitle(text, { kicker, subtitle, message = false, messageY = -5 } = {}) {
   const group = new THREE.Group();
-  if (!text && !kicker && !subtitle) return group;
+  if (!text && !kicker && !subtitle) {
+    // a slide may have no title at all — still a title object to the deck
+    group.userData.setShown = () => {};
+    group.userData.setSubShown = () => {};
+    group.userData.update = () => {};
+    group.userData.hasKicker = false;
+    return group;
+  }
 
   const inner = new THREE.Group();
   let topY = 0;

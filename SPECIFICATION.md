@@ -257,10 +257,35 @@ Use a few per deck, not dozens — every lamp is computed for every model.
 `"type": "text3d"` stands real extruded letters in the scene — a sign, a
 closing title. Options: `text` (`\n` starts a new row), `size` (cap height,
 default 1.4), `depth`, `color` or `colors: [..]` (cycled per letter),
-`sideColor`, `arc` (degrees the row bends over), `glow` (0–1, for dark
+`sideColor`, `arc` (degrees the row bends over), `roll` (degrees the whole
+lettering leans, + = rising to the right), `glow` (0–1, for dark
 moods), `animation`: `wave` (default) / `pop` / `none`. The font (Optimer
 Bold) has no diacritics — keep to plain Latin. The font is downloaded only
 by decks that use the prop.
+
+### Ring tunnel
+
+`"type": "ringTunnel"` hangs a funnel of concentric rings in the air, each a
+step deeper than the one around it, closing on a dark disc — a cartoon end
+card built in space. The prop's position is the centre of the outermost
+ring (`position: [x, height]`). Options: `radius` (default 5), `rings`
+(default 7), `gap` (depth step between rings), `well` (how far behind the
+last ring the centre disc sits), `color` / `deepColor` (inner → outer ring),
+`centerColor`, `overlay`, `animation`: `pulse` (default) / `none`. It is
+unlit, so it glows in any mood. With `"overlay": true` the rings paint over
+everything behind them **and the floor**, so a tunnel larger than the stage
+covers the whole screen; whatever stands in front of it — or inside its
+well — still shows.
+
+### Props for one slide
+
+A prop with `"slide": "<slide id>"` (next to `type` and `position`) is on
+stage only while that slide is shown: it pops in with the slide's title and
+shrinks away when the deck moves on — a set piece for a single moment.
+
+Any prop can **take a bow**: `"bow": true` in its options (or a number — a
+delay in seconds, to stagger a line of them) makes it lean forward from the
+feet every few seconds, on top of its own animation.
 
 ### Asset catalog
 
@@ -373,9 +398,19 @@ turns toward the text; `"heroSide"` says where he stands: `"left"` (default),
   "groups": [{ "parts": [{ "type": "text", "position": [7.5, 2.5], "depth": "front", "title": "Jane Doe" }] }] }
 ```
 
+**A perch for the wolf.** `"heroPerch": [x, y, z]` on a slide (from the
+scene's centre; `y` is where his feet are, above the ground) makes the wolf
+back away to that spot while the slide is on — facing the audience all the
+way — and bob up and down there, peeking out. Put it inside a prop (the well
+of a `ringTunnel`, behind a wall) and he looks out of it. He walks home when
+the deck moves on.
+
 **Closeups.** An interesting element can make an entrance: put it in a group
 of its own with `"closeup"` and the camera moves in on it **as it appears**;
 the next step pulls the camera back while that step's content comes in.
+A group may also be **only** a camera move — no `parts`, just a `closeup` on
+a prop (`{ "prop": index }`) or a point (`{ "at": [x, y, z], "size": [w, h] }`):
+one press moves in on the diorama, the next carries on.
 
 ```jsonc
 { "parts": [ statPanel ] },                                  // the context

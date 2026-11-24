@@ -128,7 +128,11 @@ function normalizeScene(s, i, deckStyle = DEFAULT_STYLE) {
       : (Array.isArray(slide.steps) ? slide.steps : []);
     const groups = rawGroups
       .map((g, gi) => {
-        const parts = normalizeGroup(g, `${ctx} group ${gi}`);
+        // A group may be a camera move and nothing else: no parts, just a
+        // closeup on a prop or a point of the scene.
+        const bare = g && !Array.isArray(g.parts) && g.part == null && g.popup == null
+          && g.closeup && (typeof g.closeup.prop === 'number' || Array.isArray(g.closeup.at));
+        const parts = bare ? [] : normalizeGroup(g, `${ctx} group ${gi}`);
         return parts ? {
           parts,
           legacyClears: g?.clears === true,
@@ -175,6 +179,10 @@ function normalizeScene(s, i, deckStyle = DEFAULT_STYLE) {
       // through the slide's groups; the wolf steps to `heroSide` and looks.
       message: slide.message === true,
       // "left" (default) / "right", or his exact offset from the scene's centre
+      // A place the wolf backs away to and peeks out from while this slide
+      // is on: [x, y, z] from the scene's centre (y = his feet, above ground).
+      heroPerch: Array.isArray(slide.heroPerch) && slide.heroPerch.length === 3 && slide.heroPerch.every(Number.isFinite)
+        ? { x: slide.heroPerch[0], y: slide.heroPerch[1], z: slide.heroPerch[2] } : null,
       heroSide: Number.isFinite(slide.heroSide) ? slide.heroSide : (slide.heroSide === 'right' ? ASIDE : -ASIDE),
       // Look of this slide's panels and titles: its own, else the scene's,
       // else the deck's (meta.style), else the paper default.
@@ -204,6 +212,7 @@ function normalizeProp(p, context) {
   return {
     type: String(prop.type ?? 'unknown'),
     id: typeof prop.id === 'string' ? prop.id : null, // lets a moving prop name its target
+    slide: typeof prop.slide === 'string' ? prop.slide : null, // on stage only during this slide
     x: Number(pos[0]) || 0,
     y: Number(pos[1]) || 0,
     dz: Number(pos[2]) || 0,

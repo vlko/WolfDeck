@@ -55,6 +55,7 @@ async function start() {
     loadModelsFor(names, (done, total, pack) => boot.progress(done, total, `${done} / ${total} packs${pack ? ` (${pack})` : ''}`)),
     // extruded lettering brings a font along — only decks that use it pay
     deck.scenes.some((sc) => sc.props.some((p) => p.type === 'text3d')) ? import('./assets/text3d.js') : null,
+    deck.scenes.some((sc) => sc.props.some((p) => p.type === 'ringTunnel')) ? import('./assets/ringTunnel.js') : null,
     loadStyles(deck.scenes.flatMap((sc) => sc.slides.map((sl) => sl.style))),
   ]);
 
@@ -132,6 +133,7 @@ async function start() {
     const st = stepMachine.state;
     cameraRig.setCloseup(hero.walking || focus.active ? null : deckView.closeupFor(st.scene, st.step));
     hero.setAside(focus.active ? 0 : deckView.heroSideFor(st.scene, st.step));
+    hero.setPerch(focus.active ? null : deckView.heroPerchFor(st.scene, st.step));
     cameraRig.update(t, dt);
     deckView.update(t, dt, cameraRig.x, focus);
     focus.render(renderer, scene, cameraRig.camera);

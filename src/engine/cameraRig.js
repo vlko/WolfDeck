@@ -90,7 +90,15 @@ export function createCameraRig() {
     // Called every frame; a new target waits its `delay` before moving in.
     setCloseup(c) {
       if (!c) { cuWant = false; cuKey = null; return; }
-      if (c.key === cuKey) return;
+      if (c.key === cuKey) {
+        // a target that moves (a prop on the run) is followed, gently
+        if (c.live && cu) {
+          cu.x += (c.x - cu.x) * 0.08;
+          cu.y += (c.y - cu.y) * 0.08;
+          cu.z += (c.z - cu.z) * 0.08;
+        }
+        return;
+      }
       cuKey = c.key;
       cuWant = true;
       cuHold = cuP > 0 ? 0 : (c.delay ?? 0.6);
