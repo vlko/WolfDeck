@@ -99,7 +99,7 @@ scenes.push({
       subtitle: '…amatérskym blogerom, pomocným podcasterom a spíkrom, ktorého vybrala AI',
       message: true,
       heroSide: -4.2,
-      notes: N('Krátko pozdraviť.'),
+      notes: N('Krátko **pozdraviť**.'),
       // the byline: small, bottom right, there from the start
       parts: [part('text', 8.5, 1.05, { title: 'Marián Vlčák', body: '@vlkodotnet', align: 'center', width: 4.2, fontScale: 0.85, depth: 'front' })],
       groups: [],
@@ -109,9 +109,9 @@ scenes.push({
       title: 'Čo to nebude',
       subtitle: '…a čo si odnesieš',
       notes: N(
-        'Teraz by ste sa mali dozvedieť, o čom bude táto prednáška.',
-        'S istotou viem povedať, že nedostanete návod, ako sa stať influencerom, ani ako rozbiť LinkedIn algoritmy.',
-        'Dozviete sa o ceste introverta, ktorý má za sebou 15 rokov pokusov, omylov a niekoľko vecí, ktoré nečakane vyšli.',
+        'Teraz by ste sa mali dozvedieť, **o čom bude táto prednáška**.',
+        'S istotou viem povedať, že **nedostanete návod**, ako sa stať influencerom, ani ako rozbiť LinkedIn algoritmy.',
+        'Dozviete sa o **ceste introverta**, ktorý má za sebou **15 rokov pokusov, omylov** a niekoľko vecí, ktoré nečakane vyšli.',
       ),
       groups: [
         {
@@ -140,14 +140,14 @@ scenes.push({
       title: 'Kto som',
       kicker: 'Marián Vlčák alias vlko',
       notes: N(
-        'Odsťahoval som sa na Oravu a ako jedinému programátorovi mi bolo smutno.',
-        'Posledných 15 rokov sa preto nejakým spôsobom snažím podporovať slovenskú developerskú komunitu.',
-        'CTO FinStat.sk',
-        'žijem a tvorím v Námestove na Orave',
-        'amatérsky bloger — technologický týždenník na vyvojari.dev',
-        'WebUP supporter s pravidelným mesačníkom',
-        'súčasť hodnotiacej komisie CodeCon',
-        'dvojka v podcaste Link',
+        '**Odsťahoval som sa na Oravu** a ako jedinému programátorovi mi **bolo smutno**.',
+        'Posledných 15 rokov sa preto nejakým spôsobom snažím **podporovať slovenskú developerskú komunitu**.',
+        '**CTO** FinStat.sk',
+        'žijem a tvorím v **Námestove** na Orave',
+        'amatérsky bloger — technologický **týždenník** na vyvojari.dev',
+        '**WebUP** supporter s pravidelným mesačníkom',
+        'súčasť hodnotiacej **komisie CodeCon**',
+        'dvojka v **podcaste Link**',
       ),
       groups: [
         { parts: [part('image', -6, 3.6, { src: 'images/vlko.jpg', caption: 'Marián „vlko“ Vlčák', width: 5 })] },
@@ -208,12 +208,12 @@ scenes.push({
       id: 'jazda',
       title: 'Posledný rok bol jazda',
       notes: N(
-        'Ešte pred pár rokmi som veril, že budem celý život programátorom.',
-        'Pred dvoma rokmi som zistil, že AI vie generovať kód.',
-        'Pred rokom, že vie programovať.',
-        'Pred pol rokom, že vie programovať obstojne.',
-        'Pred 2 mesiacmi, že vie generovať UI.',
-        'Pred mesiacom, že vytvorí plnohodnotné aplikácie.',
+        'Ešte pred pár rokmi som veril, že budem **celý život programátorom**.',
+        '**Pred dvoma rokmi** som zistil, že AI vie **generovať kód**.',
+        '**Pred rokom**, že **vie programovať**.',
+        '**Pred pol rokom**, že vie programovať **obstojne**.',
+        '**Pred 2 mesiacmi**, že vie **generovať UI**.',
+        '**Pred mesiacom**, že vytvorí **plnohodnotné aplikácie**.',
         'Ale…',
       ),
       groups: [
@@ -260,11 +260,11 @@ scenes.push({
       title: 'AI moved my cheese',
       subtitle: 'pred rokom vs. dnes',
       notes: N(
-        'Dnes AI píše väčšiu časť kódu.',
-        'To, čo nás robilo šťastnými, teda programovanie, strácame a musíme sa s tým nejako vyrovnať.',
-        'Pred rokom som si ráno urobil kávičku, otvoril som Visual Studio, Jiru a väčšinu dňa, ak do toho nevošla porada, tak písal kód.',
-        'Dnes? Otvorím ráno konzolu, Jiru, v konzole aspoň dve session a spustím prompty. Urobím si kávičku, popíjam a pozerám, ako sa míňajú tokeny.',
-        'Akurát niekde v tom procese sa podela tá radosť, že som niečo urobil. Je čas ju hľadať inde.',
+        'Dnes **AI píše väčšiu časť kódu**.',
+        'To, čo nás robilo šťastnými, teda programovanie, **strácame** a musíme sa s tým nejako vyrovnať.',
+        '**Pred rokom** som si ráno urobil **kávičku**, otvoril som **Visual Studio, Jiru** a väčšinu dňa, ak do toho nevošla porada, tak **písal kód**.',
+        '**Dnes?** Otvorím ráno **konzolu**, Jiru, v konzole aspoň **dve session** a **spustím prompty**. Urobím si kávičku, popíjam a pozerám, **ako sa míňajú tokeny**.',
+        'Akurát niekde v tom procese **sa podela tá radosť**, že som niečo urobil. Je čas ju **hľadať inde**.',
       ),
       groups: [
         { closeup: { prop: 1, zoom: 1.9 } }, // the mouse after the cheese, close up
@@ -319,8 +319,8 @@ scenes.push({
       id: 'diff-kariera',
       title: 'DIFF: Kariéra',
       notes: N(
-        'Pred rokom bola špecializácia istotou: čím viac si bol odborník vo svojej oblasti, tým si bol vzácnejší.',
-        'Dnes hĺbkovú znalosť nahrádza AI model. Očakávania sú od nás iné, len nám to ešte nikto nepovedal. Naša práca sa posúva z odborníka na generalistu. A už neplatí, že cintoríny sú plné nenahraditeľných ľudí, ale naše náhrady sú v tokenoch.',
+        'Pred rokom bola **špecializácia istotou**: čím viac si bol odborník vo svojej oblasti, tým si bol **vzácnejší**.',
+        'Dnes **hĺbkovú znalosť nahrádza AI model**. **Očakávania sú od nás iné**, len nám to ešte nikto nepovedal. Naša práca sa posúva **z odborníka na generalistu**. A už neplatí, že **cintoríny sú plné nenahraditeľných ľudí**, ale naše **náhrady sú v tokenoch**.',
       ),
       groups: [{ parts: [diff('Kariéra', ['- istoty, špecialista', '+ nahraditeľnosť, generalista'])] }],
     },
@@ -328,8 +328,8 @@ scenes.push({
       id: 'diff-hiring',
       title: 'DIFF: Hiring',
       notes: N(
-        'Trh práce vyzerá tak, že firmy radšej kúpia AI agenta ako programátora.',
-        'Pred rokom sme si my vyberali, kam pôjdeme, a firmy sa o programátorov bili. Dnes mám plný LinkedIn „Open to work“. Nikde sa neprijíma, našťastie zatiaľ ani nevyhadzuje. A juniori to schytali najviac.',
+        'Trh práce vyzerá tak, že firmy **radšej kúpia AI agenta** ako programátora.',
+        'Pred rokom sme si **my vyberali**, kam pôjdeme, a **firmy sa o programátorov bili**. Dnes mám plný LinkedIn **„Open to work“**. **Nikde sa neprijíma**, našťastie zatiaľ **ani nevyhadzuje**. A **juniori to schytali najviac**.',
       ),
       groups: [{ parts: [diff('Hiring', ['- nedostatok ľudí, mohli sme si vyberať', '+ prebytok ľudí, bolestné chodenie po pohovoroch'])] }],
     },
@@ -370,8 +370,8 @@ scenes.push({
       id: 'diff-skolstvo',
       title: 'DIFF: Školstvo',
       notes: N(
-        'Pred rokom bola kariéra v IT bezpečnou istotou budúcnosti.',
-        'Dnes počúvam, že byť taký stolár a murár nie je na zahodenie. Zmenilo sa to neuveriteľne rýchlo.',
+        'Pred rokom bola **kariéra v IT** **bezpečnou istotou** budúcnosti.',
+        'Dnes počúvam, že byť taký **stolár a murár** nie je na zahodenie. Zmenilo sa to **neuveriteľne rýchlo**.',
       ),
       groups: [{ parts: [diff('Školstvo', ['- IT, programátor', '+ stolár, murár'])] }],
     },
@@ -379,8 +379,8 @@ scenes.push({
       id: 'diff-work',
       title: 'DIFF: Work',
       notes: N(
-        'Pred rokom som vedel celý deň presedieť nad problémom.',
-        'Dnes mi beží niekoľko agentov naraz. Hlavu mám v dvoch až troch problémoch súčasne a neviem, kde mi hlava stojí.',
+        'Pred rokom som vedel **celý deň presedieť nad problémom**.',
+        'Dnes mi beží **niekoľko agentov naraz**. Hlavu mám v **dvoch až troch problémoch súčasne** a neviem, **kde mi hlava stojí**.',
       ),
       groups: [{ parts: [diff('Work', ['- focus', '+ context switching'])] }],
     },
@@ -421,7 +421,7 @@ scenes.push({
     {
       id: 'strach',
       title: 'STRACH',
-      notes: N('Strach z toho, čo prináša AI. Všetky DIFF-y vyššie sa dajú zhrnúť do tohto pocitu.'),
+      notes: N('**Strach z toho, čo prináša AI**. Všetky **DIFF-y** vyššie sa dajú zhrnúť do tohto pocitu.'),
       groups: [],
     },
     {
@@ -431,11 +431,11 @@ scenes.push({
       message: true,
       style: 'tear',
       notes: N(
-        '(Chvíľka ticha.)',
-        'Pre mňa bolo najdôležitejšie zistenie, že „Nikoho nezaujímam“. Niežeby to bolo predtým iné, ale v období nedostatku zisťovali moju hodnotu až vo firme. Teraz je na mne ukázať, že mám hodnotu.',
-        'A tu má začať aj vaša cesta: zmenilo sa prostredie, musíte sa zmeniť aj vy. Nemusí sa z vás stať druhý vlko. Akákoľvek zmena vám pomôže zvýšiť vašu hodnotu, ktorú musíte ukázať vopred.',
-        'Možno za chvíľu nebude záležať na tom, čo vieš, ale na tom, či o tebe vôbec niekto vie, že existuješ.',
-        'Tým je zodpovedaný bod 1: preto je osobný brand v ére AI dôležitý.',
+        '(**Chvíľka ticha**.)',
+        'Pre mňa bolo **najdôležitejšie zistenie**, že „Nikoho nezaujímam“. Niežeby to bolo predtým iné, ale **v období nedostatku** zisťovali moju hodnotu **až vo firme**. Teraz je **na mne ukázať, že mám hodnotu**.',
+        'A tu má začať aj **vaša cesta**: **zmenilo sa prostredie, musíte sa zmeniť aj vy**. Nemusí sa z vás stať **druhý vlko**. **Akákoľvek zmena** vám pomôže zvýšiť vašu hodnotu, ktorú musíte **ukázať vopred**.',
+        'Možno za chvíľu nebude záležať na tom, čo vieš, ale na tom, **či o tebe vôbec niekto vie**, že existuješ.',
+        'Tým je zodpovedaný bod 1: preto je **osobný brand v ére AI** dôležitý.',
       ),
       groups: [],
     },
@@ -444,7 +444,7 @@ scenes.push({
       title: 'Ako to zmeniť?',
       style: 'sticker',
       mood: 'dawn',
-      notes: N('Viditeľnosť v komunite je možno najlacnejšia poistka, ktorú si vieme kúpiť.'),
+      notes: N('**Viditeľnosť v komunite** je možno **najlacnejšia poistka**, ktorú si vieme kúpiť.'),
       groups: [],
     },
   ],
@@ -485,9 +485,9 @@ scenes.push({
       message: true,
       heroSide: 3.2,
       notes: N(
-        'Celý život mám impostor syndróm, teda pocit, že nie som dosť dobrý, že som sa sem dostal len náhodou a každú chvíľu na to niekto príde. Keby ste mi dali pochvalu, tak vám neuverím ani slovo.',
-        'Uff, to je materiál v mojej hlave, s ktorým celý život bojujem. Prirátajte introvertnosť a život mimo centra diania, na okraji Slovenska.',
-        'Ale s trochou konzistencie sa s tým dá pohnúť. Tu sú 4 kroky.',
+        'Celý život mám **impostor syndróm**, teda pocit, že **nie som dosť dobrý**, že som sa sem dostal **len náhodou** a každú chvíľu na to niekto príde. Keby ste mi dali **pochvalu**, tak vám **neuverím ani slovo**.',
+        'Uff, to je materiál v mojej hlave, s ktorým celý život bojujem. Prirátajte **introvertnosť** a život **mimo centra diania**, na okraji Slovenska.',
+        'Ale s **trochou konzistencie** sa s tým dá pohnúť. Tu sú **4 kroky**.',
       ),
       groups: [{ closeup: { at: [-5.6, 1.2, -1.2], size: [9, 5] } }], // the sheep in the wolf mask, and its mirror
     },
@@ -526,10 +526,10 @@ scenes.push({
     giveUp: 'COMFORT',
     also: { title: 'Learning is also:', items: ['communities'] },
     notes: N(
-      'Môže sa zdať, že s príchodom AI nemá zmysel učiť sa niečo nové. Opak je ale pravdou. Niekto tie prompty musí kontrolovať, niekto musí specke povedať, že má používať túto novú technológiu.',
-      'Na učenie sa ale človek musí pripraviť. Nainštalujte si dobrú RSS čítačku, prihláste sa do dobrých newsletterov. A dajte novej téme čas, niekedy mi trvá aj pár týždňov, kým sa to celé v hlave poskladá.',
-      'Musíte ale niečo obetovať. Vyčleňte si čas, nahraďte hodinu pred TV, Netflixom či YouTube hodinou koncentrovaného konzumovania noviniek.',
-      'Nezabudnite, že vzdelávanie je aj stretávanie sa s komunitami. Tak ako tento CodeCon, tak ako náš žilinský WebUP.',
+      'Môže sa zdať, že s príchodom AI **nemá zmysel učiť sa** niečo nové. **Opak je ale pravdou**. Niekto tie **prompty musí kontrolovať**, niekto musí specke povedať, že má používať túto **novú technológiu**.',
+      'Na učenie sa ale **človek musí pripraviť**. Nainštalujte si dobrú **RSS čítačku**, prihláste sa do dobrých **newsletterov**. A **dajte novej téme čas**, niekedy mi trvá aj **pár týždňov**, kým sa to celé v hlave poskladá.',
+      'Musíte ale **niečo obetovať**. **Vyčleňte si čas**, nahraďte **hodinu pred TV, Netflixom či YouTube** hodinou koncentrovaného konzumovania noviniek.',
+      'Nezabudnite, že vzdelávanie je aj **stretávanie sa s komunitami**. Tak ako tento **CodeCon**, tak ako náš žilinský **WebUP**.',
     ),
   })],
 });
@@ -565,9 +565,9 @@ scenes.push({
     giveUp: '~~WATCHING~~',
     hacks: ['e-ink / low blue light', 'paging, not scrolling'],
     notes: N(
-      'Nekonzumujte obsah len vo forme videa. Pri čítaní sa mozog prepína do špeciálneho módu, ktorý pri videu nedosiahnete. Rýchlejšie tak pochopíte súvislosti.',
-      'Vzdajte sa pasívneho pozerania videí a scrollovania. A keď máte novinky hotové, tak si otvorte knižku.',
-      'Mám pár tipov: kúpte si Android e-ink zariadenie, čítať večer pred spaním na mobile je zabijak spánku, a kúpte alebo vyvibecodujte si RSS čítačku, čo vie stránkovať obsah.',
+      'Nekonzumujte obsah **len vo forme videa**. Pri čítaní sa mozog prepína do **špeciálneho módu**, ktorý pri videu nedosiahnete. Rýchlejšie tak **pochopíte súvislosti**.',
+      'Vzdajte sa **pasívneho pozerania videí a scrollovania**. A keď máte novinky hotové, tak si **otvorte knižku**.',
+      'Mám **pár tipov**: kúpte si **Android e-ink zariadenie**, čítať večer pred spaním na mobile je **zabijak spánku**, a kúpte alebo vyvibecodujte si **RSS čítačku, čo vie stránkovať obsah**.',
     ),
   })],
 });
@@ -605,12 +605,12 @@ scenes.push({
     giveUp: 'FOMO',
     mine: 'a weekly on vyvojari.dev — eighth year, every week',
     notes: N(
-      'Prvá rola z názvu: amatérsky bloger.',
-      'Musíš začať písať pravidelne, bez výhovoriek a hlavne pre seba. Skutočné dosahy ale dosiahneš, ak budeš písať po anglicky.',
-      'Daj si pozor na FOMO, fear of missing out. Nemusíš pokryť úplne všetko. Časom si vybudujete solídnu základňu zdrojov a článkov a nedá sa popísať všetko. Nastavte si hranicu.',
-      'Ja som začal písať krátke správičky pred dávnymi rokmi. Bol to des, ale krátke texty na začiatok stačia. Skúste Twitter. Postupne mi prestal formát dostačovať, lebo FOMO písať to denne zaberalo veľa času. Tak som prešiel na týždenné intervaly, ale aj tak som s tým na desať rokov sekol.',
-      'vyvojari.dev bola pre mňa nová fáza, lebo som zistil, že bez revízie toho, čo prečítam, sa mi neukladajú informácie dobre. Neverili by ste, ako pomôže dať svoje myšlienky na papier alebo ich zapísať na klávesnici. Tak som to začal robiť pravidelne a už ôsmy rok píšem týždenník cez zaťaté zuby, či sa mi chce, alebo nechce. A keďže som amatérsky bloger, tak každý týždenník má čítanosť tak 50 až 80 ľudí. To nie je moc, ale ako mi povedal jeden kamarát: nie je dôležité, koľko, ale kto ťa číta.',
-      'Pred rokom som začal pomocou AI a manuálneho review s anglickou verziou. Keďže som slabý marketér, tak mám už asi 15 čítaní na jednu verziu. Ach jaj.',
+      'Prvá rola z názvu: **amatérsky bloger**.',
+      'Musíš začať **písať pravidelne**, **bez výhovoriek** a hlavne **pre seba**. Skutočné dosahy ale dosiahneš, ak budeš **písať po anglicky**.',
+      'Daj si pozor na **FOMO**, fear of missing out. **Nemusíš pokryť úplne všetko**. Časom si vybudujete solídnu základňu zdrojov a článkov a nedá sa popísať všetko. **Nastavte si hranicu**.',
+      'Ja som začal písať **krátke správičky** pred dávnymi rokmi. **Bol to des**, ale krátke texty na začiatok stačia. **Skúste Twitter**. Postupne mi prestal formát dostačovať, lebo FOMO písať to denne zaberalo veľa času. Tak som prešiel na **týždenné intervaly**, ale aj tak som s tým **na desať rokov sekol**.',
+      '**vyvojari.dev** bola pre mňa nová fáza, lebo som zistil, že **bez revízie toho, čo prečítam**, sa mi neukladajú informácie dobre. Neverili by ste, ako pomôže dať svoje **myšlienky na papier** alebo ich zapísať na klávesnici. Tak som to začal robiť pravidelne a už **ôsmy rok** píšem týždenník **cez zaťaté zuby**, či sa mi chce, alebo nechce. A keďže som amatérsky bloger, tak každý týždenník má čítanosť tak **50 až 80 ľudí**. To nie je moc, ale ako mi povedal jeden kamarát: nie je dôležité, koľko, **ale kto ťa číta**.',
+      'Pred rokom som začal pomocou AI a manuálneho review s **anglickou verziou**. Keďže som slabý marketér, tak mám už asi **15 čítaní** na jednu verziu. Ach jaj.',
     ),
   })],
 });
@@ -650,10 +650,10 @@ scenes.push({
     giveUp: 'COMFORT ZONE',
     mine: 'via WebUP to CodeCon · one message to Dávid and I am on the Link podcast',
     notes: N(
-      'Druhá rola z názvu: pomocný podcaster.',
-      'Viete, ako začnete hovoriť na verejných eventoch? Tak, že začnete hovoriť na tých neverejných. Spravte si mini event raz za mesiac vo vašej firme, nájdite si malú milú komunitu, ktorá vám dá feedback, ako je WebUP.',
-      'Budete ale musieť vystúpiť zo svojej komfortnej zóny. Úprimne, ja som mal a asi aj stále mám všetky chyby, aké prednášajúci môže mať. Rýchlo hovorím, mumlem, opakujem sa, keď som v úzkych, tak je to samé akokebyže, akože, takže. Ale cvičenie robí majstra. Keď som pred 4 rokmi začal mať na WebUP mesačník, tak to bolo utrpenie pre poslucháčov aj mňa, našťastie sa stretávame tam, kde čapujú pivo, tak to nejako prežili. Ale začal som sám seba nútiť lepšie artikulovať, pomalšie hovoriť. O rok na tom budem lepšie ako teraz.',
-      'A vystúpiť z komfortnej zóny znamená aj sa jednoducho spýtať. Všetky komunitné eventy hľadajú spíkrov, stačí zaplniť 15 až 20 minút. Spýtajte sa, či nepotrebujú pomôcť s organizáciou. Mimochodom, ja som sa tak raz spýtal Dávida Tvrdoňa, že či nechce vyskúšať nahradiť také robotické hlasy tým mojím, veď horšie to už nemôže byť, a už rok robím pomocného podcastera v podcaste Link. Aj do hodnotiacej komisie CodeCon som sa dostal, lebo sa stačilo iba ponúknuť.',
+      'Druhá rola z názvu: **pomocný podcaster**.',
+      'Viete, ako začnete hovoriť na verejných eventoch? Tak, že začnete hovoriť **na tých neverejných**. Spravte si **mini event raz za mesiac** vo vašej firme, nájdite si **malú milú komunitu**, ktorá vám dá **feedback**, ako je WebUP.',
+      'Budete ale musieť vystúpiť **zo svojej komfortnej zóny**. Úprimne, ja som mal a asi aj stále mám **všetky chyby**, aké prednášajúci môže mať. **Rýchlo hovorím, mumlem, opakujem sa**, keď som v úzkych, tak je to samé **akokebyže, akože, takže**. Ale **cvičenie robí majstra**. Keď som **pred 4 rokmi** začal mať na WebUP **mesačník**, tak to bolo utrpenie pre poslucháčov aj mňa, našťastie sa stretávame tam, kde **čapujú pivo**, tak to nejako prežili. Ale začal som sám seba nútiť **lepšie artikulovať, pomalšie hovoriť**. O rok na tom budem lepšie ako teraz.',
+      'A vystúpiť z komfortnej zóny znamená aj sa **jednoducho spýtať**. Všetky komunitné eventy **hľadajú spíkrov**, stačí zaplniť **15 až 20 minút**. Spýtajte sa, či nepotrebujú **pomôcť s organizáciou**. Mimochodom, ja som sa tak raz spýtal **Dávida Tvrdoňa**, že či nechce vyskúšať nahradiť také **robotické hlasy** tým mojím, veď horšie to už nemôže byť, a už rok robím pomocného podcastera v **podcaste Link**. Aj do **hodnotiacej komisie CodeCon** som sa dostal, lebo sa **stačilo iba ponúknuť**.',
     ),
   })],
 });
@@ -688,11 +688,11 @@ scenes.push({
       id: 'create',
       title: 'CREATE something',
       notes: N(
-        'Pri všetkom tom AI, čo je okolo nás, verím, že si ľudia budú ceniť to, čo tvoríme ručne. Nemusí to byť nič zložité, nájdite si komunitu v okolí, spravte malú prednášku na meetupe.',
-        'A teraz prichádza časť, keď by ste si mali vytiahnuť telefóny, lebo prichádzajú odkazy.',
-        'Prvá dvojica je písanie. Týždenník na vyvojari.dev je môj technologický prehľad, ktorý píšem ôsmy rok každý týždeň. Weekly Dev Digest na Substacku je jeho anglická verzia, ktorú robím asi rok s pomocou AI a ručného review.',
-        'Druhá dvojica je rozprávanie. WebUP je žilinský meetup, na YouTube nájdete záznamy prednášok aj môj mesačník. Link je technologický podcast Dávida Tvrdoňa, v ktorom robím pomocného podcastera.',
-        'Tretia dvojica je to, čo som si postavil sám. WolfDeck je nástroj, v ktorom beží táto prezentácia. WolfMark je môj denný zápisník: obyčajné Markdown súbory, kalendár namiesto zoznamu a história poznámok.',
+        'Pri všetkom tom AI, čo je okolo nás, verím, že si ľudia budú ceniť to, čo **tvoríme ručne**. Nemusí to byť nič zložité, nájdite si **komunitu v okolí**, spravte **malú prednášku na meetupe**.',
+        'A teraz prichádza časť, keď by ste si mali **vytiahnuť telefóny**, lebo prichádzajú odkazy.',
+        '**Prvá dvojica je písanie**. **Týždenník** na vyvojari.dev je môj technologický prehľad, ktorý píšem ôsmy rok každý týždeň. **Weekly Dev Digest** na Substacku je jeho anglická verzia, ktorú robím asi rok s pomocou AI a ručného review.',
+        '**Druhá dvojica je rozprávanie**. **WebUP** je žilinský meetup, na YouTube nájdete záznamy prednášok aj môj mesačník. **Link** je technologický podcast Dávida Tvrdoňa, v ktorom robím pomocného podcastera.',
+        '**Tretia dvojica** je to, čo som si postavil sám. **WolfDeck** je nástroj, v ktorom beží táto prezentácia. **WolfMark** je môj denný zápisník: obyčajné Markdown súbory, kalendár namiesto zoznamu a história poznámok.',
       ),
       // what I made: three pairs of links, one pair at a time
       groups: [
@@ -749,9 +749,9 @@ scenes.push({
       id: 'brand',
       title: 'Výsledok',
       notes: N(
-        'Keď sa prelúskaš cez všetky štyri START bloky, tak je veľká šanca, že si vytvoríš brand.',
-        'Keď o tebe vedia ľudia, tak sa o tebe dozvie aj AI. Treba len internet zamoriť svojím obsahom.',
-        'A to je ten finálny krok. Byť vybratý AI. Mimochodom, to je dôvod, prečo vznikla táto prednáška.',
+        'Keď sa prelúskaš cez **všetky štyri START bloky**, tak je veľká šanca, že si **vytvoríš brand**.',
+        'Keď o tebe vedia ľudia, tak sa o tebe **dozvie aj AI**. Treba len **internet zamoriť svojím obsahom**.',
+        'A to je ten **finálny krok**. **Byť vybratý AI**. Mimochodom, to je dôvod, **prečo vznikla táto prednáška**.',
       ),
       groups: [
         { parts: [part('text', -7.4, 4.3, { title: 'BUILD YOUR BRAND', align: 'center', width: 7.4, fontScale: 1.15 })] },
@@ -810,8 +810,8 @@ scenes.push({
       id: 'rekapitulacia',
       title: 'Rekapitulácia',
       notes: N(
-        'Žiadny z týchto krokov nebol plánovaný. Vždy stačilo ozvať sa a urobiť prvý krok.',
-        '[NÁVRH] Jedna vec, ktorú môžeš urobiť ešte dnes: napíš jednému človeku z tejto konferencie, ktorého prednáška ťa zaujala. Poďakuj a spýtaj sa jednu otázku. Presne tak sa začali všetky moje kroky.',
+        'Žiadny z týchto krokov **nebol plánovaný**. Vždy stačilo **ozvať sa a urobiť prvý krok**.',
+        '[NÁVRH] Jedna vec, ktorú môžeš urobiť ešte dnes: **napíš jednému človeku** z tejto konferencie, ktorého prednáška ťa zaujala. Poďakuj a spýtaj sa jednu otázku. Presne tak sa začali všetky moje kroky.',
       ),
       groups: [
         {
@@ -832,7 +832,7 @@ scenes.push({
       kicker: '',
       heroPerch: [0, 3.3, -0.3], // inside the tunnel, between the last ring and the well
       notes: N(
-        'Poďakovať, priestor na otázky.',
+        '**Poďakovať**, **priestor na otázky**.',
         'QR kódy: vyvojari.dev, Weekly Dev Digest (Substack) a podcast Link (YouTube).',
       ),
       groups: [

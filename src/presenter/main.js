@@ -57,6 +57,7 @@ body { font-family: Nunito,'Avenir Next','Trebuchet MS',sans-serif; color: #2f34
 .pv-notes-text { flex: 1; overflow: auto; white-space: pre-wrap; line-height: 1.5;
   font-weight: 400; }
 .pv-notes-text.empty { color: #a4b1a2; }
+.pv-notes-text strong { font-weight: 800; }
 `;
 
 const el = (tag, cls, text) => {
@@ -125,6 +126,16 @@ notes.append(notesBar, notesText);
 root.append(top, left, notes);
 document.body.appendChild(root);
 
+// Notes are plain text with one bit of markup: **key phrase** is set bold, so the thread of the talk can be read at a glance.
+function showNotes(text) {
+  notesText.textContent = '';
+  text.split(/\*\*(.+?)\*\*/g).forEach((chunk, i) => {
+    if (!chunk) return;
+    if (i % 2) notesText.append(el('strong', null, chunk));
+    else notesText.append(chunk);
+  });
+}
+
 // ── notes font size (remembered) ──
 let size = 24;
 try { size = Number(localStorage.getItem('wolfdeck-notes-size')) || 24; } catch { /* blocked */ }
@@ -188,7 +199,7 @@ function paintState(m) {
     : '';
   kickerEl.textContent = m.kicker ?? '';
   titleEl.textContent = m.title ?? '';
-  notesText.textContent = m.notes || 'K tomuto slidu nie sú poznámky.';
+  showNotes(m.notes || 'K tomuto slidu nie sú poznámky.');
   notesText.classList.toggle('empty', !m.notes);
   if (m.slide !== shownSlide) { notesText.scrollTop = 0; shownSlide = m.slide; }
   focusBtn.classList.toggle('on', !!m.focus);

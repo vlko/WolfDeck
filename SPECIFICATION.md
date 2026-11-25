@@ -370,6 +370,8 @@ while shown, and shrink away when you step back — the exact reverse.
 - Each slide has a URL hash (`#revenue`) and a row in the **L** menu.
 - `notes` (a string, or an array of paragraphs) are the slide's **speaker
   notes**: never drawn in the deck, shown only in the presenter window (`F`).
+  `**key phrase**` in a note is shown bold there — mark the
+  thread of the talk and you can follow it without reading every sentence.
 
 A group with a single panel may use `{ "part": {…} }` for brevity.
 
